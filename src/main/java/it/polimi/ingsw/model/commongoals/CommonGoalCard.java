@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public abstract class CommonGoalCard {
-    final int ROW = 6;
-    final int COL = 5;
+    final int NROW = 6;
+    final int NCOL = 5;
     private Stack<Integer> points; //attenzione che Integer può anche essere null a differenza di int!!
 
 
