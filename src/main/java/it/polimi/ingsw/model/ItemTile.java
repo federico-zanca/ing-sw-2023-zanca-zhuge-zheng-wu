@@ -9,6 +9,7 @@ public class ItemTile {
 
     public ItemTile(ItemType type){
         this.type = type;
+        this.GroupId = 0;
     }
 
     /**
