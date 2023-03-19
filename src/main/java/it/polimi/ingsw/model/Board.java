@@ -63,7 +63,7 @@ public class Board {
             }
         }
         */
-         
+
     }
 // ITEMS è passato da turn e sono le tessere pescate da Bag
 
@@ -87,6 +87,11 @@ public class Board {
         }
     }
 
+    /**
+     * Returns the number of empty cells in which thee will be a random ItemTile extracted from the Bag during refill.
+     * This is also the number of ItemTiles to extract from Bag
+     * @return number of items needed to refill the board
+     */
     public int numCellsToRefill() {
         int count=0;
         for(int i=0; i<Dimensions; i++){
@@ -97,6 +102,10 @@ public class Board {
         return count;
     }
 
+    /**
+     * Returns true if board needs to be refilled
+     * @return true if board needs refilling
+     */
     private boolean needsRefill() {
         for(int i=1; i<Dimensions-1; i++){
             for(int j=1; j<Dimensions-1; j++){
@@ -108,11 +117,23 @@ public class Board {
         return true;
     }
 
+    /**
+     * Places an ItemTable on a GameBoard cell
+     * @param i the IteTile to be added
+     * @param row the row number of the target cell (in which the item will be placed)
+     * @param column the row number of the target cell (in which the item will be placed)
+     */
     public void placeItem(ItemTile i, int row, int column){
         if(gameboard[row][column].getType()!=ItemType.FORBIDDEN)
             gameboard[row][column] = i;
     }
 
+    /**
+     * Returns the ItemTile in the target cell of the board (identified by row and column number)
+     * @param row the row number of the target cell
+     * @param column the column number of the target cell
+     * @return the ItemTile corresponding to the cell specified through row and column parameters
+     */
     public ItemTile pickItem(int row, int column){
         ItemTile tmp = new ItemTile(gameboard[row][column].getType());
         gameboard[row][column].setType(ItemType.EMPTY);

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +26,10 @@ public class Bag {
 
     }
 
+    /**
+     * Returns a new ItemTile object of a randomly selected ItemType from those remaining in the bag
+     * @return random ItemTile from those still present in the bag
+     */
     public ItemTile drawItem (){
         ItemType k;
         ItemType[] keys = {ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT};
@@ -39,6 +44,11 @@ public class Bag {
         return new ItemTile(k);
     }
 //TODO sistemare gestione ItemType ItemTile incoerente
+
+    /**
+     * Adds an ItemTile object to the bag
+     * @param i the item which is wished to be added to the bag
+     */
     public void putItem(@NotNull ItemTile i){
         itemTiles.put(i.getType(), itemTiles.get(i.getType())+1);
     }

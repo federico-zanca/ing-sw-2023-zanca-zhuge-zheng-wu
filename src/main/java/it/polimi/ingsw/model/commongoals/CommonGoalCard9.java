@@ -1,7 +1,8 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.commongoals;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import java.util.ArrayList;
-public class CommonGoalCard9 extends CommonGoalCard{
+public class CommonGoalCard9 extends CommonGoalCard {
     public CommonGoalCard9(int numPlayers){
         super(numPlayers);
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
-import java.lang.reflect.Array;
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+
 import java.util.ArrayList;
 
 public class Turn {

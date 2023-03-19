@@ -13,6 +13,10 @@ public class Bookshelf {
         emptyBookshelf();
     }
 
+    /**
+     * Returns true if the Bookshelf is full
+     * @return true if bookshelf is now full, false if it isn't
+     */
     public boolean isFull(){
         /*
         for(int i=0; i<Dimensions; i++)
@@ -22,6 +26,12 @@ public class Bookshelf {
         return getNumEmptyCells()==0;
     }
 
+    /**
+     * Places an item in the lowest cell of a specified column.
+     * @param item the ItemTile to be inserted
+     * @param column the target column of the insertion
+     * @throws FullColumnException if the target column is already full
+     */
     public void insertItem(ItemTile item, int column) throws FullColumnException {
         if(shelfie[0][Columns-1].getType()!= ItemType.EMPTY) throw new FullColumnException();
         for(int i=Rows-1; i>0; i--){
@@ -31,6 +41,10 @@ public class Bookshelf {
         }
     }
 
+    /**
+     * Returns the number of empty cells in the bookshelf
+     * @return number of empty cells in bookshelf
+     */
     public int getNumEmptyCells(){
         int count = 0;
         for(int i=0; i<Rows; i++){
@@ -41,6 +55,9 @@ public class Bookshelf {
         return count;
     }
 
+    /**
+     * Sets every cell of bookshelf to an ItemTile having ItemType = ItemType.EMPTY
+     */
     private void emptyBookshelf(){
         for(int i=0; i<Rows; i++){
             for(int j=0; j<Columns; j++){

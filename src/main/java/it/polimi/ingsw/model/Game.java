@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -133,7 +135,10 @@ public class Game {
         return bag;
     }
 
-    //TODO metodo per aggiungere commongoalcard
+    /**
+     * Adds a CommonGoalCard to Game.commonGoals list
+     * @param cg the CommonGoalCard to be added to the game
+     */
     public void addCommonGoal(CommonGoalCard cg){
             commonGoals.add(cg);
     }

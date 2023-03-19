@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.commongoals;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
-public class CommonGoalCard12 extends CommonGoalCard{
+public class CommonGoalCard12 extends CommonGoalCard {
 
     public CommonGoalCard12(int numPlayers){
         super(numPlayers);
