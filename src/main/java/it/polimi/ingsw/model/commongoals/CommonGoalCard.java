@@ -1,4 +1,6 @@
+
 package it.polimi.ingsw.model.commongoals;
+
 
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
@@ -7,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public abstract class CommonGoalCard {
-    final int NROW = 6;
-    final int NCOL = 5;
     private Stack<Integer> points; //attenzione che Integer può anche essere null a differenza di int!!
 
 
