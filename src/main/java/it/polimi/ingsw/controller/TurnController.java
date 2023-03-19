@@ -57,9 +57,24 @@ public class TurnController {
         this.turnPhase = phase;
     }
 
+    /**
+     * @return current turn phase
+     */
     public TurnPhase getTurnPhase() {
         return turnPhase;
     }
 
+    /**
+     * Creates a new turn
+     */
+    public void newTurn(){
+        setTurnPhase(TurnPhase.ONE);
+    }
 
+    /**
+     * @return List of players in queue
+     */
+    public ArrayList<Player> getPlayerQueue() {
+        return playerQueue;
+    }
 }
