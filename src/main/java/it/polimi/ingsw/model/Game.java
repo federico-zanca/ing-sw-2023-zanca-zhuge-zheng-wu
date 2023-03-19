@@ -3,18 +3,37 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class Game {
+    //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)
+    private static Game instance;
 
     private static final int MAX_PLAYERS = 4;
+
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
     private ArrayList<CommonGoalCard> commonGoalCards;
     private Board board;
     private Bag bag;
-
     public Game(){
         board = new Board();
         bag = new Bag();
         players = new ArrayList<Player>();
+    }
+
+    /**
+     *
+     * @return the singleton instance of the game
+     */
+    public static Game getInstance() {
+        if(instance == null)
+            instance = new Game();
+        return instance;
+    }
+
+    /**
+     * Resets the game instance, all game data is lost after this operation.
+     */
+    public static void resetInstance(){
+        Game.instance=null;
     }
 
     /**

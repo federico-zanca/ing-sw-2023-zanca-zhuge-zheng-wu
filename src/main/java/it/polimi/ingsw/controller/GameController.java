@@ -1,15 +1,17 @@
 package it.polimi.ingsw.controller;
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.Board;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Turn;
 
-import java.util.ArrayList;
+
+import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.enumerations.GamePhase;
 
 public class GameController {
-    private ArrayList<Player> players;
 
-    
+    private Game game;
+
+    private GamePhase gamePhase;
+    private TurnController turnController;
+
+    //public
 
     //game initialization : preparing board, extracting common goals...
 
