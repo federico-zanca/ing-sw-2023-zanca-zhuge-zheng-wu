@@ -3,48 +3,26 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class Player {
-
-    /**
-     *
-     */
+    private String username;
     private Bookshelf bookshelf;
-
-    /**
-     *
-     */
     private PersonalGoalCard personalGoal;
-
-    /**
-     *
-     */
     private int score;
 
-    /**
-     * Default constructor
-     */
-    public Player(PersonalGoalCard goal) {
+    public Player(PersonalGoalCard goal, String username) {
+        this.username = username;
         bookshelf = new Bookshelf();
         personalGoal = goal;
         score = 0;
     }
 
-    /**
-     * @return
-     */
     public boolean endTrigger() {
         return bookshelf.isFull();
     }
 
-    /**
-     * @return
-     */
     public int getScore() {
         return score;
     }
 
-    /**
-
-     */
     public void addPoints(int points) {
         score+=points;
     }
@@ -63,5 +41,9 @@ public class Player {
 
     public PersonalGoalCard getPersonalGoal() {
         return personalGoal;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
