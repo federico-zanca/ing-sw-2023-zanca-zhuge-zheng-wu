@@ -16,6 +16,11 @@ public class Board {
             }
         }
     }
+
+    /**
+     * Initializes the board depending on the number of players in the game
+     * @param numPlayers
+     */
     public void initBoard(int numPlayers){
         for(int i=0; i<Dimensions; i++){
             for(int j=0; j<Dimensions; j++) {
@@ -61,6 +66,11 @@ public class Board {
          
     }
 // ITEMS è passato da turn e sono le tessere pescate da Bag
+
+    /**
+     *
+     * @param items
+     */
     public void refillBoard(ArrayList<ItemTile> items){
         //TODO implement here
         int tessera=0;
@@ -77,7 +87,7 @@ public class Board {
         }
     }
 
-    private int numCellsToRefill() {
+    public int numCellsToRefill() {
         int count=0;
         for(int i=0; i<Dimensions; i++){
             for(int j=0; j<Dimensions; j++){
@@ -104,7 +114,7 @@ public class Board {
     }
 
     public ItemTile pickItem(int row, int column){
-        ItemTile tmp = gameboard[row][column];
+        ItemTile tmp = new ItemTile(gameboard[row][column].getType());
         gameboard[row][column].setType(ItemType.EMPTY);
         return tmp;
     }

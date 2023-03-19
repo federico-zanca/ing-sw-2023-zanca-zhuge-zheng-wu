@@ -10,10 +10,10 @@ public class Game {
 
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
-    private ArrayList<CommonGoalCard> commonGoalCards;
+    private ArrayList<CommonGoalCard> commonGoals;
     private Board board;
     private Bag bag;
-    public Game(){
+    private Game(){
         board = new Board();
         bag = new Bag();
         players = new ArrayList<Player>();
@@ -52,8 +52,20 @@ public class Game {
                 .orElse(null);
     }
 
+    /**
+     * Adds new Player to the list of players.
+     * @param p player to add
+     */
     public void addPlayer(Player p){
         players.add(p);
+    }
+
+    /**
+     * Returns the first player to play.
+     * @return first player to play
+     */
+    public Player getFirstPlayer(){
+        return players.get(0);
     }
 
     /**Returns the number of players
@@ -123,7 +135,7 @@ public class Game {
 
     //TODO metodo per aggiungere commongoalcard
     public void addCommonGoal(CommonGoalCard cg){
-            commonGoalCards.add(cg);
+            commonGoals.add(cg);
     }
 
 
