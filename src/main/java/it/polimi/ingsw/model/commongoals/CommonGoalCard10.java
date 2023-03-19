@@ -1,8 +1,6 @@
-<<<<<<<< HEAD:src/main/java/it/polimi/ingsw/model/commongoals/CommonGoalCard10.java
+
 package it.polimi.ingsw.model.commongoals;
-========
-package it.polimi.ingsw.model.CommonGoalCards;
->>>>>>>> c7ffb5150689a86c88a1956d9b79d75593ea373e:src/main/java/it/polimi/ingsw/model/CommonGoalCards/CommonGoalCard10.java
+
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import java.util.ArrayList;
