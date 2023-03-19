@@ -46,4 +46,6 @@ public abstract class CommonGoalCard {
     public ArrayList<Player> getThoseWhoAchieved() {
         return thoseWhoAchieved;
     }
+
+    public abstract boolean check(ItemTile[][] matrix);
 }
