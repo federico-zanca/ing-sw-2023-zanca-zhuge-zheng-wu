@@ -1,4 +1,5 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.CommonGoalCards;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import java.util.ArrayList;
 public class CommonGoalCard10 extends CommonGoalCard{

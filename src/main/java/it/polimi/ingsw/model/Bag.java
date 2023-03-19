@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.CommonGoalCards.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import org.jetbrains.annotations.NotNull;
 
