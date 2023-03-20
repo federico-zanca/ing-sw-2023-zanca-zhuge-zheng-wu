@@ -10,7 +10,8 @@ import java.util.Stack;
 
 public abstract class CommonGoalCard {
     private Stack<Integer> points; //attenzione che Integer può anche essere null a differenza di int!!
-
+    final int NROW = 6;
+    final int NCOL = 5;
 
     private ArrayList<Player> thoseWhoAchieved;
 
