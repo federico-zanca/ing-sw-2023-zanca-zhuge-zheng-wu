@@ -32,7 +32,7 @@ public class PersonalGoalCard3 extends PersonalGoalCard{
         if(score==1 || score==2) {return score;}
         else if (score==3) {return score+1;}
         else if (score==4) {return score+2;}
-        else if (score==5) {return score+3;}
+        else if (score==5) {return score+4;}
         else if (score==6) {return score*2;}
         else {return score;}
     }
