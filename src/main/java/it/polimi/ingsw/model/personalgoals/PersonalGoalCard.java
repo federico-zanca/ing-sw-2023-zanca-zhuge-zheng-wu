@@ -1,11 +1,12 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.personalgoals;
 
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
-public class PersonalGoalCard {
+public abstract class PersonalGoalCard {
     final int Rows=6;
     final int Columns=5;
-    private ItemType[][] objective;
+    protected ItemType[][] objective;
 
     /**
      * Default constructor
@@ -19,6 +20,8 @@ public class PersonalGoalCard {
             }
         }
     }
+
+    public abstract int calculateScore(ItemTile[][] matrix);
 
 
 }

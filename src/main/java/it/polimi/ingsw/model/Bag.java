@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.ItemType;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
