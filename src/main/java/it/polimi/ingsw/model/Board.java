@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model;
 
+
 import it.polimi.ingsw.model.enumerations.ItemType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Stack;
 
 public class Board {
     private ItemTile[][] gameboard;
@@ -140,6 +143,59 @@ public class Board {
         return tmp;
     }
 
+    /**
+     * Before picking (Clicking on) the first tile, pass -1 and -1 as parameters to show the pickable/clickable first tiles,
+     * by picking/clicking the first tile we insert its coordinates into the method and the method returns an array coordinates of
+     * tiles that we can further pick/click
+     * @param firstItem_x coordinates of the ItemTile to pick
+     * @param firstItem_y
+     * @return ArrayList of pickable ItemTiles
+     */
+    public ArrayList<Integer> pickableItems(int firstItem_x, int firstItem_y) {
+        ArrayList<Integer> pickable=new ArrayList<>();
+        if (firstItem_x==-1 && firstItem_y==-1){
+            for(int i=1; i<Dimensions-1; i++){
+                for(int j=1; j<Dimensions-1; j++){
+                    if(gameboard[i][j].getType()!= ItemType.EMPTY && gameboard[i][j].getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getType()==ItemType.EMPTY || gameboard[i-1][j].getType()==ItemType.FORBIDDEN) || (gameboard[i+1][j].getType()==ItemType.EMPTY || gameboard[i+1][j].getType()==ItemType.FORBIDDEN) ||
+                            (gameboard[i][j-1].getType()==ItemType.EMPTY || gameboard[i][j-1].getType()==ItemType.FORBIDDEN) || (gameboard[i][j+1].getType()==ItemType.EMPTY || gameboard[i][j+1].getType()==ItemType.FORBIDDEN)))
+                        pickable.add(i);
+                        pickable.add(j);
+                }
+            }
+        }
+        else {
+            Stack<Integer> nx =new Stack<>();
+            Stack<Integer> ny =new Stack<>();
+            nx.push(0);
+            nx.push(-1);
+            nx.push(0);
+            nx.push(1);
+            ny.push(-1);
+            ny.push(0);
+            ny.push(1);
+            ny.push(0);
+
+            while (!nx.isEmpty() && !ny.isEmpty()){
+                int x=nx.pop();
+                int y=ny.pop();
+                int count=2;
+
+                while (gameboard[firstItem_x+x][firstItem_y+y].getType()!=ItemType.EMPTY && gameboard[firstItem_x+x][firstItem_y+y].getType()!=ItemType.FORBIDDEN && count>0){
+                    pickable.add(firstItem_x+x);
+                    pickable.add(firstItem_y+y);
+                    x=2*x;
+                    y=2*y;
+                    count--;
+                }
+            }
+        }
+        return  pickable;
+    }
+
+
+
 }
+
+
 
 
