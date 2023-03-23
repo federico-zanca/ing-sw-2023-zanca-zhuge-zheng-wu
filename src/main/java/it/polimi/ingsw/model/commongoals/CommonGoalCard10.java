@@ -1,6 +1,7 @@
 
 package it.polimi.ingsw.model.commongoals;
 
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import java.util.ArrayList;
@@ -9,7 +10,9 @@ public class CommonGoalCard10 extends CommonGoalCard {
     public CommonGoalCard10(int numPlayers){
         super(numPlayers);
     }
-    public boolean check(ItemTile[][] matrix){
+    public boolean check(Bookshelf bookshelf){
+        ItemTile[][] matrix;
+        matrix = bookshelf.getShelfie();
         ArrayList<ItemType> Column = new ArrayList<ItemType>();
         int row = 0;
         for(int i=0;i<6;i++){

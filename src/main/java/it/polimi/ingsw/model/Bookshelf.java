@@ -3,15 +3,23 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 
+import java.awt.print.Book;
+
 public class Bookshelf {
-    final int Rows=6;
-    final int Columns=5;
+    protected final int Rows=6;
+    protected final int Columns=5;
+
     private ItemTile[][] shelfie;
 
     public Bookshelf(){
         shelfie = new ItemTile[Rows][Columns];
         emptyBookshelf();
     }
+
+    public void setShelfie(ItemTile[][] shelfie) {
+        this.shelfie = shelfie;
+    }
+
 
     /**
      * Returns true if the Bookshelf is full
@@ -61,8 +69,28 @@ public class Bookshelf {
     private void emptyBookshelf(){
         for(int i=0; i<Rows; i++){
             for(int j=0; j<Columns; j++){
-                shelfie[i][j].setType(ItemType.EMPTY);
+                shelfie[i][j] = new ItemTile(ItemType.EMPTY);
             }
         }
+    }
+
+    /**
+     * Returns the bookshelf
+     * @return
+     */
+    public ItemTile[][] getShelfie() {
+        return shelfie;
+    }
+
+    /**
+     * Returns the single selected cell
+     * @param r
+     * @param c
+     * @return
+     * @throws IndexOutOfBoundsException
+     */
+    public ItemTile getSingleCell(int r,int c) throws IndexOutOfBoundsException{
+        if(r>5 || r<0 || c>4 || c<0){throw new IndexOutOfBoundsException();}
+        return shelfie[r][c];
     }
 }

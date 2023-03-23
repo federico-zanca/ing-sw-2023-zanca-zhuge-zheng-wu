@@ -2,6 +2,7 @@
 package it.polimi.ingsw.model.commongoals;
 
 
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
 
@@ -53,5 +54,5 @@ public abstract class CommonGoalCard {
         return thoseWhoAchieved;
     }
 
-    public abstract boolean check(ItemTile[][] matrix);
+    public abstract boolean check(Bookshelf matrix);
 }

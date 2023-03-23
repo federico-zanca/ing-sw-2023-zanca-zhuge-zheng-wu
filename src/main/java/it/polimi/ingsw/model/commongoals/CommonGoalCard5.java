@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.commongoals;
 
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
@@ -8,7 +9,9 @@ public class CommonGoalCard5 extends CommonGoalCard{
         super(numPlayers);
     }
 
-    public boolean check(ItemTile[][] matrix) {
+    public boolean check(Bookshelf bookshelf){
+        ItemTile[][] matrix;
+        matrix = bookshelf.getShelfie();
         int columnCount = 0;
         //itero per colonne della matrice
         for (int i = 0; i < NCOL; i++) {
