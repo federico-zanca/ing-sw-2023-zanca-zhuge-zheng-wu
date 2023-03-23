@@ -81,10 +81,12 @@ public class Board {
         if(needsRefill()){
             for(int i=0; i<Dimensions; i++){
                 for(int j=0; j<Dimensions; j++){
-                    if(gameboard[i][j].getType()==ItemType.EMPTY){
+                    if (items.isEmpty()){ return;}
+                    else if(gameboard[i][j].getType()==ItemType.EMPTY){
                         placeItem(items.get(tessera), i, j);
                         tessera++;
                     }
+
                 }
             }
         }
@@ -157,9 +159,10 @@ public class Board {
             for(int i=1; i<Dimensions-1; i++){
                 for(int j=1; j<Dimensions-1; j++){
                     if(gameboard[i][j].getType()!= ItemType.EMPTY && gameboard[i][j].getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getType()==ItemType.EMPTY || gameboard[i-1][j].getType()==ItemType.FORBIDDEN) || (gameboard[i+1][j].getType()==ItemType.EMPTY || gameboard[i+1][j].getType()==ItemType.FORBIDDEN) ||
-                            (gameboard[i][j-1].getType()==ItemType.EMPTY || gameboard[i][j-1].getType()==ItemType.FORBIDDEN) || (gameboard[i][j+1].getType()==ItemType.EMPTY || gameboard[i][j+1].getType()==ItemType.FORBIDDEN)))
+                            (gameboard[i][j-1].getType()==ItemType.EMPTY || gameboard[i][j-1].getType()==ItemType.FORBIDDEN) || (gameboard[i][j+1].getType()==ItemType.EMPTY || gameboard[i][j+1].getType()==ItemType.FORBIDDEN))) {
                         pickable.add(i);
                         pickable.add(j);
+                    }
                 }
             }
         }

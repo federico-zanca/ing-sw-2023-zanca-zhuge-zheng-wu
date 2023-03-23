@@ -27,22 +27,44 @@ public class Bag {
 
     }
 
+    public boolean emptyBag(){
+        ItemType[] types = {ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT};
+        for (ItemType type : types){
+            if (itemTiles.get(type)>0){
+                return  false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Returns a new ItemTile object of a randomly selected ItemType from those remaining in the bag
-     * @return random ItemTile from those still present in the bag
+     * @return random ItemTile from those still present in the bag or null is the bag is empty
+     *
+     * !!!!IMPORTANT!!! to add ItemTile to ArrayList of ItemTiles execute something like
+     * ItemTile tile=Bag.drawItem();
+     * if(tile!=null){
+     * ArrayList<ItemTile>.add(tile);
+     * }
+     *
+     * otherwise "null" will be added to the ArrayList of ItemTile when the bag is empty, and the ArrayList will not be empty!
      */
     public ItemTile drawItem (){
         ItemType k;
         ItemType[] keys = {ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT};
-        while(true) {
-            int index = (int) (Math.random() * (itemTiles.size()) + 1);
-            k = keys[index];
-            if(itemTiles.get(k) > 0){
-                itemTiles.put(k, itemTiles.get(k) - 1);
-                break;
+
+        if (!emptyBag()) {
+            while (true) {
+                int index = (int) (Math.random() * (itemTiles.size()) + 1);
+                k = keys[index];
+                if (itemTiles.get(k) > 0) {
+                    itemTiles.put(k, itemTiles.get(k) - 1);
+                    break;
+                }
             }
+            return new ItemTile(k);
         }
-        return new ItemTile(k);
+        return null;
     }
 //TODO sistemare gestione ItemType ItemTile incoerente
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.Board;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
@@ -48,6 +49,8 @@ public class TurnController {
         setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
         setTurnPhase(TurnPhase.TWO);
     }
+
+
 
     /**
      * Set the current turn phase
