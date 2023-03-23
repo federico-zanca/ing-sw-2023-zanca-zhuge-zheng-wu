@@ -80,4 +80,9 @@ public class TurnController {
     public ArrayList<Player> getPlayerQueue() {
         return playerQueue;
     }
+
+    private boolean booleanWinCondition(){
+        return getCurrentPlayer().endTrigger();
+    }
+
 }
