@@ -10,7 +10,6 @@ public class Player {
     private Bookshelf bookshelf;
     private PersonalGoalCard personalGoal;
     private int score;
-
     /**
      * Default constructor of Player
      * @param username the Username of the player
@@ -68,7 +67,6 @@ public class Player {
         }
         return itemsTaken;
     }*/
-
     /**
      *
      * @param board
@@ -107,6 +105,10 @@ public class Player {
         return username;
     }
 
+
+    public void setPersonalGoal(PersonalGoalCard personalGoal) {
+        this.personalGoal = personalGoal;
+    }
 
 }
 
