@@ -238,5 +238,14 @@ public class Game {
             commonGoals.add(cg);
     }
 
-
+    /**
+     * Add personal goal points for each player
+     */
+    public void assignPersonalGoalPoints(){
+        int points;
+        for(Player p : players){
+            points = p.calculateScorePersonalGoal();
+            p.addPoints(points);
+        }
+    }
 }

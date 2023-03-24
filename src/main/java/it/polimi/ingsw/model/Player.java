@@ -69,7 +69,7 @@ public class Player {
     }*/
     /**
      *
-     * @param board
+     * @param board gameboard
      * @param x coordinate of the tile to pick
      * @param y coordinate of the tile to pick
      * @param firstItem_x for the first tile this is -1
@@ -105,11 +105,31 @@ public class Player {
         return username;
     }
 
-
+    /**
+     * Sets the players' PersonalGoal
+     * @param personalGoal PersonalGoalCard to set
+     */
     public void setPersonalGoal(PersonalGoalCard personalGoal) {
         this.personalGoal = personalGoal;
     }
 
+    /**
+     * Calculate how many points must be added to the player
+     * @return points to add due to personal goal accomplishment
+     */
+    public int calculateScorePersonalGoal() {
+        int matches;
+        matches = getPersonalGoal().numOfMatches(bookshelf);
+        switch(matches){
+            case 1: return 1;
+            case 2: return 2;
+            case 3: return 4;
+            case 4: return 6;
+            case 5: return 9;
+            case 6: return 12;
+            default: return 0;
+        }
+    }
 }
 
 
