@@ -13,13 +13,12 @@ public class Player {
 
     /**
      * Default constructor of Player
-     * @param goal the personalGoalCard of the player
      * @param username the Username of the player
      */
-    public Player(PersonalGoalCard goal, String username) {
+    public Player(String username) {
         this.username = username;
         bookshelf = new Bookshelf();
-        personalGoal = goal;
+        personalGoal = null;
         score = 0;
     }
 
