@@ -7,9 +7,11 @@ public class ItemTile {
 
     private int GroupId;
 
+    private boolean suckable;
     public ItemTile(ItemType type){
         this.type = type;
         this.GroupId = 0;
+        this.suckable = false;
     }
 
     /**
@@ -38,5 +40,25 @@ public class ItemTile {
      */
     public ItemType getType() {
         return type;
+    }
+
+    public boolean isEmpty(){
+        return getType()==ItemType.EMPTY;
+    }
+
+    public boolean isForbidden(){
+        return getType()==ItemType.FORBIDDEN;
+    }
+
+    public boolean hasSomething(){
+        return !(getType()==ItemType.FORBIDDEN || getType()==ItemType.EMPTY);
+    }
+
+    public void setSuckable(boolean x){
+        suckable = x;
+    }
+
+    public boolean isSuckable() {
+        return suckable;
     }
 }
