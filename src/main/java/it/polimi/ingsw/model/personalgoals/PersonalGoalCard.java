@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.personalgoals;
 
-import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
 public abstract class PersonalGoalCard {
@@ -21,7 +21,15 @@ public abstract class PersonalGoalCard {
         }
     }
 
-    public abstract int calculateScore(ItemTile[][] matrix);
-
-
+    public int numOfMatches(Bookshelf shelfie){
+        int count=0;
+        for(int i=0; i<Rows; i++){
+            for(int j=0; j<Columns; j++){
+                if(objective[i][j]!=ItemType.EMPTY && shelfie.getSingleCell(i, j).getType()==objective[i][j]){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
