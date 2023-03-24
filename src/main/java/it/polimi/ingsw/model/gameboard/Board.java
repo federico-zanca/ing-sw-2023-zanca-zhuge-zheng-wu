@@ -77,15 +77,13 @@ public class Board {
      */
     public void refillBoard(ArrayList<ItemTile> items){
         //TODO implement here
-        int tessera=0;
 
         if(needsRefill()){
             for(int i=0; i<Dimensions; i++){
                 for(int j=0; j<Dimensions; j++){
                     if (items.isEmpty()){ return;}
                     else if(gameboard[i][j].getType()==ItemType.EMPTY){
-                        placeItem(items.get(tessera), i, j);
-                        tessera++;
+                        placeItem(items.remove(0), i, j);
                     }
 
                 }
