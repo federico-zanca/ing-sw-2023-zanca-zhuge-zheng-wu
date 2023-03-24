@@ -2,9 +2,11 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.gameboard.Board;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard2;
 
 import java.util.ArrayList;
-
+import it.polimi.ingsw.model.commongoals.*;
 public class Game {
     //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)
     //private static Game instance;
@@ -25,7 +27,7 @@ public class Game {
     public void init(){
         board = null;
         bag = new Bag();
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         commonGoals = new ArrayList<>();
     }
     /**
@@ -49,9 +51,88 @@ public class Game {
     }
     */
 
+    /**
+     * Sets the Board for the game
+     * @param numPlayers number of players, used to create the board accordingly
+     */
     public void setGameBoard(int numPlayers){
-        this.board = new Board(numPlayers);
+        this.board = new Board();
+        board.initBoard(numPlayers);
     }
+
+    /**
+     * Checks if game is ready to start
+     * @return true if the number of players currently in game is equal to the number of players specified for the game
+     */
+    public boolean isGameReadyToStart(){
+        return getNumCurrentPlayers()==chosenNumOfPlayers;
+    }
+
+    public void startGame(){
+        setGameBoard(chosenNumOfPlayers);
+        fillBoard();
+        pickCommonGoalsForThisGame();
+
+        for(Player player : players){
+            player.setPersonalGoal(randomPersonalGoal());
+        }
+    }
+
+    /**
+     * Randomly picks 2 different commongoalCards and sets them as commonGoals for the game
+     */
+    private void pickCommonGoalsForThisGame() {
+        //TODO update with design pattern for CommonGoal
+        int firstGoalType = (int) (Math.random() * 12 + 1) +1;
+        int secondGoalType = firstGoalType;
+        while(firstGoalType == secondGoalType)
+            secondGoalType = (int) (Math.random() * 12 + 1) +1;
+        commonGoals.add(intToCommonGoal(firstGoalType));
+        commonGoals.add(intToCommonGoal(secondGoalType));
+
+    }
+
+    /**
+     * Given a number, returns the correspondent CommonGoalCard
+     * @param n type of commongoalcard
+     * @return commongoalcard
+     */
+    private CommonGoalCard intToCommonGoal(int n){
+        switch(n){
+            case 1: return new CommonGoalCard1(chosenNumOfPlayers);
+            case 2: return new CommonGoalCard2(chosenNumOfPlayers);
+            case 3: return new CommonGoalCard3(chosenNumOfPlayers);
+            case 4: return new CommonGoalCard4(chosenNumOfPlayers);
+            case 5: return new CommonGoalCard5(chosenNumOfPlayers);
+            case 6: return new CommonGoalCard6(chosenNumOfPlayers);
+            case 7: return new CommonGoalCard7(chosenNumOfPlayers);
+            case 8: return new CommonGoalCard8(chosenNumOfPlayers);
+            case 9: return new CommonGoalCard9(chosenNumOfPlayers);
+            case 10: return new CommonGoalCard10(chosenNumOfPlayers);
+            case 11: return new CommonGoalCard11(chosenNumOfPlayers);
+            default: return new CommonGoalCard12(chosenNumOfPlayers);
+        }
+    }
+
+    /**
+     * Extract a random personal goal card
+     * @return random personalgoal
+     */
+    public PersonalGoalCard randomPersonalGoal(){
+        //TODO replace with real random extractor
+        return new PersonalGoalCard2();
+    }
+
+    /**
+     * Fills the board with random ItemTiles as the game starts
+     */
+    public void fillBoard(){
+        ArrayList<ItemTile> items;
+        items = bag.drawItems(board.numCellsToRefill());
+
+        board.refillBoard(items);
+    }
+
     /**
      * Returns a player given his {@code username}.
      * Only the first occurrence is returned because
