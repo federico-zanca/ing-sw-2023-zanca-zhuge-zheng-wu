@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.gameboard;
 
 
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Stack;
 
 public class Board {
     private ItemTile[][] gameboard;
-    final int Dimensions = 9;
+    public final int Dimensions = 9;
 
     public Board(){
         gameboard = new ItemTile[Dimensions][Dimensions];

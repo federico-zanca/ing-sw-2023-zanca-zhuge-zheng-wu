@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 public class GameController {
 
     private Game game;
+    private GameLobby lobby;
     private GamePhase gamePhase;
     private TurnController turnController;
 
@@ -26,14 +27,13 @@ public class GameController {
     private void setGamePhase(GamePhase phase) {
         gamePhase = phase;
     }
-
-
     /**
      * @return current game controlled
      */
     public Game getGame() {
         return game;
     }
+
 
     //public
 

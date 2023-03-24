@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+import it.polimi.ingsw.model.gameboard.Board;
 
 import java.util.ArrayList;
 
@@ -9,18 +10,24 @@ public class Game {
     //private static Game instance;
 
     private static final int MAX_PLAYERS = 4;
-
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
     private ArrayList<CommonGoalCard> commonGoals;
     private Board board;
     private Bag bag;
     private Game(){
-        board = new Board();
-        bag = new Bag();
-        players = new ArrayList<Player>();
+        init();
     }
 
+    /** Game initialization
+     *
+     */
+    public void init(){
+        board = null;
+        bag = new Bag();
+        players = new ArrayList<Player>();
+        commonGoals = new ArrayList<>();
+    }
     /**
      *
      * @return the singleton instance of the game
@@ -41,6 +48,10 @@ public class Game {
         Game.instance=null;
     }
     */
+
+    public void setGameBoard(int numPlayers){
+        this.board = new Board(numPlayers);
+    }
     /**
      * Returns a player given his {@code username}.
      * Only the first occurrence is returned because
