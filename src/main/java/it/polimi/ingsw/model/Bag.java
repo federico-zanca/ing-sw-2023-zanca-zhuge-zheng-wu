@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,6 @@ import java.util.*;
 import static java.lang.Math.min;
 
 public class Bag {
-    private ArrayList<CommonGoalCard> commonGoals;
     private ArrayList<PersonalGoalCard> personalGoals;
     //private ArrayList<ItemTile> itemTiles;
     private HashMap<ItemType, Integer> itemTiles;
@@ -24,7 +23,6 @@ public class Bag {
         itemTiles.put(ItemType.PLANT, 22);
         itemTiles.put(ItemType.TROPHY, 22);
         availableItems = new ArrayList<>(Arrays.asList(ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT));
-        //TODO inserisci 12 commongoal cards, una per tipo
 
         //TODO inserisci personal goal cards (non si sa come generarle)
 
