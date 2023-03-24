@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public abstract class CommonGoalCard {
+    //TODO switch to appropriate design pattern
     private Stack<Integer> points; //attenzione che Integer può anche essere null a differenza di int!!
     final int NROW = 6;
     final int NCOL = 5;
