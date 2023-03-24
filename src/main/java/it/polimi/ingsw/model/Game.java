@@ -16,11 +16,12 @@ public class Game {
     private ArrayList<Player> players;
     private ArrayList<CommonGoalCard> commonGoals;
     private Board board;
+
     private Bag bag;
+
     private Game(){
         init();
     }
-
     /** Game initialization
      *
      */
@@ -30,10 +31,7 @@ public class Game {
         players = new ArrayList<>();
         commonGoals = new ArrayList<>();
     }
-    /**
-     *
-     * @return the singleton instance of the game
-     */
+
     /*
     public static Game getInstance() {
         if(instance == null)
@@ -50,7 +48,6 @@ public class Game {
         Game.instance=null;
     }
     */
-
     /**
      * Sets the Board for the game
      * @param numPlayers number of players, used to create the board accordingly
@@ -237,15 +234,7 @@ public class Game {
     public void addCommonGoal(CommonGoalCard cg){
             commonGoals.add(cg);
     }
-
-    /**
-     * Add personal goal points for each player
-     */
-    public void assignPersonalGoalPoints(){
-        int points;
-        for(Player p : players){
-            points = p.calculateScorePersonalGoal();
-            p.addPoints(points);
-        }
+    public ArrayList<CommonGoalCard> getCommonGoals() {
+        return commonGoals;
     }
 }
