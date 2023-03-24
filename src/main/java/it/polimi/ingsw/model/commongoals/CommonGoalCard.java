@@ -21,19 +21,19 @@ public abstract class CommonGoalCard {
 
         switch(numPlayers){
             case 2:
-                points.push(8);
                 points.push(4);
+                points.push(8);
                 break;
             case 3:
-                points.push(8);
-                points.push(6);
                 points.push(4);
+                points.push(6);
+                points.push(8);
                 break;
             case 4:
-                points.push(8);
-                points.push(6);
-                points.push(4);
                 points.push(2);
+                points.push(4);
+                points.push(6);
+                points.push(8);
         }
     }
 
