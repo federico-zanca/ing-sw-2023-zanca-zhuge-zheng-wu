@@ -110,7 +110,7 @@ public class Board {
      * Returns true if board needs to be refilled
      * @return true if board needs refilling
      */
-    private boolean needsRefill() {
+    public boolean needsRefill() {
         for(int i=1; i<Dimensions-1; i++){
             for(int j=1; j<Dimensions-1; j++){
                 if(gameboard[i][j].getType()!=ItemType.EMPTY && gameboard[i][j].getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getType()!=ItemType.EMPTY && gameboard[i-1][j].getType()!=ItemType.FORBIDDEN) || (gameboard[i+1][j].getType()!=ItemType.EMPTY && gameboard[i+1][j].getType()!=ItemType.FORBIDDEN) ||
@@ -193,9 +193,6 @@ public class Board {
         }
         return  pickable;
     }
-
-
-
 }
 
 
