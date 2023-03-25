@@ -34,10 +34,11 @@ public class CommonGoalCard3 extends CommonGoalCard{
                 }
             }
             for (int h = 1; h <= groupIDcount; h++) {
-                int increment = itemCount.get(h) / 4;
-                groupCount += increment;
-                if (groupCount == 4) {
-                    return true;
+                if (itemCount.get(h) >= 4) {
+                    groupCount ++;
+                    if(groupCount == 4){
+                        return true;
+                    }
                 }
             }
             return false;
