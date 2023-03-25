@@ -131,6 +131,10 @@ public class Player {
         }
     }
 
+    /**
+     * Calculates how many points the player deserves based on the quantity and size of groups of adjacent items found in bookshelf
+     * @return points to be added to the player's score
+     */
     public int calculateAdjacentItemsPoints() {
         int points=0;
         int numAdjacentGroups = bookshelf.adjacentGroupsElaboration();

@@ -48,6 +48,10 @@ public class GameController {
         winner = declareWinner();
     }
 
+    /**
+     * Declares the winner of the game comparing every player's score
+     * @return winner of the game
+     */
     private Player declareWinner() {
         //TODO improve with playersqueue from turncontroller
         ArrayList<Player> players = game.getPlayers();
@@ -59,6 +63,9 @@ public class GameController {
         return winner;
     }
 
+    /**
+     * Adds adjacent items extra points to each player
+     */
     private void assignAdjacentItemsPoints() {
         int points;
         ArrayList<Player> players = game.getPlayers();

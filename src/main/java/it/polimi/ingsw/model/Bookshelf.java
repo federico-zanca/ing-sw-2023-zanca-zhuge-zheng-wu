@@ -14,6 +14,10 @@ public class Bookshelf {
         emptyBookshelf();
     }
 
+    /**
+     * Setter for shelfie
+     * @param shelfie matrix to set
+     */
     public void setShelfie(ItemTile[][] shelfie) {
         this.shelfie = shelfie;
     }
@@ -92,6 +96,14 @@ public class Bookshelf {
         return shelfie[r][c];
     }
 
+    /**
+     * Recursively hecks if cells surrounding the one given share the same ItemType of the given cell.
+     * If so, sets GroupId accordingly
+     * @param type ItemType in examination
+     * @param gid GroupId to check and set
+     * @param row row number of the cell
+     * @param column column number of the cell
+     */
     private void findRegions(ItemType type, int gid, int row, int column){
         if(row<0 || column<0 || row>=Rows || column>=Columns) return;
         if(shelfie[row][column].getGroupId()==gid) return;
@@ -103,6 +115,11 @@ public class Bookshelf {
             findRegions(type, gid, row, column+1);
         }
     }
+
+    /**
+     * Assigns a GroupID to every item in the bookshelf
+     * @return the number of Groups of adjacent items found in the Bookshelf
+     */
     public int adjacentGroupsElaboration(){
         resetGroupIDs();
         int currentGId = 0;
@@ -117,6 +134,11 @@ public class Bookshelf {
         return currentGId;
     }
 
+    /**
+     * Counts the number of Items in the bookshelf belonging to a given GroupID
+     * @param gidToCheck GroupID in examination
+     * @return number of ItemTiles in bookshelf having the specified GroupId
+     */
     public int countGIDoccurrencies(int gidToCheck) {
         int count=0;
         for(int i=0; i<Rows; i++){
@@ -127,6 +149,9 @@ public class Bookshelf {
         return count;
     }
 
+    /**
+     * Sets every item's groupid to -1
+     */
     public void resetGroupIDs() {
         for(int i=0; i< Rows; i++){
             for(int j=0; j<Columns; j++){
