@@ -85,7 +85,7 @@ public class Bag {
      * Adds an ItemTile object to the bag
      * @param i the item which is wished to be added to the bag
      */
-    public void putItem(@NotNull ItemTile i){
+    public void putItem(ItemTile i){
         itemTiles.put(i.getType(), itemTiles.get(i.getType())+1);
         if(itemTiles.get(i.getType()) == 1){
             availableItems.add(i.getType());
