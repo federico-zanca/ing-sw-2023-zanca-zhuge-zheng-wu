@@ -130,6 +130,33 @@ public class Player {
             default: return 0;
         }
     }
+
+    public int calculateAdjacentItemsPoints() {
+        int points=0;
+        int numAdjacentGroups = bookshelf.adjacentGroupsElaboration();
+        for(int gidToCheck=0; gidToCheck<numAdjacentGroups; gidToCheck++){
+            switch(bookshelf.countGIDoccurrencies(gidToCheck)){
+                case 0: break;
+                case 1: break;
+                case 2: break;
+                case 3: {
+                    points+=2;
+                    break;
+                }
+                case 4: {
+                    points+=3;
+                    break;
+                }
+                case 5: {
+                    points+=5;
+                    break;
+                }
+                default: points+=8;
+            }
+        }
+        return points;
+
+    }
 }
 
 
