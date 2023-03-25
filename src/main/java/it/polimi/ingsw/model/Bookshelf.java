@@ -3,8 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 
-import java.awt.print.Book;
-
 public class Bookshelf {
     protected final int Rows=6;
     protected final int Columns=5;
@@ -56,7 +54,7 @@ public class Bookshelf {
     public int getNumEmptyCells(){
         int count = 0;
         for(int i=0; i<Rows; i++){
-            for(int j=0; j<Columns; i++){
+            for(int j=0; j<Columns; j++){
                 if(shelfie[i][j].getType()==ItemType.EMPTY) count++;
             }
         }
@@ -92,5 +90,48 @@ public class Bookshelf {
     public ItemTile getSingleCell(int r,int c) throws IndexOutOfBoundsException{
         if(r>5 || r<0 || c>4 || c<0){throw new IndexOutOfBoundsException();}
         return shelfie[r][c];
+    }
+
+    private void findRegions(ItemType type, int gid, int row, int column){
+        if(row<0 || column<0 || row>=Rows || column>=Columns) return;
+        if(shelfie[row][column].getGroupId()==gid) return;
+        if(shelfie[row][column].getType()==type){
+            shelfie[row][column].setGroupId(gid);
+            findRegions(type, gid, row-1, column);
+            findRegions(type, gid, row+1, column);
+            findRegions(type, gid, row, column-1);
+            findRegions(type, gid, row, column+1);
+        }
+    }
+    public int adjacentGroupsElaboration(){
+        resetGroupIDs();
+        int currentGId = 0;
+        for(int i=0; i<Rows; i++){
+            for(int j=0; j<Columns; j++){
+                if(shelfie[i][j].getGroupId()==-1 && shelfie[i][j].hasSomething()){
+                    shelfie[i][j].setGroupId(currentGId++);
+                    findRegions(shelfie[i][j].getType(), shelfie[i][j].getGroupId(), i, j);
+                }
+            }
+        }
+        return currentGId;
+    }
+
+    public int countGIDoccurrencies(int gidToCheck) {
+        int count=0;
+        for(int i=0; i<Rows; i++){
+            for(int j=0; j<Columns; j++){
+                if(shelfie[i][j].getGroupId()==gidToCheck) count++;
+            }
+        }
+        return count;
+    }
+
+    public void resetGroupIDs() {
+        for(int i=0; i< Rows; i++){
+            for(int j=0; j<Columns; j++){
+                shelfie[i][j].setGroupId(-1);
+            }
+        }
     }
 }
