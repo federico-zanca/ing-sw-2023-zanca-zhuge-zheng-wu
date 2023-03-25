@@ -45,8 +45,18 @@ public class GameController {
         assignPersonalGoalPoints();
         assignAdjacentItemsPoints();
         //TODO fai funzione scelta vincitore
-        //winner = declareWinner();
+        winner = declareWinner();
+    }
 
+    private Player declareWinner() {
+        //TODO improve with playersqueue from turncontroller
+        ArrayList<Player> players = game.getPlayers();
+        Player winner = players.get(0);
+        for(Player p : players){
+            if(p.getScore()>=winner.getScore())
+                winner = p;
+        }
+        return winner;
     }
 
     private void assignAdjacentItemsPoints() {
