@@ -67,21 +67,29 @@ public class Player {
         }
         return itemsTaken;
     }*/
-    /**
-     *
-     * @param board gameboard
-     * @param x coordinate of the tile to pick
-     * @param y coordinate of the tile to pick
-     * @param firstItem_x for the first tile this is -1
-     * @param firstItem_y for the first tile this is -1
-     * @return null if the inserted tile is not pickable, otherwise it return the picked tile
-     */
 
-    public ItemTile takeItem (Board board, int x, int y, int firstItem_x, int firstItem_y){
-        ArrayList<Integer> coord_list=board.pickableItems(firstItem_x,firstItem_y);
+    private ArrayList<Integer> takeableOtherItems;
+
+    public ItemTile takeFirstItem (Board board, int x, int y){
+        takeableOtherItems=null;
+        ArrayList<Integer> coord_list=board.pickableFirstItems();
 
         for (int i=0; i<coord_list.size()-1; i=i+2) {
             if (coord_list.get(i) == x && coord_list.get(i + 1) == y) {
+                takeableOtherItems=board.pickableItems(x,y);
+                return board.pickItem(x,y);
+            }
+        }
+        return null;
+
+    }
+
+    public ItemTile takeOtherItem (Board board, int x, int y){
+
+        for (int i=0; i<takeableOtherItems.size()-1; i=i+2) {
+            if (takeableOtherItems.get(i) == x && takeableOtherItems.get(i + 1) == y) {
+                takeableOtherItems.remove(i);
+                takeableOtherItems.remove(i);
                 return board.pickItem(x,y);
             }
         }

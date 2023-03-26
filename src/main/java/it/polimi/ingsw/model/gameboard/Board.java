@@ -145,16 +145,12 @@ public class Board {
     }
 
     /**
-     * Before picking (Clicking on) the first tile, pass -1 and -1 as parameters to show the pickable/clickable first tiles,
-     * by picking/clicking the first tile we insert its coordinates into the method and the method returns an array coordinates of
-     * tiles that we can further pick/click
-     * @param firstItem_x coordinates of the ItemTile to pick
-     * @param firstItem_y
-     * @return ArrayList of pickable ItemTiles
+     *
+     * @return ArrayList of coordinates of ItemTiles pickable as First ItemTiles
      */
-    public ArrayList<Integer> pickableItems(int firstItem_x, int firstItem_y) {
+
+    public ArrayList<Integer> pickableFirstItems(){
         ArrayList<Integer> pickable=new ArrayList<>();
-        if (firstItem_x==-1 && firstItem_y==-1){
             for(int i=1; i<Dimensions-1; i++){
                 for(int j=1; j<Dimensions-1; j++){
                     if(gameboard[i][j].getType()!= ItemType.EMPTY && gameboard[i][j].getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getType()==ItemType.EMPTY || gameboard[i-1][j].getType()==ItemType.FORBIDDEN) || (gameboard[i+1][j].getType()==ItemType.EMPTY || gameboard[i+1][j].getType()==ItemType.FORBIDDEN) ||
@@ -164,8 +160,18 @@ public class Board {
                     }
                 }
             }
-        }
-        else {
+        return  pickable;
+    }
+
+    /**
+     *
+     * @param firstItem_x coordinate of the first clicked ItemTile
+     * @param firstItem_y coordinate of the first clicked ItemTile
+     * @return ArrayList of pickable ItemTiles given the coordinate of the ItemTile picked as first
+     */
+    public ArrayList<Integer> pickableItems(int firstItem_x, int firstItem_y) {
+        ArrayList<Integer> pickable=new ArrayList<>();
+
             Stack<Integer> nx =new Stack<>();
             Stack<Integer> ny =new Stack<>();
             nx.push(0);
@@ -190,7 +196,6 @@ public class Board {
                     count--;
                 }
             }
-        }
         return  pickable;
     }
 }
