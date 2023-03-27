@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.personalgoals;
 
 import it.polimi.ingsw.model.Bookshelf;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
 public abstract class PersonalGoalCard {
@@ -32,4 +33,5 @@ public abstract class PersonalGoalCard {
         }
         return count;
     }
+    public abstract int calculateScore(ItemTile[][] matrix);
 }
