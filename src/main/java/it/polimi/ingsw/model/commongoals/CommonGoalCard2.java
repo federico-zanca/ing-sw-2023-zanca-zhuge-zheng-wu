@@ -14,10 +14,8 @@ public class CommonGoalCard2 extends CommonGoalCard {
                 && matrix[0][0].getType() == matrix[0][4].getType()
                 && matrix[0][0].getType() == matrix[5][4].getType()
                 && matrix[0][0].getType() == matrix[5][0].getType()){
-            System.out.println("true");
             return true;
         }
-        System.out.println("false");
         return false;
     }
 }
