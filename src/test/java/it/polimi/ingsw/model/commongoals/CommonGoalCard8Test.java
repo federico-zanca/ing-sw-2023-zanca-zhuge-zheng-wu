@@ -1,18 +1,17 @@
 package it.polimi.ingsw.model.commongoals;
 
-import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.ItemTile;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CommonGoalCard1Test {
-
+class CommonGoalCard8Test {
     @Test
     void checkEmpty() {
         BookShelfTest bookshelf = new BookShelfTest();
         ItemTile[][] itemmatrix;
-        CommonGoalCard1 cg1 = new CommonGoalCard1(4);
+        CommonGoalCard8 cg8 = new CommonGoalCard8(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -24,45 +23,63 @@ class CommonGoalCard1Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg1.check(bookshelf));
+        assertFalse(cg8.check(bookshelf));
     }
 
     @Test
-    void check6GroupsTrue() {
+    void check4rowsTrue() {
         BookShelfTest bookshelf = new BookShelfTest();
         ItemTile[][] itemmatrix;
-        CommonGoalCard1 cg1 = new CommonGoalCard1(4);
+        CommonGoalCard8 cg8 = new CommonGoalCard8(4);
         String[][] matrix ={
                 {"G","P","E","E","G"},
                 {"G","G","E","E","T"},
-                {"G","G","T","E","F"},
-                {"B","B","T","F","T"},
-                {"G","P","F","G","G"},
-                {"B","P","C","T","T"}
+                {"G","G","T","G","F"},
+                {"B","B","B","B","B"},
+                {"G","P","P","G","G"},
+                {"B","P","C","C","C"}
         };
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertTrue(cg1.check(bookshelf));
+        assertTrue(cg8.check(bookshelf));
     }
 
     @Test
-    void check6GroupsFalse() {
+    void check4rowsEmptyFalse() {
         BookShelfTest bookshelf = new BookShelfTest();
         ItemTile[][] itemmatrix;
-        CommonGoalCard1 cg1 = new CommonGoalCard1(4);
+        CommonGoalCard8 cg8 = new CommonGoalCard8(4);
         String[][] matrix ={
                 {"G","P","E","E","G"},
                 {"G","G","E","E","T"},
-                {"G","G","T","E","F"},
-                {"B","B","T","F","T"},
-                {"G","P","F","G","G"},
-                {"B","P","C","F","T"}
+                {"G","G","E","E","F"},
+                {"B","B","B","B","B"},
+                {"G","P","P","G","G"},
+                {"B","P","C","C","C"}
         };
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg1.check(bookshelf));
+        assertFalse(cg8.check(bookshelf));
     }
 
+    @Test
+    void check4rowsMoreTypeFalse() {
+        BookShelfTest bookshelf = new BookShelfTest();
+        ItemTile[][] itemmatrix;
+        CommonGoalCard8 cg8 = new CommonGoalCard8(4);
+        String[][] matrix ={
+                {"G","E","E","E","G"},
+                {"G","G","E","E","T"},
+                {"G","G","T","G","F"},
+                {"B","P","C","T","B"},
+                {"G","P","P","G","G"},
+                {"B","P","C","C","C"}
+        };
+        itemmatrix = bookshelf.stringToMat(matrix);
+        bookshelf.setShelfie(itemmatrix);
+        bookshelf.printBookshelf();
+        assertFalse(cg8.check(bookshelf));
+    }
 }

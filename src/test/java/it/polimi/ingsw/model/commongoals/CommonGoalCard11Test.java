@@ -1,18 +1,17 @@
 package it.polimi.ingsw.model.commongoals;
 
-import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.ItemTile;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CommonGoalCard5Test {
-
+class CommonGoalCard11Test {
     @Test
     void checkEmpty() {
         BookShelfTest bookshelf = new BookShelfTest();
         ItemTile[][] itemmatrix;
-        CommonGoalCard5 cg5 = new CommonGoalCard5(4);
+        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -24,61 +23,62 @@ class CommonGoalCard5Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg5.check(bookshelf));
+        assertFalse(cg11.check(bookshelf));
     }
 
     @Test
-    void check3ColumnsTrue() {
+    void checkExactXTrue() {
         BookShelfTest bookshelf = new BookShelfTest();
         ItemTile[][] itemmatrix;
-        CommonGoalCard5 cg5 = new CommonGoalCard5(4);
-        String[][] matrix ={
-                {"G","P","E","E","G"},
-                {"C","P","E","E","T"},
-                {"G","P","E","E","T"},
-                {"B","P","E","E","T"},
-                {"B","P","E","E","G"},
-                {"B","P","E","E","G"}
-        };
-        itemmatrix = bookshelf.stringToMat(matrix);
-        bookshelf.setShelfie(itemmatrix);
-        bookshelf.printBookshelf();
-        assertTrue(cg5.check(bookshelf));
-    }
-    @Test
-    void checkNot3ColumnsFull() {
-        BookShelfTest bookshelf = new BookShelfTest();
-        ItemTile[][] itemmatrix;
-        CommonGoalCard5 cg5 = new CommonGoalCard5(4);
+        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
                 {"G","P","E","E","E"},
-                {"C","P","E","E","T"},
-                {"G","P","E","E","T"},
-                {"B","P","E","E","T"},
-                {"B","P","E","E","G"},
-                {"B","P","E","E","G"}
+                {"C","G","E","E","E"},
+                {"F","G","T","E","E"},
+                {"B","G","B","E","E"},
+                {"T","B","P","G","P"},
+                {"B","P","B","C","C"}
         };
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg5.check(bookshelf));
+        assertTrue(cg11.check(bookshelf));
     }
+
     @Test
-    void checkColumnsFullMoreType() {
+    void checkXTrue() {
         BookShelfTest bookshelf = new BookShelfTest();
         ItemTile[][] itemmatrix;
-        CommonGoalCard5 cg5 = new CommonGoalCard5(4);
+        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
-                {"G","P","E","E","G"},
-                {"C","P","E","E","P"},
-                {"G","P","E","E","T"},
-                {"B","P","E","E","T"},
-                {"B","P","E","E","C"},
-                {"B","P","E","E","G"}
+                {"G","P","E","E","E"},
+                {"C","G","E","E","E"},
+                {"F","G","T","E","E"},
+                {"B","G","B","B","E"},
+                {"T","B","P","G","P"},
+                {"B","P","B","B","C"}
         };
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg5.check(bookshelf));
+        assertTrue(cg11.check(bookshelf));
+    }
+    @Test
+    void checkXFalse() {
+        BookShelfTest bookshelf = new BookShelfTest();
+        ItemTile[][] itemmatrix;
+        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
+        String[][] matrix ={
+                {"G","E","E","E","E"},
+                {"G","E","E","E","T"},
+                {"G","G","E","E","F"},
+                {"B","B","B","B","B"},
+                {"G","P","P","G","G"},
+                {"B","P","C","C","C"}
+        };
+        itemmatrix = bookshelf.stringToMat(matrix);
+        bookshelf.setShelfie(itemmatrix);
+        bookshelf.printBookshelf();
+        assertFalse(cg11.check(bookshelf));
     }
 }
