@@ -6,8 +6,10 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
+import it.polimi.ingsw.model.gameboard.Board;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class TurnController {
     private final Game game;
@@ -90,14 +92,48 @@ public class TurnController {
             case LAST:
         }
     }
-    public void playerDraw(){
+    /*public void playerDraw(){
         int dummyinput1=0,dummyinput2=0,dummyinput3=0,dummyinput4=0;
         tiles[0] = currentPlayer.takeItem(game.getBoard(),dummyinput1,dummyinput2,dummyinput3,dummyinput4);
         loadNextPhase();
+
+    }*/
+
+    public void playerDraw(){
+        int playerIn_x, playerIn_y;
+        ItemTile tile;
+        Scanner input=new Scanner(System.in);
+        boolean InputStop=false;
+        Board board=game.getBoard();
+
+        do{
+            playerIn_x=Integer.parseInt(input.nextLine());
+            playerIn_y=Integer.parseInt(input.nextLine());
+            tile=currentPlayer.takeFirstItem(board, playerIn_x, playerIn_y);
+
+        }while (playerIn_x<0 || playerIn_y<0 || tile==null);
+
+        tiles[0]=tile;
+
+        for(int i=1; i<3; i++){
+            if(InputStop){ break;  }
+            do{
+                playerIn_x=Integer.parseInt(input.nextLine());
+                playerIn_y=Integer.parseInt(input.nextLine());
+                tile=currentPlayer.takeOtherItem(board, playerIn_x, playerIn_y);
+
+            }while (playerIn_x<0 || playerIn_y<0 || tile==null);
+            tiles[i]=tile;
+        }
+
+        loadNextPhase();
     }
+
+
     public void playerInsert() throws FullColumnException {
         int dummyInput=0;
         currentPlayer.getBookshelf().insertItem(tiles[0],dummyInput);
+
         loadNextPhase();
     }
     public void refill(){
