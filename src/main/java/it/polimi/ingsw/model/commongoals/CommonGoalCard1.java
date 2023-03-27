@@ -4,6 +4,9 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommonGoalCard1 extends CommonGoalCard {
 
     public CommonGoalCard1(int numPlayers){
@@ -12,26 +15,58 @@ public class CommonGoalCard1 extends CommonGoalCard {
     public boolean check(Bookshelf bookshelf){
         ItemTile[][] matrix;
         matrix = bookshelf.getShelfie();
-        int counter = 0;
-        for(int i=0;i<6;i++){
-            for(int j=0;j<5;j++){
-                if(matrix[i][j].getGroupId() == 0 && !(matrix[i][j].getType() == ItemType.EMPTY)){
-
-                    if(matrix[i][j].getType().equals(matrix[i+1][j].getType()) && i != 5){
-                        counter = counter + 1;
-                        matrix[i][j].setGroupId(counter);
-                        matrix[i+1][j].setGroupId(counter);
-                    }else if(matrix[i][j].getType().equals(matrix[i][j+1].getType()) && j != 4){
-                        counter = counter + 1;
-                        matrix[i][j].setGroupId(counter);
-                        matrix[i][j+1].setGroupId(counter);
+        int groupIDcount = 0;
+        int groupCount = 0;
+        List<Integer> itemCount = new ArrayList<Integer>();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j].getType() != ItemType.EMPTY) {
+                    if (matrix[i][j].getGroupId() == 0) {
+                        //"creo" nuovo gruppo
+                        groupIDcount++;
+                        matrix[i][j].setGroupId(groupIDcount);
+                        itemCount.add(groupIDcount-1, 1);
+                        findAdjacentTiles(matrix, i, j, groupIDcount);
+                    } else if (matrix[i][j].getGroupId() > 0) {
+                        //incremento contatore del gruppo a cui elemento corrente appartiene
+                        int correntGroup = matrix[i][j].getGroupId();
+                        itemCount.set(correntGroup-1, itemCount.get(correntGroup-1) + 1);
                     }
                 }
-                if(counter == 6){
+            }
+        }
+        for (int h = 0; h < groupIDcount; h++) {
+            if (itemCount.get(h) >= 2) {
+                groupCount ++;
+                if(groupCount == 6){
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private void findAdjacentTiles(ItemTile[][] matrix, int i, int j, int group) {
+        // controllo cella sotto
+        if (i + 1 < matrix.length && matrix[i + 1][j].getType() ==  matrix[i][j].getType() && matrix[i + 1][j].getGroupId() == 0) {
+            matrix[i+1][j].setGroupId(group);
+            findAdjacentTiles(matrix, i + 1, j, group);
+        }
+        // controllo cella destra
+        if (j + 1 < matrix[0].length && matrix[i][j + 1].getType() ==  matrix[i][j].getType() && matrix[i][j+1].getGroupId()==0) {
+            matrix[i][j+1].setGroupId(group);
+            findAdjacentTiles(matrix, i, j + 1, group);
+        }
+        // controllo cella sopra
+        if (i - 1 >= 0 && matrix[i - 1][j].getType() ==  matrix[i][j].getType() && matrix[i - 1][j].getGroupId() == 0) {
+            matrix[i-1][j].setGroupId(group);
+            findAdjacentTiles(matrix, i - 1, j, group);
+        }
+        // controllo cella sinistra
+        if (j - 1 >= 0 && matrix[i][j - 1].getType() ==  matrix[i][j].getType() && matrix[i][j - 1].getGroupId() == 0) {
+            matrix[i][j-1].setGroupId(group);
+            findAdjacentTiles(matrix, i, j - 1, group);
+        }
+        return;
     }
 }
