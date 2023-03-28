@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 
+import java.util.ArrayList;
+
 public class Bookshelf {
     protected final int Rows=6;
     protected final int Columns=5;
@@ -24,9 +26,66 @@ public class Bookshelf {
 
 
     /**
+     *
+     * @return the maximum number of slots available in any column of the bookshelf
+     */
+
+    public int maxSlotsAvailable(){
+        int max=0;
+        int[] availableSlots=this.availableSlots();
+        for(int i=0; i<Columns; i++){
+            if(availableSlots[i]>max){
+                max=availableSlots[i];
+            }
+        }
+        return max;
+    }
+
+    /**
+     *
+     * @return ArrayList of Integers representing the index of the columns with at least 2 available slots
+     */
+
+    public ArrayList<Integer> availableColumns(){
+        ArrayList<Integer> availableCol=new ArrayList<Integer>();
+        int[] availableSlots=this.availableSlots();
+
+        for (int i=0; i<availableSlots.length; i++){
+            if (availableSlots[i]>=2){
+                availableCol.add(i);
+            }
+        }
+
+        return availableCol;
+    }
+
+    /**
+     *
+     * @return array of 5 integers, representing the number of available slots for the respective column
+     */
+    public int[] availableSlots(){
+        int[] availableSlots= new int[Columns];
+        for(int i=0; i<Columns; i++){
+            availableSlots[i]=0;
+        }
+        for(int i=0; i<Columns; i++){
+            for(int j=0; j<Rows; j++){
+                if(shelfie[j][i].getType()!=ItemType.EMPTY){
+                    availableSlots[i]++;
+                }
+            }
+        }
+
+        return availableSlots;
+    }
+
+
+
+    /**
      * Returns true if the Bookshelf is full
      * @return true if bookshelf is now full, false if it isn't
      */
+
     public boolean isFull(){
         /*
         for(int i=0; i<Dimensions; i++)
