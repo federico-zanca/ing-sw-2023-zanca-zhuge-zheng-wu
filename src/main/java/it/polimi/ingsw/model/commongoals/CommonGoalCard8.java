@@ -13,26 +13,24 @@ public class CommonGoalCard8 extends CommonGoalCard {
         ItemTile[][] matrix;
         matrix = bookshelf.getShelfie();
         int rows = 0;
+        int flag;
         ArrayList<ItemType> SixType = new ArrayList<ItemType>();
         for(int i=0;i<6;i++){
+            flag = 0;
+            SixType.clear();
             for(int j=0;j<5;j++){
-                if(matrix[i][j].getType() != ItemType.EMPTY && SixType.size()<3){
-                    if(SixType.size()==0){
+                if(matrix[i][j].getType() != ItemType.EMPTY && SixType.size()<4){
+                    if(!(SixType.contains(matrix[i][j].getType()))){
                         SixType.add(matrix[i][j].getType());
-                    }else{
-                        if(!(SixType.contains(matrix[i][j].getType()))){
-                            SixType.add(matrix[i][j].getType());
-                        }
                     }
-                }else{
-                    if(matrix[i][j].getType() == ItemType.EMPTY){
-                        return false;
-                    }
+                }else if(matrix[i][j].getType() == ItemType.EMPTY || SixType.size()>3){
+                    flag = 1;
                     break;
                 }
             }
-            SixType.clear();
-            rows = rows + 1;
+            if(flag == 0){
+                rows = rows + 1;
+            }
             if(rows==4){
                 return true;
             }
