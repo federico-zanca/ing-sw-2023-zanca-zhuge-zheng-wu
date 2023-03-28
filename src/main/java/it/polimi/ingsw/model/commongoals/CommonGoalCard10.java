@@ -16,9 +16,10 @@ public class CommonGoalCard10 extends CommonGoalCard {
         ArrayList<ItemType> Column = new ArrayList<ItemType>();
         int row = 0;
         for(int i=0;i<6;i++){
+            Column.clear();
             for(int j=0;j<5;j++){
-                if(matrix[i][j].getType() != ItemType.EMPTY){
-                    return false;
+                if(matrix[i][j].getType() == ItemType.EMPTY){
+                    break;
                 }
                 if(!(Column.contains(matrix[i][j].getType()))){
                     Column.add(matrix[i][j].getType());
@@ -30,7 +31,6 @@ public class CommonGoalCard10 extends CommonGoalCard {
             if(row == 2){
                 return true;
             }
-            Column.clear();
         }
         return false;
     }
