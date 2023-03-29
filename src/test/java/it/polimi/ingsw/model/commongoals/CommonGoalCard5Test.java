@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.Bookshelf;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +10,7 @@ class CommonGoalCard5Test {
 
     @Test
     void checkEmpty() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard5 cg5 = new CommonGoalCard5(4);
         String[][] matrix ={
@@ -29,7 +29,7 @@ class CommonGoalCard5Test {
 
     @Test
     void check3ColumnsTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard5 cg5 = new CommonGoalCard5(4);
         String[][] matrix ={
@@ -47,7 +47,7 @@ class CommonGoalCard5Test {
     }
     @Test
     void checkNot3ColumnsFull() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard5 cg5 = new CommonGoalCard5(4);
         String[][] matrix ={
@@ -65,7 +65,7 @@ class CommonGoalCard5Test {
     }
     @Test
     void checkColumnsFullMoreType() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard5 cg5 = new CommonGoalCard5(4);
         String[][] matrix ={

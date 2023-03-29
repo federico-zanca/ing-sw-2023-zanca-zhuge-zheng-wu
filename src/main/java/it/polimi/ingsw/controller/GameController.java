@@ -17,10 +17,16 @@ public class GameController {
 
     /**
      * Controller of the game
-     * @param game game to control
      */
-    public GameController(Game game){
-        this.game = game;
+    public GameController(){
+        setupGameController();
+    }
+    /**
+     * Initializes the Game Controller getting a in instance of the new game
+     */
+    public void setupGameController(){
+        this.game = Game.getInstance();
+        //set views here
         setGamePhase(GamePhase.LOGIN);
     }
 

@@ -5,6 +5,7 @@ package it.polimi.ingsw.model.commongoals;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -38,7 +39,7 @@ public abstract class CommonGoalCard {
         }
     }
 
-    public void takePoints(Player p){
+    public void takePoints(@NotNull Player p){
         p.addPoints(points.pop());
     }
 

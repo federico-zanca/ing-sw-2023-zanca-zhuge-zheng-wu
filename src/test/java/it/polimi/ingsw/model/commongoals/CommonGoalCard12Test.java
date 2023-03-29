@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.commongoals;
 
-import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommonGoalCard12Test {
     @Test
     void checkEmpty() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -28,7 +28,7 @@ class CommonGoalCard12Test {
 
     @Test
     void checkStairDecFromRightUpTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -46,7 +46,7 @@ class CommonGoalCard12Test {
     }
     @Test
     void checkStairDecFromRightDownTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -64,7 +64,7 @@ class CommonGoalCard12Test {
     }
     @Test
     void checkStairDecFromLeftUpTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -82,7 +82,7 @@ class CommonGoalCard12Test {
     }
     @Test
     void checkStairDecFromLeftDownTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -100,7 +100,7 @@ class CommonGoalCard12Test {
     }
     @Test
     void checkStairNot5ColFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -119,7 +119,7 @@ class CommonGoalCard12Test {
 
     @Test
     void checkStairEmptyColLeftFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -138,7 +138,7 @@ class CommonGoalCard12Test {
 
     @Test
     void checkStairOverColLeftFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -156,7 +156,7 @@ class CommonGoalCard12Test {
     }
     @Test
     void checkStairOverColRightFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={
@@ -174,7 +174,7 @@ class CommonGoalCard12Test {
     }
     @Test
     void checkStairEmptyColRightFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard12 cg12 = new CommonGoalCard12(4);
         String[][] matrix ={

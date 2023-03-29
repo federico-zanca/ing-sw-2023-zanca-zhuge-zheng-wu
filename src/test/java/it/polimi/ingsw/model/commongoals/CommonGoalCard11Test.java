@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.commongoals;
 
-import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommonGoalCard11Test {
     @Test
     void checkEmpty() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
@@ -28,7 +28,7 @@ class CommonGoalCard11Test {
 
     @Test
     void checkExactXTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
@@ -47,7 +47,7 @@ class CommonGoalCard11Test {
 
     @Test
     void checkXTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
@@ -65,7 +65,7 @@ class CommonGoalCard11Test {
     }
     @Test
     void checkXFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
