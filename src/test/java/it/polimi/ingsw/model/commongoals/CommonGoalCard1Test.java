@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.Bookshelf;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +10,7 @@ class CommonGoalCard1Test {
 
     @Test
     void checkEmpty() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard1 cg1 = new CommonGoalCard1(4);
         String[][] matrix ={
@@ -29,7 +29,7 @@ class CommonGoalCard1Test {
 
     @Test
     void check6GroupsTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard1 cg1 = new CommonGoalCard1(4);
         String[][] matrix ={
@@ -48,7 +48,7 @@ class CommonGoalCard1Test {
 
     @Test
     void check6GroupsFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard1 cg1 = new CommonGoalCard1(4);
         String[][] matrix ={

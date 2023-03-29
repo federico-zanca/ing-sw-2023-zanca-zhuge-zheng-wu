@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.Bookshelf;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommonGoalCard2Test {
     @Test
     void checkEmpty() {
-        BookShelfTest bookshelf = new BookShelfTest();
+       Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard2 cg2 = new CommonGoalCard2(4);
         String[][] matrix ={
@@ -28,7 +28,7 @@ class CommonGoalCard2Test {
 
     @Test
     void check4CornersTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+       Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard2 cg2 = new CommonGoalCard2(4);
         String[][] matrix ={
@@ -47,7 +47,7 @@ class CommonGoalCard2Test {
 
     @Test
     void check4CornersEmptyFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+       Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard2 cg2 = new CommonGoalCard2(4);
         String[][] matrix ={
@@ -65,7 +65,7 @@ class CommonGoalCard2Test {
     }
     @Test
     void check4CornersTypeDifferentFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+       Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard2 cg2 = new CommonGoalCard2(4);
         String[][] matrix ={

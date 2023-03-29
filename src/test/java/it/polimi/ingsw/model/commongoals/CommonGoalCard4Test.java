@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.BookShelfTest;
+import it.polimi.ingsw.model.Bookshelf;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +10,7 @@ class CommonGoalCard4Test {
 
     @Test
     void checkSquareTrue() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard4 cg4 = new CommonGoalCard4(4);
         String[][] matrix ={
@@ -29,7 +29,7 @@ class CommonGoalCard4Test {
 
     @Test
     void checkSquareFalse() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard4 cg4 = new CommonGoalCard4(4);
         String[][] matrix ={
@@ -48,7 +48,7 @@ class CommonGoalCard4Test {
 
     @Test
     void checkSquareEmpty() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard4 cg4 = new CommonGoalCard4(2);
         String[][] matrix ={
@@ -67,7 +67,7 @@ class CommonGoalCard4Test {
 
     @Test
     void checkSquareAdjacentSame() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard4 cg4 = new CommonGoalCard4(3);
         String[][] matrix ={
@@ -86,7 +86,7 @@ class CommonGoalCard4Test {
 
     @Test
     void checkSquareAdjacentDifferent() {
-        BookShelfTest bookshelf = new BookShelfTest();
+        Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard4 cg4 = new CommonGoalCard4(4);
         String[][] matrix ={
