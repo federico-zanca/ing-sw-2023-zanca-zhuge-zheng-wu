@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.exceptions.FullColumnException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
 public class Bookshelf {
     protected final int Rows=6;
     protected final int Columns=5;
@@ -71,7 +72,8 @@ public class Bookshelf {
         }
         for(int i=0; i<Columns; i++){
             for(int j=0; j<Rows; j++){
-                if(shelfie[j][i].getType()!=ItemType.EMPTY){
+                //if(shelfie[j][i].getType()!=ItemType.EMPTY){
+                if(shelfie[j][i].getType()==ItemType.EMPTY){
                     availableSlots[i]++;
                 }
             }
@@ -103,10 +105,11 @@ public class Bookshelf {
      * @throws FullColumnException if the target column is already full
      */
     public void insertItem(ItemTile item, int column) throws FullColumnException {
-        if(shelfie[0][Columns-1].getType()!= ItemType.EMPTY) throw new FullColumnException();
+        if(shelfie[0][column-1].getType()!= ItemType.EMPTY) throw new FullColumnException();
         for(int i=Rows-1; i>0; i--){
-            if(shelfie[i][column].getType()==ItemType.EMPTY){
-                shelfie[i][column] = item;
+            if(shelfie[i][column-1].getType()==ItemType.EMPTY){
+                shelfie[i][column-1] = item;
+                break;
             }
         }
     }
@@ -157,14 +160,14 @@ public class Bookshelf {
     }
 
     /**
-     * Recursively hecks if cells surrounding the one given share the same ItemType of the given cell.
+     * Recursively checks if cells surrounding the one given share the same ItemType of the given cell.
      * If so, sets GroupId accordingly
      * @param type ItemType in examination
      * @param gid GroupId to check and set
      * @param row row number of the cell
      * @param column column number of the cell
      */
-    private void findRegions(ItemType type, int gid, int row, int column){
+    public void findRegions(ItemType type, int gid, int row, int column){
         if(row<0 || column<0 || row>=Rows || column>=Columns) return;
         if(shelfie[row][column].getGroupId()==gid) return;
         if(shelfie[row][column].getType()==type){
@@ -186,8 +189,9 @@ public class Bookshelf {
         for(int i=0; i<Rows; i++){
             for(int j=0; j<Columns; j++){
                 if(shelfie[i][j].getGroupId()==-1 && shelfie[i][j].hasSomething()){
-                    shelfie[i][j].setGroupId(currentGId++);
-                    findRegions(shelfie[i][j].getType(), shelfie[i][j].getGroupId(), i, j);
+                    //shelfie[i][j].setGroupId(currentGId);
+                    findRegions(shelfie[i][j].getType(), currentGId, i, j);
+                    currentGId++;
                 }
             }
         }
@@ -257,6 +261,15 @@ public class Bookshelf {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public void printGroupID(){
+        for(int i=0;i<Rows;i++){
+            for(int j=0;j<Columns;j++){
+                System.out.print(shelfie[i][j].getGroupId());
+            }
+            System.out.println();
+        }
     }
 
 }
