@@ -27,37 +27,6 @@ class BookshelfTest {
     }
 
     @Test
-    void availableColumns() {
-        Bookshelf B = new Bookshelf();
-        ItemTile[][] itemmatrix;
-        String[][] matrix ={
-                {"G","P","E","E","G"},
-                {"G","G","E","C","T"},
-                {"G","G","E","C","F"},
-                {"B","B","E","F","T"},
-                {"G","P","E","G","G"},
-                {"B","P","E","T","T"}
-        };
-        itemmatrix = B.stringToMat(matrix);
-        B.setShelfie(itemmatrix);
-        //B.printBookshelf();
-        assertTrue(B.availableColumns().contains(2));
-    }
-
-    @Test
-    void availableSlots() throws FullColumnException {
-        Bookshelf B = new Bookshelf();
-        ItemTile dummyItem = new ItemTile(ItemType.PLANT);
-
-        for(int i=0;i<B.Columns;i++){
-            assertEquals(6,B.availableSlots()[i]);
-        }
-
-        B.insertItem(dummyItem,1);
-        assertEquals(5,B.availableSlots()[0]);
-    }
-
-    @Test
     void isFull() {
         Bookshelf B = new Bookshelf();
         ItemTile[][] itemmatrix;
