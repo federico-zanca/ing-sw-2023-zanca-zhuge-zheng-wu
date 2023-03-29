@@ -35,6 +35,11 @@ public class CommonGoalCard1 extends CommonGoalCard {
                 }
             }
         }
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++){
+                matrix[i][j].setGroupId(0);
+            }
+        }
         for (int h = 0; h < groupIDcount; h++) {
             if (itemCount.get(h) >= 2) {
                 groupCount ++;
