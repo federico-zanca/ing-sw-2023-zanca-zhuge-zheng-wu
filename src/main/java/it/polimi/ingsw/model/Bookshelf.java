@@ -34,7 +34,7 @@ public class Bookshelf {
 
     public int maxSlotsAvailable(){
         int max=0;
-        int[] availableSlots=this.availableSlots();
+        int[] availableSlots=this.availableSlotsForEachColumn();
         for(int i=0; i<Columns; i++){
             if(availableSlots[i]>max){
                 max=availableSlots[i];
@@ -43,29 +43,12 @@ public class Bookshelf {
         return max;
     }
 
-    /**
-     *
-     * @return ArrayList of Integers representing the index of the columns with at least 2 available slots
-     */
-
-    public ArrayList<Integer> availableColumns(){
-        ArrayList<Integer> availableCol=new ArrayList<Integer>();
-        int[] availableSlots=this.availableSlots();
-
-        for (int i=0; i<availableSlots.length; i++){
-            if (availableSlots[i]>=2){
-                availableCol.add(i);
-            }
-        }
-
-        return availableCol;
-    }
 
     /**
      *
      * @return array of 5 integers, representing the number of available slots for the respective column
      */
-    public int[] availableSlots(){
+    public int[] availableSlotsForEachColumn(){
         int[] availableSlots= new int[Columns];
         for(int i=0; i<Columns; i++){
             availableSlots[i]=0;
