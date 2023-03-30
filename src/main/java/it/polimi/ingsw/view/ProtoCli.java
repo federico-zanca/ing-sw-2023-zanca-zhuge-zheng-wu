@@ -17,10 +17,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     public Coordinates askPlayer() {
         Scanner s = new Scanner(System.in);
         System.out.println("Inserisci le coordinate della tessera da prendere: ");
-
+        return new Coordinates(0, 0);
     }
 
-    public void update(Message receivedMessage){
-
+    public void update(Message receivedMessage, Observable o){
+        return;
     }
 }
