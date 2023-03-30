@@ -16,7 +16,7 @@ public class Board {
         gameboard = new Square[Dimensions][Dimensions];
         for(int i=0; i<Dimensions; i++){
             for(int j=0; j<Dimensions; j++){
-                gameboard[i][j] = new Square();
+                gameboard[i][j] = new Square(i, j);
             }
         }
     }
@@ -149,12 +149,20 @@ public class Board {
      * @return ArrayList of coordinates of ItemTiles pickable as First ItemTiles
      */
 
+    public void enableSquaresWithFreeSide(){
+        for(int row=0; row<Dimensions; row++){
+            for(int column=0; column<Dimensions; column++){
+                gameboard[row][column].setPickable(gameboard[row][column].getItem().hasSomething() && doesSquareHaveFreeSide(row, column));
+            }
+        }
+    }
+
     public ArrayList<Integer> pickableFirstItems(){
         ArrayList<Integer> pickable=new ArrayList<>();
             for(int i=1; i<Dimensions-1; i++){
                 for(int j=1; j<Dimensions-1; j++){
-                    if(gameboard[i][j].getItem().getType()!= ItemType.EMPTY && gameboard[i][j].getItem().getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getItem().getType()==ItemType.EMPTY || gameboard[i-1][j].getItem().getType()==ItemType.FORBIDDEN) || (gameboard[i+1][j].getItem().getType()==ItemType.EMPTY || gameboard[i+1][j].getItem().getType()==ItemType.FORBIDDEN) ||
-                            (gameboard[i][j-1].getItem().getType()==ItemType.EMPTY || gameboard[i][j-1].getItem().getType()==ItemType.FORBIDDEN) || (gameboard[i][j+1].getItem().getType()==ItemType.EMPTY || gameboard[i][j+1].getItem().getType()==ItemType.FORBIDDEN))) {
+                    if(gameboard[i][j].getItem().hasSomething() && doesSquareHaveFreeSide(i, j))
+                    {
                         pickable.add(i);
                         pickable.add(j);
                     }
@@ -197,6 +205,18 @@ public class Board {
                 }
             }
         return  pickable;
+    }
+
+    /**
+     *
+     * @param row row number of the square to check
+     * @param column column number of the square to check
+     * @return true if the square has a free side (not containing a real item)
+     */
+    public boolean doesSquareHaveFreeSide(int row, int column){
+        if(row == 0 || row == Dimensions-1 || column == 0 || column == Dimensions-1) return true;
+        return !gameboard[row][column - 1].getItem().hasSomething() || !gameboard[row][column + 1].getItem().hasSomething()
+                || !gameboard[row - 1][column].getItem().hasSomething() || !gameboard[row + 1][column].getItem().hasSomething();
     }
 }
 
