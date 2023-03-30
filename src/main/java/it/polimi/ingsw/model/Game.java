@@ -67,6 +67,13 @@ public class Game {
         return getNumCurrentPlayers()==chosenNumOfPlayers;
     }
 
+    /**
+     * Starts the Game by executing these steps:
+     * - initializes the GameBoard
+     * - Fills the board with ItemTiles
+     * - Randomly selects the two commongoals
+     * - assigns a personal goal to each player
+     */
     public void startGame(){
         setGameBoard(chosenNumOfPlayers);
         fillBoard();
@@ -236,6 +243,11 @@ public class Game {
     public void addCommonGoal(CommonGoalCard cg){
             commonGoals.add(cg);
     }
+
+    /**
+     * Getter for CommonGoals
+     * @return CommonGoals of the game
+     */
     public ArrayList<CommonGoalCard> getCommonGoals() {
         return commonGoals;
     }
