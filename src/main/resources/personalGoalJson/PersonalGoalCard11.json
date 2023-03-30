@@ -1,0 +1,32 @@
+[
+  {
+    "row": 0,
+    "col": 2,
+    "type": "PLANT"
+  },
+  {
+    "row": 1,
+    "col": 1,
+    "type": "BOOK"
+  },
+  {
+    "row": 2,
+    "col": 0,
+    "type": "GAME"
+  },
+  {
+    "row": 3,
+    "col": 2,
+    "type": "FRAME"
+  },
+  {
+    "row": 4,
+    "col": 4,
+    "type": "CAT"
+  },
+  {
+    "row": 5,
+    "col": 3,
+    "type": "TROPHY"
+  }
+]
