@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
-import it.polimi.ingsw.model.personalgoals.PersonalGoalCard2;
 
 import java.util.ArrayList;
 import it.polimi.ingsw.model.commongoals.*;
@@ -120,7 +119,7 @@ public class Game {
      */
     public PersonalGoalCard randomPersonalGoal(){
         //TODO replace with real random extractor
-        return new PersonalGoalCard2();
+        return new PersonalGoalCard(2);
     }
 
     /**
