@@ -45,8 +45,8 @@ public class Board {
             gameboard[2][6].getItem().setType(ItemType.EMPTY);
             gameboard[3][8].getItem().setType(ItemType.EMPTY);
             gameboard[5][0].getItem().setType(ItemType.EMPTY);
-            gameboard[3][2].getItem().setType(ItemType.EMPTY);
-            gameboard[3][6].getItem().setType(ItemType.EMPTY);
+            gameboard[6][2].getItem().setType(ItemType.EMPTY);
+            gameboard[6][6].getItem().setType(ItemType.EMPTY);
             gameboard[8][5].getItem().setType(ItemType.EMPTY);
         }
         if(numPlayers == 4){
@@ -70,7 +70,9 @@ public class Board {
 
     }
 // ITEMS è passato da turn e sono le tessere pescate da Bag
-
+    public Square[][] getGameboard() {
+        return gameboard;
+    }
     /**
      *
      * @param items available in bag
@@ -85,7 +87,6 @@ public class Board {
                     else if(gameboard[i][j].getItem().getType()==ItemType.EMPTY){
                         placeItem(items.remove(0), i, j);
                     }
-
                 }
             }
         }
