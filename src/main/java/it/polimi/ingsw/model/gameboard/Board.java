@@ -9,14 +9,14 @@ import java.util.Arrays;
 import java.util.Stack;
 
 public class Board {
-    private ItemTile[][] gameboard;
+    private Square[][] gameboard;
     public final int Dimensions = 9;
 
     public Board(){
-        gameboard = new ItemTile[Dimensions][Dimensions];
+        gameboard = new Square[Dimensions][Dimensions];
         for(int i=0; i<Dimensions; i++){
             for(int j=0; j<Dimensions; j++){
-                gameboard[i][j] = new ItemTile(ItemType.EMPTY);
+                gameboard[i][j] = new Square(i, j);
             }
         }
     }
@@ -28,42 +28,42 @@ public class Board {
     public void initBoard(int numPlayers){
         for(int i=0; i<Dimensions; i++){
             for(int j=0; j<Dimensions; j++) {
-                if(i==0)    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==1 && (j<3 || j>4))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==2 && (j<3 || j>5))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==3 && (j<2 || j>7))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==4 && (j<1 || j>7))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==5 && (j<1 || j>6))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==6 && (j<3 || j>5))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==7 && (j<5 || j>6))    gameboard[i][j].setType(ItemType.FORBIDDEN);
-                if(i==8)    gameboard[i][j].setType(ItemType.FORBIDDEN);
+                if(i==0)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==1 && (j<3 || j>4))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==2 && (j<3 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==3 && (j<2 || j>7))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==4 && (j<1 || j>7))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==5 && (j<1 || j>6))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==6 && (j<3 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==7 && (j<5 || j>6))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==8)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
             }
         }
         if(numPlayers>2){
-            gameboard[0][3].setType(ItemType.EMPTY);
-            gameboard[2][2].setType(ItemType.EMPTY);
-            gameboard[2][6].setType(ItemType.EMPTY);
-            gameboard[3][8].setType(ItemType.EMPTY);
-            gameboard[5][0].setType(ItemType.EMPTY);
-            gameboard[3][2].setType(ItemType.EMPTY);
-            gameboard[3][6].setType(ItemType.EMPTY);
-            gameboard[8][5].setType(ItemType.EMPTY);
+            gameboard[0][3].getItem().setType(ItemType.EMPTY);
+            gameboard[2][2].getItem().setType(ItemType.EMPTY);
+            gameboard[2][6].getItem().setType(ItemType.EMPTY);
+            gameboard[3][8].getItem().setType(ItemType.EMPTY);
+            gameboard[5][0].getItem().setType(ItemType.EMPTY);
+            gameboard[3][2].getItem().setType(ItemType.EMPTY);
+            gameboard[3][6].getItem().setType(ItemType.EMPTY);
+            gameboard[8][5].getItem().setType(ItemType.EMPTY);
         }
         if(numPlayers == 4){
-            gameboard[0][4].setType(ItemType.EMPTY);
-            gameboard[1][5].setType(ItemType.EMPTY);
-            gameboard[1][5].setType(ItemType.EMPTY);
-            gameboard[3][1].setType(ItemType.EMPTY);
-            gameboard[4][0].setType(ItemType.EMPTY);
-            gameboard[4][8].setType(ItemType.EMPTY);
-            gameboard[5][7].setType(ItemType.EMPTY);
-            gameboard[7][3].setType(ItemType.EMPTY);
-            gameboard[8][4].setType(ItemType.EMPTY);
+            gameboard[0][4].getItem().setType(ItemType.EMPTY);
+            gameboard[1][5].getItem().setType(ItemType.EMPTY);
+            gameboard[1][5].getItem().setType(ItemType.EMPTY);
+            gameboard[3][1].getItem().setType(ItemType.EMPTY);
+            gameboard[4][0].getItem().setType(ItemType.EMPTY);
+            gameboard[4][8].getItem().setType(ItemType.EMPTY);
+            gameboard[5][7].getItem().setType(ItemType.EMPTY);
+            gameboard[7][3].getItem().setType(ItemType.EMPTY);
+            gameboard[8][4].getItem().setType(ItemType.EMPTY);
         }
         /*
         for(int i=0; i< Dimensions; i++){
             for(int j=0; j<Dimensions; j++){
-                if(gameboard[i][j].getType()==null ) gameboard[i][j].setType(ItemType.EMPTY);
+                if(gameboard[i][j].getItem().getType()==null ) gameboard[i][j].getItem().setType(ItemType.EMPTY);
             }
         }
         */
@@ -82,7 +82,7 @@ public class Board {
             for(int i=0; i<Dimensions; i++){
                 for(int j=0; j<Dimensions; j++){
                     if (items.isEmpty()){ return;}
-                    else if(gameboard[i][j].getType()==ItemType.EMPTY){
+                    else if(gameboard[i][j].getItem().getType()==ItemType.EMPTY){
                         placeItem(items.remove(0), i, j);
                     }
 
@@ -100,7 +100,7 @@ public class Board {
         int count=0;
         for(int i=0; i<Dimensions; i++){
             for(int j=0; j<Dimensions; j++){
-                if(gameboard[i][j].getType()==ItemType.EMPTY) count++;
+                if(gameboard[i][j].getItem().getType()==ItemType.EMPTY) count++;
             }
         }
         return count;
@@ -113,8 +113,8 @@ public class Board {
     public boolean needsRefill() {
         for(int i=1; i<Dimensions-1; i++){
             for(int j=1; j<Dimensions-1; j++){
-                if(gameboard[i][j].getType()!=ItemType.EMPTY && gameboard[i][j].getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getType()!=ItemType.EMPTY && gameboard[i-1][j].getType()!=ItemType.FORBIDDEN) || (gameboard[i+1][j].getType()!=ItemType.EMPTY && gameboard[i+1][j].getType()!=ItemType.FORBIDDEN) ||
-                        (gameboard[i][j-1].getType()!=ItemType.EMPTY && gameboard[i][j-1].getType()!=ItemType.FORBIDDEN) || (gameboard[i][j+1].getType()!=ItemType.EMPTY && gameboard[i][j+1].getType()!=ItemType.FORBIDDEN)))
+                if(gameboard[i][j].getItem().getType()!=ItemType.EMPTY && gameboard[i][j].getItem().getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getItem().getType()!=ItemType.EMPTY && gameboard[i-1][j].getItem().getType()!=ItemType.FORBIDDEN) || (gameboard[i+1][j].getItem().getType()!=ItemType.EMPTY && gameboard[i+1][j].getItem().getType()!=ItemType.FORBIDDEN) ||
+                        (gameboard[i][j-1].getItem().getType()!=ItemType.EMPTY && gameboard[i][j-1].getItem().getType()!=ItemType.FORBIDDEN) || (gameboard[i][j+1].getItem().getType()!=ItemType.EMPTY && gameboard[i][j+1].getItem().getType()!=ItemType.FORBIDDEN)))
                     return false;
             }
         }
@@ -128,8 +128,8 @@ public class Board {
      * @param column the row number of the target cell (in which the item will be placed)
      */
     public void placeItem(ItemTile i, int row, int column){
-        if(gameboard[row][column].getType()!=ItemType.FORBIDDEN)
-            gameboard[row][column] = i;
+        if(gameboard[row][column].getItem().getType()!=ItemType.FORBIDDEN)
+            gameboard[row][column].setItem(i);
     }
 
     /**
@@ -139,8 +139,8 @@ public class Board {
      * @return the ItemTile corresponding to the cell specified through row and column parameters
      */
     public ItemTile pickItem(int row, int column){
-        ItemTile tmp = new ItemTile(gameboard[row][column].getType());
-        gameboard[row][column].setType(ItemType.EMPTY);
+        ItemTile tmp = new ItemTile(gameboard[row][column].getItem().getType());
+        gameboard[row][column].getItem().setType(ItemType.EMPTY);
         return tmp;
     }
 
@@ -149,12 +149,20 @@ public class Board {
      * @return ArrayList of coordinates of ItemTiles pickable as First ItemTiles
      */
 
+    public void enableSquaresWithFreeSide(){
+        for(int row=0; row<Dimensions; row++){
+            for(int column=0; column<Dimensions; column++){
+                gameboard[row][column].setPickable(gameboard[row][column].getItem().hasSomething() && doesSquareHaveFreeSide(row, column));
+            }
+        }
+    }
+
     public ArrayList<Integer> pickableFirstItems(){
         ArrayList<Integer> pickable=new ArrayList<>();
             for(int i=1; i<Dimensions-1; i++){
                 for(int j=1; j<Dimensions-1; j++){
-                    if(gameboard[i][j].getType()!= ItemType.EMPTY && gameboard[i][j].getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getType()==ItemType.EMPTY || gameboard[i-1][j].getType()==ItemType.FORBIDDEN) || (gameboard[i+1][j].getType()==ItemType.EMPTY || gameboard[i+1][j].getType()==ItemType.FORBIDDEN) ||
-                            (gameboard[i][j-1].getType()==ItemType.EMPTY || gameboard[i][j-1].getType()==ItemType.FORBIDDEN) || (gameboard[i][j+1].getType()==ItemType.EMPTY || gameboard[i][j+1].getType()==ItemType.FORBIDDEN))) {
+                    if(gameboard[i][j].getItem().hasSomething() && doesSquareHaveFreeSide(i, j))
+                    {
                         pickable.add(i);
                         pickable.add(j);
                     }
@@ -188,7 +196,7 @@ public class Board {
                 int y=ny.pop();
                 int count=2;
 
-                while (gameboard[firstItem_x+x][firstItem_y+y].getType()!=ItemType.EMPTY && gameboard[firstItem_x+x][firstItem_y+y].getType()!=ItemType.FORBIDDEN && count>0){
+                while (gameboard[firstItem_x+x][firstItem_y+y].getItem().getType()!=ItemType.EMPTY && gameboard[firstItem_x+x][firstItem_y+y].getItem().getType()!=ItemType.FORBIDDEN && count>0){
                     pickable.add(firstItem_x+x);
                     pickable.add(firstItem_y+y);
                     x=2*x;
@@ -197,6 +205,18 @@ public class Board {
                 }
             }
         return  pickable;
+    }
+
+    /**
+     *
+     * @param row row number of the square to check
+     * @param column column number of the square to check
+     * @return true if the square has a free side (not containing a real item)
+     */
+    public boolean doesSquareHaveFreeSide(int row, int column){
+        if(row == 0 || row == Dimensions-1 || column == 0 || column == Dimensions-1) return true;
+        return !gameboard[row][column - 1].getItem().hasSomething() || !gameboard[row][column + 1].getItem().hasSomething()
+                || !gameboard[row - 1][column].getItem().hasSomething() || !gameboard[row + 1][column].getItem().hasSomething();
     }
 }
 

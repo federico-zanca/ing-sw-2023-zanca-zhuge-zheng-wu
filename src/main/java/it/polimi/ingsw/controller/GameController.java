@@ -4,21 +4,30 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
+import it.polimi.ingsw.utils.Observable;
+import it.polimi.ingsw.utils.Observer;
+import it.polimi.ingsw.view.ProtoCli;
 
 import java.util.ArrayList;
 
-public class GameController {
+public class GameController implements Observer {
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 3;
     private Game game;
     private GameLobby lobby;
+
+    //stuff for the view
+    public final ProtoCli view;
     private GamePhase gamePhase;
     private TurnController turnController;
 
     /**
      * Controller of the game
      */
-    public GameController(){
+    public GameController(ProtoCli view){
+        this.view = view;
         setupGameController();
     }
     /**
@@ -28,6 +37,13 @@ public class GameController {
         this.game = Game.getInstance();
         //set views here
         setGamePhase(GamePhase.LOGIN);
+    }
+
+    public void play(){
+        //Inizia partita
+        game.startGame();
+        // Avvia il primo turno di gioco
+
     }
 
     /**
@@ -43,6 +59,8 @@ public class GameController {
     public Game getGame() {
         return game;
     }
+
+
 
     /** Method called to calculate points to add to each player and declare the winner
      */
@@ -92,6 +110,22 @@ public class GameController {
             points = p.calculateScorePersonalGoal();
             p.addPoints(points);
         }
+    }
+
+    @Override
+    public void update(Message message, Observable o) {
+        //ricevo notifiche solo dalla mia view
+        if(o != view){
+            System.err.println("Discarding notification");
+            return;
+        }
+        if(message.getType()== MessageType.DRAW_TILES){
+            turnController.drawPhase();
+        } else {
+            System.err.println("Discarding event ");
+            return;
+        }
+
     }
     //public
 

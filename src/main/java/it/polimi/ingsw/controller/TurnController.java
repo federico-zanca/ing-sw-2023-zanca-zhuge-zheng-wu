@@ -17,6 +17,7 @@ public class TurnController {
     private ArrayList<Player> playerQueue;
     private Player currentPlayer;
     private TurnPhase turnPhase;
+    private boolean lastTurn = false;
     private ItemTile[] tiles;
     /**
      * Constructor of the TurnController
@@ -46,7 +47,10 @@ public class TurnController {
      */
     public void newTurn(){
         setTurnPhase(TurnPhase.DRAW);
+        drawPhase();
+
     }
+
     /**
      * Set the current player
      * @param player the current player to be set
@@ -54,6 +58,7 @@ public class TurnController {
     public void setCurrentPlayer(Player player){
         currentPlayer = player;
     }
+
     /**
      * @return the active player this turn
      */
@@ -67,14 +72,25 @@ public class TurnController {
         return playerQueue;
     }
     public void loadNextPlayer(){
-
         int nowCurrent = playerQueue.indexOf(currentPlayer);
-        setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
-        newTurn();
+        if(nowCurrent == playerQueue.size()-1 && lastTurn){
+            //Basta giocare, si calcolano i punteggi
+        }
+        else{
+            setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
+            newTurn();
+        }
     }
-    private boolean booleanWinCondition(){
-        return getCurrentPlayer().endTrigger();
+    /**
+     * Checks if current player filled his bookshelf and adds EndToken points if deserved
+     */
+    private void booleanWinCondition(){
+        if(!lastTurn && getCurrentPlayer().endTrigger()){
+            lastTurn=true;
+            currentPlayer.addPoints(1);
+        }
     }
+
     private void loadNextPhase(){
         switch (turnPhase) {
             case DRAW: setTurnPhase(TurnPhase.INSERT);
@@ -82,12 +98,12 @@ public class TurnController {
                 if(game.getBoard().needsRefill()){setTurnPhase(TurnPhase.REFILL);}
                 else{setTurnPhase(TurnPhase.CALCULATE);}
             case REFILL: setTurnPhase(TurnPhase.CALCULATE);
-            case CALCULATE: if(booleanWinCondition()) {
-                currentPlayer.addPoints(1);
-                setTurnPhase(TurnPhase.LAST);
-            }else{
-                loadNextPlayer();
-            }
+            //case CALCULATE: if(booleanWinCondition()) {
+               // currentPlayer.addPoints(1);
+              //  setTurnPhase(TurnPhase.LAST);
+           // }else{
+           //     loadNextPlayer();
+            //}
             //TODO last round turnphase case
             case LAST:
         }
@@ -98,6 +114,10 @@ public class TurnController {
         loadNextPhase();
 
     }*/
+    public void drawPhase() {
+        game.getBoard().enableSquaresWithFreeSide();
+
+    }
 
     public void playerDraw(){
         int playerIn_x, playerIn_y;
