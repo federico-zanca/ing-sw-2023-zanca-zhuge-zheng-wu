@@ -34,6 +34,9 @@ public class Square {
         return coords.getColumn();
     }
 
+    public boolean isPickable() {
+        return pickable;
+    }
     public void setPickable(boolean b){
         this.pickable = b;
     }

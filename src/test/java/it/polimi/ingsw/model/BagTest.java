@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BagTest {
 
     @Test
-    void emptyBagTest() {
+    void testEmptyBag() {
         Bag b = new Bag();
         assertFalse(b.emptyBag());
         for (int k = 0; k < 132; k++){
@@ -19,7 +19,7 @@ class BagTest {
     }
 
     @Test
-    void drawItemTest() {
+    void testDrawItem() {
         Bag b = new Bag();
         ItemTile item = b.drawItem();
         assertNotNull(item);
@@ -29,7 +29,7 @@ class BagTest {
     }
 
     @Test
-    void drawItemsTest() {
+    void testDrawItems() {
         Bag b = new Bag();
         ArrayList<ItemTile> items = new ArrayList<>();
 
@@ -46,7 +46,7 @@ class BagTest {
     }
 
     @Test
-    void putItemTest() {
+    void testPutItem() {
         Bag b = new Bag();
         ItemTile item = b.drawItem();
         assertEquals(131,b.getNumItemsLeftInBag());
@@ -55,7 +55,7 @@ class BagTest {
     }
 
     @Test
-    void getNumItemsLeftInBagTest() {
+    void testGetNumItemsLeftInBag() {
         Bag b = new Bag();
         assertEquals(132,b.getNumItemsLeftInBag());
         ArrayList<ItemTile> items = new ArrayList<>();

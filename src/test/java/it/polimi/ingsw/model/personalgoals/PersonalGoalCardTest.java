@@ -24,7 +24,7 @@ class PersonalGoalCardTest {
     }
 
     @Test
-    void NumOfMatches() {
+    void testNumOfMatches() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] item_matrix;
         String[][] matrix ={
