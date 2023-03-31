@@ -73,7 +73,7 @@ public class Board {
 
     /**
      *
-     * @param items
+     * @param items available in bag
      */
     public void refillBoard(ArrayList<ItemTile> items){
         //TODO implement here
@@ -146,9 +146,8 @@ public class Board {
 
     /**
      *
-     * @return ArrayList of coordinates of ItemTiles pickable as First ItemTiles
+     * Set ItemTiles pickable as First ItemTiles
      */
-
     public void enableSquaresWithFreeSide(){
         for(int row=0; row<Dimensions; row++){
             for(int column=0; column<Dimensions; column++){
