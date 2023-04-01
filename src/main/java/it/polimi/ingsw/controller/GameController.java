@@ -4,6 +4,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
+import it.polimi.ingsw.network.message.LoginRequest;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.utils.Observable;
@@ -119,13 +120,16 @@ public class GameController implements Observer {
             System.err.println("Discarding notification");
             return;
         }
-        if(message.getType()== MessageType.DRAW_TILES){
-            turnController.drawPhase();
-        } else {
-            System.err.println("Discarding event ");
-            return;
+        switch (message.getType()) {
+            case LOGINREQUEST:
+                game.addPlayer(new Player(message.getUsername()));
+                game.setChosenNumOfPlayers(2);
+                game.startGame();
+                break;
+            case DRAW_TILES:    //turnController.drawPhase();
+            default:
+                System.err.println("Discarding event ");
         }
-
     }
     //public
 

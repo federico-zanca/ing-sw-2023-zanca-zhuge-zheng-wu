@@ -10,12 +10,12 @@ import java.util.Stack;
 
 public class Board {
     private Square[][] gameboard;
-    public final int Dimensions = 9;
+    public static final int DIMENSIONS = 9;
 
     public Board(){
-        gameboard = new Square[Dimensions][Dimensions];
-        for(int i=0; i<Dimensions; i++){
-            for(int j=0; j<Dimensions; j++){
+        gameboard = new Square[DIMENSIONS][DIMENSIONS];
+        for(int i=0; i<DIMENSIONS; i++){
+            for(int j=0; j<DIMENSIONS; j++){
                 gameboard[i][j] = new Square(i, j);
             }
         }
@@ -26,8 +26,8 @@ public class Board {
      * @param numPlayers
      */
     public void initBoard(int numPlayers){
-        for(int i=0; i<Dimensions; i++){
-            for(int j=0; j<Dimensions; j++) {
+        for(int i=0; i<DIMENSIONS; i++){
+            for(int j=0; j<DIMENSIONS; j++) {
                 if(i==0)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
                 if(i==1 && (j<3 || j>4))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
                 if(i==2 && (j<3 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
@@ -61,8 +61,8 @@ public class Board {
             gameboard[8][4].getItem().setType(ItemType.EMPTY);
         }
         /*
-        for(int i=0; i< Dimensions; i++){
-            for(int j=0; j<Dimensions; j++){
+        for(int i=0; i< DIMENSIONS; i++){
+            for(int j=0; j<DIMENSIONS; j++){
                 if(gameboard[i][j].getItem().getType()==null ) gameboard[i][j].getItem().setType(ItemType.EMPTY);
             }
         }
@@ -81,8 +81,8 @@ public class Board {
         //TODO implement here
 
         if(needsRefill()){
-            for(int i=0; i<Dimensions; i++){
-                for(int j=0; j<Dimensions; j++){
+            for(int i=0; i<DIMENSIONS; i++){
+                for(int j=0; j<DIMENSIONS; j++){
                     if (items.isEmpty()){ return;}
                     else if(gameboard[i][j].getItem().getType()==ItemType.EMPTY){
                         placeItem(items.remove(0), i, j);
@@ -99,8 +99,8 @@ public class Board {
      */
     public int numCellsToRefill() {
         int count=0;
-        for(int i=0; i<Dimensions; i++){
-            for(int j=0; j<Dimensions; j++){
+        for(int i=0; i<DIMENSIONS; i++){
+            for(int j=0; j<DIMENSIONS; j++){
                 if(gameboard[i][j].getItem().getType()==ItemType.EMPTY) count++;
             }
         }
@@ -112,8 +112,8 @@ public class Board {
      * @return true if board needs refilling
      */
     public boolean needsRefill() {
-        for(int i=1; i<Dimensions-1; i++){
-            for(int j=1; j<Dimensions-1; j++){
+        for(int i=1; i<DIMENSIONS-1; i++){
+            for(int j=1; j<DIMENSIONS-1; j++){
                 if(gameboard[i][j].getItem().getType()!=ItemType.EMPTY && gameboard[i][j].getItem().getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getItem().getType()!=ItemType.EMPTY && gameboard[i-1][j].getItem().getType()!=ItemType.FORBIDDEN) || (gameboard[i+1][j].getItem().getType()!=ItemType.EMPTY && gameboard[i+1][j].getItem().getType()!=ItemType.FORBIDDEN) ||
                         (gameboard[i][j-1].getItem().getType()!=ItemType.EMPTY && gameboard[i][j-1].getItem().getType()!=ItemType.FORBIDDEN) || (gameboard[i][j+1].getItem().getType()!=ItemType.EMPTY && gameboard[i][j+1].getItem().getType()!=ItemType.FORBIDDEN)))
                     return false;
@@ -150,8 +150,8 @@ public class Board {
      * Set ItemTiles pickable as First ItemTiles
      */
     public void enableSquaresWithFreeSide(){
-        for(int row=0; row<Dimensions; row++){
-            for(int column=0; column<Dimensions; column++){
+        for(int row=0; row<DIMENSIONS; row++){
+            for(int column=0; column<DIMENSIONS; column++){
                 gameboard[row][column].setPickable(gameboard[row][column].getItem().hasSomething() && doesSquareHaveFreeSide(row, column));
             }
         }
@@ -159,8 +159,8 @@ public class Board {
 
     public ArrayList<Integer> pickableFirstItems(){
         ArrayList<Integer> pickable=new ArrayList<>();
-            for(int i=1; i<Dimensions-1; i++){
-                for(int j=1; j<Dimensions-1; j++){
+            for(int i=1; i<DIMENSIONS-1; i++){
+                for(int j=1; j<DIMENSIONS-1; j++){
                     if(gameboard[i][j].getItem().hasSomething() && doesSquareHaveFreeSide(i, j))
                     {
                         pickable.add(i);
@@ -214,7 +214,7 @@ public class Board {
      * @return true if the square has a free side (not containing a real item)
      */
     public boolean doesSquareHaveFreeSide(int row, int column){
-        if(row == 0 || row == Dimensions-1 || column == 0 || column == Dimensions-1) return true;
+        if(row == 0 || row == DIMENSIONS-1 || column == 0 || column == DIMENSIONS-1) return true;
         return !gameboard[row][column - 1].getItem().hasSomething() || !gameboard[row][column + 1].getItem().hasSomething()
                 || !gameboard[row - 1][column].getItem().hasSomething() || !gameboard[row + 1][column].getItem().hasSomething();
     }
