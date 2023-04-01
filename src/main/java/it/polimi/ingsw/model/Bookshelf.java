@@ -254,11 +254,4 @@ public class Bookshelf {
             System.out.println();
         }
     }
-    public void setGroupIdCommon(){
-        for(int i=0; i< Rows; i++){
-            for(int j=0; j<Columns; j++){
-                shelfie[i][j].setGroupId(0);
-            }
-        }
-    }
 }
