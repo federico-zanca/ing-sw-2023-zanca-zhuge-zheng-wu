@@ -51,4 +51,9 @@ public class ItemTile {
     public boolean hasSomething(){
         return !(getType()==ItemType.FORBIDDEN || getType()==ItemType.EMPTY);
     }
+
+    @Override
+    public String toString(){
+        return type.toString();
+    }
 }
