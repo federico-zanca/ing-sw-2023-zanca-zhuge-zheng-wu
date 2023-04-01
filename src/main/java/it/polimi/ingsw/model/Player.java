@@ -169,6 +169,10 @@ public class Player {
         return points;
 
     }
+
+    public String toString(){
+        return "Player : " + username;
+    }
 }
 
 
