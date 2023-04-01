@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
 
 public class Board {
@@ -81,10 +80,11 @@ public class Board {
         //TODO implement here
 
         if(needsRefill()){
-            for(int i=0; i<DIMENSIONS; i++){
-                for(int j=0; j<DIMENSIONS; j++){
-                    if (items.isEmpty()){ return;}
-                    else if(gameboard[i][j].getItem().getType()==ItemType.EMPTY){
+            for(int i=0; i<DIMENSIONS; i++) {
+                for (int j = 0; j < DIMENSIONS; j++) {
+                    if (items.isEmpty()) {
+                        return;
+                    } else if (gameboard[i][j].getItem().getType() == ItemType.EMPTY) {
                         placeItem(items.remove(0), i, j);
                     }
                 }

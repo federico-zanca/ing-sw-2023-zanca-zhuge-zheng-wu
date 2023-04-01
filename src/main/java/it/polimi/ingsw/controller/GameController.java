@@ -4,9 +4,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.network.message.LoginRequest;
 import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 import it.polimi.ingsw.view.ProtoCli;
@@ -126,7 +124,9 @@ public class GameController implements Observer {
                 game.setChosenNumOfPlayers(2);
                 game.startGame();
                 break;
-            case DRAW_TILES:    //turnController.drawPhase();
+            case DRAW_TILES:
+                turnController.drawPhase();
+                break;
             default:
                 System.err.println("Discarding event ");
         }

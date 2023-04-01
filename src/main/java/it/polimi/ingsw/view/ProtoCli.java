@@ -1,13 +1,12 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.BoardMessage;
-import it.polimi.ingsw.network.message.LoginRequest;
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageType;
+import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 
@@ -48,22 +47,9 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         return new Coordinates(0, 0);
     }
 
-    public void update(Message receivedMessage, Observable o){
-        if(!(o instanceof Game)){
-            System.err.println("Ignoring updates from " + o);
-            return;
-        }
-        if(receivedMessage.getType() == MessageType.BOARD){
-            showBoard(((BoardMessage) receivedMessage).getBoard());
-        }
-        else{
-            System.err.println("Ignoring event from " + o);
-        }
-    }
-
-    private void printColumnIndexes(){
+    private void printColumnIndexes(int columns){
         out.print("    ");
-        for(int i=0; i<Board.DIMENSIONS; i++){
+        for(int i=0; i<columns; i++){
             out.print(" "+ i + "  ");
         }
         out.print("\n");
@@ -74,7 +60,8 @@ public class ProtoCli extends Observable implements Observer, Runnable {
      * @param board matrix of Squares to print
      */
     private void showBoard(Square[][] board) {
-        printColumnIndexes();
+        out.println("Game Board:");
+        printColumnIndexes(Board.DIMENSIONS);
         StringBuilder strBoard = new StringBuilder();
         for(int i=0; i< Board.DIMENSIONS; i++){
             strBoard.append("    ");
@@ -95,4 +82,50 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.println(strBoard.toString());
     }
 
+    /**
+     * Prints the bookshelf of the player
+     * @param username username of the player whose bookshelf is printed
+     * @param shelfie matrix of ItemTiles
+     */
+    private void showBookshelf(String username, ItemTile[][] shelfie){
+        out.println("BookShelf of player " + username);
+        printColumnIndexes(Bookshelf.Columns); //TODO attenzione Bookshelf è del server
+        StringBuilder strShelf = new StringBuilder();
+        for(int i=0; i< Bookshelf.Rows; i++){
+            strShelf.append("    ");
+            for(int j=0; j<Bookshelf.Columns; j++){
+                strShelf.append("+--+");
+            }
+            strShelf.append("\n");
+            strShelf.append(" ").append(i).append(" |");
+            for(int j=0; j<Bookshelf.Columns; j++){
+                strShelf.append(" ").append(shelfie[i][j]).append(" |");
+            }
+            strShelf.append("\n");
+        }
+        strShelf.append("    ");
+        for(int j = 0; j< Bookshelf.Columns; j++){
+            strShelf.append("+--+");
+        }
+        out.println(strShelf.toString());
+    }
+
+    public void update(Message receivedMessage, Observable o){
+        if(!(o instanceof Game)){
+            System.err.println("Ignoring updates from " + o);
+            return;
+        }
+        switch(receivedMessage.getType()){
+            case BOARD:
+                showBoard(((BoardMessage) receivedMessage).getBoard());
+                break;
+            case BOOKSHELF:
+                BookshelfMessage m = (BookshelfMessage) receivedMessage;
+                showBookshelf(m.getUsername(), m.getBookshelf());
+                break;
+            default:
+                System.err.println("Ignoring event from " + o);
+                break;
+        }
+    }
 }

@@ -3,7 +3,6 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 import it.polimi.ingsw.model.gameboard.Board;
@@ -116,6 +115,7 @@ public class TurnController {
     }*/
     public void drawPhase() {
         game.getBoard().enableSquaresWithFreeSide();
+
 
     }
 
