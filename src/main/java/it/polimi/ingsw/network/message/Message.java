@@ -1,10 +1,11 @@
 package it.polimi.ingsw.network.message;
 
 public abstract class Message {
-
+    private final String username;
     private final MessageType type;
 
-    protected Message(MessageType type) {
+    protected Message(String username, MessageType type) {
+        this.username = username;
         this.type = type;
     }
 
@@ -20,5 +21,9 @@ public abstract class Message {
         return "Message {" +
                 "messageType = " + type +
                 " }";
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

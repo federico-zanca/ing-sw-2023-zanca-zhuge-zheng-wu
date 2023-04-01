@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Observable {
-    private boolean changed = false;
     private final List<Observer> observers = new ArrayList<>();
 
 
@@ -15,7 +14,7 @@ public class Observable {
      *
      * @param obs the observer to be added.
      */
-    public void addObserver(Observer obs) {
+    public synchronized void addObserver(Observer obs) {
         observers.add(obs);
     }
 
@@ -24,7 +23,7 @@ public class Observable {
      *
      * @param obs the observer to be removed.
      */
-    public void removeObserver(Observer obs) {
+    public synchronized void removeObserver(Observer obs) {
         observers.remove(obs);
     }
 

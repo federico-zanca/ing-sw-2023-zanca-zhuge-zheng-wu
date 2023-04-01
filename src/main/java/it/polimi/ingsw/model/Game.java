@@ -6,7 +6,10 @@ import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
 import java.util.ArrayList;
 import it.polimi.ingsw.model.commongoals.*;
-public class Game {
+import it.polimi.ingsw.network.message.BoardMessage;
+import it.polimi.ingsw.utils.Observable;
+
+public class Game extends Observable {
     //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)
     private static Game instance;
 
@@ -16,6 +19,7 @@ public class Game {
     private ArrayList<CommonGoalCard> commonGoals;
     private Board board;
     private Bag bag;
+
     private Game(){
         init();
     }
@@ -27,6 +31,7 @@ public class Game {
         board = null;
         bag = new Bag();
         players = new ArrayList<>();
+        players.add(new Player("BOT"));
         commonGoals = new ArrayList<>();
     }
     /**
@@ -82,6 +87,8 @@ public class Game {
         for(Player player : players){
             player.setPersonalGoal(randomPersonalGoal());
         }
+        notifyObserver(new BoardMessage("", board.getGameboard()){
+        });
     }
 
     /**
@@ -132,7 +139,7 @@ public class Game {
     /**
      * Fills the board with random ItemTiles as the game starts
      */
-    public void fillBoard(){
+    private void fillBoard(){
         ArrayList<ItemTile> items;
         items = bag.drawItems(board.numCellsToRefill());
 
@@ -250,5 +257,9 @@ public class Game {
      */
     public ArrayList<CommonGoalCard> getCommonGoals() {
         return commonGoals;
+    }
+
+    public void setChosenNumOfPlayers(int i) {
+        chosenNumOfPlayers = i;
     }
 }
