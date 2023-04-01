@@ -58,7 +58,7 @@ public class Bag {
         }
         else{
             //TODO replace with Random()
-            int index = (int) (Math.random() * (availableItems.size()) + 1);
+            int index = (int) (Math.random() * (availableItems.size()));
             k = availableItems.get(index);
             itemTiles.put(k, itemTiles.get(k) - 1);
             if (itemTiles.get(k) == 0) {

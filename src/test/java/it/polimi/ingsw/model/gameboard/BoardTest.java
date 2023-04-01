@@ -69,6 +69,7 @@ class BoardTest {
         b.placeItem(item1,2,5);
         ItemTile item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,1,4);
+        item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,3,4);
         assertEquals(41,b.numCellsToRefill());
         ArrayList<ItemTile> items = new ArrayList<>();
@@ -126,8 +127,11 @@ class BoardTest {
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,1,1);
         assertTrue(b.getGameboard()[1][1].getItem().isForbidden());
+
+        item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,1,3);
         assertEquals(ItemType.BOOK, b.getGameboard()[1][3].getItem().getType());
+
         ItemTile item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,3,3);
         assertEquals(ItemType.CAT, b.getGameboard()[3][3].getItem().getType());
@@ -140,8 +144,11 @@ class BoardTest {
 
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,1,3);
+        item = new ItemTile(ItemType.BOOK);
+        b.placeItem(item,1,4);
         item = new ItemTile(ItemType.CAT);
         b.placeItem(item,3,3);
+
         item = b.pickItem(1,3);
         assertTrue(b.getGameboard()[1][3].getItem().isEmpty());
         assertEquals(ItemType.BOOK,item.getType());
@@ -154,6 +161,7 @@ class BoardTest {
 
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,3);
+        item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,4);
         ItemTile item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,2,5);
@@ -165,6 +173,7 @@ class BoardTest {
 
         ItemTile item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,1,4);
+        item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,3,4);
         b.enableSquaresWithFreeSide();
 
@@ -172,13 +181,16 @@ class BoardTest {
         assertTrue(b.getGameboard()[2][5].isPickable());
         assertFalse(b.getGameboard()[2][4].isPickable());
 
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,1,5);
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,3,5);
         b.enableSquaresWithFreeSide();
         assertTrue(b.getGameboard()[2][3].isPickable());
         assertFalse(b.getGameboard()[2][4].isPickable());
         assertTrue(b.getGameboard()[2][5].isPickable());
 
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,2,6);
         b.enableSquaresWithFreeSide();
         assertFalse(b.getGameboard()[2][5].isPickable());
@@ -191,6 +203,7 @@ class BoardTest {
 
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,3);
+        item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,4);
         ItemTile item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,2,5);
@@ -202,6 +215,7 @@ class BoardTest {
 
         ItemTile item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,1,4);
+        item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,3,4);
         pickables = b.pickableFirstItems();
         exp = new int[] {1, 4, 2, 3, 2, 5, 3, 4};
@@ -209,7 +223,9 @@ class BoardTest {
             assertEquals(exp[i], pickables.get(i));
         }
 
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,1,5);
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,3,5);
         pickables = b.pickableFirstItems();
         exp = new int[] {1, 4, 1, 5, 2, 3, 2, 5, 3, 4, 3, 5};
@@ -225,6 +241,7 @@ class BoardTest {
 
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,3);
+        item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,4);
         ItemTile item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,2,5);
@@ -236,6 +253,7 @@ class BoardTest {
 
         ItemTile item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,1,4);
+        item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,3,4);
         pickables = b.pickableItems(1,4);
         exp = new int[] {2, 4, 3, 4};
@@ -243,7 +261,9 @@ class BoardTest {
             assertEquals(exp[i], pickables.get(i));
         }
 
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,1,5);
+        item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,3,5);
         pickables = b.pickableItems(1,5);
         exp = new int[] {2, 5, 3, 5, 1, 4};
@@ -259,6 +279,7 @@ class BoardTest {
 
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,3);
+        item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,4);
         ItemTile item1 = new ItemTile(ItemType.CAT);
         b.placeItem(item1,2,5);
@@ -268,6 +289,7 @@ class BoardTest {
 
         ItemTile item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,1,4);
+        item2 = new ItemTile(ItemType.FRAME);
         b.placeItem(item2,3,4);
         assertTrue(b.doesSquareHaveFreeSide(2,3));
         assertFalse(b.doesSquareHaveFreeSide(2,4));
