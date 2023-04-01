@@ -31,6 +31,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                     "\n");
         String username = askUsername();
         notifyObserver(new LoginRequest(username));
+
         //Coordinates choice = askPlayer();
     }
     public String askUsername(){

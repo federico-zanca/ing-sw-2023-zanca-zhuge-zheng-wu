@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gameboard;
 
+import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import org.junit.jupiter.api.Test;
@@ -157,7 +158,6 @@ class BoardTest {
     @Test
     void testEnableSquaresWithFreeSide() {
         Board b = new Board();
-        b.initBoard(4);
 
         ItemTile item = new ItemTile(ItemType.BOOK);
         b.placeItem(item,2,3);
@@ -194,6 +194,7 @@ class BoardTest {
         b.placeItem(item1,2,6);
         b.enableSquaresWithFreeSide();
         assertFalse(b.getGameboard()[2][5].isPickable());
+
     }
 
     @Test

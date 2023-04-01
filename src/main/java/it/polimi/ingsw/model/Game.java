@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import java.util.ArrayList;
 import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.network.message.BoardMessage;
+import it.polimi.ingsw.network.message.BookshelfMessage;
 import it.polimi.ingsw.utils.Observable;
 
 public class Game extends Observable {
@@ -87,8 +88,6 @@ public class Game extends Observable {
         for(Player player : players){
             player.setPersonalGoal(randomPersonalGoal());
         }
-        notifyObserver(new BoardMessage("", board.getGameboard()){
-        });
     }
 
     /**

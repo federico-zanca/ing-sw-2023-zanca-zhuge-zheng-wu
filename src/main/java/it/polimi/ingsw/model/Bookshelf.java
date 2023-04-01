@@ -8,8 +8,8 @@ import java.util.Objects;
 
 
 public class Bookshelf {
-    protected final int Rows=6;
-    protected final int Columns=5;
+    public static final int Rows=6;
+    public static final int Columns=5;
 
     private ItemTile[][] shelfie;
 

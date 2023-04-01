@@ -35,7 +35,7 @@ public class Board {
                 if(i==4 && (j<1 || j>7))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
                 if(i==5 && (j<1 || j>6))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
                 if(i==6 && (j<3 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==7 && (j<5 || j>6))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
+                if(i==7 && (j<4 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
                 if(i==8)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
             }
         }
@@ -218,6 +218,8 @@ public class Board {
         return !gameboard[row][column - 1].getItem().hasSomething() || !gameboard[row][column + 1].getItem().hasSomething()
                 || !gameboard[row - 1][column].getItem().hasSomething() || !gameboard[row + 1][column].getItem().hasSomething();
     }
+
+
 }
 
 
