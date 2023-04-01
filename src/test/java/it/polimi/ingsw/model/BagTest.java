@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.ItemType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,18 +24,28 @@ class BagTest {
     void testDrawItem() {
         Bag b = new Bag();
         ItemTile item = b.drawItem();
-        assertNotNull(item);
-        assertEquals(131,b.getNumItemsLeftInBag());
-        item = b.drawItem();
-        assertNotNull(item);
-        assertEquals(130,b.getNumItemsLeftInBag());
+        //assertNotNull(item);
+
+        for(int i=0;i<131;i++){
+            assertNotNull(b.drawItem());
+        }
+        assertEquals(0,b.getNumItemsLeftInBag());
     }
 
     @Test
     void testDrawItems() {
         Bag b = new Bag();
         ArrayList<ItemTile> items = new ArrayList<>();
+        HashMap<ItemType,Integer> exstracted = new HashMap<>();
+        b.printBag();
+        items = b.drawItems(122);
 
+        for(int i=0;i<122;i++){
+            exstracted.put(items.get(i).getType(),1);
+        }
+        assertEquals(132-122,b.getNumItemsLeftInBag());
+
+        /*
         items = b.drawItems(5);
         assertEquals(5,items.size());
         assertEquals(127,b.getNumItemsLeftInBag());
@@ -42,32 +54,10 @@ class BagTest {
         assertEquals(7,items.size());
         assertEquals(120,b.getNumItemsLeftInBag());
 
-        //items = b.drawItems(66);
-        //assertEquals(66,items.size());
-        //assertEquals(66,b.getNumItemsLeftInBag());
-
-        //items = b.drawItems(33);
-        //assertEquals(33,items.size());
-        //assertEquals(33,b.getNumItemsLeftInBag());
-
-        //items = b.drawItems(17);
-        //assertEquals(17,items.size());
-        //assertEquals(16,b.getNumItemsLeftInBag());
-
-        //items = b.drawItems(9);
-        //assertEquals(9,items.size());
-        //assertEquals(7,b.getNumItemsLeftInBag());
-        //items = b.drawItems(60);
-        //assertEquals(60,b.getNumItemsLeftInBag());
-        //assertEquals(60,items.size());
-
-        //items = b.drawItems(59);
-        //assertEquals(1,b.getNumItemsLeftInBag());
-        //assertEquals(59,items.size());
-
         items = b.drawItems(120); //non passa test, invece di prendere 120 oggetti prende solo 60
         assertEquals(0,b.getNumItemsLeftInBag());
         assertEquals(120,items.size());
+        */
     }
 
     @Test

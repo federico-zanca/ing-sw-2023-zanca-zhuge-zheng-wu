@@ -75,10 +75,17 @@ public class Bag {
      */
     public ArrayList<ItemTile> drawItems(int numItems){
         ArrayList<ItemTile> items = new ArrayList<>();
-        for(int i=0; i<min(numItems, getNumItemsLeftInBag()); i++){
-            items.add(drawItem());
+        if(numItems <= getNumItemsLeftInBag()) {
+            for (int i = 0; i < numItems; i++) {
+                items.add(drawItem());
+            }
+            return items;
+        }else{
+            while(getNumItemsLeftInBag()>0){
+                items.add(drawItem());
+            }
+            return items;
         }
-        return items;
     }
 //TODO sistemare gestione ItemType ItemTile incoerente
 
@@ -103,5 +110,14 @@ public class Bag {
             sum+=itemTiles.get(i);
         }
         return sum;
+    }
+
+    /**
+     * Prints bag for testing.
+     */
+    public void printBag(){
+        for(ItemType t:availableItems){
+            System.out.println(t + ":" + itemTiles.get(t));
+        }
     }
 }
