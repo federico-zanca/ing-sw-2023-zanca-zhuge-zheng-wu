@@ -14,6 +14,11 @@ public class Square {
         this.item = new ItemTile(ItemType.EMPTY);
     }
 
+    public Square(Coordinates inputCoords, ItemType type) {
+        this.coords = inputCoords;
+        this.item = new ItemTile(type);
+    }
+
     public ItemTile getItem() {
         return item;
     }
