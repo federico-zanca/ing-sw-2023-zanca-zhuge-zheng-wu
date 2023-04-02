@@ -3,11 +3,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
-import org.jetbrains.annotations.NotNull;
+
 
 import java.util.*;
 
-import static java.lang.Math.min;
 
 public class Bag {
     private ArrayList<PersonalGoalCard> personalGoals;
@@ -16,18 +15,12 @@ public class Bag {
     private ArrayList<ItemType> availableItems;
     public Bag(){
         itemTiles = new HashMap<>();
-        itemTiles.put(ItemType.CAT, 22);
-        itemTiles.put(ItemType.BOOK, 22);
-        itemTiles.put(ItemType.FRAME, 22);
-        itemTiles.put(ItemType.GAME, 22);
-        itemTiles.put(ItemType.PLANT, 22);
-        itemTiles.put(ItemType.TROPHY, 22);
-        availableItems = new ArrayList<>(Arrays.asList(ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT));
-
+        availableItems = ItemType.getValues();
+        for(ItemType t: availableItems){
+            itemTiles.put(t,22);
+        }
         //TODO inserisci personal goal cards (non si sa come generarle)
-
     }
-
     public boolean emptyBag(){
         ItemType[] types = {ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT};
         for (ItemType type : types){
@@ -36,6 +29,12 @@ public class Bag {
             }
         }
         return true;
+    }
+    public HashMap<ItemType, Integer> getItemTiles() {
+        return itemTiles;
+    }
+    public ArrayList<ItemType> getAvailableItems() {
+        return availableItems;
     }
 
     /**
@@ -75,17 +74,11 @@ public class Bag {
      */
     public ArrayList<ItemTile> drawItems(int numItems){
         ArrayList<ItemTile> items = new ArrayList<>();
-        if(numItems <= getNumItemsLeftInBag()) {
-            for (int i = 0; i < numItems; i++) {
-                items.add(drawItem());
-            }
-            return items;
-        }else{
-            while(getNumItemsLeftInBag()>0){
-                items.add(drawItem());
-            }
-            return items;
+        int numLeft = getNumItemsLeftInBag();
+        for(int i=0; i<Math.min(numItems,numLeft);i++){
+            items.add(drawItem());
         }
+        return items;
     }
 //TODO sistemare gestione ItemType ItemTile incoerente
 
