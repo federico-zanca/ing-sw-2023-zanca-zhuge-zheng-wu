@@ -1,16 +1,19 @@
 package it.polimi.ingsw.network.message;
 
 import it.polimi.ingsw.model.gameboard.Coordinates;
+import it.polimi.ingsw.model.gameboard.Square;
+
+import java.util.ArrayList;
 
 public class DrawTilesMessage extends Message {
-    private final Coordinates coords;
-    public DrawTilesMessage(String username, Coordinates coords){
+    private final ArrayList<Square> squares;
+
+    public DrawTilesMessage(String username, ArrayList<Square> squares) {
         super(username, MessageType.DRAW_TILES);
-        this.coords=coords;
+        this.squares = squares;
     }
 
-
-    public Coordinates getCoords() {
-        return coords;
+    public ArrayList<Square> getSquares() {
+        return squares;
     }
 }
