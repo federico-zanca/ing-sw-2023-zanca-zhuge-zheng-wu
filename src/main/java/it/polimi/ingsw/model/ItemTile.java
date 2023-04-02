@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enumerations.ItemType;
+import it.polimi.ingsw.view.Color;
 
 public class ItemTile {
     private ItemType type;
@@ -52,6 +53,35 @@ public class ItemTile {
         return !(getType()==ItemType.FORBIDDEN || getType()==ItemType.EMPTY);
     }
 
+
+    public String toColorString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        Color c;
+        switch(type){
+            case CAT :
+                c=Color.GREEN;
+                break;
+            case PLANT:
+                c=Color.RED;
+                break;
+            case FRAME:
+                c=Color.BLUE;
+                break;
+            case GAME:
+                c=Color.YELLOW_BOLD;
+                break;
+            case TROPHY:
+                c=Color.CYAN_BOLD;
+                break;
+            case BOOK:
+                c=Color.PURPLE;
+                break;
+            default:
+                c=Color.NO_COLOR;
+                break;
+        }
+        return stringBuilder.append(c).append(type).append(Color.NO_COLOR).toString();
+    }
     @Override
     public String toString(){
         return type.toString();
