@@ -25,6 +25,11 @@ public class Board {
      * @param numPlayers
      */
     public void initBoard(int numPlayers){
+        if(numPlayers<2 ||numPlayers>4){
+            //TODO implementare meglio.
+            System.err.println("Illegal number of players.");
+            return;
+        }
         for(int i=0; i<DIMENSIONS; i++){
             for(int j=0; j<DIMENSIONS; j++) {
                 if(i==0)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
@@ -114,8 +119,11 @@ public class Board {
     public boolean needsRefill() {
         for(int i=1; i<DIMENSIONS-1; i++){
             for(int j=1; j<DIMENSIONS-1; j++){
-                if(gameboard[i][j].getItem().getType()!=ItemType.EMPTY && gameboard[i][j].getItem().getType()!=ItemType.FORBIDDEN && ((gameboard[i-1][j].getItem().getType()!=ItemType.EMPTY && gameboard[i-1][j].getItem().getType()!=ItemType.FORBIDDEN) || (gameboard[i+1][j].getItem().getType()!=ItemType.EMPTY && gameboard[i+1][j].getItem().getType()!=ItemType.FORBIDDEN) ||
-                        (gameboard[i][j-1].getItem().getType()!=ItemType.EMPTY && gameboard[i][j-1].getItem().getType()!=ItemType.FORBIDDEN) || (gameboard[i][j+1].getItem().getType()!=ItemType.EMPTY && gameboard[i][j+1].getItem().getType()!=ItemType.FORBIDDEN)))
+                if(gameboard[i][j].getItem().hasSomething() &&
+                        (gameboard[i-1][j].getItem().hasSomething() ||
+                                gameboard[i+1][j].getItem().hasSomething() ||
+                                gameboard[i][j-1].getItem().hasSomething() ||
+                                gameboard[i][j+1].getItem().hasSomething()))
                     return false;
             }
         }
@@ -141,6 +149,11 @@ public class Board {
      */
     public ItemTile pickItem(int row, int column){
         ItemTile tmp = new ItemTile(gameboard[row][column].getItem().getType());
+        if(tmp.getType() == ItemType.FORBIDDEN){
+            //TODO implementare meglio.
+            System.err.println("Forbidden square, this square is not part of the board.");
+            return tmp;
+        }
         gameboard[row][column].getItem().setType(ItemType.EMPTY);
         return tmp;
     }
@@ -219,7 +232,17 @@ public class Board {
                 || !gameboard[row - 1][column].getItem().hasSomething() || !gameboard[row + 1][column].getItem().hasSomething();
     }
 
-
+    /**
+     * for testing purpose.
+     */
+    public void printBoard(){
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                System.out.print(getGameboard()[i][j].getItem());
+            }
+            System.out.println();
+        }
+    }
 }
 
 
