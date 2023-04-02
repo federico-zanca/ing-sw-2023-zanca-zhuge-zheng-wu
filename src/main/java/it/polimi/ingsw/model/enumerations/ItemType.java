@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.enumerations;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public enum ItemType {
         CAT,
         BOOK,
@@ -29,5 +32,11 @@ public enum ItemType {
                         default:
                                 return " ";
                 }
+        }
+        public static ArrayList<ItemType> getValues(){
+                ArrayList<ItemType> tmp = new ArrayList<>(Arrays.asList(ItemType.values()));
+                tmp.remove(ItemType.FORBIDDEN);
+                tmp.remove(ItemType.EMPTY);
+                return tmp;
         }
 }
