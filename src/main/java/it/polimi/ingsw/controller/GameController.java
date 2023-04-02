@@ -118,20 +118,22 @@ public class GameController implements Observer {
             System.err.println("Discarding notification");
             return;
         }
+        String username = message.getUsername();
+       // Player player = game.getPlayerByUsername(username);
         switch (message.getType()) {
             case LOGINREQUEST:
-                game.addPlayer(new Player(message.getUsername()));
+                game.addPlayer(new Player(username));
                 System.out.println(game.getPlayersUsernames());
                 game.setChosenNumOfPlayers(4);
                 game.startGame();
                 game.getBoard().enableSquaresWithFreeSide();
-                int maxNumItems = game.getPlayerByUsername(message.getUsername()).getBookshelf().maxSlotsAvailable();
-                view.askDraw(game.getBoard().getGameboard(), maxNumItems);
+                int maxNumItems = game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable();
+                view.askDraw(username, game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), maxNumItems);
                 break;
             case DRAW_TILES:
                 view.showGreeting();
                 //turnController.drawPhase();
-                view.showBookshelf(message.getUsername(), game.getPlayerByUsername(message.getUsername()).getBookshelf().getShelfie());
+                view.showBookshelf(username, game.getPlayerByUsername(username).getBookshelf().getShelfie());
                 break;
             default:
                 System.err.println("Discarding event ");
