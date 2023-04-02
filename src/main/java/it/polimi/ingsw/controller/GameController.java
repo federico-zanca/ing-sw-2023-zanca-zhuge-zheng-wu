@@ -121,14 +121,17 @@ public class GameController implements Observer {
         switch (message.getType()) {
             case LOGINREQUEST:
                 game.addPlayer(new Player(message.getUsername()));
-                game.setChosenNumOfPlayers(2);
+                System.out.println(game.getPlayersUsernames());
+                game.setChosenNumOfPlayers(4);
                 game.startGame();
                 game.getBoard().enableSquaresWithFreeSide();
-                view.askDraw(game.getBoard().getGameboard());
+                int maxNumItems = game.getPlayerByUsername(message.getUsername()).getBookshelf().maxSlotsAvailable();
+                view.askDraw(game.getBoard().getGameboard(), maxNumItems);
                 break;
             case DRAW_TILES:
                 view.showGreeting();
                 //turnController.drawPhase();
+                view.showBookshelf(message.getUsername(), game.getPlayerByUsername(message.getUsername()).getBookshelf().getShelfie());
                 break;
             default:
                 System.err.println("Discarding event ");
