@@ -30,21 +30,38 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                     "\n");
         String username = askUsername();
         notifyObserver(new LoginRequest(username));
-
         //Coordinates choice = askPlayer();
     }
     public String askUsername(){
         out.print("Enter your name: ");
         Scanner s = new Scanner(System.in);
-        String username = s.next();
+        String username = s.nextLine();
         return username;
 
     }
 
-    public Coordinates askPlayer() {
+    public void askDraw(Square[][] board) {
+        showBoard(board);
+        out.println("Inserisci le coordinate della tessera separate da una virgola (es. riga, colonna) :");
         Scanner s = new Scanner(System.in);
-        System.out.println("Inserisci le coordinate della tessera da prendere: ");
-        return new Coordinates(0, 0);
+        String input = s.nextLine();
+        String[] tiles = input.split(",");
+        int row = Integer.parseInt(tiles[0].trim());
+        int column = Integer.parseInt(tiles[1].trim());
+        while(true){
+            if(row<0 || row>Board.DIMENSIONS-1 || column<0 || column>Board.DIMENSIONS-1){
+                out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-"+ (Board.DIMENSIONS-1));
+            }else if(!board[row][column].isPickable()){
+                out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
+            }else{
+                break;
+            }
+            input = s.nextLine();
+            tiles = input.split(",");
+            row = Integer.parseInt(tiles[0].trim());
+            column = Integer.parseInt(tiles[1].trim());
+        }
+        notifyObserver(new DrawTilesMessage("", new Coordinates(row, column)));
     }
 
     private void printColumnIndexes(int columns){
@@ -71,7 +88,13 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             strBoard.append("\n");
             strBoard.append(" ").append(i).append(" |");
             for(int j=0; j<Board.DIMENSIONS; j++){
-                strBoard.append(" ").append(board[i][j].getItem()).append(" |");
+                strBoard.append(" ");
+                if(board[i][j].isPickable()){
+                    strBoard.append(board[i][j].getItem().toColorString());
+                }else{
+                    strBoard.append(board[i][j].getItem());
+                }
+                strBoard.append(" |");
             }
             strBoard.append("\n");
         }
@@ -110,22 +133,27 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.println(strShelf.toString());
     }
 
-    public void update(Message receivedMessage, Observable o){
+    public void update(Message message, Observable o){
         if(!(o instanceof Game)){
             System.err.println("Ignoring updates from " + o);
             return;
         }
-        switch(receivedMessage.getType()){
+        switch(message.getType()){
             case BOARD:
-                showBoard(((BoardMessage) receivedMessage).getBoard());
+                showBoard(((BoardMessage) message).getBoard());
                 break;
             case BOOKSHELF:
-                BookshelfMessage m = (BookshelfMessage) receivedMessage;
+                BookshelfMessage m = (BookshelfMessage) message;
                 showBookshelf(m.getUsername(), m.getBookshelf());
                 break;
             default:
                 System.err.println("Ignoring event from " + o);
                 break;
         }
+    }
+
+    public void showGreeting() {
+        //for debugging
+        out.println("Bravo!\n");
     }
 }

@@ -123,9 +123,12 @@ public class GameController implements Observer {
                 game.addPlayer(new Player(message.getUsername()));
                 game.setChosenNumOfPlayers(2);
                 game.startGame();
+                game.getBoard().enableSquaresWithFreeSide();
+                view.askDraw(game.getBoard().getGameboard());
                 break;
             case DRAW_TILES:
-                turnController.drawPhase();
+                view.showGreeting();
+                //turnController.drawPhase();
                 break;
             default:
                 System.err.println("Discarding event ");
