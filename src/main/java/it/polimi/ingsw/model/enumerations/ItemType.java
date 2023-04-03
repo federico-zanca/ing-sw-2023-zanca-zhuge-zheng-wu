@@ -27,8 +27,6 @@ public enum ItemType {
                                 return "T";
                         case PLANT:
                                 return "P";
-                        case EMPTY:
-                                return "E";
                         default:
                                 return " ";
                 }

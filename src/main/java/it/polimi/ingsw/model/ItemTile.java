@@ -53,7 +53,7 @@ public class ItemTile {
         return !(getType()==ItemType.FORBIDDEN || getType()==ItemType.EMPTY);
     }
 
-
+/*
     public String toColorString(){
         StringBuilder stringBuilder = new StringBuilder();
         Color c;
@@ -74,7 +74,7 @@ public class ItemTile {
                 c=Color.CYAN_BOLD;
                 break;
             case BOOK:
-                c=Color.PURPLE;
+                c=Color.WHITE;
                 break;
             default:
                 c=Color.NO_COLOR;
@@ -82,6 +82,8 @@ public class ItemTile {
         }
         return stringBuilder.append(c).append(type).append(Color.NO_COLOR).toString();
     }
+
+ */
     @Override
     public String toString(){
         return type.toString();

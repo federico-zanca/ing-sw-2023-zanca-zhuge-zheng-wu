@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
@@ -236,7 +237,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes") || isNo(input);
     }
-
+/*
     private Square inputFirstCoords(Square[][] board){
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
@@ -258,12 +259,75 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
         return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
     }
+
+ */
     private void printColumnIndexes(int columns){
-        out.print("    ");
+        out.print("       ");
         for(int i=0; i<columns; i++){
-            out.print(" "+ i + "  ");
+            out.print("  "+ i + "   ");
         }
         out.print("\n");
+    }
+
+    private String paintBG(ItemType type){
+
+            StringBuilder stringBuilder = new StringBuilder();
+            Color c;
+            switch(type){
+                case CAT :
+                    c=Color.GREEN;
+                    break;
+                case PLANT:
+                    c=Color.FUCSIA;
+                    break;
+                case FRAME:
+                    c=Color.BLUE;
+                    break;
+                case GAME:
+                    c=Color.YELLOW_BOLD;
+                    break;
+                case TROPHY:
+                    c=Color.CYAN_BOLD;
+                    break;
+                case BOOK:
+                    c=Color.WHITE;
+                    break;
+                default:
+                    c=Color.NO_COLOR;
+                    break;
+            }
+            return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
+
+    }
+
+    private String paintFG(ItemType type) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Color c;
+        switch(type){
+            case CAT :
+                c=Color.WGREEN;
+                break;
+            case PLANT:
+                c=Color.WFUCSIA;
+                break;
+            case FRAME:
+                c=Color.WBLUE;
+                break;
+            case GAME:
+                c=Color.WYELLOW_BOLD;
+                break;
+            case TROPHY:
+                c=Color.WCYAN_BOLD;
+                break;
+            case BOOK:
+                c=Color.WWHITE;
+                break;
+            default:
+                c=Color.NO_COLOR;
+                break;
+        }
+        return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
+
     }
 
     /**
@@ -275,27 +339,31 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         printColumnIndexes(Board.DIMENSIONS);
         StringBuilder strBoard = new StringBuilder();
         for(int i=0; i< Board.DIMENSIONS; i++){
-            strBoard.append("    ");
+            strBoard.append("      ");
             for(int j=0; j<Board.DIMENSIONS; j++){
-                strBoard.append("+--+");
+                strBoard.append("+-----");
             }
-            strBoard.append("\n");
-            strBoard.append(" ").append(i).append(" |");
+            strBoard.append("+\n");
+            strBoard.append("  ").append(i).append("   |");
             for(int j=0; j<Board.DIMENSIONS; j++){
-                strBoard.append(" ");
+                //strBoard.append("  ");
                 if(board[i][j].isPickable()){
-                    strBoard.append(board[i][j].getItem().toColorString());
-                }else{
-                    strBoard.append(board[i][j].getItem());
+                    //strBoard.append(board[i][j].getItem().toColorString());
+                    strBoard.append(paintBG(board[i][j].getItem().getType()));
+               }else{
+                   //strBoard.append("  ").append(board[i][j].getItem()).append("  ");
+                   strBoard.append(paintFG(board[i][j].getItem().getType()));
                 }
-                strBoard.append(" |");
+                //strBoard.append("  |");
+                strBoard.append("|");
             }
             strBoard.append("\n");
         }
-        strBoard.append("    ");
+        strBoard.append("      ");
         for(int j=0; j<Board.DIMENSIONS; j++){
-            strBoard.append("+--+");
+            strBoard.append("+-----");
         }
+        strBoard.append("+");
         out.println(strBoard.toString());
     }
 
@@ -306,24 +374,25 @@ public class ProtoCli extends Observable implements Observer, Runnable {
      */
     public void showBookshelf(String username, ItemTile[][] shelfie){
         out.println("BookShelf of player " + username);
-        printColumnIndexes(Bookshelf.Columns); //TODO attenzione Bookshelf è del server
+        printColumnIndexes(Bookshelf.Columns);
         StringBuilder strShelf = new StringBuilder();
         for(int i=0; i< Bookshelf.Rows; i++){
-            strShelf.append("    ");
+            strShelf.append("      ");
             for(int j=0; j<Bookshelf.Columns; j++){
-                strShelf.append("+--+");
+                strShelf.append("+-----");
             }
-            strShelf.append("\n");
-            strShelf.append(" ").append(i).append(" |");
+            strShelf.append("+\n");
+            strShelf.append("  ").append(i).append("   |");
             for(int j=0; j<Bookshelf.Columns; j++){
-                strShelf.append(" ").append(shelfie[i][j]).append(" |");
+                strShelf.append("  ").append(shelfie[i][j]).append("  |");
             }
             strShelf.append("\n");
         }
-        strShelf.append("    ");
+        strShelf.append("      ");
         for(int j = 0; j< Bookshelf.Columns; j++){
-            strShelf.append("+--+");
+            strShelf.append("+-----");
         }
+        strShelf.append("+");
         out.println(strShelf.toString());
     }
 

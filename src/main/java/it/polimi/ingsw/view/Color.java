@@ -1,18 +1,33 @@
 package it.polimi.ingsw.view;
 
 public enum Color {
-    // Regular Colors. Normal color, no bold, background color etc.
-    RED("\033[0;31m"),      // RED
-    GREEN("\033[38;5;28m"),    // GREEN  "\u001B[32m"
-    BLUE("\033[0;34m"),     // BLUE
+    //pickable colors
+    RED("\033[38;5;0;48;5;160m"),      // RED
+    FUCSIA("\033[38;5;0;48;5;199m"),      // FUCSIA
+    GREEN("\033[38;5;0;48;5;34m"),    // GREEN  "\u001B[32m"
+    BLUE("\033[38;5;254;48;5;21m"),     // BLUE
 
     // Bold
-    YELLOW_BOLD("\033[1;33m"), // YELLOW
-    CYAN_BOLD("\033[1;36m"),   // CYAN
+    YELLOW_BOLD("\033[38;5;0;48;5;11m"), // YELLOW
+    CYAN_BOLD("\033[38;5;0;48;5;45m"),   // CYAN
 
-    PURPLE("\033[38;5;56m"), //PURPLE
+    WHITE("\033[38;5;0;48;5;254m"), //PURPLE
 
+    //non pickable colors
+
+    WRED("\033[38;5;160m"),      // RED
+    WFUCSIA("\033[38;5;199m"),      // FUCSIA
+    WGREEN("\033[38;5;34m"),    // GREEN  "\u001B[32m"
+    WBLUE("\033[38;5;27m"),     // BLUE
+
+    // Bold
+    WYELLOW_BOLD("\033[38;5;11m"), // YELLOW
+    WCYAN_BOLD("\033[38;5;45m"),   // CYAN
+
+    WWHITE("\033[38;5;254m"), //PURPLE
     NO_COLOR("\033[0m"); //NO_COLOR
+
+
 
     private final String color;
 
