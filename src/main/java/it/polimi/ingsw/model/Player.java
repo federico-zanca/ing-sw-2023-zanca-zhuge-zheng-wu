@@ -131,7 +131,7 @@ public class Player {
             }
         }
 
-        if((takedItemsX.get(0)*takedItemsX.get(2)==-1) && (flagX || flagY)){
+        if((takedItemsX.get(0)*takedItemsX.get(2)==-1 && flagY) || (takedItemsY.get(0)*takedItemsY.get(2)==-1 && flagX)){
             return true;
         }
         return false;
