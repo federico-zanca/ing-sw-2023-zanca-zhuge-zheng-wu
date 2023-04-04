@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -64,7 +65,27 @@ public class Bookshelf {
         return availableSlots;
     }
 
-
+    /**
+     * Creates an arraylist of integers that contains only columns that have enough space to contain the handsize.
+     * @param handsize size of the players hand.
+     * @return arraylist of columns.
+     */
+    public ArrayList<Integer> insertableColumns(int handsize){
+        ArrayList<Integer> cols = new ArrayList<>();
+        int counter;
+        for(int i=0;i<Columns;i++){
+            counter = 0;
+            for(int j=0;j<Rows;j++){
+                if(shelfie[j][i].getType() == ItemType.EMPTY){
+                    counter++;
+                }
+            }
+            if(counter > handsize){
+                cols.add(i);
+            }
+        }
+        return cols;
+    }
 
     /**
      * Returns true if the Bookshelf is full
