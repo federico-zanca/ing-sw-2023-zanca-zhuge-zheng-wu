@@ -4,12 +4,15 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
+import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.network.message.DrawTilesMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 import it.polimi.ingsw.view.ProtoCli;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GameController implements Observer {
     private static final int MIN_PLAYERS = 2;
@@ -131,6 +134,11 @@ public class GameController implements Observer {
                 view.askDraw(username, game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), maxNumItems);
                 break;
             case DRAW_TILES:
+                if(isDrawPhaseValid((DrawTilesMessage) message)){
+                    view.askInsert(username, ((DrawTilesMessage) message).getSquares(), game.getPlayerByUsername(username).getBookshelf());
+                }else{
+                    view.rejectDrawRequest(message.getUsername(), game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable());
+                }
                 view.showGreeting();
                 //turnController.drawPhase();
                 view.showBookshelf(username, game.getPlayerByUsername(username).getBookshelf().getShelfie());
@@ -138,6 +146,39 @@ public class GameController implements Observer {
             default:
                 System.err.println("Discarding event ");
         }
+    }
+    private boolean allCoordsAreEqual( ArrayList<Integer> x){
+        for(int i=0; i<x.size()-1; i++){
+            if (x.get(i)!=x.get(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean allCoordsAreAdjacent(ArrayList<Integer> x){
+        Collections.sort(x);
+        for(int i=0; i<x.size()-1; i++){
+            if(x.get(i)!=x.get(i+1)-1) return false;
+        }
+        return true;
+    }
+    private boolean inLineTile(ArrayList<Square> hand) {
+        ArrayList<Integer> rows = new ArrayList<>();
+        ArrayList<Integer> columns = new ArrayList<>();
+        for(Square sq : hand){
+            rows.add(sq.getRow());
+            columns.add(sq.getColumn());
+        }
+        return (allCoordsAreAdjacent(rows) && allCoordsAreEqual(columns)) || (allCoordsAreAdjacent(columns) && allCoordsAreEqual(rows));
+    }
+    private boolean isDrawPhaseValid(DrawTilesMessage message){
+        String username = message.getUsername();
+        ArrayList<Square> hand = message.getSquares();
+
+        for(Square sq : hand){
+            if(sq.isPickable()) return false;
+        }
+        return inLineTile(hand);
     }
     //public
 
