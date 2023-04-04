@@ -162,17 +162,18 @@ public class ProtoCli extends Observable implements Observer, Runnable {
 
     /**
      * Shows the bookshelf, the player hand and asks the players to insert the column in which he wants to insert the hand.
-     * @param username
-     * @param squares
-     * @param bookshelf
+     * @param username username of the player.
+     * @param squares hand of the player.
+     * @param bookshelf bookshelf of the player.
+     * @param columns arraylist of available columns.
      */
-    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf) {
+    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf, ArrayList<Integer> columns) {
         out.println("Inizia la insert phase\n");
         showBookshelf(username, bookshelf.getShelfie());
         showHand(username, squares);
         //TODO metodo per ordinare la hand.
         out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
-        int column = inputColumn(squares, bookshelf);
+        int column = inputColumn(squares, bookshelf, columns);
         notifyObserver(new InsertTilesMessage(username, squares, bookshelf, column));
     }
 
@@ -306,9 +307,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
      * Prompts the user to insert the column of the bookshelf in which he wants to insert the hand.
      * @param squares player's hand
      * @param bookshelf player's bookshelf
+     * @param columns arraylist of available columns
      * @return chosen column
      */
-    private int inputColumn(ArrayList<Square> squares, Bookshelf bookshelf) {
+    private int inputColumn(ArrayList<Square> squares, Bookshelf bookshelf,ArrayList<Integer> columns) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
         while(invalidColumnFormat(input)){
@@ -319,7 +321,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         while(true){
             if(column < 0 || column > 4){
                 out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
-            }else if(columnHasLessSpace(bookshelf,squares,column)){
+            }else if(columnHasLessSpace(column,columns)){
                 out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
             }else{
                 break;
@@ -393,19 +395,12 @@ public class ProtoCli extends Observable implements Observer, Runnable {
 
     /**
      * Checks if the column chosen by the player has enough space to insert the players hand. If not it returns 'true'.
-     * @param bookshelf bookshelf of the player
-     * @param squares hand of the player
      * @param column column that the player chose
+     * @param columns arraylist of available columns
      * @return valid chosen column
      */
-    private boolean columnHasLessSpace(Bookshelf bookshelf, ArrayList<Square> squares, int column) {
-        int[] allColumns;
-        int handSize;
-        int columnSize;
-        allColumns = bookshelf.availableSlotsForEachColumn();
-        columnSize = allColumns[column];
-        handSize = squares.size();
-        return columnSize < handSize;
+    private boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
+        return !columns.contains(column);
     }
     /**
      * @param input String to check
