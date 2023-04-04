@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
+import it.polimi.ingsw.model.exceptions.FullColumnException;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
@@ -160,6 +161,29 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
     /**
+     * Shows the bookshelf, the player hand and asks the players to insert the column in which he wants to insert the hand.
+     * @param username
+     * @param squares
+     * @param bookshelf
+     */
+    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf) {
+        out.println("Inizia la insert phase\n");
+        showBookshelf(username, bookshelf.getShelfie());
+        showHand(username, squares);
+        //TODO metodo per ordinare la hand.
+        out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
+        int column = inputColumn(squares, bookshelf);
+        for(int i=0;i< squares.size();i++){
+            try {
+                bookshelf.insertItem(squares.get(i).getItem(),column);
+            } catch (FullColumnException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        notifyObserver(new InsertTilesMessage(username, squares,bookshelf));
+    }
+
+    /**
      * Recalls askDraw() if the tiles previously taken are rejected by the Server because they are found invalid
      * @param username username of the player
      * @param board gameboard
@@ -232,6 +256,23 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
     }
 
+    /**
+     * Checks if the input format is one exact number which fits in the bookshelf's dimension. If not, it returns 'true'.
+     * @param input chosen column
+     * @return valid column
+     */
+    private boolean invalidColumnFormat(String input) {
+        if(input.length() != 1){
+            return true;
+        }
+        try{
+            int col = Integer.parseInt(input.trim());
+            return false;
+        } catch (NumberFormatException e){
+            return true;
+        }
+    }
+
 
     /**
      * Prompts the user to insert the coordinates of the tile he wants to pick and checks if the coordinates are those of a valid tile.
@@ -269,6 +310,34 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             column = Integer.parseInt(tiles[1].trim());
         }
         return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
+    }
+
+    /**
+     * Prompts the user to insert the column of the bookshelf in which he wants to insert the hand.
+     * @param squares player's hand
+     * @param bookshelf player's bookshelf
+     * @return chosen column
+     */
+    private int inputColumn(ArrayList<Square> squares, Bookshelf bookshelf) {
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        while(invalidColumnFormat(input)){
+            out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
+            input = s.nextLine();
+        }
+        int column = Integer.parseInt(input.trim());
+        while(true){
+            if(column < 0 || column > 4){
+                out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (1-5)");
+            }else if(columnHasLessSpace(bookshelf,squares,column)){
+                out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
+            }else{
+                break;
+            }
+            input = s.nextLine();
+            column = Integer.parseInt(input.trim());
+        }
+        return column;
     }
 
     /**
@@ -333,6 +402,22 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
     /**
+     * Checks if the column chosen by the player has enough space to insert the players hand. If not it returns 'true'.
+     * @param bookshelf bookshelf of the player
+     * @param squares hand of the player
+     * @param column column that the player chose
+     * @return valid chosen column
+     */
+    private boolean columnHasLessSpace(Bookshelf bookshelf, ArrayList<Square> squares, int column) {
+        int[] allColumns;
+        int handSize;
+        int columnSize;
+        allColumns = bookshelf.availableSlotsForEachColumn();
+        columnSize = allColumns[column];
+        handSize = squares.size();
+        return columnSize < handSize;
+    }
+    /**
      * @param input String to check
      * @return true if the string passed is equal to N/No/n/no
      */
@@ -348,6 +433,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes") || isNo(input);
     }
+
 /*
     private Square inputFirstCoords(Square[][] board){
         Scanner s = new Scanner(System.in);
@@ -520,6 +606,20 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
     /**
+     * Prints the hand of the player.
+     * @param username player's username
+     * @param squares player's hand
+     */
+    public void showHand(String username, ArrayList<Square> squares){
+        out.println("Hand of player " + username);
+        for (Square square : squares) {
+            ItemType item = square.getItem().getType();
+            out.print(" [" + item + "] ");
+        }
+        out.println();
+    }
+
+    /**
      * Only for testing
      */
     public void showGreeting() {
@@ -549,9 +649,5 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 System.err.println("Ignoring event from " + o);
                 break;
         }
-    }
-
-    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf) {
-        out.println("Inizia la insert phase\n");
     }
 }
