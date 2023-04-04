@@ -35,6 +35,11 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         notifyObserver(new LoginRequest(username));
         //Coordinates choice = askPlayer();
     }
+
+    /**
+     * Asks the player his username
+     * @return the username inserted
+     */
     public String askUsername(){
         out.print("Enter your name: ");
         Scanner s = new Scanner(System.in);
@@ -43,6 +48,13 @@ public class ProtoCli extends Observable implements Observer, Runnable {
 
     }
 
+    /**
+     * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
+     * @param username username of the current player
+     * @param board gameboard
+     * @param bookshelf player's bookshelf
+     * @param maxNumItems max free cells in a single column in player's bookshelf
+     */
     public void askDraw(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
         //Game game = Game.getInstance();
         showBookshelf(username, bookshelf);
@@ -107,6 +119,12 @@ public class ProtoCli extends Observable implements Observer, Runnable {
 
     }
 
+    /**
+     * Checks if the current board configuration allows the player to draw more tiles
+     * @param hand ArrayList of tiles taken by the player in this turn
+     * @param board gameboard
+     * @return true if there are other tiles the player can pick (based on what he's already picked and the board configuration)
+     */
     private boolean isPossibleToDrawMore(ArrayList<Square> hand, Square[][] board){
         ArrayList<Integer> rows = new ArrayList<>();
         ArrayList<Integer> columns = new ArrayList<>();
@@ -137,7 +155,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
      * @param input the string which format is to be evaluated
      * @return true if the String format is invalid
      */
-    public static boolean invalidFormat(String input) {
+    public static boolean invalidCoordFormat(String input) {
         String[] parts = input.split(",");
 
         // Check for two parts and trim any whitespace
@@ -146,7 +164,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
 
         try {
-            // Attempt to parse integers from string parts
+            // Attempt to parse integers from string parts : DON'T TOUCH!!!!!
             int first = Integer.parseInt(parts[0].trim());
             int second = Integer.parseInt(parts[1].trim());
 
@@ -162,15 +180,21 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
 
-
-
+    /**
+     * Prompts the user to insert the coordinates of the tile he wants to pick and checks if the coordinates are those of a valid tile.
+     * If the coordinates inserted are not valid, it re-prompts the user to insert the input.
+     * @param hand ArrayList of tiles taken by the player in this turn
+     * @param board gameboard
+     * @param n the n_th tile taken in this turn
+     * @return the Square corresponding to the given coordinates
+     */
     private Square inputCoords(ArrayList<Square> hand, Square[][] board, int n) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
-        while(invalidFormat(input)) {
+        while(invalidCoordFormat(input)) {
             out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
             input = s.nextLine();
-        };
+        }
         String[] tiles = input.split(",");
         int row = Integer.parseInt(tiles[0].trim());
         int column = Integer.parseInt(tiles[1].trim());
@@ -194,6 +218,11 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
     }
 
+    /**
+     * Checks if the given array of Integers contains only equals elements
+     * @param x ArrayList of integers
+     * @return true if the elements of the passed ArrayList are all equal
+     */
     private boolean allCoordsAreEqual( ArrayList<Integer> x){
         for(int i=0; i<x.size()-1; i++){
             if (x.get(i)!=x.get(i + 1)) {
@@ -202,6 +231,12 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
         return true;
     }
+
+    /**
+     * Checks if the integers int the given arraylist are consecutive (in whatever order they are presented)
+     * @param x ArrayList of integers
+     * @return true if the elements in the given arraylist are consecutive (in whatever order they are presented)
+     */
     private boolean allCoordsAreAdjacent(ArrayList<Integer> x){
         Collections.sort(x);
         for(int i=0; i<x.size()-1; i++){
@@ -209,6 +244,14 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
         return true;
     }
+
+    /**
+     * Checks if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
+     * @param row row number of the Square to check
+     * @param column column number of the Square to check
+     * @param hand List of Squares (tiles) already picked by the player during this turn
+     * @return true if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
+     */
     private boolean inLineTile(int row, int column, ArrayList<Square> hand) {
         ArrayList<Integer> rows = new ArrayList<>();
         ArrayList<Integer> columns = new ArrayList<>();
@@ -221,6 +264,13 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         return (allCoordsAreAdjacent(rows) && allCoordsAreEqual(columns)) || (allCoordsAreAdjacent(columns) && allCoordsAreEqual(rows));
     }
 
+    /**
+     * Checks if the tile has already been picked by the player this turn
+     * @param row row number of the Square to check
+     * @param column column number of the Square to check
+     * @param hand List of Squares (tiles) already picked by the player during this turn
+     * @return true if the passed coordinates are those of a tile which is already in the player's hand
+     */
     private boolean isTileAlreadyOnHand(int row, int column, ArrayList<Square> hand) {
         if(hand.size()==0) return false;
         for(Square sq : hand){
@@ -229,10 +279,18 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         return false;
     }
 
+    /**
+     * @param input String to check
+     * @return true if the string passed is equal to N/No/n/no
+     */
     public static boolean isNo(String input) {
         input = input.toLowerCase();
         return input.equals("n") || input.equals("no");
     }
+    /**
+     * @param input String to check
+     * @return true if the string passed is equal to N/No/n/no/Y/y/Yes/yes
+     */
     public static boolean isYesOrNo(String input) {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes") || isNo(input);
@@ -261,6 +319,11 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
  */
+
+    /**
+     * Prints the numbers from 0 to the passed parameter-1 as column indexes (separated by 5 spaces each)
+     * @param columns number of columns to print
+     */
     private void printColumnIndexes(int columns){
         out.print("       ");
         for(int i=0; i<columns; i++){
@@ -269,6 +332,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.print("\n");
     }
 
+    /**
+     * @param type ItemType
+     * @return the ESC ColorCode to paint the background accordingly to the ItemType received
+     */
     private String paintBG(ItemType type){
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -299,7 +366,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
 
     }
-
+    /**
+     * @param type ItemType
+     * @return the ESC ColorCode to paint the foreground accordingly to the ItemType received
+     */
     private String paintFG(ItemType type) {
         StringBuilder stringBuilder = new StringBuilder();
         Color c;
@@ -396,6 +466,9 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.println(strShelf.toString());
     }
 
+    /**
+     * Only for testing
+     */
     public void showGreeting() {
         //for debugging
         out.println("Bravo!\n");
