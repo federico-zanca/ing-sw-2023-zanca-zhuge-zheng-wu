@@ -37,13 +37,53 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
     /**
+     * Checks whether the given username is valid according to certain criteria.
+     *
+     * @param username the string representing the username to be validated.
+     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
+     *
+     * Criteria for a valid username:
+     * 1. Does not contain any spaces.
+     * 2. Does not start with a special character (-, _, or .).
+     * 3. Does not end with - or .
+     * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
+     */
+    private boolean isValidUsername(String username) {
+        // Check for spaces in username
+        if (username.contains(" ")) {
+            return false;
+        }
+
+        // Check if username starts or ends with a special character or if it is solely composed of numbers
+        char firstChar = username.charAt(0);
+        if (firstChar == '-' || firstChar == '_' || firstChar == '.'  || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
+            return false;
+        }
+
+        // Check for non-literal or non-numeric characters other than '-', '_' and '.'
+        String pattern = "[^a-zA-Z0-9\\-_\\.]";
+        if (username.matches(".*" + pattern + ".*")) {
+            return false;
+        }
+
+        // All checks passed, username is valid
+        return true;
+    }
+
+    /**
      * Asks the player his username
      * @return the username inserted
      */
     public String askUsername(){
+        String username;
         out.print("Enter your name: ");
         Scanner s = new Scanner(System.in);
-        String username = s.nextLine();
+        username = s.nextLine();
+        while(!isValidUsername(username)){
+            out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
+                    "Please insert your username again: ");
+            username = s.nextLine();
+        }while(!isValidUsername(username));
         return username;
 
     }
