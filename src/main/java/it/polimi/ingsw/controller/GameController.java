@@ -135,13 +135,16 @@ public class GameController implements Observer {
                 break;
             case DRAW_TILES:
                 if(isDrawPhaseValid((DrawTilesMessage) message)){
-                    view.askInsert(username, ((DrawTilesMessage) message).getSquares(), game.getPlayerByUsername(username).getBookshelf());
+                    ArrayList<Integer> columns = game.getPlayerByUsername(username).getBookshelf().insertableColumns(((DrawTilesMessage) message).getSquares().size());
+                    view.askInsert(username, ((DrawTilesMessage) message).getSquares(), game.getPlayerByUsername(username).getBookshelf(), columns);
                 }else{
                     view.rejectDrawRequest(message.getUsername(), game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable());
                 }
                 view.showGreeting();
                 //turnController.drawPhase();
                 view.showBookshelf(username, game.getPlayerByUsername(username).getBookshelf().getShelfie());
+                break;
+            case INSERT_TILES:
                 break;
             default:
                 System.err.println("Discarding event ");
