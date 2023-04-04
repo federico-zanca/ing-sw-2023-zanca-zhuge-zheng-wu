@@ -87,10 +87,10 @@ public class Bookshelf {
      * @throws FullColumnException if the target column is already full
      */
     public void insertItem(ItemTile item, int column) throws FullColumnException {
-        if(shelfie[0][column-1].getType()!= ItemType.EMPTY) throw new FullColumnException();
+        if(shelfie[0][column].getType()!= ItemType.EMPTY) throw new FullColumnException();
         for(int i=Rows-1; i>0; i--){
-            if(shelfie[i][column-1].getType()==ItemType.EMPTY){
-                shelfie[i][column-1] = item;
+            if(shelfie[i][column].getType()==ItemType.EMPTY){
+                shelfie[i][column] = item;
                 break;
             }
         }
