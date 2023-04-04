@@ -158,7 +158,14 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         */
 
     }
-    
+
+    /**
+     * Recalls askDraw() if the tiles previously taken are rejected by the Server because they are found invalid
+     * @param username username of the player
+     * @param board gameboard
+     * @param bookshelf player's bookshelf
+     * @param maxNumItems max num of items the player can draw according to its bookshelf
+     */
     public void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems){
         out.println("Invalid draw request! It seems like your client misbehaved... " +
                 "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draware invalid!");
