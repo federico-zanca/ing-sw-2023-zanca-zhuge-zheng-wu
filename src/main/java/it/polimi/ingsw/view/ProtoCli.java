@@ -173,14 +173,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         //TODO metodo per ordinare la hand.
         out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
         int column = inputColumn(squares, bookshelf);
-        for(int i=0;i< squares.size();i++){
-            try {
-                bookshelf.insertItem(squares.get(i).getItem(),column);
-            } catch (FullColumnException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        notifyObserver(new InsertTilesMessage(username, squares,bookshelf));
+        notifyObserver(new InsertTilesMessage(username, squares, bookshelf, column));
     }
 
     /**
@@ -262,9 +255,6 @@ public class ProtoCli extends Observable implements Observer, Runnable {
      * @return valid column
      */
     private boolean invalidColumnFormat(String input) {
-        if(input.length() != 1){
-            return true;
-        }
         try{
             int col = Integer.parseInt(input.trim());
             return false;
@@ -328,7 +318,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         int column = Integer.parseInt(input.trim());
         while(true){
             if(column < 0 || column > 4){
-                out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (1-5)");
+                out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
             }else if(columnHasLessSpace(bookshelf,squares,column)){
                 out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
             }else{
