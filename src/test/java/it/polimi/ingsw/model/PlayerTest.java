@@ -16,9 +16,10 @@ class PlayerTest {
     @Test
     void testEndTrigger() {
         // creo player e BookShelf, setBookshelf a player e chiamo endtrigger da player, verifica se corretto
+        //tests when bookshelf is empty
         Player p = new Player("player_1");
         assertFalse(p.endTrigger());
-
+        //tests when bookshelf is full
         Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
         String[][] matrix ={
@@ -32,6 +33,18 @@ class PlayerTest {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         assertTrue(p.endTrigger());
+        //tests when bookshelf is not full
+        String[][] matrix2 ={
+                {"E","G","T","C","G"},
+                {"E","G","F","C","T"},
+                {"E","G","T","B","F"},
+                {"E","B","T","F","T"},
+                {"E","P","F","G","G"},
+                {"E","P","C","F","T"}
+        };
+        itemmatrix = bookshelf.stringToMat(matrix2);
+        bookshelf.setShelfie(itemmatrix);
+        assertFalse(p.endTrigger());
     }
 
     @Test
@@ -177,38 +190,19 @@ class PlayerTest {
     void testCalculateAdjacentItemsPoints() {
         Player p = new Player("player_1");
         Bookshelf bookshelf = p.getBookshelf();
-        ItemTile[][] matrix = bookshelf.getShelfie();
-        for (int i = 0; i < 4; i++){
-            matrix[1][i].setType(ItemType.PLANT);
-        }
-        matrix[0][0].setType(ItemType.PLANT);
-        matrix[0][1].setType(ItemType.PLANT);
-        matrix[1][4].setType(ItemType.TROPHY);
+        ItemTile[][] itemmatrix;
 
-        matrix[2][0].setType(ItemType.FRAME);
-        matrix[2][1].setType(ItemType.FRAME);
-        matrix[2][2].setType(ItemType.PLANT);
-        matrix[2][3].setType(ItemType.PLANT);
-        matrix[2][4].setType(ItemType.BOOK);
-
-        matrix[3][0].setType(ItemType.FRAME);
-        matrix[3][1].setType(ItemType.GAME);
-        matrix[3][2].setType(ItemType.GAME);
-        matrix[3][3].setType(ItemType.GAME);
-        matrix[3][4].setType(ItemType.BOOK);
-
-        matrix[4][0].setType(ItemType.FRAME);
-        matrix[4][1].setType(ItemType.TROPHY);
-        matrix[4][2].setType(ItemType.CAT);
-        matrix[4][3].setType(ItemType.CAT);
-        matrix[4][4].setType(ItemType.CAT);
-
-        matrix[5][0].setType(ItemType.TROPHY);
-        matrix[5][1].setType(ItemType.TROPHY);
-        matrix[5][2].setType(ItemType.TROPHY);
-        matrix[5][3].setType(ItemType.CAT);
-        matrix[5][4].setType(ItemType.CAT);
-
+        String[][] matrix ={
+                {"P","P","E","E","E"},
+                {"P","P","P","P","T"},
+                {"F","F","P","P","B"},
+                {"F","G","G","G","B"},
+                {"F","T","C","C","C"},
+                {"T","T","T","C","C"}
+        };
+        itemmatrix = bookshelf.stringToMat(matrix);
+        bookshelf.setShelfie(itemmatrix);
+        p.getBookshelf().printBookshelf();
         assertEquals(21, p.calculateAdjacentItemsPoints());
     }
 }

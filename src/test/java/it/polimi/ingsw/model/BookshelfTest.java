@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookshelfTest {
 
     @Test
-    void maxSlotsAvailable() {
+    void maxSlotsAvailable() throws FullColumnException {
         Bookshelf B = new Bookshelf();
         ItemTile[][] itemmatrix;
         String[][] matrix ={
@@ -24,6 +24,8 @@ class BookshelfTest {
         B.setShelfie(itemmatrix);
        // B.printBookshelf();
         assertEquals(6,B.maxSlotsAvailable());
+        B.insertItem(new ItemTile(ItemType.PLANT),3);
+        assertEquals(5,B.maxSlotsAvailable());
     }
 
     @Test
@@ -55,14 +57,11 @@ class BookshelfTest {
                 n=5;
             }
             B.insertItem(dummyItem,n);
+            B.printBookshelf();
         }
         assertFalse(B.isFull());
         assertEquals(30-16,B.getNumEmptyCells());
-        //B.printBookshelf();
-
-        //B.insertItem(dummyItem,6);
-        //B.printBookshelf();
-
+        B.printBookshelf();
     }
 
     @Test
@@ -147,7 +146,6 @@ class BookshelfTest {
         };
         itemmatrix = B.stringToMat(matrix);
         B.setShelfie(itemmatrix);
-        B.resetGroupIDs();
         num = B.adjacentGroupsElaboration();
         for(int i=0;i<num;i++){
             assertTrue(B.countGIDoccurrencies(i)>0);
