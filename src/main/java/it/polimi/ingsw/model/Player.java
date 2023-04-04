@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Player {
     private String username;
@@ -69,6 +70,8 @@ public class Player {
     }*/
 
     private ArrayList<Integer> takeableOtherItems;
+    private ArrayList<Integer>takedItemsX=new ArrayList<>();
+    private ArrayList<Integer>takedItemsY=new ArrayList<>();
 
     public ItemTile takeFirstItem (Board board, int x, int y){
         takeableOtherItems=null;
@@ -77,6 +80,8 @@ public class Player {
         for (int i=0; i<coord_list.size()-1; i=i+2) {
             if (coord_list.get(i) == x && coord_list.get(i + 1) == y) {
                 takeableOtherItems=board.pickableItems(x,y);
+                takedItemsX.add(x);
+                takedItemsY.add(y);
                 return board.pickItem(x,y);
             }
         }
@@ -88,13 +93,48 @@ public class Player {
 
         for (int i=0; i<takeableOtherItems.size()-1; i=i+2) {
             if (takeableOtherItems.get(i) == x && takeableOtherItems.get(i + 1) == y) {
-                takeableOtherItems.remove(i);
-                takeableOtherItems.remove(i);
-                return board.pickItem(x,y);
+                takedItemsX.add(x);
+                takedItemsY.add(y);
+                if((takedItemsY.size()<2 && takedItemsX.size()<2) || checkThirdItem(takedItemsX, takedItemsY)) {
+                    takeableOtherItems.remove(i);
+                    takeableOtherItems.remove(i);
+                    return board.pickItem(x, y);
+                }
             }
         }
         return null;
 
+    }
+
+    public boolean checkThirdItem(ArrayList<Integer>takedItemsX, ArrayList<Integer>takedItemsY){
+        takedItemsX.sort(Comparator.naturalOrder());
+        takedItemsY.sort(Comparator.naturalOrder());
+        int middleX=takedItemsX.get(1);
+        int middleY=takedItemsY.get(1);
+        boolean flagX=true, flagY=true;
+
+        for(int i=0; i<takedItemsX.size(); i++){
+            takedItemsX.set(i, takedItemsX.get(i)-middleX);
+            takedItemsY.set(i, takedItemsY.get(i)-middleY);
+        }
+        for(int i=0; i<takedItemsX.size(); i++){
+            if(takedItemsX.get(i)!=0){
+                flagX=false;
+                break;
+            }
+        }
+
+        for(int i=0; i<takedItemsY.size(); i++){
+            if(takedItemsY.get(i)!=0){
+                flagY=false;
+                break;
+            }
+        }
+
+        if((takedItemsX.get(0)*takedItemsX.get(2)==-1) && (flagX || flagY)){
+            return true;
+        }
+        return false;
     }
 
     /**
