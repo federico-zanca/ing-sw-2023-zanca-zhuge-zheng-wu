@@ -158,6 +158,12 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         */
 
     }
+    
+    public void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems){
+        out.println("Invalid draw request! It seems like your client misbehaved... " +
+                "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draware invalid!");
+        askDraw(username, board, bookshelf, maxNumItems);
+    }
 
     /**
      * Checks if the current board configuration allows the player to draw more tiles
@@ -536,5 +542,9 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 System.err.println("Ignoring event from " + o);
                 break;
         }
+    }
+
+    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf) {
+        out.println("Inizia la insert phase\n");
     }
 }
