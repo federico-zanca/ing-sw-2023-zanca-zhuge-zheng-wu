@@ -80,7 +80,7 @@ public class Bookshelf {
                     counter++;
                 }
             }
-            if(counter > handsize){
+            if(counter >= handsize){
                 cols.add(i);
             }
         }
