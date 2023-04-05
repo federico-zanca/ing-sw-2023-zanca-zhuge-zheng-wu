@@ -158,6 +158,14 @@ public class Board {
         return tmp;
     }
 
+    public ArrayList<ItemTile> pickItems(ArrayList<Square> squares){
+        ArrayList<ItemTile> hand = new ArrayList<>();
+        for(Square sq : squares){
+            hand.add(pickItem(sq.getRow(), sq.getColumn()));
+        }
+        return hand;
+    }
+
     /**
      *
      * Set ItemTiles pickable as First ItemTiles

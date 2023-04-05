@@ -2,12 +2,16 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.gameboard.Board;
+import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
 import java.util.ArrayList;
+import java.util.Random;
+
 import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.network.message.BoardMessage;
 import it.polimi.ingsw.network.message.BookshelfMessage;
+import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.utils.Observable;
 
 public class Game extends Observable {
@@ -17,6 +21,8 @@ public class Game extends Observable {
     private static final int MAX_PLAYERS = 4;
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
+
+    private Player currentPlayer;
     private ArrayList<CommonGoalCard> commonGoals;
     private Board board;
     private Bag bag;
@@ -32,7 +38,9 @@ public class Game extends Observable {
         board = null;
         bag = new Bag();
         players = new ArrayList<>();
-        players.add(new Player("BOT"));
+        players.add(new Player("BOT0"));
+        players.add(new Player("BOT1"));
+        players.add(new Player("BOT2"));
         commonGoals = new ArrayList<>();
     }
     /**
@@ -50,11 +58,9 @@ public class Game extends Observable {
     /**
      * Resets the game instance, all game data is lost after this operation.
      */
-
     public static void resetInstance(){
         Game.instance=null;
     }
-
 
     /**
      * Sets the Board for the game
@@ -70,7 +76,7 @@ public class Game extends Observable {
      * @return true if the number of players currently in game is equal to the number of players specified for the game
      */
     public boolean isGameReadyToStart(){
-        return getNumCurrentPlayers()==chosenNumOfPlayers;
+        return getCurrNumOfPlayers()==chosenNumOfPlayers;
     }
 
     /**
@@ -88,6 +94,10 @@ public class Game extends Observable {
         for(Player player : players){
             player.setPersonalGoal(randomPersonalGoal());
         }
+        //board.enableSquaresWithFreeSide();
+        notifyObservers(new BoardMessage(players.get(1).getUsername(), board.getGameboard()));
+        //fai vedere personal goal
+        //fai vedere commongoals
     }
 
     /**
@@ -131,8 +141,10 @@ public class Game extends Observable {
      * @return random personalgoal
      */
     public PersonalGoalCard randomPersonalGoal(){
-        //TODO replace with real random extractor
-        return new PersonalGoalCard(2);
+        //TODO fai in modo che
+        Random rand = new Random();
+        int n = rand.nextInt(12) + 1;
+        return new PersonalGoalCard(n);
     }
 
     /**
@@ -167,6 +179,7 @@ public class Game extends Observable {
      */
     public void addPlayer(Player p){
         players.add(p);
+        //notifica view perché la lobby si aggiorna
     }
 
     /**
@@ -181,7 +194,7 @@ public class Game extends Observable {
      *
      * @return the number of players in game
      */
-    public int getNumCurrentPlayers() {
+    public int getCurrNumOfPlayers() {
         return players.size();
     }
 
@@ -191,6 +204,21 @@ public class Game extends Observable {
      */
     public int getChosenPlayersNumber() {
         return chosenNumOfPlayers;
+    }
+
+    /**
+     * Set the current player
+     * @param player the current player to be set
+     */
+    public void setCurrentPlayer(Player player){
+        currentPlayer = player;
+    }
+
+    /**
+     * @return the active player this turn
+     */
+    public Player getCurrentPlayer(){
+        return currentPlayer;
     }
 
     /**
@@ -260,5 +288,11 @@ public class Game extends Observable {
 
     public void setChosenNumOfPlayers(int i) {
         chosenNumOfPlayers = i;
+    }
+
+    public ArrayList<ItemTile> drawFromBoard(ArrayList<Square> squares) {
+        ArrayList<ItemTile> items = getBoard().pickItems(squares);
+        notifyObservers(new BoardMessage("", getBoard().getGameboard()));
+        return items;
     }
 }

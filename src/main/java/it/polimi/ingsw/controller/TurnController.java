@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 import it.polimi.ingsw.model.gameboard.Board;
+import it.polimi.ingsw.model.gameboard.Square;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -23,10 +24,10 @@ public class TurnController {
      * @param gameController Game controller
      */
     public TurnController(GameController gameController) {
-        this.game = gameController.getGame();
-        this.currentPlayer = playerQueue.get(0);
+        this.game = Game.getInstance();
         this.gameController = gameController;
         this.playerQueue = new ArrayList<>(game.getPlayers());
+        this.currentPlayer = playerQueue.get(0);
     }
     /**
      * Set the current turn phase
@@ -41,29 +42,30 @@ public class TurnController {
     public TurnPhase getTurnPhase() {
         return turnPhase;
     }
+
     /**
      * Creates a new turn
      */
     public void newTurn(){
         setTurnPhase(TurnPhase.DRAW);
-        drawPhase();
+        //drawPhase();
 
     }
 
-    /**
-     * Set the current player
-     * @param player the current player to be set
-     */
-    public void setCurrentPlayer(Player player){
-        currentPlayer = player;
+    public void drawPhase(String username, ArrayList<Square> squares) {
+        ArrayList<ItemTile> tilesHand = game.drawFromBoard(squares);
+        nextTurnPhase();
     }
 
-    /**
-     * @return the active player this turn
-     */
-    public Player getCurrentPlayer(){
-        return currentPlayer;
+    private void nextTurnPhase() {
+        switch(turnPhase){
+            case DRAW: setTurnPhase(TurnPhase.INSERT); break;
+            case INSERT: setTurnPhase(TurnPhase.REFILL); break;
+            case REFILL: setTurnPhase(TurnPhase.CALCULATE); break;
+            default:
+        }
     }
+
     /**
      * @return List of players in queue
      */
@@ -76,20 +78,20 @@ public class TurnController {
             //Basta giocare, si calcolano i punteggi
         }
         else{
-            setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
+            game.setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
             newTurn();
         }
     }
+
     /**
      * Checks if current player filled his bookshelf and adds EndToken points if deserved
      */
     private void booleanWinCondition(){
-        if(!lastTurn && getCurrentPlayer().endTrigger()){
+        if(!lastTurn && game.getCurrentPlayer().endTrigger()){
             lastTurn=true;
             currentPlayer.addPoints(1);
         }
     }
-
     private void loadNextPhase(){
         switch (turnPhase) {
             case DRAW: setTurnPhase(TurnPhase.INSERT);
@@ -113,41 +115,6 @@ public class TurnController {
         loadNextPhase();
 
     }*/
-    public void drawPhase() {
-        game.getBoard().enableSquaresWithFreeSide();
-
-
-    }
-
-    public void playerDraw(){
-        int playerIn_x, playerIn_y;
-        ItemTile tile;
-        Scanner input=new Scanner(System.in);
-        boolean InputStop=false;
-        Board board=game.getBoard();
-
-        do{
-            playerIn_x=Integer.parseInt(input.nextLine());
-            playerIn_y=Integer.parseInt(input.nextLine());
-            tile=currentPlayer.takeFirstItem(board, playerIn_x, playerIn_y);
-
-        }while (playerIn_x<0 || playerIn_y<0 || tile==null);
-
-        tiles[0]=tile;
-
-        for(int i=1; i<3; i++){
-            if(InputStop){ break;  }
-            do{
-                playerIn_x=Integer.parseInt(input.nextLine());
-                playerIn_y=Integer.parseInt(input.nextLine());
-                tile=currentPlayer.takeOtherItem(board, playerIn_x, playerIn_y);
-
-            }while (playerIn_x<0 || playerIn_y<0 || tile==null);
-            tiles[i]=tile;
-        }
-
-        loadNextPhase();
-    }
 
 
     public void playerInsert() throws FullColumnException {

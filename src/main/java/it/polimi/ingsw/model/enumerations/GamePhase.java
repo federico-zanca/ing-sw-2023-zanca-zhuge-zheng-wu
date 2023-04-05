@@ -7,6 +7,6 @@ public enum GamePhase {
     LOGIN,
     INIT,
     PLAY,
-    LAST_TURN,
-    END
+    AWARDS,
+    ENDED
 }

@@ -1,15 +1,16 @@
 package it.polimi.ingsw.controller;
 
 
+import it.polimi.ingsw.Server;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.DrawTilesMessage;
-import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 import it.polimi.ingsw.view.ProtoCli;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,7 @@ public class GameController implements Observer {
      * Controller of the game
      */
     public GameController(ProtoCli view){
-        this.view = view;
+        this.view = view; //TODO migrate to model and remove
         setupGameController();
     }
     /**
@@ -37,24 +38,11 @@ public class GameController implements Observer {
      */
     public void setupGameController(){
         this.game = Game.getInstance();
-        //set views here
+        this.lobby = new GameLobby();
+        this.turnController = new TurnController(this);
         setGamePhase(GamePhase.LOGIN);
     }
 
-    public void play(){
-        //Inizia partita
-        game.startGame();
-        // Avvia il primo turno di gioco
-
-    }
-
-    /**
-     * Set the Phase of the current 
-     * @param phase
-     */
-    private void setGamePhase(GamePhase phase) {
-        gamePhase = phase;
-    }
     /**
      * @return current game controlled
      */
@@ -62,7 +50,19 @@ public class GameController implements Observer {
         return game;
     }
 
-
+    /**
+     * @return the instance of the {@link TurnController turnController}
+     */
+    public TurnController getTurnController(){
+        return turnController;
+    }
+    /**
+     * Set the Phase of the current 
+     * @param phase
+     */
+    private void setGamePhase(GamePhase phase) {
+        gamePhase = phase;
+    }
 
     /** Method called to calculate points to add to each player and declare the winner
      */
@@ -70,8 +70,9 @@ public class GameController implements Observer {
         Player winner;
         assignPersonalGoalPoints();
         assignAdjacentItemsPoints();
-        //TODO fai funzione scelta vincitore
         winner = declareWinner();
+        setGamePhase(GamePhase.ENDED);
+        //TODO send broadcast message
     }
 
     /**
@@ -113,6 +114,138 @@ public class GameController implements Observer {
             p.addPoints(points);
         }
     }
+    /**
+     * Checks whether the given username is valid according to certain criteria.
+     *
+     * @param username the string representing the username to be validated.
+     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
+     *
+     * Criteria for a valid username:
+     * 1. Does not contain any spaces.
+     * 2. Does not start with a special character (-, _, or .).
+     * 3. Does not end with - or .
+     * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
+     */
+    private boolean validUsernameFormat(String username) {
+        // Check for spaces in username
+        if (username.contains(" ")) {
+            return false;
+        }
+
+        // Check if username starts or ends with a special character or if it is solely composed of numbers
+        char firstChar = username.charAt(0);
+        if (firstChar == '-' || firstChar == '_' || firstChar == '.'  || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
+            return false;
+        }
+
+        // Check for non-literal or non-numeric characters other than '-', '_' and '.'
+        String pattern = "[^a-zA-Z0-9\\-_\\.]";
+        if (username.matches(".*" + pattern + ".*")) {
+            return false;
+        }
+
+        // All checks passed, username is valid
+        return true;
+    }
+
+    //will be removed and reimplemented in Server class
+    public void handleLoginRequest(LoginRequest message){
+        String username = message.getUsername();
+        if(validUsernameFormat(username)){
+            if(game.getPlayerByUsername(username)==null){
+                game.addPlayer(new Player(username));
+            }
+            else{
+                System.err.println("Errore critico: esiste già qualcuno loggato con questo username\n");
+            }
+        }
+        else{
+            System.err.println("Errore critico: formato dell'username non valido");
+        }
+        if(game.isGameReadyToStart()){
+            System.err.println("IL GIOCO INIZIA");
+            setGamePhase(GamePhase.INIT);
+            game.startGame();
+            nextGamePhase();
+            turnController.newTurn();
+        }
+    }
+
+    /**
+     * Switch on Game State.
+     * @param receivedMessage Message from Active Player.
+     */
+    public void onMessageReceived(Message receivedMessage) {
+
+        //VirtualView virtualView = virtualViewMap.get(receivedMessage.getNickname());
+        switch (gamePhase) {
+            case LOGIN:
+                loginPhase(receivedMessage);
+                break;
+            case INIT:
+                //if (inputController.checkUser(receivedMessage)) {
+                //    initState(receivedMessage, virtualView);
+                //}
+                break;
+            case PLAY:
+                //if (inputController.checkUser(receivedMessage)) {
+                    //inGameState(receivedMessage);
+                //}
+                playPhase(receivedMessage);
+                break;
+            case AWARDS:
+                System.err.println("AWARDS phase not handled yet");
+                break;
+            default: // Should never reach this condition
+                //Server.LOGGER.warning(STR_INVALID_STATE);
+                break;
+        }
+    }
+
+    private void playPhase(Message message) {
+        if(message.getType()==MessageType.DRAW_TILES){
+            if(isDrawHandValid((DrawTilesMessage) message)){
+                turnController.drawPhase(((DrawTilesMessage) message).getUsername(), ((DrawTilesMessage) message).getSquares());
+            }
+            else{
+
+            }
+        }
+        else{
+            game.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
+        }
+
+    }
+
+
+
+    public void loginPhase(Message message){
+        if(message.getType()== MessageType.LOGINREQUEST) {
+            handleLoginRequest((LoginRequest) message);
+        }
+        else{
+            game.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
+        }
+    }
+
+    private void nextGamePhase() {
+        switch(gamePhase){
+            case LOGIN:
+                setGamePhase(GamePhase.INIT);
+                break;
+            case INIT:
+                setGamePhase(GamePhase.PLAY);
+                break;
+            case PLAY:
+                setGamePhase(GamePhase.AWARDS);
+                break;
+            case AWARDS:
+                setGamePhase(GamePhase.ENDED);
+                break;
+            default:
+                System.err.println("Invalid gamephase");
+        }
+    }
 
     @Override
     public void update(Message message, Observable o) {
@@ -125,16 +258,15 @@ public class GameController implements Observer {
        // Player player = game.getPlayerByUsername(username);
         switch (message.getType()) {
             case LOGINREQUEST:
-                game.addPlayer(new Player(username));
-                System.out.println(game.getPlayersUsernames());
-                game.setChosenNumOfPlayers(4);
-                game.startGame();
-                game.getBoard().enableSquaresWithFreeSide();
-                int maxNumItems = game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable();
-                view.askDraw(username, game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), maxNumItems);
+                game.setChosenNumOfPlayers(4); //andrà tolta
+                handleLoginRequest((LoginRequest) message);
+                //game.startGame();
+                //game.getBoard().enableSquaresWithFreeSide();
+                //int maxNumItems = game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable();
+                //view.askDraw(username, game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), maxNumItems);
                 break;
             case DRAW_TILES:
-                if(isDrawPhaseValid((DrawTilesMessage) message)){
+                if(isDrawHandValid((DrawTilesMessage) message)){
                     ArrayList<Integer> columns = game.getPlayerByUsername(username).getBookshelf().insertableColumns(((DrawTilesMessage) message).getSquares().size());
                     view.askInsert(username, ((DrawTilesMessage) message).getSquares(), game.getPlayerByUsername(username).getBookshelf(), columns);
                 }else{
@@ -174,7 +306,7 @@ public class GameController implements Observer {
         }
         return (allCoordsAreAdjacent(rows) && allCoordsAreEqual(columns)) || (allCoordsAreAdjacent(columns) && allCoordsAreEqual(rows));
     }
-    private boolean isDrawPhaseValid(DrawTilesMessage message){
+    public boolean isDrawHandValid(DrawTilesMessage message){
         String username = message.getUsername();
         ArrayList<Square> hand = message.getSquares();
 

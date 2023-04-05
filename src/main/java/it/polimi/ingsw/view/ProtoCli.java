@@ -33,7 +33,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                     "                                                                       \n" +
                     "\n");
         String username = askUsername();
-        notifyObserver(new LoginRequest(username));
+        notifyObservers(new LoginRequest(username));
         //Coordinates choice = askPlayer();
     }
 
@@ -122,7 +122,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 break;
             }
         }
-        notifyObserver(new DrawTilesMessage(username, hand));
+        notifyObservers(new DrawTilesMessage(username, hand));
 /*
         out.println("Inserisci le coordinate della prima tessera separate da una virgola (es. riga, colonna) :");
         hand.add(inputFirstCoords(board));
@@ -174,7 +174,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         //TODO metodo per ordinare la hand.
         out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
         int column = inputColumn(squares, bookshelf, columns);
-        notifyObserver(new InsertTilesMessage(username, squares, bookshelf, column));
+        notifyObservers(new InsertTilesMessage(username, squares, bookshelf, column));
     }
 
     /**
