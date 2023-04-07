@@ -26,6 +26,7 @@ public class GameController implements Observer {
     public final ProtoCli view;
     private TurnController turnController;
 
+    //constructors and setters
     /**
      * Controller of the game
      */
@@ -42,7 +43,15 @@ public class GameController implements Observer {
         this.turnController = new TurnController(this);
         setGamePhase(GamePhase.LOGIN);
     }
+    /**
+     * Set the Phase of the current
+     * @param phase
+     */
+    private void setGamePhase(GamePhase phase) {
+        model.setGamePhase(phase);
+    }
 
+    //getters
     /**
      * @return current game controlled
      */
@@ -56,15 +65,20 @@ public class GameController implements Observer {
         return turnController;
     }
 
-    /** Method called to calculate points to add to each player and declare the winner
+    //endgame methods
+    /**
+     * Declares the winner of the game comparing every player's score
+     * @return winner of the game
      */
-    public void endGame(){
-        Player winner;
-        assignPersonalGoalPoints();
-        assignAdjacentItemsPoints();
-        winner = declareWinner();
-        setGamePhase(GamePhase.ENDED);
-        //TODO send broadcast message
+    private Player declareWinner() {
+        //TODO improve with playersqueue from turncontroller
+        ArrayList<Player> players = model.getPlayers();
+        Player winner = players.get(0);
+        for(Player p : players){
+            if(p.getScore()>=winner.getScore())
+                winner = p;
+        }
+        return winner;
     }
     /** Method called to calculate points to add to each player and declare the winner
      */
