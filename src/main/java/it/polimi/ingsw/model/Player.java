@@ -55,90 +55,6 @@ public class Player {
     public Bookshelf getBookshelf() {
         return bookshelf;
     }
-    /*
-    /**
-     * Returns the items present on board at the passed coordinates
-     * @param board the board from which the items are taken
-     * @param rows coordinates of the rows of the items to take
-     * @param columns coordinates of the columns of the items to take
-     * @return items taken from the board
-     */
-    /*public ArrayList<ItemTile> takeItems(Board board, ArrayList<Integer> rows, ArrayList<Integer> columns){
-        ArrayList<ItemTile> itemsTaken = new ArrayList<ItemTile>();
-        for(int i=0; i<3 && i<itemsTaken.size(); i++){
-            itemsTaken.add(board.pickItem(rows.get(i), columns.get(i)));
-        }
-        return itemsTaken;
-    }*/
-
-    private ArrayList<Integer> takeableOtherItems;
-    private ArrayList<Integer>takedItemsX=new ArrayList<>();
-    private ArrayList<Integer>takedItemsY=new ArrayList<>();
-
-    public ItemTile takeFirstItem (Board board, int x, int y){
-        takeableOtherItems=null;
-        ArrayList<Integer> coord_list=board.pickableFirstItems();
-
-        for (int i=0; i<coord_list.size()-1; i=i+2) {
-            if (coord_list.get(i) == x && coord_list.get(i + 1) == y) {
-                takeableOtherItems=board.pickableItems(x,y);
-                takedItemsX.add(x);
-                takedItemsY.add(y);
-                return board.pickItem(x,y);
-            }
-        }
-        return null;
-
-    }
-
-    public ItemTile takeOtherItem (Board board, int x, int y){
-
-        for (int i=0; i<takeableOtherItems.size()-1; i=i+2) {
-            if (takeableOtherItems.get(i) == x && takeableOtherItems.get(i + 1) == y) {
-                takedItemsX.add(x);
-                takedItemsY.add(y);
-                if((takedItemsY.size()<2 && takedItemsX.size()<2) || checkThirdItem(takedItemsX, takedItemsY)) {
-                    takeableOtherItems.remove(i);
-                    takeableOtherItems.remove(i);
-                    return board.pickItem(x, y);
-                }
-            }
-        }
-        return null;
-
-    }
-
-    public boolean checkThirdItem(ArrayList<Integer>takedItemsX, ArrayList<Integer>takedItemsY){
-        takedItemsX.sort(Comparator.naturalOrder());
-        takedItemsY.sort(Comparator.naturalOrder());
-        int middleX=takedItemsX.get(1);
-        int middleY=takedItemsY.get(1);
-        boolean flagX=true, flagY=true;
-
-        for(int i=0; i<takedItemsX.size(); i++){
-            takedItemsX.set(i, takedItemsX.get(i)-middleX);
-            takedItemsY.set(i, takedItemsY.get(i)-middleY);
-        }
-        for(int i=0; i<takedItemsX.size(); i++){
-            if(takedItemsX.get(i)!=0){
-                flagX=false;
-                break;
-            }
-        }
-
-        for(int i=0; i<takedItemsY.size(); i++){
-            if(takedItemsY.get(i)!=0){
-                flagY=false;
-                break;
-            }
-        }
-
-        if((takedItemsX.get(0)*takedItemsX.get(2)==-1 && flagY) || (takedItemsY.get(0)*takedItemsY.get(2)==-1 && flagX)){
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Returns the personalGoalCard of the player
      * @return this.personalGoal
@@ -220,5 +136,3 @@ public class Player {
         return "Player : " + username;
     }
 }
-
-

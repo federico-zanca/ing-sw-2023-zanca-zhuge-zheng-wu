@@ -116,15 +116,7 @@ public class TurnController {
         }
     }
 
-    /*public void playerDraw(){
-        int dummyinput1=0,dummyinput2=0,dummyinput3=0,dummyinput4=0;
-        tiles[0] = currentPlayer.takeItem(game.getBoard(),dummyinput1,dummyinput2,dummyinput3,dummyinput4);
-        loadNextPhase();
-
-    }*/
-
-
-    public void playerInsert() throws FullColumnException {
+ public void playerInsert() throws FullColumnException {
         int dummyInput=0;
         currentPlayer.getBookshelf().insertItem(tiles[0],dummyInput);
 
