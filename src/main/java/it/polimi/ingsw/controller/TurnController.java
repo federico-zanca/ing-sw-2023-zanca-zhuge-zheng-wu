@@ -3,12 +3,15 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.network.message.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class TurnController {
@@ -16,7 +19,7 @@ public class TurnController {
     private final GameController gameController;
     private ArrayList<Player> playerQueue;
     private Player currentPlayer;
-    private TurnPhase turnPhase;
+
     private boolean lastTurn = false;
     private ItemTile[] tiles;
     /**
@@ -29,42 +32,62 @@ public class TurnController {
         this.playerQueue = new ArrayList<>(game.getPlayers());
         this.currentPlayer = playerQueue.get(0);
     }
-    /**
-     * Set the current turn phase
-     * @param phase the phase to be set
-     */
-    private void setTurnPhase(TurnPhase phase) {
-        this.turnPhase = phase;
-    }
-    /**
-     * @return current turn phase
-     */
-    public TurnPhase getTurnPhase() {
-        return turnPhase;
-    }
 
     /**
      * Creates a new turn
      */
-    public void newTurn(){
-        setTurnPhase(TurnPhase.DRAW);
-        //drawPhase();
-
+    public void newTurn() {
+        game.handleDrawPhase();
+        //game.setGamePhase(TurnPhase.DRAW);
     }
 
-    public void drawPhase(String username, ArrayList<Square> squares) {
-        ArrayList<ItemTile> tilesHand = game.drawFromBoard(squares);
-        nextTurnPhase();
-    }
-
-    private void nextTurnPhase() {
-        switch(turnPhase){
-            case DRAW: setTurnPhase(TurnPhase.INSERT); break;
-            case INSERT: setTurnPhase(TurnPhase.REFILL); break;
-            case REFILL: setTurnPhase(TurnPhase.CALCULATE); break;
-            default:
+    public void drawPhase(Message message) {
+        if(message.getType()== MessageType.DRAW_TILES){
+            DrawTilesMessage m = (DrawTilesMessage) message;
+            if(isDrawHandValid(m.getSquares())){
+                game.drawFromBoard(m.getSquares());
+            }
+            else{
+                System.err.println("Tessere non valide");
+            }
         }
+        else{
+            game.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
+        }
+        //nextTurnPhase();
     }
+
+    private boolean allCoordsAreEqual( ArrayList<Integer> x){
+        for(int i=0; i<x.size()-1; i++){
+            if (x.get(i)!=x.get(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean allCoordsAreAdjacent(ArrayList<Integer> x){
+        Collections.sort(x);
+        for(int i=0; i<x.size()-1; i++){
+            if(x.get(i)!=x.get(i+1)-1) return false;
+        }
+        return true;
+    }
+    private boolean inLineTile(ArrayList<Square> hand) {
+        ArrayList<Integer> rows = new ArrayList<>();
+        ArrayList<Integer> columns = new ArrayList<>();
+        for(Square sq : hand){
+            rows.add(sq.getRow());
+            columns.add(sq.getColumn());
+        }
+        return (allCoordsAreAdjacent(rows) && allCoordsAreEqual(columns)) || (allCoordsAreAdjacent(columns) && allCoordsAreEqual(rows));
+    }
+    public boolean isDrawHandValid(ArrayList<Square> items){
+        for(Square sq : items){
+            if(!game.getBoard().getSquare(sq.getCoordinates()).isPickable()) return false;
+        }
+        return inLineTile(items);
+    }
+
 
     /**
      * @return List of players in queue
@@ -92,23 +115,7 @@ public class TurnController {
             currentPlayer.addPoints(1);
         }
     }
-    private void loadNextPhase(){
-        switch (turnPhase) {
-            case DRAW: setTurnPhase(TurnPhase.INSERT);
-            case INSERT:
-                if(game.getBoard().needsRefill()){setTurnPhase(TurnPhase.REFILL);}
-                else{setTurnPhase(TurnPhase.CALCULATE);}
-            case REFILL: setTurnPhase(TurnPhase.CALCULATE);
-            //case CALCULATE: if(booleanWinCondition()) {
-               // currentPlayer.addPoints(1);
-              //  setTurnPhase(TurnPhase.LAST);
-           // }else{
-           //     loadNextPlayer();
-            //}
-            //TODO last round turnphase case
-            case LAST:
-        }
-    }
+
     /*public void playerDraw(){
         int dummyinput1=0,dummyinput2=0,dummyinput3=0,dummyinput4=0;
         tiles[0] = currentPlayer.takeItem(game.getBoard(),dummyinput1,dummyinput2,dummyinput3,dummyinput4);
@@ -121,11 +128,12 @@ public class TurnController {
         int dummyInput=0;
         currentPlayer.getBookshelf().insertItem(tiles[0],dummyInput);
 
-        loadNextPhase();
+        //loadNextPhase();
     }
     public void refill(){
-        game.getBoard().refillBoard(game.getBag().drawItems(game.getBoard().numCellsToRefill()));
-        loadNextPhase();
+        //game.getBoard().refillBoard(game.getBag().drawItems(game.getBoard().numCellsToRefill()));
+        game.handleRefillPhase();
+        //loadNextPhase();
     }
     public void calculateCommonGoal(){
         int first=0,second=1;
@@ -134,6 +142,6 @@ public class TurnController {
         } else if(game.getCommonGoals().get(second).check(currentPlayer.getBookshelf())){
             game.getCommonGoals().get(second).takePoints(currentPlayer);
         }
-        loadNextPhase();
+        //loadNextPhase();
     }
 }

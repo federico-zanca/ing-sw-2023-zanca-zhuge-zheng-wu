@@ -7,5 +7,5 @@ public enum MessageType {
     INSERT_TILES,
 
     BOARD, //il messaggio contiene la board aggiornata da dare alla view
-    DRAW_INFO, LOGIN_REPLY, BOOKSHELF
+    DRAW_INFO, LOGIN_REPLY, CHANGE_PHASE, BOOKSHELF
 }

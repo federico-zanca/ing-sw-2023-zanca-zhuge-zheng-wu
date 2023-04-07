@@ -81,10 +81,10 @@ public class Board {
      *
      * @param items available in bag
      */
-    public void refillBoard(ArrayList<ItemTile> items){
+    public void refillBoardWithItems(ArrayList<ItemTile> items){
         //TODO implement here
 
-        if(needsRefill()){
+
             for(int i=0; i<DIMENSIONS; i++) {
                 for (int j = 0; j < DIMENSIONS; j++) {
                     if (items.isEmpty()) {
@@ -94,7 +94,7 @@ public class Board {
                     }
                 }
             }
-        }
+
     }
 
     /**
@@ -250,6 +250,10 @@ public class Board {
             }
             System.out.println();
         }
+    }
+
+    public Square getSquare(Coordinates coords) {
+        return gameboard[coords.getRow()][coords.getColumn()];
     }
 }
 

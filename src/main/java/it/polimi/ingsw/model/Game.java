@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+import it.polimi.ingsw.model.enumerations.GamePhase;
+import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
@@ -10,8 +12,8 @@ import java.util.Random;
 
 import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.network.message.BoardMessage;
-import it.polimi.ingsw.network.message.BookshelfMessage;
-import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.DrawInfoMessage;
+import it.polimi.ingsw.network.message.InsertTilesMessage;
 import it.polimi.ingsw.utils.Observable;
 
 public class Game extends Observable {
@@ -22,6 +24,10 @@ public class Game extends Observable {
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
 
+    boolean lastTurn;
+    private GamePhase gamePhase;
+
+    private TurnPhase turnPhase;
     private Player currentPlayer;
     private ArrayList<CommonGoalCard> commonGoals;
     private Board board;
@@ -31,6 +37,8 @@ public class Game extends Observable {
         init();
     }
 
+
+    //METHODS FOR GAME INITIALIZATION
     /** Game initialization
      *
      */
@@ -42,6 +50,7 @@ public class Game extends Observable {
         players.add(new Player("BOT1"));
         players.add(new Player("BOT2"));
         commonGoals = new ArrayList<>();
+        chosenNumOfPlayers=4; //andrà rimosso, solo per testing
     }
     /**
      *
@@ -80,24 +89,42 @@ public class Game extends Observable {
     }
 
     /**
-     * Starts the Game by executing these steps:
-     * - initializes the GameBoard
-     * - Fills the board with ItemTiles
-     * - Randomly selects the two commongoals
-     * - assigns a personal goal to each player
+     * @return the GamePhase in which the game is
      */
-    public void startGame(){
-        setGameBoard(chosenNumOfPlayers);
-        fillBoard();
-        pickCommonGoalsForThisGame();
+    public GamePhase getGamePhase(){
+        return gamePhase;
+    }
 
-        for(Player player : players){
-            player.setPersonalGoal(randomPersonalGoal());
+    /**
+     * Set the Phase of the current game
+     * @param phase
+     */
+    public void setGamePhase(GamePhase phase) {
+        this.gamePhase = phase;
+        //notifyObservers(new Message(currentPlayer.getUsername(), phase));
+        //notifyObservers(new ChangedPhaseMessage(currentPlayer.getUsername(), phase));
+    }
+
+    /**
+     * Switch GamePhase to the next one
+     */
+    private void nextGamePhase() {
+        switch(gamePhase){
+            case LOGIN:
+                setGamePhase(GamePhase.INIT);
+                break;
+            case INIT:
+                setGamePhase(GamePhase.PLAY);
+                break;
+            case PLAY:
+                setGamePhase(GamePhase.AWARDS);
+                break;
+            case AWARDS:
+                setGamePhase(GamePhase.ENDED);
+                break;
+            default:
+                System.err.println("Invalid gamephase");
         }
-        //board.enableSquaresWithFreeSide();
-        notifyObservers(new BoardMessage(players.get(1).getUsername(), board.getGameboard()));
-        //fai vedere personal goal
-        //fai vedere commongoals
     }
 
     /**
@@ -135,6 +162,15 @@ public class Game extends Observable {
             default: return new CommonGoalCard12(chosenNumOfPlayers);
         }
     }
+    /**
+     * Fills the board with random ItemTiles as the game starts
+     */
+    private void fillBoard(){
+        ArrayList<ItemTile> items;
+        items = bag.drawItems(board.numCellsToRefill());
+
+        board.refillBoardWithItems(items);
+    }
 
     /**
      * Extract a random personal goal card
@@ -148,14 +184,72 @@ public class Game extends Observable {
     }
 
     /**
-     * Fills the board with random ItemTiles as the game starts
+     * Adds a CommonGoalCard to Game.commonGoals list
+     * @param cg the CommonGoalCard to be added to the game
      */
-    private void fillBoard(){
-        ArrayList<ItemTile> items;
-        items = bag.drawItems(board.numCellsToRefill());
-
-        board.refillBoard(items);
+    public void addCommonGoal(CommonGoalCard cg){
+        commonGoals.add(cg);
     }
+
+    /**
+     * Starts the Game by executing these steps:
+     * - initializes the GameBoard
+     * - Fills the board with ItemTiles
+     * - Randomly selects the two commongoals
+     * - assigns a personal goal to each player
+     */
+    public void startGame(){
+        setGamePhase(GamePhase.INIT);
+        setGameBoard(chosenNumOfPlayers);
+        fillBoard();
+        pickCommonGoalsForThisGame();
+
+        for(Player player : players){
+            player.setPersonalGoal(randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
+        }
+        setCurrentPlayer(getFirstPlayer());
+        //board.enableSquaresWithFreeSide();
+        notifyObservers(new BoardMessage(currentPlayer.getUsername(), board.getGameboard()));
+        nextGamePhase();
+        //fai vedere personal goal
+        //fai vedere commongoals
+    }
+
+
+
+    //  METHODS FOR DRAW
+
+    /**
+     * Prepares the info used by current player to draw items from the board
+     */
+    public void handleDrawPhase() {
+        setTurnPhase(TurnPhase.DRAW);
+        int maxItemTiles = currentPlayer.getBookshelf().maxSlotsAvailable();
+        board.enableSquaresWithFreeSide();
+        DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), board.getGameboard(), currentPlayer.getBookshelf().getShelfie(), maxItemTiles);
+        notifyObservers(m);
+    }
+
+    /**
+     * Calls all the methods used to remove the selected squares from the board (and puts them in the player's hand)
+     * @param squares containing the items to remove from the board
+     */
+    public void drawFromBoard(ArrayList<Square> squares) {
+       setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
+       notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
+    }
+
+    /**
+     * Sets a player's hand
+     * @param username of the player whose hand is to be set
+     * @param hand ItemTiles taken from the board (those which will be inserted in the bookshelf)
+     */
+    private void setPlayerHand(String username, ArrayList<ItemTile> hand) {
+        getPlayerByUsername(username).setHand(hand);
+        //notifyObservers();
+    }
+
+    //  PLAYERS RELATED STUFF
 
     /**
      * Returns a player given his {@code username}.
@@ -245,6 +339,14 @@ public class Game extends Observable {
     }
 
     /**
+     * Sets the number of players this game will be composed of once started
+     * @param chosenNum number of players
+     */
+    public void setChosenNumOfPlayers(int chosenNum) {
+        chosenNumOfPlayers = chosenNum;
+    }
+
+    /**
      * Returns a list of players.
      *
      * @return the players.
@@ -258,6 +360,8 @@ public class Game extends Observable {
      *
      * @return the board of the game.
      */
+
+    //  MISC
     public Board getBoard() {
         return board;
     }
@@ -271,11 +375,30 @@ public class Game extends Observable {
     }
 
     /**
-     * Adds a CommonGoalCard to Game.commonGoals list
-     * @param cg the CommonGoalCard to be added to the game
+     * @return the TurnPhase of the game
      */
-    public void addCommonGoal(CommonGoalCard cg){
-            commonGoals.add(cg);
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
+    }
+
+    /**
+     * Sets the turnphase
+     * @param turnPhase to set
+     */
+    public void setTurnPhase(TurnPhase turnPhase) {
+        this.turnPhase = turnPhase;
+    }
+
+    /**
+     * Switch TurnPhase to the next one
+     */
+    private void nextTurnPhase() {
+        switch(turnPhase){
+            case DRAW: setTurnPhase(TurnPhase.INSERT); break;
+            case INSERT: setTurnPhase(TurnPhase.REFILL); break;
+            case REFILL: setTurnPhase(TurnPhase.CALCULATE); break;
+            default:
+        }
     }
 
     /**
@@ -286,13 +409,18 @@ public class Game extends Observable {
         return commonGoals;
     }
 
-    public void setChosenNumOfPlayers(int i) {
-        chosenNumOfPlayers = i;
-    }
+    //  REFILL PHASE METHODS
 
-    public ArrayList<ItemTile> drawFromBoard(ArrayList<Square> squares) {
-        ArrayList<ItemTile> items = getBoard().pickItems(squares);
-        notifyObservers(new BoardMessage("", getBoard().getGameboard()));
-        return items;
+    /**
+     * Handles the refill phase by placing ItemTiles randomly extracted from the Bag (only if the board needs to be refilled)
+     */
+    public void handleRefillPhase() {
+        if(board.needsRefill()){
+            board.refillBoardWithItems(bag.drawItems(board.numCellsToRefill()));
+        }
+        notifyObservers(new BoardMessage("", board.getGameboard()));
     }
 }
+
+
+//ARRIVO TRA UN ATTIMO OK BRO

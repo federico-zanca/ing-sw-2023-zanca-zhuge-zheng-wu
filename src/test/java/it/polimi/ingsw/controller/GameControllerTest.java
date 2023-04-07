@@ -35,7 +35,7 @@ class GameControllerTest {
     @Test
     void update() {
         GameController g = new GameController(null);
-        Game game = g.getGame();
+        Game game = g.getModel();
         game.addPlayer(new Player("amuro"));
         System.out.println(game.getPlayersUsernames());
         game.setChosenNumOfPlayers(4);
@@ -47,20 +47,20 @@ class GameControllerTest {
         hand.add(new Square(1,3));
         //hand.add(new Square())
         DrawTilesMessage message = new DrawTilesMessage("amuro", hand);
-        assert(g.isDrawPhaseValid(message));
+        assert(g.isDrawHandValid(message));
 
         hand=new ArrayList<>();
         hand.add(new Square(0,3));
         hand.add(new Square(1,4));
         //hand.add(new Square())
         message = new DrawTilesMessage("amuro", hand);
-        assertFalse(g.isDrawPhaseValid(message));
+        assertFalse(g.isDrawHandValid(message));
 
         hand=new ArrayList<>();
         hand.add(new Square(0,3));
         hand.add(new Square(1,4));
         //hand.add(new Square())
         message = new DrawTilesMessage("amuro", hand);
-        assertFalse(g.isDrawPhaseValid(message));
+        assertFalse(g.isDrawHandValid(message));
     }
 }

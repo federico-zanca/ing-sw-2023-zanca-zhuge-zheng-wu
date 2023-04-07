@@ -10,6 +10,7 @@ public class Player {
     private String username;
     private Bookshelf bookshelf;
     private PersonalGoalCard personalGoal;
+    ArrayList<ItemTile> hand;
     private int score;
     /**
      * Default constructor of Player
@@ -19,6 +20,7 @@ public class Player {
         this.username = username;
         bookshelf = new Bookshelf();
         personalGoal = null;
+        hand = new ArrayList<>();
         score = 0;
     }
 
@@ -208,6 +210,10 @@ public class Player {
         }
         return points;
 
+    }
+
+    public void setHand(ArrayList<ItemTile> hand){
+        this.hand = hand;
     }
 
     public String toString(){

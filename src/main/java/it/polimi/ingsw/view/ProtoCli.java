@@ -37,6 +37,26 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         //Coordinates choice = askPlayer();
     }
 
+    //USERNAME insertion stuff
+
+    /**
+     * Asks the player his username
+     * @return the username inserted
+     */
+    public String askUsername(){
+        String username;
+        out.print("Enter your name: ");
+        Scanner s = new Scanner(System.in);
+        username = s.nextLine();
+        while(!isValidUsername(username)){
+            out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
+                    "Please insert your username again: ");
+            username = s.nextLine();
+        }while(!isValidUsername(username));
+        return username;
+
+    }
+
     /**
      * Checks whether the given username is valid according to certain criteria.
      *
@@ -71,23 +91,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         return true;
     }
 
-    /**
-     * Asks the player his username
-     * @return the username inserted
-     */
-    public String askUsername(){
-        String username;
-        out.print("Enter your name: ");
-        Scanner s = new Scanner(System.in);
-        username = s.nextLine();
-        while(!isValidUsername(username)){
-            out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
-                    "Please insert your username again: ");
-            username = s.nextLine();
-        }while(!isValidUsername(username));
-        return username;
-
-    }
+    //DRAW PHASE stuff
 
     /**
      * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
@@ -158,23 +162,6 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         notifyObserver(new DrawTilesMessage(username, hand));
         */
 
-    }
-
-    /**
-     * Shows the bookshelf, the player hand and asks the players to insert the column in which he wants to insert the hand.
-     * @param username username of the player.
-     * @param squares hand of the player.
-     * @param bookshelf bookshelf of the player.
-     * @param columns arraylist of available columns.
-     */
-    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf, ArrayList<Integer> columns) {
-        out.println("Inizia la insert phase\n");
-        showBookshelf(username, bookshelf.getShelfie());
-        showHand(username, squares);
-        //TODO metodo per ordinare la hand.
-        out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
-        int column = inputColumn(squares, bookshelf, columns);
-        notifyObservers(new InsertTilesMessage(username, squares, bookshelf, column));
     }
 
     /**
@@ -264,7 +251,6 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
     }
 
-
     /**
      * Prompts the user to insert the coordinates of the tile he wants to pick and checks if the coordinates are those of a valid tile.
      * If the coordinates inserted are not valid, it re-prompts the user to insert the input.
@@ -301,35 +287,6 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             column = Integer.parseInt(tiles[1].trim());
         }
         return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
-    }
-
-    /**
-     * Prompts the user to insert the column of the bookshelf in which he wants to insert the hand.
-     * @param squares player's hand
-     * @param bookshelf player's bookshelf
-     * @param columns arraylist of available columns
-     * @return chosen column
-     */
-    private int inputColumn(ArrayList<Square> squares, Bookshelf bookshelf,ArrayList<Integer> columns) {
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        while(invalidColumnFormat(input)){
-            out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
-            input = s.nextLine();
-        }
-        int column = Integer.parseInt(input.trim());
-        while(true){
-            if(column < 0 || column > 4){
-                out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
-            }else if(columnHasLessSpace(column,columns)){
-                out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
-            }else{
-                break;
-            }
-            input = s.nextLine();
-            column = Integer.parseInt(input.trim());
-        }
-        return column;
     }
 
     /**
@@ -394,15 +351,6 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
     /**
-     * Checks if the column chosen by the player has enough space to insert the players hand. If not it returns 'true'.
-     * @param column column that the player chose
-     * @param columns arraylist of available columns
-     * @return valid chosen column
-     */
-    private boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
-        return !columns.contains(column);
-    }
-    /**
      * @param input String to check
      * @return true if the string passed is equal to N/No/n/no
      */
@@ -410,6 +358,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         input = input.toLowerCase();
         return input.equals("n") || input.equals("no");
     }
+
     /**
      * @param input String to check
      * @return true if the string passed is equal to N/No/n/no/Y/y/Yes/yes
@@ -417,6 +366,67 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     public static boolean isYesOrNo(String input) {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes") || isNo(input);
+    }
+
+
+
+
+
+    //INSERT PHASE stuff
+    /**
+     * Shows the bookshelf, the player hand and asks the players to insert the column in which he wants to insert the hand.
+     * @param username username of the player.
+     * @param squares hand of the player.
+     * @param bookshelf bookshelf of the player.
+     * @param columns arraylist of available columns.
+     */
+    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf, ArrayList<Integer> columns) {
+        out.println("Inizia la insert phase\n");
+        showBookshelf(username, bookshelf.getShelfie());
+        showHand(username, squares);
+        //TODO metodo per ordinare la hand.
+        out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
+        int column = inputColumn(squares, bookshelf, columns);
+        notifyObservers(new InsertTilesMessage(username, squares, bookshelf, column));
+    }
+
+    /**
+     * Prompts the user to insert the column of the bookshelf in which he wants to insert the hand.
+     * @param squares player's hand
+     * @param bookshelf player's bookshelf
+     * @param columns arraylist of available columns
+     * @return chosen column
+     */
+    private int inputColumn(ArrayList<Square> squares, Bookshelf bookshelf,ArrayList<Integer> columns) {
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        while(invalidColumnFormat(input)){
+            out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
+            input = s.nextLine();
+        }
+        int column = Integer.parseInt(input.trim());
+        while(true){
+            if(column < 0 || column > 4){
+                out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
+            }else if(columnHasLessSpace(column,columns)){
+                out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
+            }else{
+                break;
+            }
+            input = s.nextLine();
+            column = Integer.parseInt(input.trim());
+        }
+        return column;
+    }
+
+    /**
+     * Checks if the column chosen by the player has enough space to insert the players hand. If not it returns 'true'.
+     * @param column column that the player chose
+     * @param columns arraylist of available columns
+     * @return valid chosen column
+     */
+    private boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
+        return !columns.contains(column);
     }
 
 /*
@@ -630,6 +640,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 //showBookshelf(m1.getUsername(), m1.getBookshelf());
                 //showBoard(m1.getBoard());
                 askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
+                break;
             default:
                 System.err.println("Ignoring event from " + o);
                 break;
