@@ -255,6 +255,14 @@ public class Board {
     public Square getSquare(Coordinates coords) {
         return gameboard[coords.getRow()][coords.getColumn()];
     }
+
+    public void disableAllSquares() {
+        for(int i=0; i<DIMENSIONS; i++){
+            for(int j=0; j<DIMENSIONS; j++){
+                gameboard[i][j].setPickable(false);
+            }
+        }
+    }
 }
 
 

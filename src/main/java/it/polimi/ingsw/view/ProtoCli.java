@@ -373,31 +373,19 @@ public class ProtoCli extends Observable implements Observer, Runnable {
 
 
     //INSERT PHASE stuff
-    /**
-     * Shows the bookshelf, the player hand and asks the players to insert the column in which he wants to insert the hand.
-     * @param username username of the player.
-     * @param squares hand of the player.
-     * @param bookshelf bookshelf of the player.
-     * @param columns arraylist of available columns.
-     */
-    public void askInsert(String username, ArrayList<Square> squares, Bookshelf bookshelf, ArrayList<Integer> columns) {
+
+    public void askInsert(String username, ItemTile[][] bookshelf, ArrayList<ItemTile> hand, ArrayList<Integer> columns) {
         out.println("Inizia la insert phase\n");
-        showBookshelf(username, bookshelf.getShelfie());
-        showHand(username, squares);
+        showBookshelf(username, bookshelf);
+        showHand(username, hand);
         //TODO metodo per ordinare la hand.
         out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
-        int column = inputColumn(squares, bookshelf, columns);
-        notifyObservers(new InsertTilesMessage(username, squares, bookshelf, column));
+        int column = inputColumn(hand, bookshelf, columns);
+        notifyObservers(new InsertTilesMessage(username, hand, column));
     }
 
-    /**
-     * Prompts the user to insert the column of the bookshelf in which he wants to insert the hand.
-     * @param squares player's hand
-     * @param bookshelf player's bookshelf
-     * @param columns arraylist of available columns
-     * @return chosen column
-     */
-    private int inputColumn(ArrayList<Square> squares, Bookshelf bookshelf,ArrayList<Integer> columns) {
+
+    private int inputColumn(ArrayList<ItemTile> items, ItemTile[][] bookshelf,ArrayList<Integer> columns) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
         while(invalidColumnFormat(input)){
@@ -428,31 +416,6 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     private boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
         return !columns.contains(column);
     }
-
-/*
-    private Square inputFirstCoords(Square[][] board){
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        String[] tiles = input.split(",");
-        int row = Integer.parseInt(tiles[0].trim());
-        int column = Integer.parseInt(tiles[1].trim());
-        while(true){
-            if(row<0 || row>Board.DIMENSIONS-1 || column<0 || column>Board.DIMENSIONS-1){
-                out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-"+ (Board.DIMENSIONS-1));
-            }else if(!board[row][column].isPickable()){
-                out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
-            }else{
-                break;
-            }
-            input = s.nextLine();
-            tiles = input.split(",");
-            row = Integer.parseInt(tiles[0].trim());
-            column = Integer.parseInt(tiles[1].trim());
-        }
-        return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
-    }
-
- */
 
     /**
      * Prints the numbers from 0 to the passed parameter-1 as column indexes (separated by 5 spaces each)
@@ -588,7 +551,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             strShelf.append("+\n");
             strShelf.append("  ").append(i).append("   |");
             for(int j=0; j<Bookshelf.Columns; j++){
-                strShelf.append("  ").append(shelfie[i][j]).append("  |");
+                strShelf.append(paintFG(shelfie[i][j].getType())).append("|");
             }
             strShelf.append("\n");
         }
@@ -600,16 +563,11 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.println(strShelf.toString());
     }
 
-    /**
-     * Prints the hand of the player.
-     * @param username player's username
-     * @param squares player's hand
-     */
-    public void showHand(String username, ArrayList<Square> squares){
+
+    public void showHand(String username, ArrayList<ItemTile> hand){
         out.println("Hand of player " + username);
-        for (Square square : squares) {
-            ItemType item = square.getItem().getType();
-            out.print(" [" + item + "] ");
+        for (ItemTile item : hand) {
+            out.print(" " + paintFG(item.getType()) + " ");
         }
         out.println();
     }
@@ -640,6 +598,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 //showBookshelf(m1.getUsername(), m1.getBookshelf());
                 //showBoard(m1.getBoard());
                 askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
+                break;
+            case INSERT_INFO:
+                InsertInfoMessage m2 = (InsertInfoMessage) message;
+                askInsert(m2.getUsername(), m2.getShelfie(), m2.getHand(), m2.getEnabledColumns());
                 break;
             default:
                 System.err.println("Ignoring event from " + o);

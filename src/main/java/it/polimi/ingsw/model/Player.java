@@ -135,4 +135,8 @@ public class Player {
     public String toString(){
         return "Player : " + username;
     }
+
+    public ArrayList<ItemTile> getHand() {
+        return hand;
+    }
 }

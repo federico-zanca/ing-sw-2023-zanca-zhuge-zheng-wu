@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import it.polimi.ingsw.model.commongoals.*;
-import it.polimi.ingsw.network.message.BoardMessage;
-import it.polimi.ingsw.network.message.DrawInfoMessage;
-import it.polimi.ingsw.network.message.InsertTilesMessage;
+import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.utils.Observable;
 
 public class Game extends Observable {
@@ -236,6 +234,7 @@ public class Game extends Observable {
      */
     public void drawFromBoard(ArrayList<Square> squares) {
        setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
+       board.disableAllSquares();
        notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
     }
 
@@ -394,7 +393,11 @@ public class Game extends Observable {
      */
     private void nextTurnPhase() {
         switch(turnPhase){
-            case DRAW: setTurnPhase(TurnPhase.INSERT); break;
+            case DRAW: {
+                setTurnPhase(TurnPhase.INSERT);
+                break;
+            }
+
             case INSERT: setTurnPhase(TurnPhase.REFILL); break;
             case REFILL: setTurnPhase(TurnPhase.CALCULATE); break;
             default:
@@ -419,6 +422,22 @@ public class Game extends Observable {
             board.refillBoardWithItems(bag.drawItems(board.numCellsToRefill()));
         }
         notifyObservers(new BoardMessage("", board.getGameboard()));
+    }
+
+    public ArrayList<ItemTile> getDrawnTiles() {
+        return currentPlayer.getHand();
+    }
+
+    public void prepareForInsertPhase() {
+        nextTurnPhase();
+        ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
+        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), currentPlayer.getHand(), currentPlayer.getBookshelf().getShelfie(), insertableColumns));
+    }
+
+    public void insertTiles(ArrayList<ItemTile> items, int column) {
+        currentPlayer.getBookshelf().insertItems(items, column);
+        currentPlayer.getHand().clear();
+        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf().getShelfie()));
     }
 }
 

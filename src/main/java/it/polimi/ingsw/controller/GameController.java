@@ -145,12 +145,14 @@ public class GameController implements Observer {
             turnController.newTurn();
         }
     }
+
     private void playPhase(Message message) {
         switch(model.getTurnPhase()){
             case DRAW:
                 turnController.drawPhase(message);
                 break;
             case INSERT:
+                turnController.insertPhase(message);
                 break;
             case REFILL:
                 break;

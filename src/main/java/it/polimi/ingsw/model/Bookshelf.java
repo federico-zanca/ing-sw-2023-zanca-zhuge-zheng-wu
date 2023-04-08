@@ -54,14 +54,18 @@ public class Bookshelf {
             availableSlots[i]=0;
         }
         for(int i=0; i<Columns; i++){
-            for(int j=0; j<Rows; j++){
-                //if(shelfie[j][i].getType()!=ItemType.EMPTY){
-                if(shelfie[j][i].getType()==ItemType.EMPTY){
-                    availableSlots[i]++;
-                }
+            availableSlots[i]=availableSlotsForColumn(i);
+        }
+        return availableSlots;
+    }
+
+    public int availableSlotsForColumn(int column){
+        int availableSlots=0;
+        for(int i=0; i<Rows; i++){
+            if(shelfie[i][column].getType()==ItemType.EMPTY){
+                availableSlots++;
             }
         }
-
         return availableSlots;
     }
 
@@ -70,7 +74,7 @@ public class Bookshelf {
      * @param handsize size of the players hand.
      * @return arraylist of columns.
      */
-    public ArrayList<Integer> insertableColumns(int handsize){
+    public ArrayList<Integer> enableColumns(int handsize){
         ArrayList<Integer> cols = new ArrayList<>();
         int counter;
         for(int i=0;i<Columns;i++){
@@ -107,8 +111,7 @@ public class Bookshelf {
      * @param column the target column of the insertion
      * @throws FullColumnException if the target column is already full
      */
-    public void insertItem(ItemTile item, int column) throws FullColumnException {
-        if(shelfie[0][column].getType()!= ItemType.EMPTY) throw new FullColumnException();
+    public void insertItem(ItemTile item, int column){
         for(int i=Rows-1; i>0; i--){
             if(shelfie[i][column].getType()==ItemType.EMPTY){
                 shelfie[i][column] = item;
@@ -272,6 +275,12 @@ public class Bookshelf {
                 System.out.print(shelfie[i][j].getGroupId());
             }
             System.out.println();
+        }
+    }
+
+    public void insertItems(ArrayList<ItemTile> items, int column) {
+        for(ItemTile item : items){
+            insertItem(item, column);
         }
     }
 }
