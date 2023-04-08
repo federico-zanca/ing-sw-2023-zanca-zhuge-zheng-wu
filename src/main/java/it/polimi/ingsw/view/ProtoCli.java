@@ -378,7 +378,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.println("Inizia la insert phase\n");
         showBookshelf(username, bookshelf);
         showHand(username, hand);
-        //TODO metodo per ordinare la hand.
+        orderHand(username,hand);
         out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
         int column = inputColumn(hand, bookshelf, columns);
         notifyObservers(new InsertTilesMessage(username, hand, column));
@@ -570,6 +570,105 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             out.print(" " + paintFG(item.getType()) + " ");
         }
         out.println();
+    }
+
+    /**
+     * Orders the player's hand.
+     * @param username name of player
+     * @param hand hand of player
+     */
+    public void orderHand(String username,ArrayList<ItemTile> hand){
+        String continueResponse;
+        Scanner s = new Scanner(System.in);
+        if(hand.size() > 1){
+            out.println("Vorresti ordinare la mano? (y/n)");
+            if(hand.size() == 2){
+                continueResponse = s.nextLine();
+                if(isYesOrNo(continueResponse)){
+                    while(!isNo(continueResponse)) {
+                        Collections.swap(hand, 1, 0);
+                        showHand(username,hand);
+                        out.println("Vorresti ordinarla ancora? (y/n)");
+                        continueResponse = s.nextLine();
+                    }
+                }
+            }else{
+                continueResponse = s.nextLine();
+                if(isYesOrNo(continueResponse)){
+                    while(!isNo(continueResponse)){
+                        out.println("Inserisci l'ordine in cui vorresti aver la mano: (es. 2,1,3");
+                        inputOrder(hand);
+                        showHand(username, hand);
+                        continueResponse = s.nextLine();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the order in input is correct and actually orders the hand.
+     * @param hand hand of player
+     */
+    private void inputOrder(ArrayList<ItemTile> hand) {
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        while(invalidOrderFormat(input,3)) {
+            out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
+            input = s.nextLine();
+        }
+        String[] order = input.split(",");
+        int first = Integer.parseInt(order[0].trim());
+        int second = Integer.parseInt(order[1].trim());
+        int third = Integer.parseInt(order[2].trim());
+        while(true){
+            if(first<1 || first>3 || second<1 || second>3 || third<1 || third>3){
+                out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (1-3)");
+            }else if(first==second || second==third || first==third){
+                out.println("Non si può avere due tessere nello stesso slot!");
+            }else{
+                break;
+            }
+            input = s.nextLine();
+            order = input.split(",");
+            first = Integer.parseInt(order[0].trim());
+            second = Integer.parseInt(order[1].trim());
+            third = Integer.parseInt(order[2].trim());
+        }
+        Collections.swap(hand,first,0);
+        Collections.swap(hand,second,1);
+        Collections.swap(hand,third,3);
+    }
+
+    /**
+     * Same as invalidCoordsFormat but is generic
+     * @param input cli input
+     * @param n number of numbers separated by the coma that you have in the input string
+     * @return
+     */
+    public static boolean invalidOrderFormat(String input, int n) {
+        String[] parts = input.split(",");
+
+        // Check for two parts and trim any whitespace
+        if (parts.length != n) {
+            return true;
+        }
+
+        try {
+            // Attempt to parse integers from string parts : DON'T TOUCH!!!!!
+            for(int i=0;i<n; i++){
+                int num = Integer.parseInt(parts[i].trim());
+            }
+
+            // Return false if we parsed two valid integers
+            //System.err.println("Valid format");
+            return false;
+
+        } catch (NumberFormatException e) {
+            // Catch any exception thrown by parseInt()
+            //System.err.println("Invalid format");
+            return true;
+        }
     }
 
     /**
