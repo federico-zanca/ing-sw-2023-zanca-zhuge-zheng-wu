@@ -622,8 +622,8 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         int second = Integer.parseInt(order[1].trim());
         int third = Integer.parseInt(order[2].trim());
         while(true){
-            if(first<1 || first>3 || second<1 || second>3 || third<1 || third>3){
-                out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (1-3)");
+            if(first<0 || first>2 || second<0 || second>2 || third<0 || third>2){
+                out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (0-2)");
             }else if(first==second || second==third || first==third){
                 out.println("Non si può avere due tessere nello stesso slot!");
             }else{
@@ -635,9 +635,13 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             second = Integer.parseInt(order[1].trim());
             third = Integer.parseInt(order[2].trim());
         }
+
         Collections.swap(hand,first,0);
-        Collections.swap(hand,second,1);
-        Collections.swap(hand,third,3);
+        if(second!=0){
+            Collections.swap(hand,second,1);
+        }else{
+            Collections.swap(hand,third,2);
+        }
     }
 
     /**
