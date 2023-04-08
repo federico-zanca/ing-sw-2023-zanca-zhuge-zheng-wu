@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class Player {
     private String username;

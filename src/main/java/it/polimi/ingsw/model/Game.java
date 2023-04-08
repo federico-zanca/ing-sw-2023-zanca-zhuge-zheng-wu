@@ -1,18 +1,16 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.utils.Observable;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import it.polimi.ingsw.model.commongoals.*;
-import it.polimi.ingsw.network.message.*;
-import it.polimi.ingsw.utils.Observable;
 
 public class Game extends Observable {
     //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)

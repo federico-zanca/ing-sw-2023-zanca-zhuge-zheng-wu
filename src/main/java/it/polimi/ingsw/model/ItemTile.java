@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enumerations.ItemType;
-import it.polimi.ingsw.view.Color;
 
 public class ItemTile {
     private ItemType type;

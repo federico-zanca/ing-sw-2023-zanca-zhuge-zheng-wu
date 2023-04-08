@@ -4,11 +4,13 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.message.ErrorMessage;
+import it.polimi.ingsw.network.message.LoginRequest;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 import it.polimi.ingsw.view.ProtoCli;
-//import it.polimi.ingsw.view.VirtualView;
 
 import java.util.ArrayList;
 
