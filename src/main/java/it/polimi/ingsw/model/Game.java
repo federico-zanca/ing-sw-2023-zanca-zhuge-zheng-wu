@@ -95,7 +95,7 @@ public class Game extends Observable {
 
     /**
      * Set the Phase of the current game
-     * @param phase
+     * @param phase the phase to set
      */
     public void setGamePhase(GamePhase phase) {
         this.gamePhase = phase;
@@ -334,6 +334,7 @@ public class Game extends Observable {
      * @return {@code true} if the username is found, {@code false} otherwise.
      */
     public boolean isUsernameTaken(String username){
+        if(getPlayersUsernames().isEmpty()) return false;
         return getPlayersUsernames().contains(username);
     }
 
@@ -369,7 +370,7 @@ public class Game extends Observable {
 
     /**
      * Returns the current board.
-     * @return
+     * @return the board of the game.
      */
     public Board getBoard() {
         return board;
@@ -430,6 +431,10 @@ public class Game extends Observable {
      */
 
     //  INSERT PHASE METHODS
+
+    /**
+     * Prepares the game for the insert phase by sending the currentplayer all the info he needs to insert his tiles
+     */
     public void prepareForInsertPhase() {
         nextTurnPhase();
         ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
@@ -448,12 +453,19 @@ public class Game extends Observable {
     }
 
     //  CALCULATE PHASE METHODS
+
+    /**
+     * Prepares the game for the calculate phase by setting the turnphase to Calculate
+     */
     public void prepareForCalculatePhase() {
         nextTurnPhase();
         //TODO eventuali messaggi
         handleCalculatePhase();
     }
 
+    /**
+     * Handles the calculate phase by checking if the player has achieved any common goal
+     */
     public void handleCalculatePhase() {
         int count=0;
         for(CommonGoalCard cg : commonGoals){
@@ -472,6 +484,9 @@ public class Game extends Observable {
 
     //  REFILL PHASE METHODS
 
+    /**
+     * Prepares the game for the refill phase by setting the turnphase to refill
+     */
     public void prepareForRefillPhase() {
         nextTurnPhase();
         //TODO eventuali messaggi

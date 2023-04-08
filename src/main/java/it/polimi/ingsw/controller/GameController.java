@@ -1,20 +1,16 @@
 package it.polimi.ingsw.controller;
 
 
-import it.polimi.ingsw.Server;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 import it.polimi.ingsw.view.ProtoCli;
-import it.polimi.ingsw.view.View;
 //import it.polimi.ingsw.view.VirtualView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class GameController implements Observer {
     private static final int MIN_PLAYERS = 2;
@@ -117,6 +113,10 @@ public class GameController implements Observer {
     //will be removed and reimplemented in Server class
 
     //phases handling methods
+    /**
+     * Handles the LoginPhase related messages received from the view
+     * @param message
+     */
     public void loginPhase(Message message){
         if(message.getType()== MessageType.LOGINREQUEST) {
             handleLoginRequest((LoginRequest) message);
@@ -128,7 +128,7 @@ public class GameController implements Observer {
     public void handleLoginRequest(LoginRequest message){
         String username = message.getUsername();
         if(validUsernameFormat(username)){
-            if(model.getPlayerByUsername(username)==null){
+            if(!model.isUsernameTaken(username)){
                 model.addPlayer(new Player(username));
             }
             else{
@@ -148,7 +148,10 @@ public class GameController implements Observer {
             turnController.newTurn();
         }
     }
-
+    /**
+     * Handles the PlayPhase related messages received from the view
+     * @param message
+     */
     private void playPhase(Message message) {
         switch(model.getTurnPhase()){
             case DRAW:
@@ -170,6 +173,7 @@ public class GameController implements Observer {
         }
 
     }
+
 
     //validity check methods
     /**
@@ -278,8 +282,6 @@ public class GameController implements Observer {
 
          */
     }
-
-
 
 
     //public
