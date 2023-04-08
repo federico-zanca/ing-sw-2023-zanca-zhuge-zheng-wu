@@ -23,8 +23,6 @@ public class TurnController {
     public TurnController(GameController gameController) {
         this.model = Game.getInstance();
         this.gameController = gameController;
-        this.playerQueue = new ArrayList<>(model.getPlayers());
-        model.setCurrentPlayer(playerQueue.get(0));
     }
 
     /**
@@ -94,7 +92,7 @@ public class TurnController {
     public void loadNextPlayer(){
         int nowCurrent = playerQueue.indexOf(model.getCurrentPlayer());
         if(nowCurrent == playerQueue.size()-1 && lastTurn){
-            //Basta giocare, si calcolano i punteggi
+            model.nextGamePhase();
         }
         else{
             model.setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
@@ -105,33 +103,33 @@ public class TurnController {
     /**
      * Checks if current player filled his bookshelf and adds EndToken points if deserved
      */
-    private void booleanWinCondition(){
+    private void lastTurnCondition(){
         if(!lastTurn && model.getCurrentPlayer().endTrigger()){
             lastTurn=true;
             model.getCurrentPlayer().addPoints(1);
         }
     }
 
-    public void refill(){
-        //game.getBoard().refillBoard(game.getBag().drawItems(game.getBoard().numCellsToRefill()));
+    public void refillPhase(){
         model.handleRefillPhase();
-        //loadNextPhase();
-    }
-    public void calculateCommonGoal(){
-        int first=0,second=1;
-        if(model.getCommonGoals().get(first).check(model.getCurrentPlayer().getBookshelf())){
-            model.getCommonGoals().get(first).takePoints(model.getCurrentPlayer());
-        } else if(model.getCommonGoals().get(second).check(model.getCurrentPlayer().getBookshelf())){
-            model.getCommonGoals().get(second).takePoints(model.getCurrentPlayer());
-        }
-        //loadNextPhase();
+        loadNextPlayer();
     }
 
+    public void calculateCommonGoal(){
+        model.handleCalculatePhase();
+        refillPhase();
+    }
+
+    /**
+     * Inserts the tiles in the hand in the bookshelf
+     * @param message Message containing the tiles to insert and where to insert them (column)
+     */
     public void insertPhase(Message message) {
         if(message.getType()== MessageType.INSERT_TILES){
             InsertTilesMessage m = (InsertTilesMessage) message;
             if(isInsertHandValid(m.getItems(), m.getColumn())){
                 model.insertTiles(m.getItems(), m.getColumn());
+                lastTurnCondition();
             }
             else{
                 System.err.println("Tessere non valide");
@@ -140,6 +138,8 @@ public class TurnController {
         else{
             model.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
         }
+        model.prepareForRefillPhase();
+        calculateCommonGoal();
     }
 
     /**
@@ -152,5 +152,9 @@ public class TurnController {
         if(items.size()!=model.getCurrentPlayer().getHand().size()) return false; //return false if the number of tiles in the hand is different from the number of tiles in the message
         if(!items.containsAll(model.getCurrentPlayer().getHand())) return false; //return false if the tiles in the hand are different from the tiles in the message
         return model.getCurrentPlayer().getBookshelf().availableSlotsForColumn(column)>=items.size(); //return false if the column has less available slots than the number of tiles in the message
+    }
+
+    public void setPlayersQueue(ArrayList<Player> players) {
+        this.playerQueue = players;
     }
 }

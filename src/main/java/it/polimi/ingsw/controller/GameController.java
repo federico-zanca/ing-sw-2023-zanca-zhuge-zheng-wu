@@ -31,7 +31,7 @@ public class GameController implements Observer {
      * Controller of the game
      */
     public GameController(ProtoCli view){
-        this.view = view; //TODO migrate to model and remove
+        this.view = view;
         setupGameController();
     }
     /**
@@ -141,6 +141,9 @@ public class GameController implements Observer {
         if(model.isGameReadyToStart()){
             System.err.println("IL GIOCO INIZIA");
             model.startGame();
+            turnController.setPlayersQueue(model.getPlayers());
+            model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
+
             //nextGamePhase();
             turnController.newTurn();
         }
@@ -154,10 +157,14 @@ public class GameController implements Observer {
             case INSERT:
                 turnController.insertPhase(message);
                 break;
-            case REFILL:
-                break;
+                /*
             case CALCULATE:
+                turnController.calculateCommonGoal();
                 break;
+            case REFILL:
+                turnController.refillPhase();
+                break;
+                 */
             default:
                 System.err.println("Invalid Turn Phase: should never reach this state");
         }

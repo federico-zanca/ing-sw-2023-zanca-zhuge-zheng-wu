@@ -106,7 +106,7 @@ public class Game extends Observable {
     /**
      * Switch GamePhase to the next one
      */
-    private void nextGamePhase() {
+    public void nextGamePhase() {
         switch(gamePhase){
             case LOGIN:
                 setGamePhase(GamePhase.INIT);
@@ -222,6 +222,7 @@ public class Game extends Observable {
      */
     public void handleDrawPhase() {
         setTurnPhase(TurnPhase.DRAW);
+        notifyObservers(new NewTurnMessage(currentPlayer.getUsername()));
         int maxItemTiles = currentPlayer.getBookshelf().maxSlotsAvailable();
         board.enableSquaresWithFreeSide();
         DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), board.getGameboard(), currentPlayer.getBookshelf().getShelfie(), maxItemTiles);
@@ -246,6 +247,18 @@ public class Game extends Observable {
     private void setPlayerHand(String username, ArrayList<ItemTile> hand) {
         getPlayerByUsername(username).setHand(hand);
         //notifyObservers();
+    }
+
+    /**
+     * Returns the current board.
+     *
+     * @return the board of the game.
+     */
+
+    //  MISC
+
+    public ArrayList<ItemTile> getDrawnTiles() {
+        return currentPlayer.getHand();
     }
 
     //  PLAYERS RELATED STUFF
@@ -356,11 +369,8 @@ public class Game extends Observable {
 
     /**
      * Returns the current board.
-     *
-     * @return the board of the game.
+     * @return
      */
-
-    //  MISC
     public Board getBoard() {
         return board;
     }
@@ -398,8 +408,9 @@ public class Game extends Observable {
                 break;
             }
 
-            case INSERT: setTurnPhase(TurnPhase.REFILL); break;
-            case REFILL: setTurnPhase(TurnPhase.CALCULATE); break;
+            case INSERT: setTurnPhase(TurnPhase.CALCULATE); break;
+            case CALCULATE: setTurnPhase(TurnPhase.REFILL); break;
+            //case REFILL: setTurnPhase(TurnPhase.DRAW); break;
             default:
         }
     }
@@ -415,31 +426,66 @@ public class Game extends Observable {
     //  REFILL PHASE METHODS
 
     /**
+     * Prepares the game for the insert phase by sending the currentplayer all the info he needs to insert his tiles
+     */
+
+    //  INSERT PHASE METHODS
+    public void prepareForInsertPhase() {
+        nextTurnPhase();
+        ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
+        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), getDrawnTiles(), currentPlayer.getBookshelf().getShelfie(), insertableColumns));
+    }
+
+    /**
+     * Inserts the tiles in the bookshelf
+     * @param items to insert
+     * @param column where to insert them
+     */
+    public void insertTiles(ArrayList<ItemTile> items, int column) {
+        currentPlayer.getBookshelf().insertItems(items, column);
+        currentPlayer.getHand().clear();
+        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf().getShelfie()));
+    }
+
+    //  CALCULATE PHASE METHODS
+    public void prepareForCalculatePhase() {
+        nextTurnPhase();
+        //TODO eventuali messaggi
+        handleCalculatePhase();
+    }
+
+    public void handleCalculatePhase() {
+        int count=0;
+        for(CommonGoalCard cg : commonGoals){
+            if(!cg.achievedBy(currentPlayer) && cg.check(currentPlayer.getBookshelf())){
+                int points = cg.peek();
+                cg.takePoints(currentPlayer);
+                //TODO replace cg with a description of it
+                notifyObservers(new AchievedCommonGoalMessage(currentPlayer.getUsername(), cg, points)); //send a message containing the info of the achieved common goal
+                count++;
+            }
+        }
+        if(count==0){
+            notifyObservers(new NoCommonGoalMessage(currentPlayer.getUsername()));
+        }
+    }
+
+    //  REFILL PHASE METHODS
+
+    public void prepareForRefillPhase() {
+        nextTurnPhase();
+        //TODO eventuali messaggi
+        handleRefillPhase();
+    }
+
+    /**
      * Handles the refill phase by placing ItemTiles randomly extracted from the Bag (only if the board needs to be refilled)
      */
     public void handleRefillPhase() {
         if(board.needsRefill()){
             board.refillBoardWithItems(bag.drawItems(board.numCellsToRefill()));
         }
-        notifyObservers(new BoardMessage("", board.getGameboard()));
+        notifyObservers(new BoardMessage(currentPlayer.getUsername(), board.getGameboard()));
     }
 
-    public ArrayList<ItemTile> getDrawnTiles() {
-        return currentPlayer.getHand();
-    }
-
-    public void prepareForInsertPhase() {
-        nextTurnPhase();
-        ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
-        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), currentPlayer.getHand(), currentPlayer.getBookshelf().getShelfie(), insertableColumns));
-    }
-
-    public void insertTiles(ArrayList<ItemTile> items, int column) {
-        currentPlayer.getBookshelf().insertItems(items, column);
-        currentPlayer.getHand().clear();
-        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf().getShelfie()));
-    }
 }
-
-
-//ARRIVO TRA UN ATTIMO OK BRO

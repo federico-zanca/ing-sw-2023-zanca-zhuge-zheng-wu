@@ -80,7 +80,6 @@ public class Bag {
         }
         return items;
     }
-//TODO sistemare gestione ItemType ItemTile incoerente
 
     /**
      * Adds an ItemTile object to the bag

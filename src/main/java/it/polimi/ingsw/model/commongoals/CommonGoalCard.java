@@ -39,8 +39,10 @@ public abstract class CommonGoalCard {
         }
     }
 
-    public void takePoints(@NotNull Player p){
+
+    public void takePoints(Player p){
         p.addPoints(points.pop());
+        thoseWhoAchieved.add(p);
     }
 
     public int peek(){
@@ -48,6 +50,8 @@ public abstract class CommonGoalCard {
     }
 
     public boolean achievedBy(Player p){
+        if(thoseWhoAchieved == null)
+            return false;
         return thoseWhoAchieved.contains(p);
     }
 
