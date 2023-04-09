@@ -644,7 +644,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
 
         Collections.swap(hand,first-1,0);
-        if(second!=0){
+        if(second!=1){
             Collections.swap(hand,second-1,1);
         }else{
             Collections.swap(hand,third-1,2);
