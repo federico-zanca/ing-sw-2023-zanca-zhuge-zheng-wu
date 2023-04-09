@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.gameboard;
 
-import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import org.junit.jupiter.api.Test;

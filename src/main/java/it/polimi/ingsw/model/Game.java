@@ -1,18 +1,16 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
+import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.utils.Observable;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import it.polimi.ingsw.model.commongoals.*;
-import it.polimi.ingsw.network.message.*;
-import it.polimi.ingsw.utils.Observable;
 
 public class Game extends Observable {
     //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)
@@ -95,7 +93,7 @@ public class Game extends Observable {
 
     /**
      * Set the Phase of the current game
-     * @param phase
+     * @param phase the phase to set
      */
     public void setGamePhase(GamePhase phase) {
         this.gamePhase = phase;
@@ -106,7 +104,7 @@ public class Game extends Observable {
     /**
      * Switch GamePhase to the next one
      */
-    private void nextGamePhase() {
+    public void nextGamePhase() {
         switch(gamePhase){
             case LOGIN:
                 setGamePhase(GamePhase.INIT);
@@ -222,6 +220,7 @@ public class Game extends Observable {
      */
     public void handleDrawPhase() {
         setTurnPhase(TurnPhase.DRAW);
+        notifyObservers(new NewTurnMessage(currentPlayer.getUsername()));
         int maxItemTiles = currentPlayer.getBookshelf().maxSlotsAvailable();
         board.enableSquaresWithFreeSide();
         DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), board.getGameboard(), currentPlayer.getBookshelf().getShelfie(), maxItemTiles);
@@ -246,6 +245,18 @@ public class Game extends Observable {
     private void setPlayerHand(String username, ArrayList<ItemTile> hand) {
         getPlayerByUsername(username).setHand(hand);
         //notifyObservers();
+    }
+
+    /**
+     * Returns the current board.
+     *
+     * @return the board of the game.
+     */
+
+    //  MISC
+
+    public ArrayList<ItemTile> getDrawnTiles() {
+        return currentPlayer.getHand();
     }
 
     //  PLAYERS RELATED STUFF
@@ -321,6 +332,7 @@ public class Game extends Observable {
      * @return {@code true} if the username is found, {@code false} otherwise.
      */
     public boolean isUsernameTaken(String username){
+        if(getPlayersUsernames().isEmpty()) return false;
         return getPlayersUsernames().contains(username);
     }
 
@@ -356,11 +368,8 @@ public class Game extends Observable {
 
     /**
      * Returns the current board.
-     *
      * @return the board of the game.
      */
-
-    //  MISC
     public Board getBoard() {
         return board;
     }
@@ -398,8 +407,9 @@ public class Game extends Observable {
                 break;
             }
 
-            case INSERT: setTurnPhase(TurnPhase.REFILL); break;
-            case REFILL: setTurnPhase(TurnPhase.CALCULATE); break;
+            case INSERT: setTurnPhase(TurnPhase.CALCULATE); break;
+            case CALCULATE: setTurnPhase(TurnPhase.REFILL); break;
+            //case REFILL: setTurnPhase(TurnPhase.DRAW); break;
             default:
         }
     }
@@ -415,31 +425,80 @@ public class Game extends Observable {
     //  REFILL PHASE METHODS
 
     /**
+     * Prepares the game for the insert phase by sending the currentplayer all the info he needs to insert his tiles
+     */
+
+    //  INSERT PHASE METHODS
+
+    /**
+     * Prepares the game for the insert phase by sending the currentplayer all the info he needs to insert his tiles
+     */
+    public void prepareForInsertPhase() {
+        nextTurnPhase();
+        ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
+        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), getDrawnTiles(), currentPlayer.getBookshelf().getShelfie(), insertableColumns));
+    }
+
+    /**
+     * Inserts the tiles in the bookshelf
+     * @param items to insert
+     * @param column where to insert them
+     */
+    public void insertTiles(ArrayList<ItemTile> items, int column) {
+        currentPlayer.getBookshelf().insertItems(items, column);
+        currentPlayer.getHand().clear();
+        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf().getShelfie()));
+    }
+
+    //  CALCULATE PHASE METHODS
+
+    /**
+     * Prepares the game for the calculate phase by setting the turnphase to Calculate
+     */
+    public void prepareForCalculatePhase() {
+        nextTurnPhase();
+        //TODO eventuali messaggi
+        handleCalculatePhase();
+    }
+
+    /**
+     * Handles the calculate phase by checking if the player has achieved any common goal
+     */
+    public void handleCalculatePhase() {
+        int count=0;
+        for(CommonGoalCard cg : commonGoals){
+            if(!cg.achievedBy(currentPlayer) && cg.check(currentPlayer.getBookshelf())){
+                int points = cg.peek();
+                cg.takePoints(currentPlayer);
+                //TODO replace cg with a description of it
+                notifyObservers(new AchievedCommonGoalMessage(currentPlayer.getUsername(), cg, points)); //send a message containing the info of the achieved common goal
+                count++;
+            }
+        }
+        if(count==0){
+            notifyObservers(new NoCommonGoalMessage(currentPlayer.getUsername()));
+        }
+    }
+
+    //  REFILL PHASE METHODS
+
+    /**
+     * Prepares the game for the refill phase by setting the turnphase to refill
+     */
+    public void prepareForRefillPhase() {
+        nextTurnPhase();
+        //TODO eventuali messaggi
+        handleRefillPhase();
+    }
+
+    /**
      * Handles the refill phase by placing ItemTiles randomly extracted from the Bag (only if the board needs to be refilled)
      */
     public void handleRefillPhase() {
         if(board.needsRefill()){
             board.refillBoardWithItems(bag.drawItems(board.numCellsToRefill()));
         }
-        notifyObservers(new BoardMessage("", board.getGameboard()));
+        notifyObservers(new BoardMessage(currentPlayer.getUsername(), board.getGameboard()));
     }
 
-    public ArrayList<ItemTile> getDrawnTiles() {
-        return currentPlayer.getHand();
-    }
-
-    public void prepareForInsertPhase() {
-        nextTurnPhase();
-        ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
-        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), currentPlayer.getHand(), currentPlayer.getBookshelf().getShelfie(), insertableColumns));
-    }
-
-    public void insertTiles(ArrayList<ItemTile> items, int column) {
-        currentPlayer.getBookshelf().insertItems(items, column);
-        currentPlayer.getHand().clear();
-        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf().getShelfie()));
-    }
 }
-
-
-//ARRIVO TRA UN ATTIMO OK BRO

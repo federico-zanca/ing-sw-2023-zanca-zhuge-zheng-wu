@@ -3,8 +3,8 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.ItemType;
-import it.polimi.ingsw.model.exceptions.FullColumnException;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
@@ -112,7 +112,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         for(int i=0; i<Math.min(3, maxNumItems); i++){
             out.println("Inserisci le coordinate della "+(i+1)+"° tessera separate da una virgola (es. riga, colonna) :");
             hand.add(inputCoords(hand, board, i));
-            if(isPossibleToDrawMore(hand, board)) {
+            if(isPossibleToDrawMore(hand, board) && i<2) {
                 if (maxNumItems > i+1) {
                     do {
                         out.println("Vuoi continuare a prendere tessere? (y/n)");
@@ -564,6 +564,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
 
+    private void showAchievedCommonGoal(String username, CommonGoalCard goal, int points) {
+        out.println("Player " + username + " has achieved the common goal " + goal + " and has earned " + points + " points!");
+    }
+
     public void showHand(String username, ArrayList<ItemTile> hand){
         out.println("Hand of player " + username);
         for (ItemTile item : hand) {
@@ -580,41 +584,44 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     public void orderHand(String username,ArrayList<ItemTile> hand){
         String continueResponse;
         Scanner s = new Scanner(System.in);
-        if(hand.size() > 1){
-            out.println("Vorresti ordinare la mano? (y/n)");
-            if(hand.size() == 2){
+        if(hand.size()==2){
+            out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
+            continueResponse = s.nextLine();
+
+            while(!isYesOrNo(continueResponse) || isYes(continueResponse)){
+                Collections.swap(hand, 1, 0);
+                showHand(username,hand);
+                out.println("Vuoi invertire ancora l'ordine delle tessere? (y/n)");
                 continueResponse = s.nextLine();
-                if(isYesOrNo(continueResponse)){
-                    while(!isNo(continueResponse)) {
-                        Collections.swap(hand, 1, 0);
-                        showHand(username,hand);
-                        out.println("Vorresti ordinarla ancora? (y/n)");
-                        continueResponse = s.nextLine();
-                    }
-                }
-            }else{
+            }
+        } else if (hand.size() == 3) {
+            out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
+            continueResponse = s.nextLine();
+            while(!isYesOrNo(continueResponse) || isYes(continueResponse)){
+                out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
+                inputOrder(hand, username);
+                showHand(username, hand);
+                out.println("Ordine cambiato! Vuoi cambiare ancora l'ordine delle tessere? (y/n)");
                 continueResponse = s.nextLine();
-                if(isYesOrNo(continueResponse)){
-                    while(!isNo(continueResponse)){
-                        out.println("Inserisci l'ordine in cui vorresti aver la mano: (es. 2,1,3");
-                        inputOrder(hand);
-                        showHand(username, hand);
-                        continueResponse = s.nextLine();
-                    }
-                }
             }
         }
     }
 
+    private boolean isYes(String input) {
+        input = input.toLowerCase();
+        return input.equals("y") || input.equals("yes");
+    }
     /**
      * Checks if the order in input is correct and actually orders the hand.
      * @param hand hand of player
      */
-    private void inputOrder(ArrayList<ItemTile> hand) {
+    private void inputOrder(ArrayList<ItemTile> hand, String username) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
         while(invalidOrderFormat(input,3)) {
-            out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
+            out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
+            showHand(username, hand);
+            out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
             input = s.nextLine();
         }
         String[] order = input.split(",");
@@ -622,10 +629,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         int second = Integer.parseInt(order[1].trim());
         int third = Integer.parseInt(order[2].trim());
         while(true){
-            if(first<0 || first>2 || second<0 || second>2 || third<0 || third>2){
-                out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (0-2)");
+            if(first<1 || first>3 || second<1 || second>3 || third<1 || third>3){
+                out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (1-3)");
             }else if(first==second || second==third || first==third){
-                out.println("Non si può avere due tessere nello stesso slot!");
+                out.println("Non si può avere due tessere nello stesso slot! Riprova");
             }else{
                 break;
             }
@@ -636,11 +643,11 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             third = Integer.parseInt(order[2].trim());
         }
 
-        Collections.swap(hand,first,0);
+        Collections.swap(hand,first-1,0);
         if(second!=0){
-            Collections.swap(hand,second,1);
+            Collections.swap(hand,second-1,1);
         }else{
-            Collections.swap(hand,third,2);
+            Collections.swap(hand,third-1,2);
         }
     }
 
@@ -689,6 +696,9 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             return;
         }
         switch(message.getType()){
+            case NEW_TURN:
+                showNewTurn(((NewTurnMessage) message).getUsername());
+                break;
             case BOARD:
                 showBoard(((BoardMessage) message).getBoard());
                 break;
@@ -706,9 +716,20 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
                 askInsert(m2.getUsername(), m2.getShelfie(), m2.getHand(), m2.getEnabledColumns());
                 break;
+            case ACHIEVED_COMMON_GOAL:
+                AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
+                showAchievedCommonGoal(m3.getUsername(), m3.getGoal(), m3.getPoints());
+                break;
+            case NO_COMMON_GOAL:
+                out.println(((NoCommonGoalMessage) message).getContent());
+                break;
             default:
                 System.err.println("Ignoring event from " + o);
                 break;
         }
+    }
+
+    private void showNewTurn(String username) {
+        out.println("E' il turno di " + username);
     }
 }

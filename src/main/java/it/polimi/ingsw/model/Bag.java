@@ -4,8 +4,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Bag {
@@ -80,7 +80,6 @@ public class Bag {
         }
         return items;
     }
-//TODO sistemare gestione ItemType ItemTile incoerente
 
     /**
      * Adds an ItemTile object to the bag

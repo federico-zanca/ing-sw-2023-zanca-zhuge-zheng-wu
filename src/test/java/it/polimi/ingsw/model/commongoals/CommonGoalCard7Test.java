@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.commongoals;
 
-import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Bookshelf;
+import it.polimi.ingsw.model.ItemTile;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CommonGoalCard7Test {
 

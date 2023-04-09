@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.message;
-import it.polimi.ingsw.model.Bookshelf;
+
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.gameboard.Square;
 
 import java.util.ArrayList;
 public class InsertTilesMessage extends Message{

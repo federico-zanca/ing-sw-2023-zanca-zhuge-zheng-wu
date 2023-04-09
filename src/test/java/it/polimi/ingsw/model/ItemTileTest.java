@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.ItemType;
 import org.junit.jupiter.api.Test;
-
-import java.awt.print.Book;
 
 import static it.polimi.ingsw.model.enumerations.ItemType.*;
 import static org.junit.jupiter.api.Assertions.*;

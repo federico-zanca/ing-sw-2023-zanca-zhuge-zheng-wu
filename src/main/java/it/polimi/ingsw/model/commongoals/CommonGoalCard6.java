@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.enumerations.ItemType;
 
 
 public class CommonGoalCard6 extends CommonGoalCard{

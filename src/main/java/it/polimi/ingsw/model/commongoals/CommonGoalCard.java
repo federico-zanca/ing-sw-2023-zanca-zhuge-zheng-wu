@@ -3,9 +3,7 @@ package it.polimi.ingsw.model.commongoals;
 
 
 import it.polimi.ingsw.model.Bookshelf;
-import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -39,8 +37,10 @@ public abstract class CommonGoalCard {
         }
     }
 
-    public void takePoints(@NotNull Player p){
+
+    public void takePoints(Player p){
         p.addPoints(points.pop());
+        thoseWhoAchieved.add(p);
     }
 
     public int peek(){
@@ -48,6 +48,8 @@ public abstract class CommonGoalCard {
     }
 
     public boolean achievedBy(Player p){
+        if(thoseWhoAchieved == null)
+            return false;
         return thoseWhoAchieved.contains(p);
     }
 

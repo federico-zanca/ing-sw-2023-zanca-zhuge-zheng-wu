@@ -1,20 +1,18 @@
 package it.polimi.ingsw.controller;
 
 
-import it.polimi.ingsw.Server;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.message.ErrorMessage;
+import it.polimi.ingsw.network.message.LoginRequest;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 import it.polimi.ingsw.view.ProtoCli;
-import it.polimi.ingsw.view.View;
-//import it.polimi.ingsw.view.VirtualView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class GameController implements Observer {
     private static final int MIN_PLAYERS = 2;
@@ -31,7 +29,7 @@ public class GameController implements Observer {
      * Controller of the game
      */
     public GameController(ProtoCli view){
-        this.view = view; //TODO migrate to model and remove
+        this.view = view;
         setupGameController();
     }
     /**
@@ -117,6 +115,10 @@ public class GameController implements Observer {
     //will be removed and reimplemented in Server class
 
     //phases handling methods
+    /**
+     * Handles the LoginPhase related messages received from the view
+     * @param message
+     */
     public void loginPhase(Message message){
         if(message.getType()== MessageType.LOGINREQUEST) {
             handleLoginRequest((LoginRequest) message);
@@ -128,7 +130,7 @@ public class GameController implements Observer {
     public void handleLoginRequest(LoginRequest message){
         String username = message.getUsername();
         if(validUsernameFormat(username)){
-            if(model.getPlayerByUsername(username)==null){
+            if(!model.isUsernameTaken(username)){
                 model.addPlayer(new Player(username));
             }
             else{
@@ -141,11 +143,17 @@ public class GameController implements Observer {
         if(model.isGameReadyToStart()){
             System.err.println("IL GIOCO INIZIA");
             model.startGame();
+            turnController.setPlayersQueue(model.getPlayers());
+            model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
+
             //nextGamePhase();
             turnController.newTurn();
         }
     }
-
+    /**
+     * Handles the PlayPhase related messages received from the view
+     * @param message
+     */
     private void playPhase(Message message) {
         switch(model.getTurnPhase()){
             case DRAW:
@@ -154,15 +162,20 @@ public class GameController implements Observer {
             case INSERT:
                 turnController.insertPhase(message);
                 break;
-            case REFILL:
-                break;
+                /*
             case CALCULATE:
+                turnController.calculateCommonGoal();
                 break;
+            case REFILL:
+                turnController.refillPhase();
+                break;
+                 */
             default:
                 System.err.println("Invalid Turn Phase: should never reach this state");
         }
 
     }
+
 
     //validity check methods
     /**
@@ -271,8 +284,6 @@ public class GameController implements Observer {
 
          */
     }
-
-
 
 
     //public
