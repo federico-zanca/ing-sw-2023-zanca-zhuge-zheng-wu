@@ -161,7 +161,7 @@ public class Bookshelf {
      * @throws IndexOutOfBoundsException
      */
     public ItemTile getSingleCell(int r,int c) throws IndexOutOfBoundsException{
-        if(r>5 || r<0 || c>4 || c<0){throw new IndexOutOfBoundsException();}
+        if(r>Rows || r<0 || c>Columns || c<0){throw new IndexOutOfBoundsException();}
         return shelfie[r][c];
     }
 
