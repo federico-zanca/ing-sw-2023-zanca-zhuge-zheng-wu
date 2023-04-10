@@ -11,9 +11,9 @@ public class CommonGoalCard2 extends CommonGoalCard {
         ItemTile[][] matrix;
         matrix = bookshelf.getShelfie();
         if(matrix[0][0].getType() != ItemType.EMPTY
-                && matrix[0][0].getType() == matrix[0][4].getType()
-                && matrix[0][0].getType() == matrix[5][4].getType()
-                && matrix[0][0].getType() == matrix[5][0].getType()){
+                && matrix[0][0].getType() == matrix[0][Bookshelf.Columns-1].getType()
+                && matrix[0][0].getType() == matrix[Bookshelf.Rows-1][Bookshelf.Columns-1].getType()
+                && matrix[0][0].getType() == matrix[Bookshelf.Rows-1][0].getType()){
             return true;
         }
         return false;

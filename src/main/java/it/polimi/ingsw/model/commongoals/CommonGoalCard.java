@@ -11,8 +11,8 @@ import java.util.Stack;
 public abstract class CommonGoalCard {
     //TODO switch to appropriate design pattern
     private Stack<Integer> points; //attenzione che Integer può anche essere null a differenza di int!!
-    final int NROW = 6;
-    final int NCOL = 5;
+    final int NROW = Bookshelf.Rows;
+    final int NCOL = Bookshelf.Columns;
 
     private ArrayList<Player> thoseWhoAchieved;
 
@@ -37,10 +37,14 @@ public abstract class CommonGoalCard {
         }
     }
 
-
+    //deprecated
     public void takePoints(Player p){
         p.addPoints(points.pop());
         thoseWhoAchieved.add(p);
+    }
+
+    public int pop(){
+        return points.pop();
     }
 
     public int peek(){

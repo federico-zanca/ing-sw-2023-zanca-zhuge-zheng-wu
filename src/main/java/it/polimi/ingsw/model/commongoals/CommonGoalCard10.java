@@ -16,9 +16,9 @@ public class CommonGoalCard10 extends CommonGoalCard {
         matrix = bookshelf.getShelfie();
         ArrayList<ItemType> Column = new ArrayList<ItemType>();
         int row = 0;
-        for(int i=0;i<6;i++){
+        for(int i=0;i<Bookshelf.Rows;i++){
             Column.clear();
-            for(int j=0;j<5;j++){
+            for(int j=0;j<Bookshelf.Columns;j++){
                 if(matrix[i][j].getType() == ItemType.EMPTY){
                     break;
                 }
