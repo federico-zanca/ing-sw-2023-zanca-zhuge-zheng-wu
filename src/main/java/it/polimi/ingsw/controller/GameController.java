@@ -80,38 +80,17 @@ public class GameController implements Observer {
     }
     /** Method called to calculate points to add to each player and declare the winner
      */
-    public void endGame(){
+    public void awardPhase(){
         Player winner;
-        assignPersonalGoalPoints();
-        assignAdjacentItemsPoints();
+        model.assignPersonalGoalPoints();
+        model.assignAdjacentItemsPoints();
         winner = declareWinner();
         setGamePhase(GamePhase.ENDED);
+        model.endGame(winner, turnController.getPlayerQueueUsernames());
         //TODO send broadcast message
     }
 
-    //points calculators
-    /**
-     * Adds adjacent items extra points to each player
-     */
-    private void assignAdjacentItemsPoints() {
-        int points;
-        ArrayList<Player> players = model.getPlayers();
-        for(Player p : players){
-            points = p.calculateAdjacentItemsPoints();
-            p.addPoints(points);
-        }
-    }
-    /**
-     * Add personal goal points for each player
-     */
-    public void assignPersonalGoalPoints(){
-        int points;
-        ArrayList<Player> players = model.getPlayers();
-        for(Player p : players){
-            points = p.calculateScorePersonalGoal();
-            p.addPoints(points);
-        }
-    }
+
     //will be removed and reimplemented in Server class
 
     //phases handling methods
@@ -173,7 +152,9 @@ public class GameController implements Observer {
             default:
                 System.err.println("Invalid Turn Phase: should never reach this state");
         }
-
+        if(model.getGamePhase()==GamePhase.AWARDS) {
+            awardPhase();
+        }
     }
 
 

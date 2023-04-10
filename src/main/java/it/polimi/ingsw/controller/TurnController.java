@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.exceptions.FullColumnException;
+import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.*;
 
@@ -15,7 +15,6 @@ public class TurnController {
     private final GameController gameController;
     private ArrayList<Player> playerQueue;
 
-    private boolean lastTurn = false;
     /**
      * Constructor of the TurnController
      * @param gameController Game controller
@@ -29,8 +28,20 @@ public class TurnController {
      * Creates a new turn
      */
     public void newTurn() {
+        if (model.getGamePhase() != GamePhase.PLAY) {
+            return;
+        }
+        model.updateLeaderBoard(getPlayerQueueUsernames());
         model.handleDrawPhase();
         //game.setGamePhase(TurnPhase.DRAW);
+    }
+
+    protected ArrayList<String> getPlayerQueueUsernames() {
+        ArrayList<String> usernames = new ArrayList<>();
+        for (Player p : playerQueue) {
+            usernames.add(p.getUsername());
+        }
+        return usernames;
     }
 
     public void drawPhase(Message message) {
@@ -91,8 +102,9 @@ public class TurnController {
     }
     public void loadNextPlayer(){
         int nowCurrent = playerQueue.indexOf(model.getCurrentPlayer());
-        if(nowCurrent == playerQueue.size()-1 && lastTurn){
+        if(nowCurrent == playerQueue.size()-1 && isLastTurn()){
             model.nextGamePhase();
+            gameController.awardPhase();
         }
         else{
             model.setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
@@ -100,13 +112,21 @@ public class TurnController {
         }
     }
 
+    public boolean isLastTurn() {
+        return model.isLastTurn();
+    }
+
+    public void triggerLastTurn() {
+        model.setLastTurn(true);
+    }
     /**
      * Checks if current player filled his bookshelf and adds EndToken points if deserved
      */
     private void lastTurnCondition(){
-        if(!lastTurn && model.getCurrentPlayer().endTrigger()){
-            lastTurn=true;
-            model.getCurrentPlayer().addPoints(1);
+        if(!isLastTurn() && model.getCurrentPlayer().endTrigger()){
+            triggerLastTurn();
+            model.addPointsToPlayer(model.getCurrentPlayer(), 1);
+            //model.getCurrentPlayer().addPoints(1);
         }
     }
 

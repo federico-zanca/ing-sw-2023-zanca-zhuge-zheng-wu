@@ -9,8 +9,8 @@ import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.utils.Observable;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game extends Observable {
     //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)
@@ -20,9 +20,10 @@ public class Game extends Observable {
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
 
-    boolean lastTurn;
+    boolean lastTurn=false;
     private GamePhase gamePhase;
 
+    private LinkedHashMap<String, Integer> leaderboard;
     private TurnPhase turnPhase;
     private Player currentPlayer;
     private ArrayList<CommonGoalCard> commonGoals;
@@ -43,10 +44,11 @@ public class Game extends Observable {
         bag = new Bag();
         players = new ArrayList<>();
         players.add(new Player("BOT0"));
-        players.add(new Player("BOT1"));
-        players.add(new Player("BOT2"));
+        //players.add(new Player("BOT1"));
+        //players.add(new Player("BOT2"));
         commonGoals = new ArrayList<>();
-        chosenNumOfPlayers=4; //andrà rimosso, solo per testing
+        leaderboard = new LinkedHashMap<>();
+        chosenNumOfPlayers=2; //andrà rimosso, solo per testing
     }
     /**
      *
@@ -203,9 +205,11 @@ public class Game extends Observable {
         for(Player player : players){
             player.setPersonalGoal(randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
         }
+
+        initLeaderBoard();
         setCurrentPlayer(getFirstPlayer());
         //board.enableSquaresWithFreeSide();
-        notifyObservers(new BoardMessage(currentPlayer.getUsername(), board.getGameboard()));
+        notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), board.getGameboard()));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
@@ -462,14 +466,15 @@ public class Game extends Observable {
     }
 
     /**
-     * Handles the calculate phase by checking if the player has achieved any common goal
+     * Handles calculate phase by checking if the player has achieved any common goal
      */
     public void handleCalculatePhase() {
         int count=0;
         for(CommonGoalCard cg : commonGoals){
             if(!cg.achievedBy(currentPlayer) && cg.check(currentPlayer.getBookshelf())){
-                int points = cg.peek();
-                cg.takePoints(currentPlayer);
+                int points = cg.pop();
+                addPointsToPlayer(currentPlayer, points);
+                //cg.takePoints(currentPlayer);
                 //TODO replace cg with a description of it
                 notifyObservers(new AchievedCommonGoalMessage(currentPlayer.getUsername(), cg, points)); //send a message containing the info of the achieved common goal
                 count++;
@@ -501,4 +506,66 @@ public class Game extends Observable {
         notifyObservers(new BoardMessage(currentPlayer.getUsername(), board.getGameboard()));
     }
 
+    public void endGame(Player winner, ArrayList<String> playersQueue) {
+        sortLeaderBoard(playersQueue);
+        notifyObservers(new EndGameMessage(winner.getUsername(), leaderboard));
+    }
+
+
+    //points calculators
+    /**
+     * Adds adjacent items extra points to each player
+     */
+    public void assignAdjacentItemsPoints() {
+        int points;
+        for(Player p : players){
+            points = p.calculateAdjacentItemsPoints();
+            //p.addPoints(points);
+            addPointsToPlayer(p, points);
+        }
+    }
+    /**
+     * Add personal goal points for each player
+     */
+    public void assignPersonalGoalPoints(){
+        int points;
+        for(Player p : players){
+            points = p.calculateScorePersonalGoal();
+            addPointsToPlayer(p, points);
+            //p.addPoints(points);
+        }
+    }
+
+    public void addPointsToPlayer(Player p, int points){
+        p.addPoints(points);
+        leaderboard.put(p.getUsername(), leaderboard.get(p.getUsername()) + points);
+    }
+
+    public void updateLeaderBoard(ArrayList<String> usernamesQueue){
+        sortLeaderBoard(usernamesQueue);
+        notifyObservers(new LeaderBoardMessage(currentPlayer.getUsername(), leaderboard));
+    }
+
+    public void sortLeaderBoard(ArrayList<String> usernamesQueue){
+        leaderboard = leaderboard.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
+                        .thenComparing(e -> -usernamesQueue.indexOf(e.getKey())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+    }
+
+    private void initLeaderBoard(){
+        for(Player p : players){
+            leaderboard.put(p.getUsername(), 0);
+        }
+    }
+
+    public boolean isLastTurn() {
+        return lastTurn;
+    }
+
+    public void setLastTurn(boolean b) {
+        lastTurn = b;
+        notifyObservers(new LastTurnMessage(currentPlayer.getUsername()));
+    }
 }

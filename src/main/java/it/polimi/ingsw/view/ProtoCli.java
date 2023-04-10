@@ -12,15 +12,15 @@ import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.utils.Observable;
 import it.polimi.ingsw.utils.Observer;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 public class ProtoCli extends Observable implements Observer, Runnable {
-    private final PrintStream out;
+    private final MyPrintStream out;
 
-    public ProtoCli(){out = System.out;}
+    public ProtoCli(){out = new MyPrintStream();}
 
     @Override
     public void run(){
@@ -282,6 +282,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 break;
             }
             input = s.nextLine();
+            while(invalidCoordFormat(input)) {
+                out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
+                input = s.nextLine();
+            }
             tiles = input.split(",");
             row = Integer.parseInt(tiles[0].trim());
             column = Integer.parseInt(tiles[1].trim());
@@ -589,19 +593,27 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             continueResponse = s.nextLine();
 
             while(!isYesOrNo(continueResponse) || isYes(continueResponse)){
-                Collections.swap(hand, 1, 0);
-                showHand(username,hand);
-                out.println("Vuoi invertire ancora l'ordine delle tessere? (y/n)");
+                if(!isYesOrNo(continueResponse))
+                    out.println("Inserisci y o n");
+                else {
+                    Collections.swap(hand, 1, 0);
+                    showHand(username, hand);
+                    out.println("Vuoi invertire ancora l'ordine delle tessere? (y/n)");
+                }
                 continueResponse = s.nextLine();
             }
         } else if (hand.size() == 3) {
             out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
             continueResponse = s.nextLine();
             while(!isYesOrNo(continueResponse) || isYes(continueResponse)){
-                out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
-                inputOrder(hand, username);
-                showHand(username, hand);
-                out.println("Ordine cambiato! Vuoi cambiare ancora l'ordine delle tessere? (y/n)");
+                if(!isYesOrNo(continueResponse))
+                    out.println("Inserisci y o n");
+                else {
+                    out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
+                    inputOrder(hand, username);
+                    showHand(username, hand);
+                    out.println("Ordine cambiato! Vuoi cambiare ancora l'ordine delle tessere? (y/n)");
+                }
                 continueResponse = s.nextLine();
             }
         }
@@ -696,11 +708,17 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             return;
         }
         switch(message.getType()){
+            case GAME_STARTED:
+                showGameStarted(((GameStartedMessage) message).getGameboard());
+                break;
             case NEW_TURN:
                 showNewTurn(((NewTurnMessage) message).getUsername());
                 break;
             case BOARD:
                 showBoard(((BoardMessage) message).getBoard());
+                break;
+            case LEADERBOARD:
+                showLeaderboard(((LeaderBoardMessage) message).getLeaderboard());
                 break;
             case BOOKSHELF:
                 BookshelfMessage m = (BookshelfMessage) message;
@@ -723,13 +741,57 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             case NO_COMMON_GOAL:
                 out.println(((NoCommonGoalMessage) message).getContent());
                 break;
+            case LAST_TURN:
+                showLastTurn((LastTurnMessage) message);
+                break;
+            case END_GAME:
+                EndGameMessage m4 = (EndGameMessage) message;
+                showEndGame(m4.getRanking());
+                break;
             default:
                 System.err.println("Ignoring event from " + o);
                 break;
         }
     }
 
-    private void showNewTurn(String username) {
-        out.println("E' il turno di " + username);
+    private void showLastTurn(LastTurnMessage message) {
+        out.println("######################################\n" +
+                    message.getUsername() + "ha riempito la sua libreria!\n" +
+                "Questo è l'ultimo giro di turni di gioco!\n" +
+                    "######################################");
     }
+
+    private void showEndGame(LinkedHashMap<String, Integer> ranking){
+        out.println("######################################\n" +
+                    "#        La partita è finita         #\n" +
+                    "######################################");
+        showLeaderboard(ranking);
+        for (String key : ranking.keySet()) {
+            out.println("Il vincitore della partita è " +  ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
+            break;
+        }
+    }
+
+    private void showGameStarted(Square[][] gameboard) {
+        out.println("######################################\n" +
+                    "#        La partita è iniziata!      #\n" +
+                    "######################################");
+        showBoard(gameboard);
+    }
+
+    private void showNewTurn(String username) {
+        out.println("######################################\n" +
+                    "    E' il turno di " + username+"\t\n" +           //migliorabile
+                    "######################################");
+    }
+
+    public void showLeaderboard(LinkedHashMap<String, Integer> sortedMap) {
+        int rank = 1;
+        out.println("Leaderboard :");
+        for (String key : sortedMap.keySet()) {
+            out.println("#" + rank + ". " + key + " : " + sortedMap.get(key));
+            rank++;
+        }
+    }
+
 }
