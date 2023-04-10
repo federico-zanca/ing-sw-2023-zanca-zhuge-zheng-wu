@@ -35,7 +35,7 @@ public class CommonGoalCard12 extends CommonGoalCard {
             }
         }
 
-        if(matrix[0][4].getType() != ItemType.EMPTY && flag != 1){
+        if(matrix[0][NCOL-1].getType() != ItemType.EMPTY && flag != 1){
             for(int i=3;i>=0;i--){
                 if(matrix[4-i][i].getType() == ItemType.EMPTY || matrix[3-i][i].getType() != ItemType.EMPTY){
                     flag = 1;
@@ -47,7 +47,7 @@ public class CommonGoalCard12 extends CommonGoalCard {
             }
         }
 
-        if(matrix[1][4].getType() != ItemType.EMPTY && flag != 1){
+        if(matrix[1][NCOL-1].getType() != ItemType.EMPTY && flag != 1){
             for(int i=3;i>=0;i--){
                 if(matrix[5-i][i].getType() == ItemType.EMPTY || matrix[4-i][i].getType() != ItemType.EMPTY){
                     flag = 1;

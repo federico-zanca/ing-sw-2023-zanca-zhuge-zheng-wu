@@ -25,9 +25,9 @@ public class CommonGoalCard9 extends CommonGoalCard {
         AllTypes.add(ItemType.TROPHY);
         AllTypes.add(ItemType.PLANT);
 
-        for(int i=0;i<5;i++){
+        for(int i=0;i<NCOL;i++){
             if(matrix[0][i].getType() != ItemType.EMPTY){
-                for(int j=0;j<6;j++){
+                for(int j=0;j<NROW;j++){
                     Column.add(matrix[j][i].getType());
                 }
                 if(Column.containsAll(AllTypes)){
