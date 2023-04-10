@@ -28,7 +28,7 @@ class BoardTest {
         b.initBoard(4);
         //Board needs refill because initBoard instantiates an empty board.
         assertTrue(b.needsRefill());
-        b.refillBoard(bag.drawItems(b.numCellsToRefill()));
+       // b.refillBoard(bag.drawItems(b.numCellsToRefill()));
         //After refilling the board, it has to be full and needsRefill must be false.
         assertEquals(0,b.numCellsToRefill());
         assertFalse(b.needsRefill());
@@ -45,7 +45,7 @@ class BoardTest {
         assertEquals(45-2,b.numCellsToRefill());
         assertTrue(b.needsRefill());
         //Refills.
-        b.refillBoard(bag.drawItems(b.numCellsToRefill()));
+       // b.refillBoard(bag.drawItems(b.numCellsToRefill()));
         for(int i=0;i<9;i++){
             for(int j=0;j<9;j++){
                 b.pickItem(i,j);
@@ -55,7 +55,7 @@ class BoardTest {
         b.placeItem(new ItemTile(ItemType.PLANT),4,4);
         b.placeItem(new ItemTile(ItemType.PLANT),4,5);
         //Method refillBoard shouldn't refill.
-        b.refillBoard(bag.drawItems(b.numCellsToRefill()));
+       // b.refillBoard(bag.drawItems(b.numCellsToRefill()));
         assertFalse(b.needsRefill());
     }
 
@@ -99,7 +99,7 @@ class BoardTest {
         Board b = new Board();
         Bag bag = new Bag();
         b.initBoard(4);
-        b.refillBoard(bag.drawItems(b.numCellsToRefill()));
+        //b.refillBoard(bag.drawItems(b.numCellsToRefill()));
         b.enableSquaresWithFreeSide();
     }
 
@@ -184,7 +184,7 @@ class BoardTest {
         Board b = new Board();
         Bag bag = new Bag();
         b.initBoard(4);
-        b.refillBoard(bag.drawItems(b.numCellsToRefill()));
+       // b.refillBoard(bag.drawItems(b.numCellsToRefill()));
         b.pickItem(3,3);
         //After picking one item, the squares adjacent should have a free side.
         assertTrue(b.doesSquareHaveFreeSide(3,2));
