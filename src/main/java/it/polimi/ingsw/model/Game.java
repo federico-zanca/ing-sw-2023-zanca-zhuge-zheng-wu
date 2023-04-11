@@ -237,10 +237,10 @@ public class Game extends Observable {
      * @param squares containing the items to remove from the board
      */
     public void drawFromBoard(ArrayList<Square> squares) {
-       setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
-       board.disableAllSquares();
-       //TODO da tenere solo quando ho una view separata per ogni giocatore
-       //notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
+        setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
+        board.disableAllSquares();
+        //TODO da tenere solo quando ho una view separata per ogni giocatore
+        //notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
     }
 
     /**
@@ -476,6 +476,7 @@ public class Game extends Observable {
             if(!cg.achievedBy(currentPlayer) && cg.check(currentPlayer.getBookshelf())){
                 int points = cg.pop();
                 addPointsToPlayer(currentPlayer, points);
+                cg.addAchiever(currentPlayer);
                 //cg.takePoints(currentPlayer);
                 //TODO replace cg with a description of it
                 notifyObservers(new AchievedCommonGoalMessage(currentPlayer.getUsername(), cg, points)); //send a message containing the info of the achieved common goal
@@ -575,5 +576,9 @@ public class Game extends Observable {
 
     public synchronized void addObserver(it.polimi.ingsw.utils.Observer o) {
         super.addObserver(o);
+    }
+
+    public LinkedHashMap<String, Integer> getLeaderboard() {
+        return leaderboard;
     }
 }

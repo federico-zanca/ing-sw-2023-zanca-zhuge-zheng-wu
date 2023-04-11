@@ -18,7 +18,7 @@ public abstract class CommonGoalCard {
 
     public CommonGoalCard(int numPlayers){
         points = new Stack<Integer>();
-
+        thoseWhoAchieved = new ArrayList<Player>();
         switch(numPlayers){
             case 2:
                 points.push(4);
@@ -65,5 +65,9 @@ public abstract class CommonGoalCard {
     public abstract boolean check(Bookshelf matrix);
     public String toString(){
         return "This is the pattern!";
+    }
+
+    public void addAchiever(Player p){
+        thoseWhoAchieved.add(p);
     }
 }
