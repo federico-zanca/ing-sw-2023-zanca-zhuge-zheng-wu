@@ -238,7 +238,8 @@ public class Game extends Observable {
     public void drawFromBoard(ArrayList<Square> squares) {
        setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
        board.disableAllSquares();
-       notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
+       //TODO da tenere solo quando ho una view separata per ogni giocatore
+       //notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
     }
 
     /**
@@ -522,6 +523,7 @@ public class Game extends Observable {
             points = p.calculateAdjacentItemsPoints();
             //p.addPoints(points);
             addPointsToPlayer(p, points);
+            notifyObservers(new AdjacentItemsPointsMessage(p.getUsername(), points));
         }
     }
     /**
@@ -532,6 +534,7 @@ public class Game extends Observable {
         for(Player p : players){
             points = p.calculateScorePersonalGoal();
             addPointsToPlayer(p, points);
+            notifyObservers(new PersonalGoalPointsMessage(p.getUsername(), p.getPersonalGoal(), points));
             //p.addPoints(points);
         }
     }

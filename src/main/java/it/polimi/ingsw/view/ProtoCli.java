@@ -744,6 +744,12 @@ public class ProtoCli extends Observable implements Observer, Runnable {
             case LAST_TURN:
                 showLastTurn((LastTurnMessage) message);
                 break;
+            case ADJACENT_ITEMS_POINTS:
+                showAdjacentItemsPoints((AdjacentItemsPointsMessage) message);
+                break;
+            case PERSONAL_GOAL_POINTS:
+                showPersonalGoalPoints((PersonalGoalPointsMessage) message);
+                break;
             case END_GAME:
                 EndGameMessage m4 = (EndGameMessage) message;
                 showEndGame(m4.getRanking());
@@ -754,10 +760,22 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
     }
 
+    private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
+        out.println("######################################\n" +
+                    message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
+                    "######################################");
+    }
+
+    private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
+        out.println("######################################\n" +
+                    message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di !tessere uguali adiacenti nella libreria!\n" +
+                    "######################################");
+    }
+
     private void showLastTurn(LastTurnMessage message) {
         out.println("######################################\n" +
-                    message.getUsername() + "ha riempito la sua libreria!\n" +
-                "Questo è l'ultimo giro di turni di gioco!\n" +
+                    message.getUsername() + " ha riempito la sua libreria!\n" +
+                "Questo è l'ultimo giro di gioco!\n" +
                     "######################################");
     }
 
