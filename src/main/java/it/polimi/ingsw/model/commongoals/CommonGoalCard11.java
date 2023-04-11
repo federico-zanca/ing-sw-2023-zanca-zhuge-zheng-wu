@@ -24,4 +24,9 @@ public class CommonGoalCard11 extends CommonGoalCard {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Cinque tessere dello stesso tipo che formano una X";
+    }
 }

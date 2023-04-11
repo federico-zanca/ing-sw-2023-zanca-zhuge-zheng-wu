@@ -32,4 +32,9 @@ public class CommonGoalCard7 extends CommonGoalCard{
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Cinque tessere dello stesso tipo che formano una diagonale.";
+    }
 }

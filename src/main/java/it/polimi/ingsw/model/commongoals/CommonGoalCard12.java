@@ -60,4 +60,11 @@ public class CommonGoalCard12 extends CommonGoalCard {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Cinque colonne di altezza crescente o decrescente: " +
+                "a partire dalla prima colonna a sinistra o a destra, ogni colonna successiva deve essere formata da una tessera in più." +
+                "Le tessere possono essere di qualsiasi tipo.";
+    }
 }

@@ -18,4 +18,9 @@ public class CommonGoalCard2 extends CommonGoalCard {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Quattro tessere dello stesso tipo ai quattro angoli della Libreria.";
+    }
 }

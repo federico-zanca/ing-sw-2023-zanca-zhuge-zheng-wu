@@ -73,4 +73,10 @@ public class CommonGoalCard3 extends CommonGoalCard{
             }
             return;
         }
+
+    @Override
+    public String toString() {
+        return "Quattro gruppi separati formati ciascuno da quattro tessere adiacenti dello stesso tipo." +
+                "Le tessere di un gruppo possono essere diverse da quelle di un latro gruppo.";
+    }
 }

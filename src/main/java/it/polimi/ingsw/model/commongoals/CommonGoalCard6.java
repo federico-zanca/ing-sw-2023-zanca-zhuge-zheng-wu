@@ -46,4 +46,10 @@ public class CommonGoalCard6 extends CommonGoalCard{
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Otto tessere dello stesso tipo. " +
+                "Non ci sono restrizioni sulla posizione di queste tessere.";
+    }
 }

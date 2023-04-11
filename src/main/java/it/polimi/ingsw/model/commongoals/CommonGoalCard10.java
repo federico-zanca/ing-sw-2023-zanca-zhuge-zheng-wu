@@ -35,4 +35,9 @@ public class CommonGoalCard10 extends CommonGoalCard {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Due righe formate ciascuna da 5 diversi tipi di tessere.";
+    }
 }

@@ -63,4 +63,7 @@ public abstract class CommonGoalCard {
     }
 
     public abstract boolean check(Bookshelf matrix);
+    public String toString(){
+        return "This is the pattern!";
+    }
 }

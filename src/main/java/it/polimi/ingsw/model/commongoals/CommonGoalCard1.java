@@ -74,4 +74,10 @@ public class CommonGoalCard1 extends CommonGoalCard {
         }
         return;
     }
+
+    @Override
+    public String toString() {
+        return "Sei gruppi separati formati ciascuno da due tessere adiacenti dello stesso tipo." +
+                "Le tessere di un Gruppo possono essere diverse da quelle di un altro gruppo.";
+    }
 }

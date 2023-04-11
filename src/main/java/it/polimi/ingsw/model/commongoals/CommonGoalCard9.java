@@ -41,4 +41,9 @@ public class CommonGoalCard9 extends CommonGoalCard {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Due colonne formate ciascuna da 6 diversi tipi di tessere.";
+    }
 }
