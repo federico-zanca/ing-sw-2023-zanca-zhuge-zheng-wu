@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
-public class ProtoCli extends Observable implements Observer, Runnable {
+public class ProtoCli extends Observable implements Runnable {
     private final MyPrintStream out;
 
     private ArrayList<CommonGoalCard> cards;
@@ -39,13 +39,13 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     @Override
     public void run(){
         out.println("███╗   ███╗██╗   ██╗███████╗██╗  ██╗███████╗██╗     ███████╗██╗███████╗\n" +
-                    "████╗ ████║╚██╗ ██╔╝██╔════╝██║  ██║██╔════╝██║     ██╔════╝██║██╔════╝\n" +
-                    "██╔████╔██║ ╚████╔╝ ███████╗███████║█████╗  ██║     █████╗  ██║█████╗  \n" +
-                    "██║╚██╔╝██║  ╚██╔╝  ╚════██║██╔══██║██╔══╝  ██║     ██╔══╝  ██║██╔══╝  \n" +
-                    "██║ ╚═╝ ██║   ██║   ███████║██║  ██║███████╗███████╗██║     ██║███████╗\n" +
-                    "╚═╝     ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝\n" +
-                    "                                                                       \n" +
-                    "\n");
+                "████╗ ████║╚██╗ ██╔╝██╔════╝██║  ██║██╔════╝██║     ██╔════╝██║██╔════╝\n" +
+                "██╔████╔██║ ╚████╔╝ ███████╗███████║█████╗  ██║     █████╗  ██║█████╗  \n" +
+                "██║╚██╔╝██║  ╚██╔╝  ╚════██║██╔══██║██╔══╝  ██║     ██╔══╝  ██║██╔══╝  \n" +
+                "██║ ╚═╝ ██║   ██║   ███████║██║  ██║███████╗███████╗██║     ██║███████╗\n" +
+                "╚═╝     ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝\n" +
+                "                                                                       \n" +
+                "\n");
         String username = askUsername();
         notifyObservers(new LoginRequest(username));
         //Coordinates choice = askPlayer();
@@ -454,32 +454,32 @@ public class ProtoCli extends Observable implements Observer, Runnable {
      */
     private String paintBG(ItemType type){
 
-            StringBuilder stringBuilder = new StringBuilder();
-            Color c;
-            switch(type){
-                case CAT :
-                    c=Color.GREEN;
-                    break;
-                case PLANT:
-                    c=Color.FUCSIA;
-                    break;
-                case FRAME:
-                    c=Color.BLUE;
-                    break;
-                case GAME:
-                    c=Color.YELLOW_BOLD;
-                    break;
-                case TROPHY:
-                    c=Color.CYAN_BOLD;
-                    break;
-                case BOOK:
-                    c=Color.WHITE;
-                    break;
-                default:
-                    c=Color.NO_COLOR;
-                    break;
-            }
-            return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        Color c;
+        switch(type){
+            case CAT :
+                c=Color.GREEN;
+                break;
+            case PLANT:
+                c=Color.FUCSIA;
+                break;
+            case FRAME:
+                c=Color.BLUE;
+                break;
+            case GAME:
+                c=Color.YELLOW_BOLD;
+                break;
+            case TROPHY:
+                c=Color.CYAN_BOLD;
+                break;
+            case BOOK:
+                c=Color.WHITE;
+                break;
+            default:
+                c=Color.NO_COLOR;
+                break;
+        }
+        return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
 
     }
     /**
@@ -536,9 +536,9 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 if(board[i][j].isPickable()){
                     //strBoard.append(board[i][j].getItem().toColorString());
                     strBoard.append(paintBG(board[i][j].getItem().getType()));
-               }else{
-                   //strBoard.append("  ").append(board[i][j].getItem()).append("  ");
-                   strBoard.append(paintFG(board[i][j].getItem().getType()));
+                }else{
+                    //strBoard.append("  ").append(board[i][j].getItem()).append("  ");
+                    strBoard.append(paintFG(board[i][j].getItem().getType()));
                 }
                 //strBoard.append("  |");
                 strBoard.append("|");
@@ -717,9 +717,31 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         out.println("Bravo!\n");
     }
 
-    public void update(Message message, Observable o){
-        if(!(o instanceof GameView)){
-            System.err.println("Ignoring updates from " + o);
+    private void showGameStarted(Square[][] gameboard) {
+        out.println("######################################\n" +
+                "#        La partita è iniziata!      #\n" +
+                "######################################");
+        showBoard(gameboard);
+    }
+
+    private void showNewTurn(String username) {
+        out.println("######################################\n" +
+                "    E' il turno di " + username+"\t\n" +           //migliorabile
+                "######################################");
+    }
+
+    public void showLeaderboard(LinkedHashMap<String, Integer> sortedMap) {
+        int rank = 1;
+        out.println("Leaderboard :");
+        for (String key : sortedMap.keySet()) {
+            out.println("#" + rank + ". " + key + " : " + sortedMap.get(key));
+            rank++;
+        }
+    }
+
+    public void update(GameView model, Message message) {
+        if(!(model instanceof GameView)){
+            System.err.println("Ignoring updates from " + model);
             return;
         }
         switch(message.getType()){
@@ -774,7 +796,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 showEndGame(m4.getRanking());
                 break;
             default:
-                System.err.println("Ignoring event from " + o);
+                System.err.println("Ignoring event from " + model);
                 break;
         }
     }
@@ -785,54 +807,30 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
     private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         out.println("######################################\n" +
-                    message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
-                    "######################################");
+                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
+                "######################################");
     }
 
     private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
         out.println("######################################\n" +
-                    message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
-                    "######################################");
+                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
+                "######################################");
     }
 
     private void showLastTurn(LastTurnMessage message) {
         out.println("######################################\n" +
-                    message.getUsername() + " ha riempito la sua libreria!\n" +
+                message.getUsername() + " ha riempito la sua libreria!\n" +
                 "Questo è l'ultimo giro di gioco!\n" +
-                    "######################################");
+                "######################################");
     }
 
     private void showEndGame(LinkedHashMap<String, Integer> ranking){
         out.println("######################################\n" +
-                    "#        La partita è finita         #\n" +
-                    "######################################");
+                "#        La partita è finita         #\n" +
+                "######################################");
         showLeaderboard(ranking);
-        for (String key : ranking.keySet()) {
-            out.println("Il vincitore della partita è " +  ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
-            break;
-        }
-    }
+        out.println("Il vincitore della partita è " +  ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
 
-    private void showGameStarted(Square[][] gameboard) {
-        out.println("######################################\n" +
-                    "#        La partita è iniziata!      #\n" +
-                    "######################################");
-        showBoard(gameboard);
-    }
-
-    private void showNewTurn(String username) {
-        out.println("######################################\n" +
-                    "    E' il turno di " + username+"\t\n" +           //migliorabile
-                    "######################################");
-    }
-
-    public void showLeaderboard(LinkedHashMap<String, Integer> sortedMap) {
-        int rank = 1;
-        out.println("Leaderboard :");
-        for (String key : sortedMap.keySet()) {
-            out.println("#" + rank + ". " + key + " : " + sortedMap.get(key));
-            rank++;
-        }
     }
 
 }

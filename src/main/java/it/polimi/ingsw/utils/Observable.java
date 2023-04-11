@@ -34,7 +34,7 @@ public class Observable {
      */
     public void notifyObservers(Message message) {
         for (Observer observer : observers) {
-            observer.update(message, this);
+            observer.update(this, message);
         }
     }
 }

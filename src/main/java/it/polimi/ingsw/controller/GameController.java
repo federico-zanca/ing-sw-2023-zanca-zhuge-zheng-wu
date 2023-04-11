@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 
+import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
@@ -14,21 +15,21 @@ import it.polimi.ingsw.view.ProtoCli;
 
 import java.util.ArrayList;
 
-public class GameController implements Observer {
+public class GameController {
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 3;
     private Game model;
     private GameLobby lobby;
 
     //stuff for the view
-    public final ProtoCli view;
+    public final Client view;
     private TurnController turnController;
 
     //constructors and setters
     /**
      * Controller of the game
      */
-    public GameController(ProtoCli view){
+    public GameController(Client view){
         this.view = view;
         setupGameController();
     }
@@ -224,11 +225,10 @@ public class GameController implements Observer {
         }
     }
 
-    @Override
-    public void update(Message message, Observable o) {
+    public void update(Client client, Message message) {
         //ricevo notifiche solo dalla mia view
-        if(o != view){
-            System.err.println("Discarding notification from "+o);
+        if(client != view){
+            System.err.println("Discarding notification from "+ client);
             return;
         }
         onMessageReceived(message);
