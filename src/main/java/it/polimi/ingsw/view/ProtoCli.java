@@ -21,7 +21,20 @@ import java.util.Scanner;
 public class ProtoCli extends Observable implements Observer, Runnable {
     private final MyPrintStream out;
 
-    public ProtoCli(){out = new MyPrintStream();}
+    private ArrayList<CommonGoalCard> cards;
+
+    public ProtoCli(){
+        out = new MyPrintStream();
+        cards = null;
+    }
+
+    public void setCards(ArrayList<CommonGoalCard> cards) {
+        this.cards = cards;
+    }
+
+    public ArrayList<CommonGoalCard> getCards() {
+        return cards;
+    }
 
     @Override
     public void run(){
@@ -105,6 +118,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         //Game game = Game.getInstance();
         showBookshelf(username, bookshelf);
         showBoard(board);
+        showCommonGoals();
         ArrayList<Square> hand = new ArrayList<>();
         String continueResponse;
         Scanner s = new Scanner(System.in);
@@ -725,6 +739,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
                 BookshelfMessage m = (BookshelfMessage) message;
                 showBookshelf(m.getUsername(), m.getBookshelf());
                 break;
+            case COMMONGOALCARD:
+                CommonGoalCardMessage cgm = (CommonGoalCardMessage) message;
+                setCards(cgm.getCards());
+                break;
             case DRAW_INFO:
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
                 //showBookshelf(m1.getUsername(), m1.getBookshelf());
@@ -761,6 +779,10 @@ public class ProtoCli extends Observable implements Observer, Runnable {
         }
     }
 
+    private void showCommonGoals(){
+        out.println("First Common Goal: " + getCards().get(0).toString() +
+                "\nSecond Common Goal: " + getCards().get(1).toString());
+    }
     private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         out.println("######################################\n" +
                     message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +

@@ -210,6 +210,7 @@ public class Game extends Observable {
         setCurrentPlayer(getFirstPlayer());
         //board.enableSquaresWithFreeSide();
         notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), board.getGameboard()));
+        notifyObservers(new CommonGoalCardMessage(currentPlayer.getUsername(), commonGoals));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
