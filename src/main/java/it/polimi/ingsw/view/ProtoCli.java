@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.ItemType;
@@ -703,7 +704,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
     }
 
     public void update(Message message, Observable o){
-        if(!(o instanceof Game)){
+        if(!(o instanceof GameView)){
             System.err.println("Ignoring updates from " + o);
             return;
         }
@@ -768,7 +769,7 @@ public class ProtoCli extends Observable implements Observer, Runnable {
 
     private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
         out.println("######################################\n" +
-                    message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di !tessere uguali adiacenti nella libreria!\n" +
+                    message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
                     "######################################");
     }
 

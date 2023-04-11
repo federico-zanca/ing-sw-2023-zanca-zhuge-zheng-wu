@@ -571,4 +571,8 @@ public class Game extends Observable {
         lastTurn = b;
         notifyObservers(new LastTurnMessage(currentPlayer.getUsername()));
     }
+
+    public synchronized void addObserver(it.polimi.ingsw.utils.Observer o) {
+        super.addObserver(o);
+    }
 }
