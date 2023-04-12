@@ -227,10 +227,12 @@ public class GameController {
 
     public void update(Client client, Message message) {
         //ricevo notifiche solo dalla mia view
+        /*
         if(client != view){
             System.err.println("Discarding notification from "+ client);
             return;
         }
+        */
         onMessageReceived(message);
         /*
         String username = message.getUsername();
