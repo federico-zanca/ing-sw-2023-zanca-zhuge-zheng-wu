@@ -170,8 +170,22 @@ public class TurnController {
      */
     private boolean isInsertHandValid(ArrayList<ItemTile> items, int column) {
         if(items.size()!=model.getCurrentPlayer().getHand().size()) return false; //return false if the number of tiles in the hand is different from the number of tiles in the message
-        if(!items.containsAll(model.getCurrentPlayer().getHand())) return false; //return false if the tiles in the hand are different from the tiles in the message
+        if(!areTheSameHand(items, model.getCurrentPlayer().getHand())) return false; //return false if the tiles in the hand are different from the tiles in the message
         return model.getCurrentPlayer().getBookshelf().availableSlotsForColumn(column)>=items.size(); //return false if the column has less available slots than the number of tiles in the message
+    }
+
+    private boolean areTheSameHand(ArrayList<ItemTile> items, ArrayList<ItemTile> hand) {
+        ArrayList<ItemTile> handCopy = new ArrayList<>(hand);
+        for(ItemTile it : items){
+            for(ItemTile it2 : handCopy){
+                if(it.getType() == it2.getType()){
+                    handCopy.remove(it2);
+                    break;
+                }
+                if(it2==hand.get(hand.size()-1)) return false;
+            }
+        }
+        return true;
     }
 
     public void setPlayersQueue(ArrayList<Player> players) {
