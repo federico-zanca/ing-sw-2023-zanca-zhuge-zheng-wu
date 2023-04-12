@@ -3,7 +3,10 @@ package it.polimi.ingsw.model.gameboard;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
-public class Square {
+import java.io.Serializable;
+
+public class Square implements Serializable {
+    private static final long serialVersionUID = -5718430460179695362L;
     private ItemTile item;
 
     private final Coordinates coords;

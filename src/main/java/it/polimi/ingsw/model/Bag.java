@@ -4,11 +4,13 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class Bag {
+public class Bag implements Serializable {
+    private static final long serialVersionUID = -4755443721464701726L;
     private ArrayList<PersonalGoalCard> personalGoals;
     //private ArrayList<ItemTile> itemTiles;
     private HashMap<ItemType, Integer> itemTiles;

@@ -5,10 +5,12 @@ package it.polimi.ingsw.model.commongoals;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public abstract class CommonGoalCard {
+public abstract class CommonGoalCard implements Serializable {
+private static final long serialVersionUID = 2348200362905242941L;
     //TODO switch to appropriate design pattern
     private Stack<Integer> points; //attenzione che Integer può anche essere null a differenza di int!!
     final int NROW = Bookshelf.Rows;

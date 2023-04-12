@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model.gameboard;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
+    private static final long serialVersionUID = 3852798630854592187L;
     private final int row;
 
     private final int column;

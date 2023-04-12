@@ -7,9 +7,11 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
-public class PersonalGoalCard {
+public class PersonalGoalCard implements Serializable {
+    private static final long serialVersionUID = -4793133503754805698L;
     final int Rows=6;
     final int Columns=5;
     protected ItemType[][] objective;

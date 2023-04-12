@@ -2,9 +2,11 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Serializable {
+    private static final long serialVersionUID = 5681952653692686369L;
     private String username;
     private Bookshelf bookshelf;
     private PersonalGoalCard personalGoal;

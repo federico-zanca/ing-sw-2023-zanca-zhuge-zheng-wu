@@ -3,11 +3,13 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class Bookshelf {
+public class Bookshelf implements Serializable {
+    private static final long serialVersionUID = -4668097451983716980L;
     public static final int Rows=6;
     public static final int Columns=5;
 

@@ -4,10 +4,12 @@ package it.polimi.ingsw.model.gameboard;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class Board {
+public class Board implements Serializable {
+    private static final long serialVersionUID = 90503760638457723L;
     private Square[][] gameboard;
     public static final int DIMENSIONS = 9;
 

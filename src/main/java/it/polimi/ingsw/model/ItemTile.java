@@ -2,7 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enumerations.ItemType;
 
-public class ItemTile {
+import java.io.Serializable;
+
+public class ItemTile implements Serializable {
+    private static final long serialVersionUID = 4467821091195695300L;
     private ItemType type;
 
     private int GroupId;
