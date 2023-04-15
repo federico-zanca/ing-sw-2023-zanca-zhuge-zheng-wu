@@ -1,8 +1,8 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.distributed.Server;
-import it.polimi.ingsw.distributed.local.ClientImpl;
-import it.polimi.ingsw.distributed.local.ServerImpl;
+import it.polimi.ingsw.distributed.ServerImpl;
 
 import java.rmi.RemoteException;
 //import it.polimi.ingsw.view.VirtualView;
