@@ -1,7 +1,5 @@
-package it.polimi.ingsw.distributed.local;
+package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.distributed.Client;
-import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.view.ProtoCli;
@@ -34,7 +32,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
     }
 
     private void initialize(Server server) throws RemoteException {
-        server.registerClient(this);
+        server.register(this);
 
         view.addObserver((o, arg) -> {
             try {
@@ -47,12 +45,12 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
 
     @Override
     public void update(GameView o, Message message) {
-        this.view.update(o, message);
+        view.update(o, message);
     }
 
     @Override
     public void run() {
-        this.view.run();
+        view.run();
     }
 }
 

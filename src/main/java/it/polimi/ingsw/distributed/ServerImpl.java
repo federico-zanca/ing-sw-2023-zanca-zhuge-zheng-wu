@@ -1,4 +1,4 @@
-package it.polimi.ingsw.distributed.local;
+package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.Client;
@@ -30,7 +30,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
 
     @Override
-    public void registerClient(Client client) {
+    public void register(Client client) {
         this.model = Game.getInstance();
         //forse problemi per game.instance
         this.model.addObserver((o, arg) -> {
