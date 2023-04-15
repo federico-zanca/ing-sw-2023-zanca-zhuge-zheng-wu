@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.message.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class TurnController {
     private final Game model;
@@ -176,14 +177,11 @@ public class TurnController {
 
     private boolean areTheSameHand(ArrayList<ItemTile> items, ArrayList<ItemTile> hand) {
         ArrayList<ItemTile> handCopy = new ArrayList<>(hand);
-        for(ItemTile it : items){
-            for(ItemTile it2 : handCopy){
-                if(it.getType() == it2.getType()){
-                    handCopy.remove(it2);
-                    break;
-                }
-                if(it2==hand.get(hand.size()-1)) return false;
-            }
+        Collections.sort(handCopy, Comparator.comparing(ItemTile::getType));
+        for (ItemTile it : items) {
+            int index = Collections.binarySearch(handCopy, it, Comparator.comparing(ItemTile::getType));
+            if (index < 0) return false;
+            handCopy.remove(index);
         }
         return true;
     }
