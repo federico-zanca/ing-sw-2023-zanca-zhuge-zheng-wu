@@ -209,8 +209,7 @@ public class Game extends Observable {
         initLeaderBoard();
         setCurrentPlayer(getFirstPlayer());
         //board.enableSquaresWithFreeSide();
-        notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), board.getGameboard()));
-        notifyObservers(new CommonGoalCardMessage(currentPlayer.getUsername(), commonGoals));
+        notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), board.getGameboard(), commonGoals));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
@@ -548,7 +547,7 @@ public class Game extends Observable {
 
     public void updateLeaderBoard(ArrayList<String> usernamesQueue){
         sortLeaderBoard(usernamesQueue);
-        notifyObservers(new LeaderBoardMessage(currentPlayer.getUsername(), leaderboard));
+       // notifyObservers(new LeaderBoardMessage(currentPlayer.getUsername(), leaderboard));
     }
 
     public void sortLeaderBoard(ArrayList<String> usernamesQueue){
