@@ -118,7 +118,7 @@ public class ProtoCli extends Observable implements Runnable {
         //Game game = Game.getInstance();
         showBookshelf(username, bookshelf);
         showBoard(board);
-        showCommonGoals();
+        //showCommonGoals();
         ArrayList<Square> hand = new ArrayList<>();
         String continueResponse;
         Scanner s = new Scanner(System.in);
@@ -717,11 +717,13 @@ public class ProtoCli extends Observable implements Runnable {
         out.println("Bravo!\n");
     }
 
-    private void showGameStarted(Square[][] gameboard) {
+    private void showGameStarted(GameView model) {
         out.println("######################################\n" +
                 "#        La partita è iniziata!      #\n" +
                 "######################################");
-        showBoard(gameboard);
+        showBoard(model.getBoard().getGameboard());
+        showCommonGoals(model);
+        showLeaderboard(model.getLeaderboard());
     }
 
     private void showNewTurn(String username) {
@@ -740,16 +742,20 @@ public class ProtoCli extends Observable implements Runnable {
     }
 
     public void update(GameView model, Message message) {
+        /*
         if(!(model instanceof GameView)){
             System.err.println("Ignoring updates from " + model);
             return;
         }
+
+         */
         switch(message.getType()){
             case GAME_STARTED:
-                showGameStarted(((GameStartedMessage) message).getGameboard());
+                //showGameStarted(((GameStartedMessage) message).getGameboard());
+                showGameStarted(model);
                 break;
             case NEW_TURN:
-                showNewTurn(((NewTurnMessage) message).getUsername());
+                showNewTurn(message.getUsername());
                 break;
             case BOARD:
                 showBoard(((BoardMessage) message).getBoard());
@@ -769,7 +775,7 @@ public class ProtoCli extends Observable implements Runnable {
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
                 //showBookshelf(m1.getUsername(), m1.getBookshelf());
                 //showBoard(m1.getBoard());
-                askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
+                askDraw(m1.getUsername(), model.getBoard().getGameboard(), model.getBookshelf().getShelfie(), m1.getMaxNumItems());
                 break;
             case INSERT_INFO:
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
@@ -801,9 +807,9 @@ public class ProtoCli extends Observable implements Runnable {
         }
     }
 
-    private void showCommonGoals(){
-        out.println("First Common Goal: " + getCards().get(0).toString() +
-                "\nSecond Common Goal: " + getCards().get(1).toString());
+    private void showCommonGoals(GameView model){
+        out.println("First Common Goal: " + model.getCommonGoals().get(0).toString() +
+                "\nSecond Common Goal: " + model.getCommonGoals().get(1).toString());
     }
     private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         out.println("######################################\n" +
