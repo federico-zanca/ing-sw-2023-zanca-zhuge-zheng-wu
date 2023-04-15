@@ -6,16 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Observable {
-    private final List<Observer> observers = new ArrayList<>();
+    private List<Observer> observers = new ArrayList<>();
 
 
     /**
      * Adds an observer.
      *
-     * @param obs the observer to be added.
+     * @param o the observer to be added.
      */
-    public synchronized void addObserver(Observer obs) {
-        observers.add(obs);
+    public synchronized void addObserver(Observer o) {
+        if(o == null)
+            throw new NullPointerException();
+        if(!observers.contains(o))
+            observers.add(o);
     }
 
     /**
