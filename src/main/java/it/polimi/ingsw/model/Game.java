@@ -43,7 +43,7 @@ public class Game extends Observable {
         board = null;
         bag = new Bag();
         players = new ArrayList<>();
-        players.add(new Player("BOT0"));
+        //players.add(new Player("BOT0"));
         //players.add(new Player("BOT1"));
         //players.add(new Player("BOT2"));
         commonGoals = new ArrayList<>();
