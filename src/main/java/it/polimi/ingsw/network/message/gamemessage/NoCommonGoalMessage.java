@@ -1,10 +1,13 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.message.gamemessage;
 
-public class NoCommonGoalMessage extends Message {
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+
+public class NoCommonGoalMessage extends GameMessage {
 
     private final String content = "No common goal achieved this round :(";
     public NoCommonGoalMessage(String username) {
-        super(username, MessageType.NO_COMMON_GOAL);
+        super(username, GameMessageType.NO_COMMON_GOAL);
     }
 
     public String getContent() {

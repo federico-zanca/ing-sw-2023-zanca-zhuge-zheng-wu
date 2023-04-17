@@ -1,16 +1,18 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 
 import java.util.ArrayList;
-public class InsertTilesMessage extends Message{
+public class InsertTilesMessage extends GameMessage {
     private final ArrayList<ItemTile> items;
 
 
     private final int column;
 
     public InsertTilesMessage(String username, ArrayList<ItemTile> items, int column){
-        super(username, MessageType.INSERT_TILES);
+        super(username, GameMessageType.INSERT_TILES);
         this.items = items;
         this.column = column;
     }

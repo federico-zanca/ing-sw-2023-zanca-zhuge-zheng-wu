@@ -1,10 +1,10 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.message.gamemessage;
 
-public class AdjacentItemsPointsMessage extends Message {
+public class AdjacentItemsPointsMessage extends GameMessage {
     private final int points;
 
     public AdjacentItemsPointsMessage(String username, int points) {
-        super(username, MessageType.ADJACENT_ITEMS_POINTS);
+        super(username, GameMessageType.ADJACENT_ITEMS_POINTS);
         this.points = points;
     }
 

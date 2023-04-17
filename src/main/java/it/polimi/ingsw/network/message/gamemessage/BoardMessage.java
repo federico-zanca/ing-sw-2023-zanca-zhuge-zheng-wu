@@ -1,11 +1,11 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.model.gameboard.Square;
 
 import java.util.Arrays;
 
 
-public class BoardMessage extends Message{
+public class BoardMessage extends GameMessage {
     private final Square[][] board;
 
     /**
@@ -13,7 +13,7 @@ public class BoardMessage extends Message{
      * @param board
      */
     public BoardMessage(String username, Square[][] board){
-        super(username, MessageType.BOARD);
+        super(username, GameMessageType.BOARD);
         this.board = board;
     }
 

@@ -1,11 +1,13 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.message.gamemessage;
+
+import it.polimi.ingsw.network.message.Message;
 
 import java.util.LinkedHashMap;
 
-public class EndGameMessage extends Message {
+public class EndGameMessage extends GameMessage {
     private final LinkedHashMap<String, Integer> ranking;
     public EndGameMessage(String username, LinkedHashMap<String, Integer> ranking) {
-        super(username, MessageType.END_GAME);
+        super(username, GameMessageType.END_GAME);
         this.ranking = ranking;
     }
 

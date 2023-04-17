@@ -1,14 +1,14 @@
-package it.polimi.ingsw.network.message;
+package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 
 import java.util.ArrayList;
 
-public class CommonGoalCardMessage extends Message{
+public class CommonGoalCardMessage extends GameMessage {
     private ArrayList<CommonGoalCard> cards;
 
     public CommonGoalCardMessage(String username, ArrayList<CommonGoalCard> cards){
-        super(username,MessageType.COMMONGOALCARD);
+        super(username, GameMessageType.COMMONGOALCARD);
         this.cards = cards;
     }
 
