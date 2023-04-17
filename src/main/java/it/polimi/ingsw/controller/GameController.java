@@ -5,13 +5,13 @@ import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.network.message.ErrorMessage;
-import it.polimi.ingsw.network.message.LoginRequest;
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageType;
-import it.polimi.ingsw.utils.Observable;
-import it.polimi.ingsw.utils.Observer;
-import it.polimi.ingsw.view.ProtoCli;
+import it.polimi.ingsw.model.exceptions.GameNotReadyException;
+import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
+import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.message.gamemessage.ErrorMessage;
+import it.polimi.ingsw.network.message.gamemessage.GameMessage;
+import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.gamemessage.LoginRequest;
 
 import java.util.ArrayList;
 
@@ -19,26 +19,21 @@ public class GameController {
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 3;
     private Game model;
-    private GameLobby lobby;
-
     //stuff for the view
-    public final Client view;
     private TurnController turnController;
 
     //constructors and setters
     /**
      * Controller of the game
      */
-    public GameController(Client view){
-        this.view = view;
-        setupGameController();
+    public GameController(Game model){
+        setupGameController(model);
     }
     /**
      * Initializes the Game Controller getting a in instance of the new game
      */
-    public void setupGameController(){
-        this.model = Game.getInstance();
-        this.lobby = new GameLobby();
+    public void setupGameController(Game model){
+        this.model = model;
         this.turnController = new TurnController(this);
         setGamePhase(GamePhase.LOGIN);
     }
@@ -99,8 +94,8 @@ public class GameController {
      * Handles the LoginPhase related messages received from the view
      * @param message
      */
-    public void loginPhase(Message message){
-        if(message.getType()== MessageType.LOGINREQUEST) {
+    public void loginPhase(GameMessage message){
+        if(message.getType()== GameMessageType.LOGINREQUEST) {
             handleLoginRequest((LoginRequest) message);
         }
         else{
@@ -134,7 +129,7 @@ public class GameController {
      * Handles the PlayPhase related messages received from the view
      * @param message
      */
-    private void playPhase(Message message) {
+    private void playPhase(GameMessage message) {
         switch(model.getTurnPhase()){
             case DRAW:
                 turnController.drawPhase(message);
@@ -198,13 +193,10 @@ public class GameController {
      * Switch on Game State.
      * @param receivedMessage Message from Active Player.
      */
-    public void onMessageReceived(Message receivedMessage) {
+    public void onMessageReceived(GameMessage receivedMessage) {
 
         //VirtualView virtualView = virtualViewMap.get(receivedMessage.getNickname());
         switch (model.getGamePhase()) {
-            case LOGIN:
-                loginPhase(receivedMessage);
-                break;
             case INIT:
                 //if (inputController.checkUser(receivedMessage)) {
                 //    initState(receivedMessage, virtualView);
@@ -225,7 +217,7 @@ public class GameController {
         }
     }
 
-    public void update(Client client, Message message) {
+    public void update(Client client, GameMessage message) {
         //ricevo notifiche solo dalla mia view
         /*
         if(client != view){
@@ -266,6 +258,32 @@ public class GameController {
 
 
          */
+    }
+
+    public void startGame() throws GameNotReadyException {
+        if(model.isGameReadyToStart()){
+            System.err.println("IL GIOCO INIZIA");
+            model.startGame();
+            turnController.setPlayersQueue(model.getPlayers());
+            model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
+
+            //nextGamePhase();
+            turnController.newTurn();
+        } else{
+            throw new GameNotReadyException("Game not ready to start");
+        }
+    }
+
+    public void addPlayer(String username) throws InvalidUsernameException {
+        if(validUsernameFormat(username)){
+            model.addPlayer(new Player(username));
+        } else{
+            throw new InvalidUsernameException();
+        }
+    }
+
+    public void removePlayer(String username) {
+        model.removePlayer(model.getPlayerByUsername(username));
     }
 
 

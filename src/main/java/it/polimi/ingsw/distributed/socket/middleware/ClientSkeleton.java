@@ -30,13 +30,7 @@ public class ClientSkeleton implements Client {
     }
 
     @Override
-    public void update(GameView o, Message message) throws RemoteException {
-        try {
-            oos.writeObject(o);
-            oos.reset();
-        } catch (IOException e) {
-            throw new RemoteException("Cannot send game view: " + e.getMessage());
-        }
+    public void update(Message message) throws RemoteException {
         try {
             oos.writeObject(message);
             oos.reset();

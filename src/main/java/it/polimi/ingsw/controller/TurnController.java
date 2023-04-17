@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.message.gamemessage.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class TurnController {
      * @param gameController Game controller
      */
     public TurnController(GameController gameController) {
-        this.model = Game.getInstance();
+        this.model = gameController.getModel();
         this.gameController = gameController;
     }
 
@@ -45,8 +46,8 @@ public class TurnController {
         return usernames;
     }
 
-    public void drawPhase(Message message) {
-        if(message.getType()== MessageType.DRAW_TILES){
+    public void drawPhase(GameMessage message) {
+        if(message.getType()== GameMessageType.DRAW_TILES){
             DrawTilesMessage m = (DrawTilesMessage) message;
             if(isDrawHandValid(m.getSquares())){
                 model.drawFromBoard(m.getSquares());
@@ -145,8 +146,8 @@ public class TurnController {
      * Inserts the tiles in the hand in the bookshelf
      * @param message Message containing the tiles to insert and where to insert them (column)
      */
-    public void insertPhase(Message message) {
-        if(message.getType()== MessageType.INSERT_TILES){
+    public void insertPhase(GameMessage message) {
+        if(message.getType()== GameMessageType.INSERT_TILES){
             InsertTilesMessage m = (InsertTilesMessage) message;
             if(isInsertHandValid(m.getItems(), m.getColumn())){
                 model.insertTiles(m.getItems(), m.getColumn());

@@ -74,12 +74,12 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
     public static void startSocket() throws RemoteException {
         AppServerImpl instance = getInstance();
         try (ServerSocket serverSocket = new ServerSocket(1234)) {
+            Server server = new ServerImpl();
             while (true) {
                 Socket socket = serverSocket.accept();
                 instance.executorService.submit(() -> {
                     try {
                         ClientSkeleton clientSkeleton = new ClientSkeleton(socket);
-                        Server server = new ServerImpl();
                         server.register(clientSkeleton);
                         while (true) {
                             clientSkeleton.receive(server);

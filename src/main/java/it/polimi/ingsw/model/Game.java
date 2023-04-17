@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
-import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.utils.Observable;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class Game extends Observable {
     private Board board;
     private Bag bag;
 
-    private Game(){
+    public Game(){
         init();
     }
 
@@ -54,20 +54,23 @@ public class Game extends Observable {
      *
      * @return the singleton instance of the game
      */
-
+    /*
     public static Game getInstance() {
         if(instance == null)
             instance = new Game();
         return instance;
     }
-
+    */
 
     /**
      * Resets the game instance, all game data is lost after this operation.
      */
+    /*
     public static void resetInstance(){
         Game.instance=null;
     }
+    */
+
 
     /**
      * Sets the Board for the game
@@ -209,7 +212,7 @@ public class Game extends Observable {
         initLeaderBoard();
         setCurrentPlayer(getFirstPlayer());
         //board.enableSquaresWithFreeSide();
-        notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), board.getGameboard(), commonGoals));
+        notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), new GameView(this), board.getGameboard(), commonGoals));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
@@ -579,5 +582,9 @@ public class Game extends Observable {
 
     public LinkedHashMap<String, Integer> getLeaderboard() {
         return leaderboard;
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 }

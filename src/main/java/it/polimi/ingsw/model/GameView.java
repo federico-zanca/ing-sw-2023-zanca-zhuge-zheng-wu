@@ -28,8 +28,7 @@ public class GameView implements Serializable {
     private final PersonalGoalCard personalGoal;
 
 
-    public GameView() {
-        Game model = Game.getInstance();
+    public GameView(Game model) {
         if (model.getPlayers() != null) {
             this.players = new ArrayList<>(model.getPlayers());
         } else {
@@ -60,7 +59,7 @@ public class GameView implements Serializable {
         } else {
             this.bag = null;
         }
-        Player player = Game.getInstance().getPlayerByUsername(model.getCurrentPlayer().getUsername());
+        Player player = model.getPlayerByUsername(model.getCurrentPlayer().getUsername());
 
         this.score = player.getScore();
         this.bookshelf = player.getBookshelf();

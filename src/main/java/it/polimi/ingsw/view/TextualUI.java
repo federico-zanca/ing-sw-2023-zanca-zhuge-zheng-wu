@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
 import it.polimi.ingsw.model.Bookshelf;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
@@ -10,20 +10,22 @@ import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.network.message.connectionmessage.*;
+import it.polimi.ingsw.network.message.gamemessage.*;
+import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
+import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyResponse;
+import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
+import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.utils.Observable;
-import it.polimi.ingsw.utils.Observer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Scanner;
+import java.util.*;
 
-public class ProtoCli extends Observable implements Runnable {
+public class TextualUI extends Observable implements Runnable {
     private final MyPrintStream out;
 
     private ArrayList<CommonGoalCard> cards;
 
-    public ProtoCli(){
+    public TextualUI() {
         out = new MyPrintStream();
         cards = null;
     }
@@ -37,17 +39,9 @@ public class ProtoCli extends Observable implements Runnable {
     }
 
     @Override
-    public void run(){
-        out.println("███╗   ███╗██╗   ██╗███████╗██╗  ██╗███████╗██╗     ███████╗██╗███████╗\n" +
-                "████╗ ████║╚██╗ ██╔╝██╔════╝██║  ██║██╔════╝██║     ██╔════╝██║██╔════╝\n" +
-                "██╔████╔██║ ╚████╔╝ ███████╗███████║█████╗  ██║     █████╗  ██║█████╗  \n" +
-                "██║╚██╔╝██║  ╚██╔╝  ╚════██║██╔══██║██╔══╝  ██║     ██╔══╝  ██║██╔══╝  \n" +
-                "██║ ╚═╝ ██║   ██║   ███████║██║  ██║███████╗███████╗██║     ██║███████╗\n" +
-                "╚═╝     ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝\n" +
-                "                                                                       \n" +
-                "\n");
-        String username = askUsername();
-        notifyObservers(new LoginRequest(username));
+    public void run() {
+        //String username = askUsername();
+        //notifyObservers(new LoginRequest(username));
         //Coordinates choice = askPlayer();
     }
 
@@ -55,18 +49,19 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Asks the player his username
+     *
      * @return the username inserted
      */
-    public String askUsername(){
+    public String askUsername() {
         String username;
         out.print("Enter your name: ");
         Scanner s = new Scanner(System.in);
         username = s.nextLine();
-        while(!isValidUsername(username)){
+        while (!isValidUsername(username)) {
             out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
                     "Please insert your username again: ");
             username = s.nextLine();
-        }while(!isValidUsername(username));
+        }
         return username;
 
     }
@@ -76,7 +71,7 @@ public class ProtoCli extends Observable implements Runnable {
      *
      * @param username the string representing the username to be validated.
      * @return true if the username meets all of the validation criteria outlined below, false otherwise.
-     *
+     * <p>
      * Criteria for a valid username:
      * 1. Does not contain any spaces.
      * 2. Does not start with a special character (-, _, or .).
@@ -91,7 +86,7 @@ public class ProtoCli extends Observable implements Runnable {
 
         // Check if username starts or ends with a special character or if it is solely composed of numbers
         char firstChar = username.charAt(0);
-        if (firstChar == '-' || firstChar == '_' || firstChar == '.'  || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
+        if (firstChar == '-' || firstChar == '_' || firstChar == '.' || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
             return false;
         }
 
@@ -109,9 +104,10 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
-     * @param username username of the current player
-     * @param board gameboard
-     * @param bookshelf player's bookshelf
+     *
+     * @param username    username of the current player
+     * @param board       gameboard
+     * @param bookshelf   player's bookshelf
      * @param maxNumItems max free cells in a single column in player's bookshelf
      */
     public void askDraw(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
@@ -122,13 +118,13 @@ public class ProtoCli extends Observable implements Runnable {
         ArrayList<Square> hand = new ArrayList<>();
         String continueResponse;
         Scanner s = new Scanner(System.in);
-        out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, maxNumItems) +" tessere. Di più non riusciresti a inserirne!");
+        out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, maxNumItems) + " tessere. Di più non riusciresti a inserirne!");
 
-        for(int i=0; i<Math.min(3, maxNumItems); i++){
-            out.println("Inserisci le coordinate della "+(i+1)+"° tessera separate da una virgola (es. riga, colonna) :");
+        for (int i = 0; i < Math.min(3, maxNumItems); i++) {
+            out.println("Inserisci le coordinate della " + (i + 1) + "° tessera separate da una virgola (es. riga, colonna) :");
             hand.add(inputCoords(hand, board, i));
-            if(isPossibleToDrawMore(hand, board) && i<2) {
-                if (maxNumItems > i+1) {
+            if (isPossibleToDrawMore(hand, board) && i < 2) {
+                if (maxNumItems > i + 1) {
                     do {
                         out.println("Vuoi continuare a prendere tessere? (y/n)");
                         continueResponse = s.nextLine();
@@ -137,7 +133,7 @@ public class ProtoCli extends Observable implements Runnable {
                         break;
                     }
                 }
-            }else{
+            } else {
                 break;
             }
         }
@@ -181,12 +177,13 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Recalls askDraw() if the tiles previously taken are rejected by the Server because they are found invalid
-     * @param username username of the player
-     * @param board gameboard
-     * @param bookshelf player's bookshelf
+     *
+     * @param username    username of the player
+     * @param board       gameboard
+     * @param bookshelf   player's bookshelf
      * @param maxNumItems max num of items the player can draw according to its bookshelf
      */
-    public void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems){
+    public void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
         out.println("Invalid draw request! It seems like your client misbehaved... " +
                 "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draware invalid!");
         askDraw(username, board, bookshelf, maxNumItems);
@@ -194,37 +191,41 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Checks if the current board configuration allows the player to draw more tiles
-     * @param hand ArrayList of tiles taken by the player in this turn
+     *
+     * @param hand  ArrayList of tiles taken by the player in this turn
      * @param board gameboard
      * @return true if there are other tiles the player can pick (based on what he's already picked and the board configuration)
      */
-    private boolean isPossibleToDrawMore(ArrayList<Square> hand, Square[][] board){
+    private boolean isPossibleToDrawMore(ArrayList<Square> hand, Square[][] board) {
         ArrayList<Integer> rows = new ArrayList<>();
         ArrayList<Integer> columns = new ArrayList<>();
-        for(Square sq : hand){
+        for (Square sq : hand) {
             rows.add(sq.getRow());
             columns.add(sq.getColumn());
         }
-        if(allCoordsAreEqual(rows)){
+        if (allCoordsAreEqual(rows)) {
             Collections.sort(columns);
-            if(columns.get(0)!=0 && board[rows.get(0)][columns.get(0)-1].isPickable()) return true;
-            if(columns.get(columns.size()-1)!= board.length-1 && board[rows.get(0)][columns.get(columns.size()-1)+1].isPickable()) return true;
+            if (columns.get(0) != 0 && board[rows.get(0)][columns.get(0) - 1].isPickable()) return true;
+            if (columns.get(columns.size() - 1) != board.length - 1 && board[rows.get(0)][columns.get(columns.size() - 1) + 1].isPickable())
+                return true;
         }
-        if(allCoordsAreEqual(columns)){
+        if (allCoordsAreEqual(columns)) {
             Collections.sort(rows);
-            if(rows.get(0)!=0 && board[rows.get(0)-1][columns.get(0)].isPickable()) return true;
-            if(rows.get(rows.size()-1)!= board.length-1 && board[rows.get(rows.size()-1)+1][columns.get(0)].isPickable()) return true;
+            if (rows.get(0) != 0 && board[rows.get(0) - 1][columns.get(0)].isPickable()) return true;
+            if (rows.get(rows.size() - 1) != board.length - 1 && board[rows.get(rows.size() - 1) + 1][columns.get(0)].isPickable())
+                return true;
         }
         return false;
     }
 
     /**
      * This method splits the input string on commas and checks if there are exactly two parts. If not, it returns `true`.
-     *     If there are two parts, it attempts to parse them as integers using `Integer.parseInt()`.
-     *     If either of them cannot be parsed as an integer (due to a non-numeric character being present, for example),
-     *      the method returns `true`. Otherwise, it returns `false`.
-     *     Note that this implementation assumes the input string contains only ASCII digits, whitespace, and commas.
-     *     If other characters are allowed, the parsing logic would need to be adapted accordingly.
+     * If there are two parts, it attempts to parse them as integers using `Integer.parseInt()`.
+     * If either of them cannot be parsed as an integer (due to a non-numeric character being present, for example),
+     * the method returns `true`. Otherwise, it returns `false`.
+     * Note that this implementation assumes the input string contains only ASCII digits, whitespace, and commas.
+     * If other characters are allowed, the parsing logic would need to be adapted accordingly.
+     *
      * @param input the string which format is to be evaluated
      * @return true if the String format is invalid
      */
@@ -254,14 +255,15 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Checks if the input format is one exact number which fits in the bookshelf's dimension. If not, it returns 'true'.
+     *
      * @param input chosen column
      * @return valid column
      */
     private boolean invalidColumnFormat(String input) {
-        try{
+        try {
             int col = Integer.parseInt(input.trim());
             return false;
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return true;
         }
     }
@@ -269,35 +271,36 @@ public class ProtoCli extends Observable implements Runnable {
     /**
      * Prompts the user to insert the coordinates of the tile he wants to pick and checks if the coordinates are those of a valid tile.
      * If the coordinates inserted are not valid, it re-prompts the user to insert the input.
-     * @param hand ArrayList of tiles taken by the player in this turn
+     *
+     * @param hand  ArrayList of tiles taken by the player in this turn
      * @param board gameboard
-     * @param n the n_th tile taken in this turn
+     * @param n     the n_th tile taken in this turn
      * @return the Square corresponding to the given coordinates
      */
     private Square inputCoords(ArrayList<Square> hand, Square[][] board, int n) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
-        while(invalidCoordFormat(input)) {
+        while (invalidCoordFormat(input)) {
             out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
             input = s.nextLine();
         }
         String[] tiles = input.split(",");
         int row = Integer.parseInt(tiles[0].trim());
         int column = Integer.parseInt(tiles[1].trim());
-        while(true){
-            if(row<0 || row>Board.DIMENSIONS-1 || column<0 || column>Board.DIMENSIONS-1){
-                out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-"+ (Board.DIMENSIONS-1));
-            }else if(isTileAlreadyOnHand(row, column, hand)){
+        while (true) {
+            if (row < 0 || row > Board.DIMENSIONS - 1 || column < 0 || column > Board.DIMENSIONS - 1) {
+                out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-" + (Board.DIMENSIONS - 1));
+            } else if (isTileAlreadyOnHand(row, column, hand)) {
                 out.println("Non puoi prendere una tessera che hai già preso! Inserisci altre coordinate: ");
-            }else if(!board[row][column].isPickable()){
+            } else if (!board[row][column].isPickable()) {
                 out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
-            }else if(n>0 && !inLineTile(row, column, hand)){
+            } else if (n > 0 && !inLineTile(row, column, hand)) {
                 out.println("Coordinate non valide! La tessera che prendi deve essere adiacente e in linea retta (orizzontale o verticale) con le tessere che hai già preso in questo turno! Inserisci le coordinate nuovamente: ");
-            }else{
+            } else {
                 break;
             }
             input = s.nextLine();
-            while(invalidCoordFormat(input)) {
+            while (invalidCoordFormat(input)) {
                 out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
                 input = s.nextLine();
             }
@@ -310,12 +313,13 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Checks if the given array of Integers contains only equals elements
+     *
      * @param x ArrayList of integers
      * @return true if the elements of the passed ArrayList are all equal
      */
-    private boolean allCoordsAreEqual( ArrayList<Integer> x){
-        for(int i=0; i<x.size()-1; i++){
-            if (x.get(i)!=x.get(i + 1)) {
+    private boolean allCoordsAreEqual(ArrayList<Integer> x) {
+        for (int i = 0; i < x.size() - 1; i++) {
+            if (x.get(i) != x.get(i + 1)) {
                 return false;
             }
         }
@@ -324,22 +328,24 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Checks if the integers int the given arraylist are consecutive (in whatever order they are presented)
+     *
      * @param x ArrayList of integers
      * @return true if the elements in the given arraylist are consecutive (in whatever order they are presented)
      */
-    private boolean allCoordsAreAdjacent(ArrayList<Integer> x){
+    private boolean allCoordsAreAdjacent(ArrayList<Integer> x) {
         Collections.sort(x);
-        for(int i=0; i<x.size()-1; i++){
-            if(x.get(i)!=x.get(i+1)-1) return false;
+        for (int i = 0; i < x.size() - 1; i++) {
+            if (x.get(i) != x.get(i + 1) - 1) return false;
         }
         return true;
     }
 
     /**
      * Checks if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
-     * @param row row number of the Square to check
+     *
+     * @param row    row number of the Square to check
      * @param column column number of the Square to check
-     * @param hand List of Squares (tiles) already picked by the player during this turn
+     * @param hand   List of Squares (tiles) already picked by the player during this turn
      * @return true if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
      */
     private boolean inLineTile(int row, int column, ArrayList<Square> hand) {
@@ -347,7 +353,7 @@ public class ProtoCli extends Observable implements Runnable {
         ArrayList<Integer> columns = new ArrayList<>();
         rows.add(row);
         columns.add(column);
-        for(Square sq : hand){
+        for (Square sq : hand) {
             rows.add(sq.getRow());
             columns.add(sq.getColumn());
         }
@@ -356,15 +362,16 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Checks if the tile has already been picked by the player this turn
-     * @param row row number of the Square to check
+     *
+     * @param row    row number of the Square to check
      * @param column column number of the Square to check
-     * @param hand List of Squares (tiles) already picked by the player during this turn
+     * @param hand   List of Squares (tiles) already picked by the player during this turn
      * @return true if the passed coordinates are those of a tile which is already in the player's hand
      */
     private boolean isTileAlreadyOnHand(int row, int column, ArrayList<Square> hand) {
-        if(hand.size()==0) return false;
-        for(Square sq : hand){
-            if(sq.getCoordinates().getRow()==row && sq.getCoordinates().getColumn()==column) return true;
+        if (hand.size() == 0) return false;
+        for (Square sq : hand) {
+            if (sq.getCoordinates().getRow() == row && sq.getCoordinates().getColumn() == column) return true;
         }
         return false;
     }
@@ -388,36 +395,33 @@ public class ProtoCli extends Observable implements Runnable {
     }
 
 
-
-
-
     //INSERT PHASE stuff
 
     public void askInsert(String username, ItemTile[][] bookshelf, ArrayList<ItemTile> hand, ArrayList<Integer> columns) {
         out.println("Inizia la insert phase\n");
         showBookshelf(username, bookshelf);
         showHand(username, hand);
-        orderHand(username,hand);
+        orderHand(username, hand);
         out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
         int column = inputColumn(hand, bookshelf, columns);
         notifyObservers(new InsertTilesMessage(username, hand, column));
     }
 
 
-    private int inputColumn(ArrayList<ItemTile> items, ItemTile[][] bookshelf,ArrayList<Integer> columns) {
+    private int inputColumn(ArrayList<ItemTile> items, ItemTile[][] bookshelf, ArrayList<Integer> columns) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
-        while(invalidColumnFormat(input)){
+        while (invalidColumnFormat(input)) {
             out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
             input = s.nextLine();
         }
         int column = Integer.parseInt(input.trim());
-        while(true){
-            if(column < 0 || column > 4){
+        while (true) {
+            if (column < 0 || column > 4) {
                 out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
-            }else if(columnHasLessSpace(column,columns)){
+            } else if (columnHasLessSpace(column, columns)) {
                 out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
-            }else{
+            } else {
                 break;
             }
             input = s.nextLine();
@@ -428,7 +432,8 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Checks if the column chosen by the player has enough space to insert the players hand. If not it returns 'true'.
-     * @param column column that the player chose
+     *
+     * @param column  column that the player chose
      * @param columns arraylist of available columns
      * @return valid chosen column
      */
@@ -438,12 +443,13 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Prints the numbers from 0 to the passed parameter-1 as column indexes (separated by 5 spaces each)
+     *
      * @param columns number of columns to print
      */
-    private void printColumnIndexes(int columns){
+    private void printColumnIndexes(int columns) {
         out.print("       ");
-        for(int i=0; i<columns; i++){
-            out.print("  "+ i + "   ");
+        for (int i = 0; i < columns; i++) {
+            out.print("  " + i + "   ");
         }
         out.print("\n");
     }
@@ -452,36 +458,37 @@ public class ProtoCli extends Observable implements Runnable {
      * @param type ItemType
      * @return the ESC ColorCode to paint the background accordingly to the ItemType received
      */
-    private String paintBG(ItemType type){
+    private String paintBG(ItemType type) {
 
         StringBuilder stringBuilder = new StringBuilder();
         Color c;
-        switch(type){
-            case CAT :
-                c=Color.GREEN;
+        switch (type) {
+            case CAT:
+                c = Color.GREEN;
                 break;
             case PLANT:
-                c=Color.FUCSIA;
+                c = Color.FUCSIA;
                 break;
             case FRAME:
-                c=Color.BLUE;
+                c = Color.BLUE;
                 break;
             case GAME:
-                c=Color.YELLOW_BOLD;
+                c = Color.YELLOW_BOLD;
                 break;
             case TROPHY:
-                c=Color.CYAN_BOLD;
+                c = Color.CYAN_BOLD;
                 break;
             case BOOK:
-                c=Color.WHITE;
+                c = Color.WHITE;
                 break;
             default:
-                c=Color.NO_COLOR;
+                c = Color.NO_COLOR;
                 break;
         }
         return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
 
     }
+
     /**
      * @param type ItemType
      * @return the ESC ColorCode to paint the foreground accordingly to the ItemType received
@@ -489,27 +496,27 @@ public class ProtoCli extends Observable implements Runnable {
     private String paintFG(ItemType type) {
         StringBuilder stringBuilder = new StringBuilder();
         Color c;
-        switch(type){
-            case CAT :
-                c=Color.WGREEN;
+        switch (type) {
+            case CAT:
+                c = Color.WGREEN;
                 break;
             case PLANT:
-                c=Color.WFUCSIA;
+                c = Color.WFUCSIA;
                 break;
             case FRAME:
-                c=Color.WBLUE;
+                c = Color.WBLUE;
                 break;
             case GAME:
-                c=Color.WYELLOW_BOLD;
+                c = Color.WYELLOW_BOLD;
                 break;
             case TROPHY:
-                c=Color.WCYAN_BOLD;
+                c = Color.WCYAN_BOLD;
                 break;
             case BOOK:
-                c=Color.WWHITE;
+                c = Color.WWHITE;
                 break;
             default:
-                c=Color.NO_COLOR;
+                c = Color.NO_COLOR;
                 break;
         }
         return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
@@ -518,25 +525,26 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Prints the GameBoard
+     *
      * @param board matrix of Squares to print
      */
     private void showBoard(Square[][] board) {
         out.println("Game Board:");
         printColumnIndexes(Board.DIMENSIONS);
         StringBuilder strBoard = new StringBuilder();
-        for(int i=0; i< Board.DIMENSIONS; i++){
+        for (int i = 0; i < Board.DIMENSIONS; i++) {
             strBoard.append("      ");
-            for(int j=0; j<Board.DIMENSIONS; j++){
+            for (int j = 0; j < Board.DIMENSIONS; j++) {
                 strBoard.append("+-----");
             }
             strBoard.append("+\n");
             strBoard.append("  ").append(i).append("   |");
-            for(int j=0; j<Board.DIMENSIONS; j++){
+            for (int j = 0; j < Board.DIMENSIONS; j++) {
                 //strBoard.append("  ");
-                if(board[i][j].isPickable()){
+                if (board[i][j].isPickable()) {
                     //strBoard.append(board[i][j].getItem().toColorString());
                     strBoard.append(paintBG(board[i][j].getItem().getType()));
-                }else{
+                } else {
                     //strBoard.append("  ").append(board[i][j].getItem()).append("  ");
                     strBoard.append(paintFG(board[i][j].getItem().getType()));
                 }
@@ -546,7 +554,7 @@ public class ProtoCli extends Observable implements Runnable {
             strBoard.append("\n");
         }
         strBoard.append("      ");
-        for(int j=0; j<Board.DIMENSIONS; j++){
+        for (int j = 0; j < Board.DIMENSIONS; j++) {
             strBoard.append("+-----");
         }
         strBoard.append("+");
@@ -555,27 +563,28 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Prints the bookshelf of the player
+     *
      * @param username username of the player whose bookshelf is printed
-     * @param shelfie matrix of ItemTiles
+     * @param shelfie  matrix of ItemTiles
      */
-    public void showBookshelf(String username, ItemTile[][] shelfie){
+    public void showBookshelf(String username, ItemTile[][] shelfie) {
         out.println("BookShelf of player " + username);
         printColumnIndexes(Bookshelf.Columns);
         StringBuilder strShelf = new StringBuilder();
-        for(int i=0; i< Bookshelf.Rows; i++){
+        for (int i = 0; i < Bookshelf.Rows; i++) {
             strShelf.append("      ");
-            for(int j=0; j<Bookshelf.Columns; j++){
+            for (int j = 0; j < Bookshelf.Columns; j++) {
                 strShelf.append("+-----");
             }
             strShelf.append("+\n");
             strShelf.append("  ").append(i).append("   |");
-            for(int j=0; j<Bookshelf.Columns; j++){
+            for (int j = 0; j < Bookshelf.Columns; j++) {
                 strShelf.append(paintFG(shelfie[i][j].getType())).append("|");
             }
             strShelf.append("\n");
         }
         strShelf.append("      ");
-        for(int j = 0; j< Bookshelf.Columns; j++){
+        for (int j = 0; j < Bookshelf.Columns; j++) {
             strShelf.append("+-----");
         }
         strShelf.append("+");
@@ -587,7 +596,7 @@ public class ProtoCli extends Observable implements Runnable {
         out.println("Player " + username + " has achieved the common goal " + goal + " and has earned " + points + " points!");
     }
 
-    public void showHand(String username, ArrayList<ItemTile> hand){
+    public void showHand(String username, ArrayList<ItemTile> hand) {
         out.println("Hand of player " + username);
         for (ItemTile item : hand) {
             out.print(" " + paintFG(item.getType()) + " ");
@@ -597,18 +606,19 @@ public class ProtoCli extends Observable implements Runnable {
 
     /**
      * Orders the player's hand.
+     *
      * @param username name of player
-     * @param hand hand of player
+     * @param hand     hand of player
      */
-    public void orderHand(String username,ArrayList<ItemTile> hand){
+    public void orderHand(String username, ArrayList<ItemTile> hand) {
         String continueResponse;
         Scanner s = new Scanner(System.in);
-        if(hand.size()==2){
+        if (hand.size() == 2) {
             out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
             continueResponse = s.nextLine();
 
-            while(!isYesOrNo(continueResponse) || isYes(continueResponse)){
-                if(!isYesOrNo(continueResponse))
+            while (!isYesOrNo(continueResponse) || isYes(continueResponse)) {
+                if (!isYesOrNo(continueResponse))
                     out.println("Inserisci y o n");
                 else {
                     Collections.swap(hand, 1, 0);
@@ -620,8 +630,8 @@ public class ProtoCli extends Observable implements Runnable {
         } else if (hand.size() == 3) {
             out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
             continueResponse = s.nextLine();
-            while(!isYesOrNo(continueResponse) || isYes(continueResponse)){
-                if(!isYesOrNo(continueResponse))
+            while (!isYesOrNo(continueResponse) || isYes(continueResponse)) {
+                if (!isYesOrNo(continueResponse))
                     out.println("Inserisci y o n");
                 else {
                     out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
@@ -638,14 +648,16 @@ public class ProtoCli extends Observable implements Runnable {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes");
     }
+
     /**
      * Checks if the order in input is correct and actually orders the hand.
+     *
      * @param hand hand of player
      */
     private void inputOrder(ArrayList<ItemTile> hand, String username) {
         Scanner s = new Scanner(System.in);
         String input = s.nextLine();
-        while(invalidOrderFormat(input,3)) {
+        while (invalidOrderFormat(input, 3)) {
             out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
             showHand(username, hand);
             out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
@@ -655,12 +667,12 @@ public class ProtoCli extends Observable implements Runnable {
         int first = Integer.parseInt(order[0].trim());
         int second = Integer.parseInt(order[1].trim());
         int third = Integer.parseInt(order[2].trim());
-        while(true){
-            if(first<1 || first>3 || second<1 || second>3 || third<1 || third>3){
+        while (true) {
+            if (first < 1 || first > 3 || second < 1 || second > 3 || third < 1 || third > 3) {
                 out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (1-3)");
-            }else if(first==second || second==third || first==third){
+            } else if (first == second || second == third || first == third) {
                 out.println("Non si può avere due tessere nello stesso slot! Riprova");
-            }else{
+            } else {
                 break;
             }
             input = s.nextLine();
@@ -670,18 +682,19 @@ public class ProtoCli extends Observable implements Runnable {
             third = Integer.parseInt(order[2].trim());
         }
 
-        Collections.swap(hand,first-1,0);
-        if(second!=1){
-            Collections.swap(hand,second-1,1);
-        }else{
-            Collections.swap(hand,third-1,2);
+        Collections.swap(hand, first - 1, 0);
+        if (second != 1) {
+            Collections.swap(hand, second - 1, 1);
+        } else {
+            Collections.swap(hand, third - 1, 2);
         }
     }
 
     /**
      * Same as invalidCoordsFormat but is generic
+     *
      * @param input cli input
-     * @param n number of numbers separated by the coma that you have in the input string
+     * @param n     number of numbers separated by the coma that you have in the input string
      * @return
      */
     public static boolean invalidOrderFormat(String input, int n) {
@@ -694,7 +707,7 @@ public class ProtoCli extends Observable implements Runnable {
 
         try {
             // Attempt to parse integers from string parts : DON'T TOUCH!!!!!
-            for(int i=0;i<n; i++){
+            for (int i = 0; i < n; i++) {
                 int num = Integer.parseInt(parts[i].trim());
             }
 
@@ -728,7 +741,7 @@ public class ProtoCli extends Observable implements Runnable {
 
     private void showNewTurn(String username) {
         out.println("######################################\n" +
-                "    E' il turno di " + username+"\t\n" +           //migliorabile
+                "    E' il turno di " + username + "\t\n" +           //migliorabile
                 "######################################");
     }
 
@@ -741,18 +754,246 @@ public class ProtoCli extends Observable implements Runnable {
         }
     }
 
-    public void update(GameView model, Message message) {
-        /*
-        if(!(model instanceof GameView)){
-            System.err.println("Ignoring updates from " + model);
-            return;
-        }
+    private void showConnectedToServer() {
+        out.println("Connesso al server!");
 
-         */
-        switch(message.getType()){
+    }
+
+    private void askConnectionCommand() {
+        ConnectionCommand connectionCommand = null;
+
+        out.println("help mostra la lista dei comandi");
+        out.print(">>> ");
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        String parts[] = input.split(" ");
+
+        for (ConnectionCommand c : ConnectionCommand.values()) {
+            if (parts[0].toUpperCase().equals(c.toString())) {
+                connectionCommand = c;
+                break;
+            }
+        }
+        while (connectionCommand == null) {
+            out.println("Comando non valido! ");
+            out.println("help mostra la lista dei comandi");
+            out.print(">>>  ");
+            input = s.nextLine();
+            parts = input.split(" ");
+            for (ConnectionCommand c : ConnectionCommand.values()) {
+                if (parts[0].toUpperCase().equals(c.toString())) {
+                    connectionCommand = c;
+                    break;
+                }
+            }
+        }
+        switch (connectionCommand) {
+            case HELP:
+                for (ConnectionCommand c : ConnectionCommand.values()) {
+                    out.println(c.toString() + " " + c.getDescription());
+                }
+                break;
+            case USERNAME:
+                if (parts.length != 2) {
+                    out.println("Comando non valido!");
+                    askConnectionCommand();
+                } else {
+                    if (!isValidUsername(parts[1])) {
+                        out.println("Username non valido");
+                        askConnectionCommand();
+                        break;
+                    } else {
+                        out.println("Username impostato a " + parts[1]);
+                        notifyObservers(new UsernameRequest(parts[1]));
+                        break;
+                    }
+                }
+                break;
+            case EXIT:
+                //TODO disconnettiti dal server
+                break;
+            case GAMES:
+                notifyObservers(new LobbyListRequest());
+                break;
+            case JOIN:
+                if (parts.length != 2) {
+                    out.println("Comando non valido!");
+                    askConnectionCommand();
+                } else {
+                    notifyObservers(new JoinLobbyRequest(parts[1]));
+                }
+                break;
+            case CREATE:
+                if (parts.length != 2) {
+                    out.println("Comando non valido!");
+                    askConnectionCommand();
+                } else {
+                    notifyObservers(new CreateLobbyRequest(parts[1]));
+                }
+                break;
+            default:
+                System.err.println("Comando non valido, should never reach this state");
+                break;
+
+        }
+    }
+
+    private void showCommonGoals(GameView model) {
+        out.println("First Common Goal: " + model.getCommonGoals().get(0).toString() +
+                "\nSecond Common Goal: " + model.getCommonGoals().get(1).toString());
+    }
+
+    private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
+        out.println("######################################\n" +
+                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
+                "######################################");
+    }
+
+    private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
+        out.println("######################################\n" +
+                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
+                "######################################");
+    }
+
+    private void showLastTurn(LastTurnMessage message) {
+        out.println("######################################\n" +
+                message.getUsername() + " ha riempito la sua libreria!\n" +
+                "Questo è l'ultimo giro di gioco!\n" +
+                "######################################");
+    }
+
+    private void showEndGame(LinkedHashMap<String, Integer> ranking) {
+        out.println("######################################\n" +
+                "#        La partita è finita         #\n" +
+                "######################################");
+        showLeaderboard(ranking);
+        out.println("Il vincitore della partita è " + ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
+
+    }
+
+    private void showLobbyList(HashMap<String, Map.Entry<Integer, Integer>> lobbies) {
+        out.println("Lista delle partite disponibili:");
+        if(lobbies.size()==0){
+            out.println("Non ci sono partite disponibili! Usa il comando create per crearne una nuova!");
+        }
+        else{
+            for (String key : lobbies.keySet()) {
+                out.println("Nome partita: " + key + " | Numero giocatori: " + lobbies.get(key).getKey() + "/" + lobbies.get(key).getValue());
+            }
+        }
+    }
+
+
+    private void showUsernameResponse(boolean successful, String username) {
+        if(successful){
+            out.println("Username cambiato in " + username + "!");
+        }else{
+            out.println("Username " + username+" già in uso! Riprova con un altro username!");
+        }
+        askConnectionCommand();
+    }
+
+    private void showJoinLobbyResponse(boolean successful, String content) {
+        out.println(content);
+        if(!successful)
+            askConnectionCommand();
+        else
+            showEnteredLobby();
+    }
+
+    private void showCreateLobbyResponse(boolean successful) {
+        if(successful){
+            out.println("Partita creata con successo!");
+            out.println("In attesa di altri giocatori...");
+            askLobbyCommand();
+        }else{
+            out.println("Partita non creata! Riprova con un altro nome!");
+            askConnectionCommand();
+        }
+    }
+
+    private void showEnteredLobby() {
+        out.println("Sei entrato nella partita!");
+        askLobbyCommand();
+    }
+
+    private void askLobbyCommand() {
+        LobbyCommand lobbyCommand = null;
+
+        out.println("help mostra la lista dei comandi disponibili nella lobby");
+        out.print(">>>  ");
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        String[] parts = input.split(" ");
+        for (LobbyCommand c : LobbyCommand.values()) {
+            if (parts[0].toUpperCase().equals(c.toString())) {
+                lobbyCommand = c;
+                break;
+            }
+        }
+        while (lobbyCommand == null) {
+            out.println("Comando non valido!");
+            out.print(">>>  ");
+            input = s.nextLine();
+            parts = input.split(" ");
+            for (LobbyCommand c : LobbyCommand.values()) {
+                if (parts[0].toUpperCase().equals(c.toString())) {
+                    lobbyCommand = c;
+                    break;
+                }
+            }
+        }
+        switch (lobbyCommand) {
+            case HELP:
+                out.println("Lista dei comandi disponibili nella lobby:");
+                for (LobbyCommand c : LobbyCommand.values()) {
+                    out.println(c.toString() + " - " + c.getDescription());
+                }
+                askLobbyCommand();
+                break;
+            case START:
+                notifyObservers(new StartGameRequest());
+                break;
+            case EXIT:
+                notifyObservers(new ExitLobbyRequest());
+                //askLobbyCommand();
+                break;
+            case CHAT:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case READY:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case UNREADY:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case KICK:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case CHANGE_NUMBER_OF_PLAYERS:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            default:
+                System.err.println("Comando non valido, should never reach this state");
+                break;
+        }
+    }
+
+    private void showExitLobbyResponse(boolean successful) {
+        if(successful){
+            out.println("Uscito dalla lobby");
+            askConnectionCommand();
+        }else{
+            out.println("Errore nell'uscire dalla lobby, riprova");
+            askLobbyCommand();
+        }
+    }
+
+    private void onGameMessage(GameMessage message) {
+        switch (message.getType()) {
             case GAME_STARTED:
                 //showGameStarted(((GameStartedMessage) message).getGameboard());
-                showGameStarted(model);
+                showGameStarted(((GameStartedMessage) message).getGameView());
                 break;
             case NEW_TURN:
                 showNewTurn(message.getUsername());
@@ -775,7 +1016,7 @@ public class ProtoCli extends Observable implements Runnable {
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
                 //showBookshelf(m1.getUsername(), m1.getBookshelf());
                 //showBoard(m1.getBoard());
-                askDraw(m1.getUsername(), model.getBoard().getGameboard(), model.getBookshelf().getShelfie(), m1.getMaxNumItems());
+                askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
                 break;
             case INSERT_INFO:
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
@@ -802,41 +1043,75 @@ public class ProtoCli extends Observable implements Runnable {
                 showEndGame(m4.getRanking());
                 break;
             default:
-                System.err.println("Ignoring event from " + model);
+                System.err.println("Ignoring event from model");
                 break;
         }
     }
 
-    private void showCommonGoals(GameView model){
-        out.println("First Common Goal: " + model.getCommonGoals().get(0).toString() +
-                "\nSecond Common Goal: " + model.getCommonGoals().get(1).toString());
-    }
-    private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
-        out.println("######################################\n" +
-                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
-                "######################################");
-    }
-
-    private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
-        out.println("######################################\n" +
-                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
-                "######################################");
-    }
-
-    private void showLastTurn(LastTurnMessage message) {
-        out.println("######################################\n" +
-                message.getUsername() + " ha riempito la sua libreria!\n" +
-                "Questo è l'ultimo giro di gioco!\n" +
-                "######################################");
-    }
-
-    private void showEndGame(LinkedHashMap<String, Integer> ranking){
-        out.println("######################################\n" +
-                "#        La partita è finita         #\n" +
-                "######################################");
-        showLeaderboard(ranking);
-        out.println("Il vincitore della partita è " +  ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
-
+    private void onConnectionMessage(ConnectionMessage message) {
+        switch (message.getType()){
+            case CONNECTED_TO_SERVER:
+                showConnectedToServer();
+                askConnectionCommand();
+                break;
+            case LOBBY_LIST_RESPONSE:
+                showLobbyList(((LobbyListResponse) message).getLobbies());
+                askConnectionCommand();
+                break;
+            case CREATE_LOBBY_RESPONSE:
+                showCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
+                break;
+            case JOIN_LOBBY_RESPONSE:
+                showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
+                break;
+            case USERNAME_RESPONSE:
+                showUsernameResponse(((UsernameResponse) message).isSuccessful(), ((UsernameResponse) message).getUsername());
+                break;
+            default:
+                System.err.println("Ignoring ConnectionMessage from server");
+                break;
+        }
     }
 
+    private void onLobbyMessage(LobbyMessage message) {
+        switch(message.getType()){
+            case EXIT_LOBBY_RESPONSE:
+                showExitLobbyResponse(((ExitLobbyResponse) message).isSuccessful());
+                break;
+            case PLAYERS_UPDATE:
+                System.err.println("PLAYERS_UPDATE not implemented yet");
+                break;
+            case NEW_ADMIN:
+                showNewAdmin(((NewAdminMessage) message).getOld_admin(), ((NewAdminMessage) message).getNew_admin());
+                break;
+            case GAME_NOT_READY:
+                showGameNotReady();
+                break;
+            default:
+                System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
+                break;
+        }
+    }
+
+    private void showGameNotReady() {
+        out.println("Non ci sono le condizioni per iniziare la partita");
+        askLobbyCommand();
+    }
+
+    private void showNewAdmin(String old_admin, String new_admin) {
+        out.println("Il vecchio admin " + old_admin + " è stato rimosso");
+        out.println("Il nuovo admin è " + new_admin);
+    }
+
+    public void update(Message message) {
+        if (message instanceof GameMessage) {
+            onGameMessage((GameMessage) message);
+        }else if(message instanceof ConnectionMessage){
+            onConnectionMessage((ConnectionMessage) message);
+        } else if (message instanceof LobbyMessage) {
+            onLobbyMessage((LobbyMessage) message);
+        } else {
+            System.err.println("Ignoring message from server");
+        }
+    }
 }

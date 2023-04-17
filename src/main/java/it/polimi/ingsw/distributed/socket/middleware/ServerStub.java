@@ -58,15 +58,6 @@ public class ServerStub implements Server {
     }
 
     public void receive(Client client) throws RemoteException {
-        GameView o;
-        try {
-            o = (GameView) ois.readObject();
-        } catch (IOException e) {
-            throw new RemoteException("Cannot receive game view: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            throw new RemoteException("Cannot cast game view: " + e.getMessage());
-        }
-
         Message m;
         try {
             m = (Message) ois.readObject();
@@ -76,7 +67,7 @@ public class ServerStub implements Server {
         } catch (ClassNotFoundException e) {
             throw new RemoteException("Cannot cast message: " + e.getMessage());
         }
-        client.update(o, m);
+        client.update(m);
     }
 
     public void close() throws RemoteException {
