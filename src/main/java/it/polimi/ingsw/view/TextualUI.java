@@ -792,6 +792,7 @@ public class TextualUI extends Observable implements Runnable {
                 for (ConnectionCommand c : ConnectionCommand.values()) {
                     out.println(c.toString() + " " + c.getDescription());
                 }
+                askConnectionCommand();
                 break;
             case USERNAME:
                 if (parts.length != 2) {
