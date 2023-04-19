@@ -20,7 +20,7 @@ public class AppClientRMI {
                 "╚═╝     ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝\n" +
                 "                                                                       \n" +
                 "\n");
-        Registry registry = LocateRegistry.getRegistry();
+        Registry registry = LocateRegistry.getRegistry(1099);
         AppServer server = (AppServer) registry.lookup("server");
 
         ClientImpl client = new ClientImpl(server.connect());

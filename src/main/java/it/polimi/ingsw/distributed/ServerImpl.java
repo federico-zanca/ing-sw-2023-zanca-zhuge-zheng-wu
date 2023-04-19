@@ -1,7 +1,5 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
@@ -11,7 +9,6 @@ import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 
-import javax.print.attribute.HashAttributeSet;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
@@ -22,18 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
-    private Game model;
     private HashMap<Client, ClientInfo> connectedClients;
 
     private ArrayList<Lobby> lobbies;
 
-    private GameController controller;
     private ClientHandler clientHandler;
 
     public ServerImpl() throws RemoteException {
         super();
-        this.model = new Game();
-        this.controller = new GameController(model);
         this.connectedClients = new HashMap<>();
         this.clientHandler = new ClientHandler(this);
         this.lobbies = new ArrayList<>();
@@ -126,8 +119,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     @Override
     public void update(Client client, Message message){
-        if(message instanceof GameMessage)
-            this.controller.update(client, (GameMessage) message);
+        System.out.println("Received message: " + message);
+        if(message instanceof GameMessage) {
+            Lobby lobby = getLobbyOfClient(client);
+            lobby.getController().update(client, (GameMessage) message);
+        }
         else if(message instanceof ConnectionMessage)
             this.clientHandler.onConnectionMessage(client, (ConnectionMessage) message);
         else if(message instanceof LobbyMessage)
@@ -142,8 +138,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         connectedClients.get(client).setClientState(ClientState.IN_SERVER);
     }
 
-    public String getLobbyOfClient(Client client) {
-        return connectedClients.get(client).getLobby().getName();
+    public String getLobbyNameOfClient(Client client) {
+        return getLobbyOfClient(client).getName();
+    }
+
+    public Lobby getLobbyOfClient(Client client) {
+        return connectedClients.get(client).getLobby();
     }
 
     public void startGame(Client client) {

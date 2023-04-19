@@ -20,7 +20,9 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
+    private static Server server;
     protected AppServerImpl() throws RemoteException {
+        server = new ServerImpl();
     }
 
     public static AppServerImpl getInstance() throws RemoteException {
@@ -74,7 +76,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
     public static void startSocket() throws RemoteException {
         AppServerImpl instance = getInstance();
         try (ServerSocket serverSocket = new ServerSocket(1234)) {
-            Server server = new ServerImpl();
             while (true) {
                 Socket socket = serverSocket.accept();
                 instance.executorService.submit(() -> {
@@ -102,6 +103,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
 
     @Override
     public Server connect() throws RemoteException {
-        return new ServerImpl();
+        return server;
     }
 }

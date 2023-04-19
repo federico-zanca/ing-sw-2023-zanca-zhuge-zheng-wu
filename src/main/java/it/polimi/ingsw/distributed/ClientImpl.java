@@ -10,29 +10,27 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
 
-    TextualUI view = new TextualUI();
+    private TextualUI view;
 
     public ClientImpl(Server server) throws RemoteException {
         super();
-
+        view = new TextualUI();
         initialize(server);
     }
 
     public ClientImpl(Server server, int port) throws RemoteException {
         super(port);
-
+        view = new TextualUI();
         initialize(server);
     }
 
     public ClientImpl(Server server, int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(port, csf, ssf);
-
+        view = new TextualUI();
         initialize(server);
     }
 
     private void initialize(Server server) throws RemoteException {
-        server.register(this);
-
         view.addObserver((arg) -> {
             try {
                 server.update(this, arg);
@@ -40,6 +38,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
                 throw new RuntimeException(e);
             }
         });
+        server.register(this);
+
     }
 
     @Override

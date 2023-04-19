@@ -2,7 +2,6 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
-import it.polimi.ingsw.model.exceptions.GameNotReadyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyResponse;
@@ -91,7 +90,7 @@ public class ClientHandler {
         switch (message.getType()){
             case EXIT_LOBBY_REQUEST:
                 try {
-                    String lobbyName = server.getLobbyOfClient(client);
+                    String lobbyName = server.getLobbyNameOfClient(client);
                     server.removeClientFromLobby(client);
                     client.update(new ExitLobbyResponse(true, lobbyName));
                 } catch (RemoteException e) {

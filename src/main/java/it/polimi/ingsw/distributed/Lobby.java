@@ -86,7 +86,8 @@ public class Lobby {
                 }
             }
         }
-    }
+        //TODO remove observer
+}
 
     public void startGame() {
         try {
@@ -100,5 +101,9 @@ public class Lobby {
                 System.err.println("Unable to send preGameMessage "+ ex);
             }
         }
+    }
+
+    public GameController getController() {
+        return controller;
     }
 }
