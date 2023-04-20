@@ -154,6 +154,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
     }
 
+    public void changeNumOfPlayers(Client client, int chosenNum){
+        if(connectedClients.get(client).getLobby().getAdmin().equals(client) && chosenNum != connectedClients.get(client).getLobby().getMaxNumClients()){
+            connectedClients.get(client).getLobby().changeMaxNumClients(chosenNum);
+        }
+    }
+
     public ClientInfo getConnectedClientInfo(Client client) {
         return connectedClients.get(client);
     }

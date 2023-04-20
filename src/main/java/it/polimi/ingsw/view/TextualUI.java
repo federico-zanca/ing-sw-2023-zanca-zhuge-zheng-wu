@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.distributed.ClientState;
-import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
+import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
@@ -147,9 +147,10 @@ public class TextualUI extends Observable implements Runnable {
             } else {
                 Collections.swap(tilesToInsert, third - 1, 2);
             }
-            setActionType(ActionType.INSERT_HAND);
-            showInsertInfo((InsertInfoMessage) lastMessage);
-            System.out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
+            showHand(myUsername,tilesToInsert);
+            System.out.println("Vuoi cambiare ancora l'ordine delle tessere? (y/n)");
+            setActionType(ActionType.ORDER_HAND);
+            return;
         }
     }
 
@@ -251,8 +252,18 @@ public class TextualUI extends Observable implements Runnable {
             case KICK:
                 System.err.println(lobbyCommand.toString() + " not implemented yet");
                 break;
-            case CHANGE_NUMBER_OF_PLAYERS:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
+            case CHANGE_NUM_OF_PLAYERS:
+                    if (parts.length != 2) {
+                        System.out.println("Comando non valido!");
+                        return;
+                    } else if(!invalidNumOfPlayersFormat(parts[1])){
+                        int chosenNum = Integer.parseInt(parts[1].trim());
+                        System.out.println("Numero di giocatori cambiato a " + chosenNum);
+                        notifyObservers(new ChangeNumOfPlayerRequest(chosenNum));
+                    }else{
+                        System.out.println("Numero non valido!");
+                        return;
+                    }
                 break;
             default:
                 System.err.println("Comando non valido, should never reach this state");
@@ -484,6 +495,18 @@ public class TextualUI extends Observable implements Runnable {
         try {
             int col = Integer.parseInt(input.trim());
             return false;
+        } catch (NumberFormatException e) {
+            return true;
+        }
+    }
+    private boolean invalidNumOfPlayersFormat(String input) {
+        try {
+            int chosenNum = Integer.parseInt(input.trim());
+            if(chosenNum >= 2 && chosenNum<=4)
+                return false;
+            else{
+                return true;
+            }
         } catch (NumberFormatException e) {
             return true;
         }
@@ -1226,10 +1249,17 @@ public class TextualUI extends Observable implements Runnable {
             case GAME_NOT_READY:
                 showGameNotReady();
                 break;
+            case NOT_ADMIN:
+                showNotAdmin();
+                break;
             default:
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
                 break;
         }
+    }
+
+    private void showNotAdmin() {
+        System.out.println("You are not the admin.");
     }
 
     public void update(Message message) {

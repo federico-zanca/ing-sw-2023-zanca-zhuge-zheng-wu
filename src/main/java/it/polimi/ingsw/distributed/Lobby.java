@@ -106,6 +106,10 @@ public class Lobby {
         }
     }
 
+    public void changeMaxNumClients(int chosenNum){
+        controller.changeNumOfPlayers(chosenNum);
+    }
+
     public GameController getController() {
         return controller;
     }

@@ -274,6 +274,11 @@ public class GameController {
         }
     }
 
+    public void changeNumOfPlayers(int chosenNum){
+        //TODO gestire eccezioni
+        model.setChosenNumOfPlayers(chosenNum);
+    }
+
     public void addPlayer(String username) throws InvalidUsernameException {
         if(validUsernameFormat(username)){
             model.addPlayer(new Player(username));

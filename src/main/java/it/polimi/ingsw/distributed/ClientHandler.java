@@ -4,8 +4,10 @@ import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.connectionmessage.*;
+import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerRequest;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyResponse;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
+import it.polimi.ingsw.network.message.lobbymessage.NotAdminMessage;
 
 import java.rmi.RemoteException;
 
@@ -87,6 +89,7 @@ public class ClientHandler {
     }
 
     public void onLobbyMessage(Client client, LobbyMessage message) {
+        Client admin = server.getLobbyOfClient(client).getAdmin();
         switch (message.getType()){
             case EXIT_LOBBY_REQUEST:
                 try {
@@ -98,8 +101,27 @@ public class ClientHandler {
                 }
                 break;
             case START_GAME_REQUEST:
-                server.startGame(client);
+                if(client.equals(admin))
+                    server.startGame(client);
+                else{
+                    try {
+                        client.update(new NotAdminMessage());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 break;
+            case CHANGE_NUM_OF_PLAYER_REQUEST:
+                int chosenNum = ((ChangeNumOfPlayerRequest) message).getChosenNum();
+                if(client.equals(admin))
+                    server.changeNumOfPlayers(client, chosenNum);
+                else{
+                    try {
+                        client.update(new NotAdminMessage());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
         }
     }
 }

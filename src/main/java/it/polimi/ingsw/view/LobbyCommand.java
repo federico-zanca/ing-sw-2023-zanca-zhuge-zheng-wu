@@ -8,7 +8,7 @@ public enum LobbyCommand {
     UNREADY("indica che non sei più pronto"),
     KICK("<username> espelli un giocatore dalla partita"),
     CHAT("<messaggio> invia un messaggio nella chat"),
-    CHANGE_NUMBER_OF_PLAYERS("<numero giocatori> cambia il numero di giocatori della partita");
+    CHANGE_NUM_OF_PLAYERS("<numero giocatori> cambia il numero di giocatori della partita");
 
     private String description;
 
