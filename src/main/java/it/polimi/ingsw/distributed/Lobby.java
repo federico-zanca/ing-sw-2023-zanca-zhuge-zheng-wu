@@ -3,6 +3,7 @@ package it.polimi.ingsw.distributed;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.lobbymessage.GameNotReadyMessage;
 import it.polimi.ingsw.network.message.lobbymessage.InvalidComandMessage;
 import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
@@ -48,7 +49,14 @@ public class Lobby {
             }
             this.model.addObserver((arg) -> {
                 try {
-                    client.update(arg);
+                    if(arg instanceof GameMessage) {
+                        if (controller.getCurrentPlayerUsername().equals(server.getConnectedClientInfo(client).getClientID()) && ((GameMessage) arg).getUsername().equals(server.getConnectedClientInfo(client).getClientID()))
+                            client.update(arg);
+                        else if(((GameMessage) arg).getUsername().equals(""))
+                            client.update(arg);
+                    } else {
+                        System.err.println("Unable to update the client: " + arg + " is not a GameMessage. Skipping the update...");
+                    }
                 } catch (RemoteException e) {
                     System.err.println("Unable to update the client: " + e.getMessage() + ". Skipping the update...");
                 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
@@ -13,7 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Game extends Observable {
-    private static final int MAX_PLAYERS = 4;
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
 
@@ -41,12 +41,9 @@ public class Game extends Observable {
         board = null;
         bag = new Bag();
         players = new ArrayList<>();
-        //players.add(new Player("BOT0"));
-        //players.add(new Player("BOT1"));
-        //players.add(new Player("BOT2"));
         commonGoals = new ArrayList<>();
         leaderboard = new LinkedHashMap<>();
-        chosenNumOfPlayers=2; //andrà rimosso, solo per testing
+        chosenNumOfPlayers= GameController.MIN_PLAYERS;
         personalGoals = new HashMap<>();
     }
 
@@ -190,8 +187,7 @@ public class Game extends Observable {
 
         initLeaderBoard();
         setCurrentPlayer(getFirstPlayer());
-        //board.enableSquaresWithFreeSide();
-        notifyObservers(new GameStartedMessage(currentPlayer.getUsername(), new GameView(this), board.getGameboard(), commonGoals));
+        notifyObservers(new GameStartedMessage("", new GameView(this), board.getGameboard(), commonGoals));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
@@ -206,7 +202,7 @@ public class Game extends Observable {
      */
     public void handleDrawPhase() {
         setTurnPhase(TurnPhase.DRAW);
-        notifyObservers(new NewTurnMessage(currentPlayer.getUsername()));
+        notifyObservers(new NewTurnMessage("", currentPlayer.getUsername()));
         int maxItemTiles = currentPlayer.getBookshelf().maxSlotsAvailable();
         board.enableSquaresWithFreeSide();
         DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this), maxItemTiles);
@@ -221,7 +217,7 @@ public class Game extends Observable {
         setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
         board.disableAllSquares();
         //TODO da tenere solo quando ho una view separata per ogni giocatore
-        //notifyObservers(new BoardMessage(currentPlayer.getUsername(), getBoard().getGameboard()));
+        //notifyObservers(new BoardMessage("", getBoard().getGameboard()));
     }
 
     /**
@@ -460,12 +456,12 @@ public class Game extends Observable {
                 cg.addAchiever(currentPlayer);
                 //cg.takePoints(currentPlayer);
                 //TODO replace cg with a description of it
-                notifyObservers(new AchievedCommonGoalMessage(currentPlayer.getUsername(), cg, points)); //send a message containing the info of the achieved common goal
+                notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername() + " ha completato l'Obiettivo Comune:\n\"" + cg + "\"\n e ha ottenuto " + points + "punti!")); //send a message containing the info of the achieved common goal
                 count++;
             }
         }
         if(count==0){
-            notifyObservers(new NoCommonGoalMessage(currentPlayer.getUsername()));
+            notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername()+" non ha completato nessun Obiettivo Comune questo turno."));
         }
     }
 
@@ -487,12 +483,12 @@ public class Game extends Observable {
         if(board.needsRefill()){
             board.refillBoardWithItems(bag.drawItems(board.numCellsToRefill()));
         }
-        notifyObservers(new BoardMessage(currentPlayer.getUsername(), board.getGameboard()));
+        notifyObservers(new BoardMessage("", board.getGameboard()));
     }
 
     public void endGame(Player winner, ArrayList<String> playersQueue) {
         sortLeaderBoard(playersQueue);
-        notifyObservers(new EndGameMessage(winner.getUsername(), leaderboard));
+        notifyObservers(new EndGameMessage("", leaderboard));
     }
 
 
@@ -506,7 +502,7 @@ public class Game extends Observable {
             points = p.calculateAdjacentItemsPoints();
             //p.addPoints(points);
             addPointsToPlayer(p, points);
-            notifyObservers(new AdjacentItemsPointsMessage(p.getUsername(), points));
+            notifyObservers(new AdjacentItemsPointsMessage("", p.getUsername(), points));
         }
     }
     /**
@@ -517,7 +513,7 @@ public class Game extends Observable {
         for(Player p : players){
             points = p.calculateScorePersonalGoal(personalGoals.get(p.getUsername()));
             addPointsToPlayer(p, points);
-            notifyObservers(new PersonalGoalPointsMessage(p.getUsername(), personalGoals.get(p.getUsername()), points));
+            notifyObservers(new PersonalGoalPointsMessage("", p.getUsername(), personalGoals.get(p.getUsername()), points));
             //p.addPoints(points);
         }
     }
@@ -552,7 +548,7 @@ public class Game extends Observable {
 
     public void setLastTurn(boolean b) {
         lastTurn = b;
-        notifyObservers(new LastTurnMessage(currentPlayer.getUsername()));
+        notifyObservers(new LastTurnMessage("", currentPlayer.getUsername()));
     }
 
     public synchronized void addObserver(it.polimi.ingsw.utils.Observer o) {

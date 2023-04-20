@@ -3,22 +3,14 @@ package it.polimi.ingsw.network.message.gamemessage;
 import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 
 public class AchievedCommonGoalMessage extends GameMessage {
+    private final String content;
 
-    private final CommonGoalCard goal; //TODO potrebbe essere insicuro passare la commongoal card
-
-    private final int points;
-    public AchievedCommonGoalMessage(String username, CommonGoalCard commonGoal, int points) {
+    public AchievedCommonGoalMessage(String username, String content) {
         super(username, GameMessageType.ACHIEVED_COMMON_GOAL);
-
-        this.goal = commonGoal;
-        this.points = points;
+        this.content = content;
     }
 
-    public CommonGoalCard getGoal() {
-        return goal;
-    }
-
-    public int getPoints() {
-        return points;
+    public String getContent() {
+        return content;
     }
 }

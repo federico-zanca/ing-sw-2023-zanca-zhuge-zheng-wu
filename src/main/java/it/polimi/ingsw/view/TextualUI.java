@@ -31,7 +31,7 @@ public class TextualUI extends Observable implements Runnable {
     private GameMessage lastMessage;
     private final Scanner s;
     private String myUsername;
-    private boolean isActive;
+    //private boolean isActive;
 
     ArrayList<Square> tilesToDraw;
     ArrayList<ItemTile> tilesToInsert;
@@ -74,7 +74,7 @@ public class TextualUI extends Observable implements Runnable {
 
     /**
      * Elaborates the input from the user when the client is in a game
-     * @param input
+     * @param input the input from the user
      */
     private void elaborateGameCommand(String input) {
         switch(actionType){
@@ -174,7 +174,7 @@ public class TextualUI extends Observable implements Runnable {
                 System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
                 return;
             } else {
-                System.err.println("Dimensioni mano illegali");;
+                System.err.println("Dimensioni mano illegali");
             }
         } else{
             setActionType(ActionType.INSERT_HAND);
@@ -539,12 +539,10 @@ public class TextualUI extends Observable implements Runnable {
 
     /**
      * Prints the number of points scored by the player when he/she has achieved a common goal
-     * @param username player's username
-     * @param goal common goal achieved
-     * @param points points scored
+     * @param message the message containing the number of points scored
      */
-    private void showAchievedCommonGoal(String username, CommonGoalCard goal, int points) {
-        System.out.println("Player " + username + " has achieved the common goal " + goal + " and has earned " + points + " points!");
+    private void showAchievedCommonGoal(AchievedCommonGoalMessage message) {
+        System.out.println(message.getContent());
     }
 
     /**
@@ -623,7 +621,7 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         System.out.println("######################################\n" +
-                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
+                message.getPlayerUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
                 "######################################");
     }
 
@@ -634,7 +632,7 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
         System.out.println("######################################\n" +
-                message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
+                message.getPlayerUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
                 "######################################");
     }
 
@@ -645,7 +643,7 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void showLastTurn(LastTurnMessage message) {
         System.out.println("######################################\n" +
-                message.getUsername() + " ha riempito la sua libreria!\n" +
+                message.getCurrentPlayer() + " ha riempito la sua libreria!\n" +
                 "Questo è l'ultimo giro di gioco!\n" +
                 "######################################");
     }
@@ -705,7 +703,7 @@ public class TextualUI extends Observable implements Runnable {
     private void showJoinLobbyResponse(boolean successful, String content) {
         System.out.println(content);
         if(!successful){
-            System.out.println(content);;
+            System.out.println(content);
         }
         else {
             setClientState(ClientState.IN_A_LOBBY);
@@ -814,7 +812,7 @@ public class TextualUI extends Observable implements Runnable {
      * @param isActive True if the player is active, false otherwise.
      */
     private void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+        //this.isActive = isActive;
     }
 
     /**
@@ -825,6 +823,10 @@ public class TextualUI extends Observable implements Runnable {
         this.actionType = actionType;
     }
 
+    /**
+     * Handles a game message.
+     * @param message The game message.
+     */
     private void onGameMessage(GameMessage message) {
         lastMessage = message;
         setIsActive(message.getUsername().equals(myUsername));
@@ -837,7 +839,7 @@ public class TextualUI extends Observable implements Runnable {
             case NEW_TURN:
                 tilesToInsert.clear();
                 tilesToDraw.clear();
-                showNewTurn(message.getUsername());
+                showNewTurn(((NewTurnMessage) message).getCurrentPlayer());
                 setActionType(ActionType.NONE);
                 break;
             case BOARD:
@@ -853,17 +855,17 @@ public class TextualUI extends Observable implements Runnable {
             case DRAW_INFO:
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
                 showDrawInfo(m1);
-                if(isActive) {
+                //if(isActive) {
                     System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, m1.getMaxNumItems()) + " tessere. Di più non riusciresti a inserirne!");
                     System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
                     setActionType(ActionType.DRAW_TILES);
-                }
+                //}
                 break;
             case INSERT_INFO:
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
                 tilesToInsert = m2.getHand();
                 showInsertInfo(m2);
-                if(isActive) {
+                //if(isActive) {
                     if (m2.getHand().size() == 1) {
                         System.out.println("Inserisci la colonna in cui vuoi inserire la tessera");
                         setActionType(ActionType.INSERT_HAND);
@@ -872,12 +874,12 @@ public class TextualUI extends Observable implements Runnable {
                         setActionType(ActionType.ORDER_HAND);
                         askOrderHand(m2);
                     }
-                }
+                //}
 
                 break;
             case ACHIEVED_COMMON_GOAL:
                 AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
-                showAchievedCommonGoal(m3.getUsername(), m3.getGoal(), m3.getPoints());
+                showAchievedCommonGoal(m3);
                 break;
             case NO_COMMON_GOAL:
                 System.out.println(((NoCommonGoalMessage) message).getContent());

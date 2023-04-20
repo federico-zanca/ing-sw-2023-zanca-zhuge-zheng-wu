@@ -290,6 +290,10 @@ public class GameController {
         model.removePlayer(model.getPlayerByUsername(username));
     }
 
+    public String getCurrentPlayerUsername() {
+        return model.getCurrentPlayer().getUsername();
+    }
+
 
     //public
 

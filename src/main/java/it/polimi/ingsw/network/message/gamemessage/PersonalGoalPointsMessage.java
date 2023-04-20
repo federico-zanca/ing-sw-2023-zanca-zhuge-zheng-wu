@@ -7,10 +7,12 @@ import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 public class PersonalGoalPointsMessage extends GameMessage {
     private final PersonalGoalCard personalGoal;
     private final int points;
+    private final String playerUsername;
 
-    public PersonalGoalPointsMessage(String username, PersonalGoalCard personalGoal, int points) {
+    public PersonalGoalPointsMessage(String username, String playerUsername, PersonalGoalCard personalGoal, int points) {
         super(username, GameMessageType.PERSONAL_GOAL_POINTS);
         this.personalGoal = personalGoal;
+        this.playerUsername = playerUsername;
         this.points = points;
     }
 
@@ -20,5 +22,9 @@ public class PersonalGoalPointsMessage extends GameMessage {
 
     public PersonalGoalCard getPersonalGoal() {
         return personalGoal;
+    }
+
+    public String getPlayerUsername() {
+        return playerUsername;
     }
 }
