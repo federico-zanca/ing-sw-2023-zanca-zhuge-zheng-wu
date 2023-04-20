@@ -28,12 +28,8 @@ public class TextualUI extends Observable implements Runnable {
     private ClientState clientState;
 
     private ActionType actionType;
-
-    private ArrayList<CommonGoalCard> cards;
-
     private GameMessage lastMessage;
-
-    private Scanner s;
+    private final Scanner s;
     private String myUsername;
     private boolean isActive;
 
@@ -41,17 +37,8 @@ public class TextualUI extends Observable implements Runnable {
     ArrayList<ItemTile> tilesToInsert;
     public TextualUI() {
         s = new Scanner(System.in);
-        cards = null;
         tilesToDraw = new ArrayList<>();
         tilesToInsert = new ArrayList<>();
-    }
-
-    public void setCards(ArrayList<CommonGoalCard> cards) {
-        this.cards = cards;
-    }
-
-    public ArrayList<CommonGoalCard> getCards() {
-        return cards;
     }
 
     @Override
@@ -243,16 +230,10 @@ public class TextualUI extends Observable implements Runnable {
                 notifyObservers(new ExitLobbyRequest());
                 break;
             case CHAT:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            case READY:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            case UNREADY:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                System.err.println(lobbyCommand + " not implemented yet");
                 break;
             case KICK:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                System.err.println(lobbyCommand + " not implemented yet");
                 break;
             case NUMPLAYERS:
                     if (parts.length != 2) {
@@ -333,51 +314,6 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
-
-    /* USERNAME insertion stuff */
-    /**
-     * Asks the player his username
-     *
-     * @return the username inserted
-     */
-    public String askUsername() {
-        String username;
-        System.out.print("Enter your name: ");
-
-        username = s.nextLine();
-        while (!inputValidator.isValidUsername(username)) {
-            System.out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
-                    "Please insert your username again: ");
-            username = s.nextLine();
-        }
-        return username;
-
-    }
-    /**
-     * Checks whether the given username is valid according to certain criteria.
-     *
-     * @param username the string representing the username to be validated.
-     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
-     * <p>
-     * Criteria for a valid username:
-     * 1. Does not contain any spaces.
-     * 2. Does not start with a special character (-, _, or .).
-     * 3. Does not end with - or .
-     * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
-     */
-    private boolean isValidUsername(String username) {
-        // Check for spaces in username
-
-        // Check if username starts or ends with a special character or if it is solely composed of numbers
-
-        // Check for non-literal or non-numeric characters other than '-', '_' and '.'
-
-        // All checks passed, username is valid
-        return inputValidator.isValidUsername(username);
-    }
-
-
-
     public void setClientState(ClientState clientState) {
         this.clientState = clientState;
     }
@@ -411,84 +347,7 @@ public class TextualUI extends Observable implements Runnable {
         //showDrawInfo(username, board, bookshelf, maxNumItems);
     }
 
-    /**
-     * Prompts the user to insert the coordinates of the tile he wants to pick and checks if the coordinates are those of a valid tile.
-     * If the coordinates inserted are not valid, it re-prompts the user to insert the input.
-     *
-     * @param hand  ArrayList of tiles taken by the player in this turn
-     * @param board gameboard
-     * @param n     the n_th tile taken in this turn
-     * @return the Square corresponding to the given coordinates
-     */
-    private Square inputCoords(ArrayList<Square> hand, Square[][] board, int n) {
-
-        String input = s.nextLine();
-        while (InputValidator.invalidCoordFormat(input)) {
-            System.out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
-            input = s.nextLine();
-        }
-        String[] tiles = input.split(",");
-        int row = Integer.parseInt(tiles[0].trim());
-        int column = Integer.parseInt(tiles[1].trim());
-        while (true) {
-            if (row < 0 || row > Board.DIMENSIONS - 1 || column < 0 || column > Board.DIMENSIONS - 1) {
-                System.out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-" + (Board.DIMENSIONS - 1));
-            } else if (inputValidator.isTileAlreadyOnHand(row, column, hand)) {
-                System.out.println("Non puoi prendere una tessera che hai già preso! Inserisci altre coordinate: ");
-            } else if (!board[row][column].isPickable()) {
-                System.out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
-            } else if (n > 0 && !inputValidator.inLineTile(row, column, hand)) {
-                System.out.println("Coordinate non valide! La tessera che prendi deve essere adiacente e in linea retta (orizzontale o verticale) con le tessere che hai già preso in questo turno! Inserisci le coordinate nuovamente: ");
-            } else {
-                break;
-            }
-            input = s.nextLine();
-            while (InputValidator.invalidCoordFormat(input)) {
-                System.out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
-                input = s.nextLine();
-            }
-            tiles = input.split(",");
-            row = Integer.parseInt(tiles[0].trim());
-            column = Integer.parseInt(tiles[1].trim());
-        }
-        return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
-    }
-
-
     //INSERT PHASE stuff
-
-    public void askInsert(String username, ItemTile[][] bookshelf, ArrayList<ItemTile> hand, ArrayList<Integer> columns) {
-        System.out.println("Inizia la insert phase\n");
-        showBookshelf(username, bookshelf);
-        showHand(username, hand);
-        orderHand(username, hand);
-        System.out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
-        int column = inputColumn(hand, bookshelf, columns);
-        notifyObservers(new InsertTilesMessage(username, hand, column));
-    }
-
-
-    private int inputColumn(ArrayList<ItemTile> items, ItemTile[][] bookshelf, ArrayList<Integer> columns) {
-
-        String input = s.nextLine();
-        while (inputValidator.invalidColumnFormat(input)) {
-            System.out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
-            input = s.nextLine();
-        }
-        int column = Integer.parseInt(input.trim());
-        while (true) {
-            if (column < 0 || column > 4) {
-                System.out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
-            } else if (inputValidator.columnHasLessSpace(column, columns)) {
-                System.out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
-            } else {
-                break;
-            }
-            input = s.nextLine();
-            column = Integer.parseInt(input.trim());
-        }
-        return column;
-    }
 
     /**
      * Prints the numbers from 0 to the passed parameter-1 as column indexes (separated by 5 spaces each)
@@ -607,7 +466,7 @@ public class TextualUI extends Observable implements Runnable {
             strBoard.append("+-----");
         }
         strBoard.append("+");
-        System.out.println(strBoard.toString());
+        System.out.println(strBoard);
     }
 
     /**
@@ -637,7 +496,7 @@ public class TextualUI extends Observable implements Runnable {
             strShelf.append("+-----");
         }
         strShelf.append("+");
-        System.out.println(strShelf.toString());
+        System.out.println(strShelf);
     }
 
 
@@ -651,96 +510,6 @@ public class TextualUI extends Observable implements Runnable {
             System.out.print(" " + paintFG(item.getType()) + " ");
         }
         System.out.println();
-    }
-
-    /**
-     * Orders the player's hand.
-     *
-     * @param username name of player
-     * @param hand     hand of player
-     */
-    public void orderHand(String username, ArrayList<ItemTile> hand) {
-        String continueResponse;
-
-        if (hand.size() == 2) {
-            System.out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
-            continueResponse = s.nextLine();
-
-            while (!InputValidator.isYesOrNo(continueResponse) || inputValidator.isYes(continueResponse)) {
-                if (!InputValidator.isYesOrNo(continueResponse))
-                    System.out.println("Inserisci y o n");
-                else {
-                    Collections.swap(hand, 1, 0);
-                    showHand(username, hand);
-                    System.out.println("Vuoi invertire ancora l'ordine delle tessere? (y/n)");
-                }
-                continueResponse = s.nextLine();
-            }
-        } else if (hand.size() == 3) {
-            System.out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
-            continueResponse = s.nextLine();
-            while (!InputValidator.isYesOrNo(continueResponse) || inputValidator.isYes(continueResponse)) {
-                if (!InputValidator.isYesOrNo(continueResponse))
-                    System.out.println("Inserisci y o n");
-                else {
-                    System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
-                    inputOrder(hand, username);
-                    showHand(username, hand);
-                    System.out.println("Ordine cambiato! Vuoi cambiare ancora l'ordine delle tessere? (y/n)");
-                }
-                continueResponse = s.nextLine();
-            }
-        }
-    }
-    
-
-    /**
-     * Checks if the order in input is correct and actually orders the hand.
-     *
-     * @param hand hand of player
-     */
-    private void inputOrder(ArrayList<ItemTile> hand, String username) {
-
-        String input = s.nextLine();
-        while (InputValidator.invalidOrderFormat(input, 3)) {
-            System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
-            showHand(username, hand);
-            System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
-            input = s.nextLine();
-        }
-        String[] order = input.split(",");
-        int first = Integer.parseInt(order[0].trim());
-        int second = Integer.parseInt(order[1].trim());
-        int third = Integer.parseInt(order[2].trim());
-        while (true) {
-            if (first < 1 || first > 3 || second < 1 || second > 3 || third < 1 || third > 3) {
-                System.out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (1-3)");
-            } else if (first == second || second == third || first == third) {
-                System.out.println("Non si può avere due tessere nello stesso slot! Riprova");
-            } else {
-                break;
-            }
-            input = s.nextLine();
-            order = input.split(",");
-            first = Integer.parseInt(order[0].trim());
-            second = Integer.parseInt(order[1].trim());
-            third = Integer.parseInt(order[2].trim());
-        }
-
-        Collections.swap(hand, first - 1, 0);
-        if (second != 1) {
-            Collections.swap(hand, second - 1, 1);
-        } else {
-            Collections.swap(hand, third - 1, 2);
-        }
-    }
-
-    /**
-     * Only for testing
-     */
-    public void showGreeting() {
-        //for debugging
-        System.out.println("Bravo!\n");
     }
 
     private void showGameStarted(GameView model) {
@@ -869,7 +638,7 @@ public class TextualUI extends Observable implements Runnable {
 
     }
 
-    private void showInvalidComand() {
+    private void showInvalidCommand() {
         System.out.println("Il comando è invalido");
     }
 
@@ -907,10 +676,6 @@ public class TextualUI extends Observable implements Runnable {
                 BookshelfMessage m = (BookshelfMessage) message;
                 showBookshelf(m.getUsername(), m.getBookshelf());
                 break;
-            case COMMONGOALCARD:
-                CommonGoalCardMessage cgm = (CommonGoalCardMessage) message;
-                setCards(cgm.getCards());
-                break;
             case DRAW_INFO:
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
                 showDrawInfo(m1);
@@ -919,7 +684,6 @@ public class TextualUI extends Observable implements Runnable {
                     System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
                     setActionType(ActionType.DRAW_TILES);
                 }
-                //askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
                 break;
             case INSERT_INFO:
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
@@ -1029,8 +793,8 @@ public class TextualUI extends Observable implements Runnable {
             case NOT_ADMIN:
                 showNotAdmin();
                 break;
-            case INVALID_COMAND:
-                showInvalidComand();
+            case INVALID_COMMAND:
+                showInvalidCommand();
                 break;
             case CHANGE_NUM_OF_PLAYER_RESPONSE:
                 System.out.println(((ChangeNumOfPlayerResponse) message).getContent());

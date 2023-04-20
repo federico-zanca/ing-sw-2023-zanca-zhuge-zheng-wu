@@ -4,8 +4,6 @@ public enum LobbyCommand {
     HELP("mostra la lista dei comandi"),
     EXIT("termina la connessione"),
     START("avvia la partita"),
-    READY("indica che sei pronto"),
-    UNREADY("indica che non sei più pronto"),
     KICK("<username> espelli un giocatore dalla partita"),
     CHAT("<messaggio> invia un messaggio nella chat"),
     NUMPLAYERS("<numero giocatori> cambia il numero di giocatori della partita");
