@@ -27,6 +27,7 @@ public class Game extends Observable {
     private TurnPhase turnPhase;
     private Player currentPlayer;
     private ArrayList<CommonGoalCard> commonGoals;
+    private HashMap<String,PersonalGoalCard> personalGoals;
     private Board board;
     private Bag bag;
 
@@ -537,9 +538,9 @@ public class Game extends Observable {
     public void assignPersonalGoalPoints(){
         int points;
         for(Player p : players){
-            points = p.calculateScorePersonalGoal();
+            points = p.calculateScorePersonalGoal(personalGoals.get(p.getUsername()));
             addPointsToPlayer(p, points);
-            notifyObservers(new PersonalGoalPointsMessage(p.getUsername(), p.getPersonalGoal(), points));
+            notifyObservers(new PersonalGoalPointsMessage(p.getUsername(), personalGoals.get(p.getUsername()), points));
             //p.addPoints(points);
         }
     }

@@ -29,6 +29,8 @@ public class TextualUI extends Observable implements Runnable {
 
     private ArrayList<CommonGoalCard> cards;
 
+    private GameMessage lastMessage;
+
     private Scanner s;
     private String myUsername;
     private boolean isActive;
@@ -40,11 +42,6 @@ public class TextualUI extends Observable implements Runnable {
         cards = null;
         tilesToDraw = new ArrayList<>();
         tilesToInsert = new ArrayList<>();
-    }
-
-    public TextualUI() {
-        s = new Scanner(System.in);
-        cards = null;
     }
 
     public void setCards(ArrayList<CommonGoalCard> cards) {
@@ -378,48 +375,15 @@ public class TextualUI extends Observable implements Runnable {
         return true;
     }
 
-    /**
-     * Checks whether the given username is valid according to certain criteria.
-     *
-     * @param username the string representing the username to be validated.
-     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
-     * <p>
-     * Criteria for a valid username:
-     * 1. Does not contain any spaces.
-     * 2. Does not start with a special character (-, _, or .).
-     * 3. Does not end with - or .
-     * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
-     */
-    private boolean isValidUsername(String username) {
-        // Check for spaces in username
-        if (username.contains(" ")) {
-            return false;
-        }
 
-        // Check if username starts or ends with a special character or if it is solely composed of numbers
-        char firstChar = username.charAt(0);
-        if (firstChar == '-' || firstChar == '_' || firstChar == '.' || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
-            return false;
-        }
 
-        // Check for non-literal or non-numeric characters other than '-', '_' and '.'
-        String pattern = "[^a-zA-Z0-9\\-_\\.]";
-        if (username.matches(".*" + pattern + ".*")) {
-            return false;
-        }
-
-        // All checks passed, username is valid
-        return true;
+    public void setClientState(ClientState clientState) {
+        this.clientState = clientState;
     }
-
     //DRAW PHASE stuff
     /**
      * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
      *
-     * @param username    username of the current player
-     * @param board       gameboard
-     * @param bookshelf   player's bookshelf
-     * @param maxNumItems max free cells in a single column in player's bookshelf
      */
     public void showDrawInfo(DrawInfoMessage message) {
         GameView model = message.getModel();
@@ -443,7 +407,7 @@ public class TextualUI extends Observable implements Runnable {
     public void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
         System.out.println("Invalid draw request! It seems like your client misbehaved... " +
                 "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draware invalid!");
-        askDraw(username, board, bookshelf, maxNumItems);
+        //showDrawInfo(username, board, bookshelf, maxNumItems);
     }
 
     /**
@@ -1278,5 +1242,13 @@ public class TextualUI extends Observable implements Runnable {
         } else {
             System.err.println("Ignoring message from server");
         }
+    }
+
+    public GameMessage getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(GameMessage lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

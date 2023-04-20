@@ -75,7 +75,7 @@ public class ClientHandler {
                         }
                     } else {
                         try {
-                            client.update(new UsernameResponse(false, username));
+                            client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
                         } catch (RemoteException e) {
                             System.err.println("Unable to send username response: " + e);
                         }

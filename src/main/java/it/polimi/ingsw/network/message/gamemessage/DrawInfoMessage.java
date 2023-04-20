@@ -15,10 +15,6 @@ public class DrawInfoMessage extends GameMessage {
         this.maxNumItems = maxNumTiles;
     }
 
-    public ItemTile[][] getBookshelf() {
-        return bookshelf;
-    }
-
     public int getMaxNumItems() {
         return maxNumItems;
     }

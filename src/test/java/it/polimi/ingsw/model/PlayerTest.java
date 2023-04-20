@@ -201,4 +201,6 @@ class PlayerTest {
         p.getBookshelf().printBookshelf();
         assertEquals(21, p.calculateAdjacentItemsPoints());
     }
+
+ */
 }

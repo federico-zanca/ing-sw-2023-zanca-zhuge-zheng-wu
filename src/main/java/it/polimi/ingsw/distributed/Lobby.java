@@ -77,15 +77,17 @@ public class Lobby {
         inLobbyClients.remove(client);
         server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);
         controller.removePlayer(server.getConnectedClientInfo(client).getClientID());
-        if(client.equals(admin) && inLobbyClients.size() > 0){
+        if(client.equals(admin) && inLobbyClients.size() > 0) {
             admin = inLobbyClients.get(0);
             for (Client c : inLobbyClients) {
                 try {
                     c.update(new NewAdminMessage(server.getConnectedClientInfo(client).getClientID(), server.getConnectedClientInfo(admin).getClientID()));
                 } catch (RemoteException e) {
-                    System.err.println("Unable to send preGameMessage "+ e);
+                    System.err.println("Unable to send preGameMessage " + e);
                 }
             }
+        }else if(inLobbyClients.size() == 0){
+            server.getLobbies().remove(this);
         }
         //TODO remove observer
 }
