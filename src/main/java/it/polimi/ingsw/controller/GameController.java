@@ -275,12 +275,7 @@ public class GameController {
     }
 
     public void changeChosenNumOfPlayers(int chosenNum) throws InvalidComandException{
-        //TODO gestire eccezioni
-        if(chosenNum > model.getCurrNumOfPlayers()){
-            model.setChosenNumOfPlayers(chosenNum);
-        }else{
-            throw new InvalidComandException();
-        }
+        model.setChosenNumOfPlayers(chosenNum);
     }
 
     public void addPlayer(String username) throws InvalidUsernameException {
