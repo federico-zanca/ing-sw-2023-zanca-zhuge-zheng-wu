@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.GameNotReadyException;
 import it.polimi.ingsw.model.exceptions.InvalidComandException;
 import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
-import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.network.message.gamemessage.ErrorMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
@@ -17,8 +16,8 @@ import it.polimi.ingsw.network.message.gamemessage.LoginRequest;
 import java.util.ArrayList;
 
 public class GameController {
-    private static final int MIN_PLAYERS = 2;
-    private static final int MAX_PLAYERS = 3;
+    public static final int MIN_PLAYERS = 2;
+    public static final int MAX_PLAYERS = 4;
     private Game model;
     //stuff for the view
     private TurnController turnController;
@@ -275,7 +274,7 @@ public class GameController {
         }
     }
 
-    public void changeNumOfPlayers(int chosenNum) throws InvalidComandException{
+    public void changeChosenNumOfPlayers(int chosenNum) throws InvalidComandException{
         //TODO gestire eccezioni
         if(chosenNum > model.getCurrNumOfPlayers()){
             model.setChosenNumOfPlayers(chosenNum);

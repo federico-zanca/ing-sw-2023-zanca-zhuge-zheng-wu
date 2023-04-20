@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.Bookshelf;
@@ -252,16 +253,15 @@ public class TextualUI extends Observable implements Runnable {
             case KICK:
                 System.err.println(lobbyCommand.toString() + " not implemented yet");
                 break;
-            case CHANGE_NUM_OF_PLAYERS:
+            case NUMPLAYERS:
                     if (parts.length != 2) {
                         System.out.println("Comando non valido!");
                         return;
                     } else if(!invalidNumOfPlayersFormat(parts[1])){
                         int chosenNum = Integer.parseInt(parts[1].trim());
-                        System.out.println("Numero di giocatori cambiato a " + chosenNum); //da spostare. non va bene perchè lo fa anche quando il controllo lato server va male
                         notifyObservers(new ChangeNumOfPlayerRequest(chosenNum));
                     }else{
-                        System.out.println("Numero non valido!");
+                        System.out.println("Numero non valido! La partita deve avere minimo " + GameController.MIN_PLAYERS + " giocatori e massimo " + GameController.MAX_PLAYERS + " giocatori");
                         return;
                     }
                 break;
@@ -502,7 +502,7 @@ public class TextualUI extends Observable implements Runnable {
     private boolean invalidNumOfPlayersFormat(String input) {
         try {
             int chosenNum = Integer.parseInt(input.trim());
-            if(chosenNum >= 2 && chosenNum<=4)
+            if(chosenNum >= GameController.MIN_PLAYERS && chosenNum<=GameController.MAX_PLAYERS)
                 return false;
             else{
                 return true;
@@ -1262,6 +1262,9 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case INVALID_COMAND:
                 showInvalidComand();
+                break;
+            case CHANGE_NUM_OF_PLAYER_RESPONSE:
+                System.out.println(((ChangeNumOfPlayerResponse) message).getContent());
                 break;
             default:
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());

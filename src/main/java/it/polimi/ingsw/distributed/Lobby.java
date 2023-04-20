@@ -67,7 +67,7 @@ public class Lobby {
         return inLobbyClients.size();
     }
 
-    public int getMaxNumClients() {
+    public int getChosenNumOfPlayers() {
         return model.getChosenPlayersNumber();
     }
 
@@ -104,9 +104,9 @@ public class Lobby {
         }
     }
 
-    public void changeMaxNumClients(int chosenNum){
+    public void changeChosenNumOfPlayers(int chosenNum){
         try {
-            controller.changeNumOfPlayers(chosenNum);
+            controller.changeChosenNumOfPlayers(chosenNum);
         } catch (InvalidComandException e){
             try {
                 admin.update(new InvalidComandMessage());

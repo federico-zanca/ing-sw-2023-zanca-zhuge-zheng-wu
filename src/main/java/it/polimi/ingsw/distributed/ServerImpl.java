@@ -1,5 +1,6 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
@@ -7,6 +8,8 @@ import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessag
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
+import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerRequest;
+import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerResponse;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 
 import java.rmi.RemoteException;
@@ -81,7 +84,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     public HashMap<String, Map.Entry<Integer, Integer>> getLobbiesInfo() {
         HashMap <String, Map.Entry<Integer, Integer>> availableLobbies = new HashMap<>();
         for(Lobby l : lobbies)
-            availableLobbies.put(l.getName(), new AbstractMap.SimpleEntry<>(l.getInLobbyClients().size(), l.getMaxNumClients()));
+            availableLobbies.put(l.getName(), new AbstractMap.SimpleEntry<>(l.getInLobbyClients().size(), l.getChosenNumOfPlayers()));
         return availableLobbies;
     }
 
@@ -149,14 +152,37 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     public void startGame(Client client) {
         if(connectedClients.get(client).getLobby().getAdmin().equals(client)
-                && connectedClients.get(client).getLobby().getInLobbyClients().size() == connectedClients.get(client).getLobby().getMaxNumClients()) {
+                && connectedClients.get(client).getLobby().getInLobbyClients().size() == connectedClients.get(client).getLobby().getChosenNumOfPlayers()) {
             connectedClients.get(client).getLobby().startGame();
         }
     }
 
     public void changeNumOfPlayers(Client client, int chosenNum){
-        if(connectedClients.get(client).getLobby().getAdmin().equals(client) && chosenNum != connectedClients.get(client).getLobby().getMaxNumClients()){
-            connectedClients.get(client).getLobby().changeMaxNumClients(chosenNum);
+        if( chosenNum > GameController.MAX_PLAYERS){
+            try {
+                client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
+            } catch (RemoteException e) {
+                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
+            }
+        } else if (chosenNum < GameController.MIN_PLAYERS){
+            try {
+                client.update(new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
+            } catch (RemoteException e) {
+                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
+            }
+        } else if (chosenNum < connectedClients.get(client).getLobby().getInLobbyClients().size()){
+            try {
+                client.update(new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
+            } catch (RemoteException e) {
+                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
+            }
+        } else {
+            connectedClients.get(client).getLobby().changeChosenNumOfPlayers(chosenNum);
+            try {
+                client.update(new ChangeNumOfPlayerResponse(true, "Numero di giocatori della partita cambiato a " + chosenNum));
+            } catch (RemoteException e) {
+                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
+            }
         }
     }
 
