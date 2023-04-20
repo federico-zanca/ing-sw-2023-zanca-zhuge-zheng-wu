@@ -24,6 +24,7 @@ import java.util.*;
 
 public class TextualUI extends Observable implements Runnable {
 
+    private final InputValidator inputValidator = new InputValidator();
     private ClientState clientState;
 
     private ActionType actionType;
@@ -107,7 +108,7 @@ public class TextualUI extends Observable implements Runnable {
     }
 
     private void elaborateInsertHand(String input) {
-        if(invalidColumnFormat(input)){
+        if(inputValidator.invalidColumnFormat(input)){
             System.out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
             return;
         }
@@ -115,7 +116,7 @@ public class TextualUI extends Observable implements Runnable {
         if (column < 0 || column > 4) {
             System.out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
             return;
-        } else if (columnHasLessSpace(column, ((InsertInfoMessage) lastMessage).getEnabledColumns())) {
+        } else if (inputValidator.columnHasLessSpace(column, ((InsertInfoMessage) lastMessage).getEnabledColumns())) {
             System.out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
             return;
         } else {
@@ -125,7 +126,7 @@ public class TextualUI extends Observable implements Runnable {
     }
 
     private void elaborateReorderThreeTiles(String input) {
-        if(invalidOrderFormat(input, 3)){
+        if(InputValidator.invalidOrderFormat(input, 3)){
             System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
             showHand(myUsername, tilesToInsert);
             System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
@@ -156,10 +157,10 @@ public class TextualUI extends Observable implements Runnable {
     }
 
     private void elaborateOrderHandInput(String input) {
-        if(!isYesOrNo(input)){
+        if(!InputValidator.isYesOrNo(input)){
             System.out.println("Risposta non valida! Inserisci 'y' o 'n'");
             return;
-        }else if(isYes(input)){
+        }else if(inputValidator.isYes(input)){
             if(tilesToInsert.size() == 2){
                 Collections.swap(tilesToInsert, 1, 0);
                 showHand(myUsername, tilesToInsert);
@@ -186,7 +187,7 @@ public class TextualUI extends Observable implements Runnable {
             notifyObservers(new DrawTilesMessage(myUsername, tilesToDraw));
             return;
         }
-        if(invalidCoordFormat(input)){
+        if(InputValidator.invalidCoordFormat(input)){
             System.out.println("Formato coordinate non valido!");
             return;
         }
@@ -196,18 +197,18 @@ public class TextualUI extends Observable implements Runnable {
         if (row < 0 || row > Board.DIMENSIONS - 1 || column < 0 || column > Board.DIMENSIONS - 1) {
             System.out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-" + (Board.DIMENSIONS - 1));
             return;
-        } else if (isTileAlreadyOnHand(row, column, tilesToDraw)) {
+        } else if (inputValidator.isTileAlreadyOnHand(row, column, tilesToDraw)) {
             System.out.println("Non puoi prendere una tessera che hai già preso! Inserisci altre coordinate: ");
             return;
         } else if (!board[row][column].isPickable()) {
             System.out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
             return;
-        } else if (tilesToDraw.size() > 0 && !inLineTile(row, column, tilesToDraw)) {
+        } else if (tilesToDraw.size() > 0 && !inputValidator.inLineTile(row, column, tilesToDraw)) {
             System.out.println("Coordinate non valide! La tessera che prendi deve essere adiacente e in linea retta (orizzontale o verticale) con le tessere che hai già preso in questo turno! Inserisci le coordinate nuovamente: ");
             return;
         }
         tilesToDraw.add(new Square(new Coordinates(row, column), board[row][column].getItem().getType()));
-        if (isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems))
+        if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems))
             System.out.println("Inserisci le coordinate della " + (tilesToDraw.size() + 1) + "° tessera separate da una virgola (es. riga, colonna) :");
         else{
             setActionType(ActionType.ORDER_HAND);
@@ -257,7 +258,7 @@ public class TextualUI extends Observable implements Runnable {
                     if (parts.length != 2) {
                         System.out.println("Comando non valido!");
                         return;
-                    } else if(!invalidNumOfPlayersFormat(parts[1])){
+                    } else if(!inputValidator.invalidNumOfPlayersFormat(parts[1])){
                         int chosenNum = Integer.parseInt(parts[1].trim());
                         notifyObservers(new ChangeNumOfPlayerRequest(chosenNum));
                     }else{
@@ -295,7 +296,7 @@ public class TextualUI extends Observable implements Runnable {
                     System.out.println("Comando non valido!");
                     return;
                 } else {
-                    if (!isValidUsername(parts[1])) {
+                    if (!inputValidator.isValidUsername(parts[1])) {
                         System.out.println("Username non valido");
                         return;
                     } else {
@@ -344,7 +345,7 @@ public class TextualUI extends Observable implements Runnable {
         System.out.print("Enter your name: ");
 
         username = s.nextLine();
-        while (!isValidUsername(username)) {
+        while (!inputValidator.isValidUsername(username)) {
             System.out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
                     "Please insert your username again: ");
             username = s.nextLine();
@@ -366,24 +367,13 @@ public class TextualUI extends Observable implements Runnable {
      */
     private boolean isValidUsername(String username) {
         // Check for spaces in username
-        if (username.contains(" ")) {
-            return false;
-        }
 
         // Check if username starts or ends with a special character or if it is solely composed of numbers
-        char firstChar = username.charAt(0);
-        if (firstChar == '-' || firstChar == '_' || firstChar == '.' || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
-            return false;
-        }
 
         // Check for non-literal or non-numeric characters other than '-', '_' and '.'
-        String pattern = "[^a-zA-Z0-9\\-_\\.]";
-        if (username.matches(".*" + pattern + ".*")) {
-            return false;
-        }
 
         // All checks passed, username is valid
-        return true;
+        return inputValidator.isValidUsername(username);
     }
 
 
@@ -422,97 +412,6 @@ public class TextualUI extends Observable implements Runnable {
     }
 
     /**
-     * Checks if the current board configuration allows the player to draw more tiles
-     *
-     * @param hand  ArrayList of tiles taken by the player in this turn
-     * @param board gameboard
-     * @return true if there are other tiles the player can pick (based on what he's already picked and the board configuration)
-     */
-    private boolean isPossibleToDrawMore(ArrayList<Square> hand, Square[][] board) {
-        ArrayList<Integer> rows = new ArrayList<>();
-        ArrayList<Integer> columns = new ArrayList<>();
-        for (Square sq : hand) {
-            rows.add(sq.getRow());
-            columns.add(sq.getColumn());
-        }
-        if (allCoordsAreEqual(rows)) {
-            Collections.sort(columns);
-            if (columns.get(0) != 0 && board[rows.get(0)][columns.get(0) - 1].isPickable()) return true;
-            if (columns.get(columns.size() - 1) != board.length - 1 && board[rows.get(0)][columns.get(columns.size() - 1) + 1].isPickable())
-                return true;
-        }
-        if (allCoordsAreEqual(columns)) {
-            Collections.sort(rows);
-            if (rows.get(0) != 0 && board[rows.get(0) - 1][columns.get(0)].isPickable()) return true;
-            if (rows.get(rows.size() - 1) != board.length - 1 && board[rows.get(rows.size() - 1) + 1][columns.get(0)].isPickable())
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * This method splits the input string on commas and checks if there are exactly two parts. If not, it returns `true`.
-     * If there are two parts, it attempts to parse them as integers using `Integer.parseInt()`.
-     * If either of them cannot be parsed as an integer (due to a non-numeric character being present, for example),
-     * the method returns `true`. Otherwise, it returns `false`.
-     * Note that this implementation assumes the input string contains only ASCII digits, whitespace, and commas.
-     * If other characters are allowed, the parsing logic would need to be adapted accordingly.
-     *
-     * @param input the string which format is to be evaluated
-     * @return true if the String format is invalid
-     */
-    public static boolean invalidCoordFormat(String input) {
-        String[] parts = input.split(",");
-
-        // Check for two parts and trim any whitespace
-        if (parts.length != 2) {
-            return true;
-        }
-
-        try {
-            // Attempt to parse integers from string parts : DON'T TOUCH!!!!!
-            int first = Integer.parseInt(parts[0].trim());
-            int second = Integer.parseInt(parts[1].trim());
-
-            // Return false if we parsed two valid integers
-            //System.err.println("Valid format");
-            return false;
-
-        } catch (NumberFormatException e) {
-            // Catch any exception thrown by parseInt()
-            //System.err.println("Invalid format");
-            return true;
-        }
-    }
-
-    /**
-     * Checks if the input format is one exact number which fits in the bookshelf's dimension. If not, it returns 'true'.
-     *
-     * @param input chosen column
-     * @return valid column
-     */
-    private boolean invalidColumnFormat(String input) {
-        try {
-            int col = Integer.parseInt(input.trim());
-            return false;
-        } catch (NumberFormatException e) {
-            return true;
-        }
-    }
-    private boolean invalidNumOfPlayersFormat(String input) {
-        try {
-            int chosenNum = Integer.parseInt(input.trim());
-            if(chosenNum >= GameController.MIN_PLAYERS && chosenNum<=GameController.MAX_PLAYERS)
-                return false;
-            else{
-                return true;
-            }
-        } catch (NumberFormatException e) {
-            return true;
-        }
-    }
-
-    /**
      * Prompts the user to insert the coordinates of the tile he wants to pick and checks if the coordinates are those of a valid tile.
      * If the coordinates inserted are not valid, it re-prompts the user to insert the input.
      *
@@ -524,7 +423,7 @@ public class TextualUI extends Observable implements Runnable {
     private Square inputCoords(ArrayList<Square> hand, Square[][] board, int n) {
 
         String input = s.nextLine();
-        while (invalidCoordFormat(input)) {
+        while (InputValidator.invalidCoordFormat(input)) {
             System.out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
             input = s.nextLine();
         }
@@ -534,17 +433,17 @@ public class TextualUI extends Observable implements Runnable {
         while (true) {
             if (row < 0 || row > Board.DIMENSIONS - 1 || column < 0 || column > Board.DIMENSIONS - 1) {
                 System.out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-" + (Board.DIMENSIONS - 1));
-            } else if (isTileAlreadyOnHand(row, column, hand)) {
+            } else if (inputValidator.isTileAlreadyOnHand(row, column, hand)) {
                 System.out.println("Non puoi prendere una tessera che hai già preso! Inserisci altre coordinate: ");
             } else if (!board[row][column].isPickable()) {
                 System.out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
-            } else if (n > 0 && !inLineTile(row, column, hand)) {
+            } else if (n > 0 && !inputValidator.inLineTile(row, column, hand)) {
                 System.out.println("Coordinate non valide! La tessera che prendi deve essere adiacente e in linea retta (orizzontale o verticale) con le tessere che hai già preso in questo turno! Inserisci le coordinate nuovamente: ");
             } else {
                 break;
             }
             input = s.nextLine();
-            while (invalidCoordFormat(input)) {
+            while (InputValidator.invalidCoordFormat(input)) {
                 System.out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
                 input = s.nextLine();
             }
@@ -553,89 +452,6 @@ public class TextualUI extends Observable implements Runnable {
             column = Integer.parseInt(tiles[1].trim());
         }
         return new Square(new Coordinates(row, column), board[row][column].getItem().getType());
-    }
-
-    /**
-     * Checks if the given array of Integers contains only equals elements
-     *
-     * @param x ArrayList of integers
-     * @return true if the elements of the passed ArrayList are all equal
-     */
-    private boolean allCoordsAreEqual(ArrayList<Integer> x) {
-        for (int i = 0; i < x.size() - 1; i++) {
-            if (x.get(i) != x.get(i + 1)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Checks if the integers int the given arraylist are consecutive (in whatever order they are presented)
-     *
-     * @param x ArrayList of integers
-     * @return true if the elements in the given arraylist are consecutive (in whatever order they are presented)
-     */
-    private boolean allCoordsAreAdjacent(ArrayList<Integer> x) {
-        Collections.sort(x);
-        for (int i = 0; i < x.size() - 1; i++) {
-            if (x.get(i) != x.get(i + 1) - 1) return false;
-        }
-        return true;
-    }
-
-    /**
-     * Checks if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
-     *
-     * @param row    row number of the Square to check
-     * @param column column number of the Square to check
-     * @param hand   List of Squares (tiles) already picked by the player during this turn
-     * @return true if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
-     */
-    private boolean inLineTile(int row, int column, ArrayList<Square> hand) {
-        ArrayList<Integer> rows = new ArrayList<>();
-        ArrayList<Integer> columns = new ArrayList<>();
-        rows.add(row);
-        columns.add(column);
-        for (Square sq : hand) {
-            rows.add(sq.getRow());
-            columns.add(sq.getColumn());
-        }
-        return (allCoordsAreAdjacent(rows) && allCoordsAreEqual(columns)) || (allCoordsAreAdjacent(columns) && allCoordsAreEqual(rows));
-    }
-
-    /**
-     * Checks if the tile has already been picked by the player this turn
-     *
-     * @param row    row number of the Square to check
-     * @param column column number of the Square to check
-     * @param hand   List of Squares (tiles) already picked by the player during this turn
-     * @return true if the passed coordinates are those of a tile which is already in the player's hand
-     */
-    private boolean isTileAlreadyOnHand(int row, int column, ArrayList<Square> hand) {
-        if (hand.size() == 0) return false;
-        for (Square sq : hand) {
-            if (sq.getCoordinates().getRow() == row && sq.getCoordinates().getColumn() == column) return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param input String to check
-     * @return true if the string passed is equal to N/No/n/no
-     */
-    public static boolean isNo(String input) {
-        input = input.toLowerCase();
-        return input.equals("n") || input.equals("no");
-    }
-
-    /**
-     * @param input String to check
-     * @return true if the string passed is equal to N/No/n/no/Y/y/Yes/yes
-     */
-    public static boolean isYesOrNo(String input) {
-        input = input.toLowerCase();
-        return input.equals("y") || input.equals("yes") || isNo(input);
     }
 
 
@@ -655,7 +471,7 @@ public class TextualUI extends Observable implements Runnable {
     private int inputColumn(ArrayList<ItemTile> items, ItemTile[][] bookshelf, ArrayList<Integer> columns) {
 
         String input = s.nextLine();
-        while (invalidColumnFormat(input)) {
+        while (inputValidator.invalidColumnFormat(input)) {
             System.out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
             input = s.nextLine();
         }
@@ -663,7 +479,7 @@ public class TextualUI extends Observable implements Runnable {
         while (true) {
             if (column < 0 || column > 4) {
                 System.out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
-            } else if (columnHasLessSpace(column, columns)) {
+            } else if (inputValidator.columnHasLessSpace(column, columns)) {
                 System.out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
             } else {
                 break;
@@ -672,17 +488,6 @@ public class TextualUI extends Observable implements Runnable {
             column = Integer.parseInt(input.trim());
         }
         return column;
-    }
-
-    /**
-     * Checks if the column chosen by the player has enough space to insert the players hand. If not it returns 'true'.
-     *
-     * @param column  column that the player chose
-     * @param columns arraylist of available columns
-     * @return valid chosen column
-     */
-    private boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
-        return !columns.contains(column);
     }
 
     /**
@@ -861,8 +666,8 @@ public class TextualUI extends Observable implements Runnable {
             System.out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
             continueResponse = s.nextLine();
 
-            while (!isYesOrNo(continueResponse) || isYes(continueResponse)) {
-                if (!isYesOrNo(continueResponse))
+            while (!InputValidator.isYesOrNo(continueResponse) || inputValidator.isYes(continueResponse)) {
+                if (!InputValidator.isYesOrNo(continueResponse))
                     System.out.println("Inserisci y o n");
                 else {
                     Collections.swap(hand, 1, 0);
@@ -874,8 +679,8 @@ public class TextualUI extends Observable implements Runnable {
         } else if (hand.size() == 3) {
             System.out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
             continueResponse = s.nextLine();
-            while (!isYesOrNo(continueResponse) || isYes(continueResponse)) {
-                if (!isYesOrNo(continueResponse))
+            while (!InputValidator.isYesOrNo(continueResponse) || inputValidator.isYes(continueResponse)) {
+                if (!InputValidator.isYesOrNo(continueResponse))
                     System.out.println("Inserisci y o n");
                 else {
                     System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
@@ -887,11 +692,7 @@ public class TextualUI extends Observable implements Runnable {
             }
         }
     }
-
-    private boolean isYes(String input) {
-        input = input.toLowerCase();
-        return input.equals("y") || input.equals("yes");
-    }
+    
 
     /**
      * Checks if the order in input is correct and actually orders the hand.
@@ -901,7 +702,7 @@ public class TextualUI extends Observable implements Runnable {
     private void inputOrder(ArrayList<ItemTile> hand, String username) {
 
         String input = s.nextLine();
-        while (invalidOrderFormat(input, 3)) {
+        while (InputValidator.invalidOrderFormat(input, 3)) {
             System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
             showHand(username, hand);
             System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
@@ -931,38 +732,6 @@ public class TextualUI extends Observable implements Runnable {
             Collections.swap(hand, second - 1, 1);
         } else {
             Collections.swap(hand, third - 1, 2);
-        }
-    }
-
-    /**
-     * Same as invalidCoordsFormat but is generic
-     *
-     * @param input cli input
-     * @param n     number of numbers separated by the coma that you have in the input string
-     * @return
-     */
-    public static boolean invalidOrderFormat(String input, int n) {
-        String[] parts = input.split(",");
-
-        // Check for two parts and trim any whitespace
-        if (parts.length != n) {
-            return true;
-        }
-
-        try {
-            // Attempt to parse integers from string parts : DON'T TOUCH!!!!!
-            for (int i = 0; i < n; i++) {
-                int num = Integer.parseInt(parts[i].trim());
-            }
-
-            // Return false if we parsed two valid integers
-            //System.err.println("Valid format");
-            return false;
-
-        } catch (NumberFormatException e) {
-            // Catch any exception thrown by parseInt()
-            //System.err.println("Invalid format");
-            return true;
         }
     }
 
@@ -1065,11 +834,11 @@ public class TextualUI extends Observable implements Runnable {
         }
         else {
             setClientState(ClientState.IN_A_LOBBY);
-            showEnteredLobby();
+            printEnteredLobby();
         }
     }
 
-    private void showCreateLobbyResponse(boolean successful) {
+    private void printCreateLobbyResponse(boolean successful) {
         if(successful){
             setClientState(ClientState.IN_A_LOBBY);
             System.out.println("Partita creata con successo!");
@@ -1081,7 +850,7 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
-    private void showEnteredLobby() {
+    private void printEnteredLobby() {
         System.out.println("Sei entrato nella partita!");
     }
 
@@ -1228,7 +997,7 @@ public class TextualUI extends Observable implements Runnable {
                 showLobbyList(((LobbyListResponse) message).getLobbies());
                 break;
             case CREATE_LOBBY_RESPONSE:
-                showCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
+                printCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
                 break;
             case JOIN_LOBBY_RESPONSE:
                 showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
