@@ -75,6 +75,7 @@ public class Lobby {
 
     public void removeClient(Client client) {
         inLobbyClients.remove(client);
+        server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);
         controller.removePlayer(server.getConnectedClientInfo(client).getClientID());
         if(client.equals(admin) && inLobbyClients.size() > 0){
             admin = inLobbyClients.get(0);

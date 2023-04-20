@@ -9,7 +9,6 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 5681952653692686369L;
     private String username;
     private Bookshelf bookshelf;
-    private PersonalGoalCard personalGoal;
     ArrayList<ItemTile> hand;
     private int score;
     /**
@@ -19,7 +18,6 @@ public class Player implements Serializable {
     public Player(String username) {
         this.username = username;
         bookshelf = new Bookshelf();
-        personalGoal = null;
         hand = new ArrayList<>();
         score = 0;
     }
@@ -55,13 +53,7 @@ public class Player implements Serializable {
     public Bookshelf getBookshelf() {
         return bookshelf;
     }
-    /**
-     * Returns the personalGoalCard of the player
-     * @return this.personalGoal
-     */
-    public PersonalGoalCard getPersonalGoal() {
-        return personalGoal;
-    }
+
 
     /**
      * Returns the username of the player
@@ -71,21 +63,14 @@ public class Player implements Serializable {
         return username;
     }
 
-    /**
-     * Sets the players' PersonalGoal
-     * @param personalGoal PersonalGoalCard to set
-     */
-    public void setPersonalGoal(PersonalGoalCard personalGoal) {
-        this.personalGoal = personalGoal;
-    }
 
     /**
      * Calculate how many points must be added to the player
      * @return points to add due to personal goal accomplishment
      */
-    public int calculateScorePersonalGoal() {
+    public int calculateScorePersonalGoal(PersonalGoalCard personalGoal) {
         int matches;
-        matches = getPersonalGoal().numOfMatches(bookshelf);
+        matches = personalGoal.numOfMatches(bookshelf);
         switch(matches){
             case 1: return 1;
             case 2: return 2;

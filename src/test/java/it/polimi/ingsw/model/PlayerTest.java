@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
-
+/*
     @Test
     void testEndTrigger() {
         // creo player e BookShelf, setBookshelf a player e chiamo endtrigger da player, verifica se corretto

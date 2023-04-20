@@ -49,6 +49,7 @@ public class Game extends Observable {
         commonGoals = new ArrayList<>();
         leaderboard = new LinkedHashMap<>();
         chosenNumOfPlayers=2; //andrà rimosso, solo per testing
+        personalGoals = new HashMap<>();
     }
     /**
      *
@@ -206,7 +207,7 @@ public class Game extends Observable {
         pickCommonGoalsForThisGame();
 
         for(Player player : players){
-            player.setPersonalGoal(randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
+            personalGoals.put(player.getUsername(), randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
         }
 
         initLeaderBoard();
@@ -230,7 +231,7 @@ public class Game extends Observable {
         notifyObservers(new NewTurnMessage(currentPlayer.getUsername()));
         int maxItemTiles = currentPlayer.getBookshelf().maxSlotsAvailable();
         board.enableSquaresWithFreeSide();
-        DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), board.getGameboard(), currentPlayer.getBookshelf().getShelfie(), maxItemTiles);
+        DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this), maxItemTiles);
         notifyObservers(m);
     }
 

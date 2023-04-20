@@ -44,6 +44,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     @Override
     public void register(Client client) {
         connectedClients.put(client, new ClientInfo(client));
+
         try {
             client.update(new ConnectedToServerMessage(client));
         } catch (RemoteException e) {

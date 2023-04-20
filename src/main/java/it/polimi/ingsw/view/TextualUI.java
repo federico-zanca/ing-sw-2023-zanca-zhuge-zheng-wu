@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
@@ -22,9 +23,24 @@ import java.util.*;
 
 public class TextualUI extends Observable implements Runnable {
 
+    private ClientState clientState;
+
+    private ActionType actionType;
+
     private ArrayList<CommonGoalCard> cards;
 
     private Scanner s;
+    private String myUsername;
+    private boolean isActive;
+
+    ArrayList<Square> tilesToDraw;
+    ArrayList<ItemTile> tilesToInsert;
+    public TextualUI() {
+        s = new Scanner(System.in);
+        cards = null;
+        tilesToDraw = new ArrayList<>();
+        tilesToInsert = new ArrayList<>();
+    }
 
     public TextualUI() {
         s = new Scanner(System.in);
@@ -41,14 +57,275 @@ public class TextualUI extends Observable implements Runnable {
 
     @Override
     public void run() {
+        String input;
+        while (true) {
+            System.out.print(">>> ");
+            input = s.nextLine();
+            elaborateInput(input);
+        }
     }
 
+    /**
+     * Elaborates the input from the user
+     * @param input the input from the user
+     */
     private void elaborateInput(String input) {
 
+        switch(clientState){
+            case IN_SERVER:
+                elaborateConnectionCommand(input);
+                break;
+            case IN_A_LOBBY:
+                elaborateLobbyCommand(input);
+                break;
+            case IN_GAME:
+                elaborateGameCommand(input);
+                break;
+            default:
+                System.err.println("Stato client non supportato wtf bro");
+        }
     }
 
-    /* USERNAME insertion stuff */
+    private void elaborateGameCommand(String input) {
+        switch(actionType){
+            case DRAW_TILES:
+                DrawInfoMessage message = (DrawInfoMessage) lastMessage;
+                elaborateDrawInput(input, message.getModel(), message.getMaxNumItems());
+                break;
+            case ORDER_HAND:
+                elaborateOrderHandInput(input);
+                break;
+            case REORDER_THREE_TILES:
+                elaborateReorderThreeTiles(input);
+                break;
+            case INSERT_HAND:
+                elaborateInsertHand(input);
+                break;
+            case NONE:
+                break;
+            default:
+                System.err.println("Should not send anything in this phase");
+        }
+    }
 
+    private void elaborateInsertHand(String input) {
+        if(invalidColumnFormat(input)){
+            System.out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
+            return;
+        }
+        int column = Integer.parseInt(input.trim());
+        if (column < 0 || column > 4) {
+            System.out.println("Colonna non valida! Assicurati di inserire colonne che rientrano nella dimensione della libreria (0-4)");
+            return;
+        } else if (columnHasLessSpace(column, ((InsertInfoMessage) lastMessage).getEnabledColumns())) {
+            System.out.println("La colonna scelta non ha sufficiente spazio per inserire la mano! Inserisci un'altra colonna: ");
+            return;
+        } else {
+            setActionType(ActionType.NONE);
+            notifyObservers(new InsertTilesMessage(myUsername, tilesToInsert, column));
+        }
+    }
+
+    private void elaborateReorderThreeTiles(String input) {
+        if(invalidOrderFormat(input, 3)){
+            System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
+            showHand(myUsername, tilesToInsert);
+            System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
+            return;
+        }
+        String[] order = input.split(",");
+        int first = Integer.parseInt(order[0].trim());
+        int second = Integer.parseInt(order[1].trim());
+        int third = Integer.parseInt(order[2].trim());
+        if (first < 1 || first > 3 || second < 1 || second > 3 || third < 1 || third > 3) {
+            System.out.println("Ordine inserito non riconosciuto. Assicurati che i numeri siano (1-3)");
+            return;
+        } else if (first == second || second == third || first == third) {
+            System.out.println("Non si può avere due tessere nello stesso slot! Riprova");
+            return;
+        } else{
+            Collections.swap(tilesToInsert, first - 1, 0);
+            if (second != 1) {
+                Collections.swap(tilesToInsert, second - 1, 1);
+            } else {
+                Collections.swap(tilesToInsert, third - 1, 2);
+            }
+            setActionType(ActionType.INSERT_HAND);
+            showInsertInfo((InsertInfoMessage) lastMessage);
+            System.out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
+        }
+    }
+
+    private void elaborateOrderHandInput(String input) {
+        if(!isYesOrNo(input)){
+            System.out.println("Risposta non valida! Inserisci 'y' o 'n'");
+            return;
+        }else if(isYes(input)){
+            if(tilesToInsert.size() == 2){
+                Collections.swap(tilesToInsert, 1, 0);
+                showHand(myUsername, tilesToInsert);
+                System.out.println("Vuoi invertire ancora l'ordine delle tessere? (y/n)");
+                return;
+            }else if(tilesToInsert.size()==3){
+                setActionType(ActionType.REORDER_THREE_TILES);
+                System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 mette la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
+                return;
+            } else {
+                System.err.println("Dimensioni mano illegali");;
+            }
+        } else{
+            setActionType(ActionType.INSERT_HAND);
+            showInsertInfo((InsertInfoMessage) lastMessage);
+            System.out.println("Inserisci la colonna in cui vuoi inserire la mano: ");
+            return;
+        }
+    }
+
+    private void elaborateDrawInput(String input, GameView model, int maxNumItems) {
+        Square[][] board = model.getBoard().getGameboard();
+        if(tilesToDraw.size() > 0 &&  input.equalsIgnoreCase("ok")){
+            notifyObservers(new DrawTilesMessage(myUsername, tilesToDraw));
+            return;
+        }
+        if(invalidCoordFormat(input)){
+            System.out.println("Formato coordinate non valido!");
+            return;
+        }
+        String[] coords = input.split(",");
+        int row = Integer.parseInt(coords[0].trim());
+        int column = Integer.parseInt(coords[1].trim());
+        if (row < 0 || row > Board.DIMENSIONS - 1 || column < 0 || column > Board.DIMENSIONS - 1) {
+            System.out.println("Coordinate non valide! Assicurati di inserire coordinate che rientrino nelle dimensioni della Board (0-" + (Board.DIMENSIONS - 1));
+            return;
+        } else if (isTileAlreadyOnHand(row, column, tilesToDraw)) {
+            System.out.println("Non puoi prendere una tessera che hai già preso! Inserisci altre coordinate: ");
+            return;
+        } else if (!board[row][column].isPickable()) {
+            System.out.println("Coordinate non valide! Assicurati di inserire le coordinate di una tessera che sia prendibile secondo le regole di gioco!");
+            return;
+        } else if (tilesToDraw.size() > 0 && !inLineTile(row, column, tilesToDraw)) {
+            System.out.println("Coordinate non valide! La tessera che prendi deve essere adiacente e in linea retta (orizzontale o verticale) con le tessere che hai già preso in questo turno! Inserisci le coordinate nuovamente: ");
+            return;
+        }
+        tilesToDraw.add(new Square(new Coordinates(row, column), board[row][column].getItem().getType()));
+        if (isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems))
+            System.out.println("Inserisci le coordinate della " + (tilesToDraw.size() + 1) + "° tessera separate da una virgola (es. riga, colonna) :");
+        else{
+            setActionType(ActionType.ORDER_HAND);
+            notifyObservers(new DrawTilesMessage(myUsername, tilesToDraw));
+        }
+    }
+
+    private void elaborateLobbyCommand(String input) {
+        String[] parts = input.split(" ");
+        LobbyCommand lobbyCommand = null;
+        for (LobbyCommand c : LobbyCommand.values()) {
+            if (parts[0].toUpperCase().equals(c.toString())) {
+                lobbyCommand = c;
+                break;
+            }
+        }
+        if(lobbyCommand == null){
+            System.out.println("Comando non valido!");
+            return;
+        }
+        switch (lobbyCommand) {
+            case HELP:
+                System.out.println("Lista dei comandi disponibili nella lobby:");
+                for (LobbyCommand c : LobbyCommand.values()) {
+                    System.out.println(c.toString() + " - " + c.getDescription());
+                }
+                break;
+            case START:
+                notifyObservers(new StartGameRequest());
+                break;
+            case EXIT:
+                notifyObservers(new ExitLobbyRequest());
+                break;
+            case CHAT:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case READY:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case UNREADY:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case KICK:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            case CHANGE_NUMBER_OF_PLAYERS:
+                System.err.println(lobbyCommand.toString() + " not implemented yet");
+                break;
+            default:
+                System.err.println("Comando non valido, should never reach this state");
+                break;
+        }
+    }
+
+    private void elaborateConnectionCommand(String input) {
+        String[] parts = input.split(" ");
+        ConnectionCommand command = null;
+        for (ConnectionCommand c : ConnectionCommand.values()) {
+            if (parts[0].toUpperCase().equals(c.toString())) {
+                command = c;
+                break;
+            }
+        }
+        if(command == null){
+            System.out.println("Comando non valido!");
+            return;
+        }
+        switch (command) {
+            case HELP:
+                for (ConnectionCommand c : ConnectionCommand.values()) {
+                    System.out.println(c.toString() + " " + c.getDescription());
+                }
+                break;
+            case USERNAME:
+                if (parts.length != 2) {
+                    System.out.println("Comando non valido!");
+                    return;
+                } else {
+                    if (!isValidUsername(parts[1])) {
+                        System.out.println("Username non valido");
+                        return;
+                    } else {
+                        System.out.println("Username impostato a " + parts[1]);
+                        notifyObservers(new UsernameRequest(parts[1]));
+                    }
+                }
+                break;
+            case EXIT:
+                //TODO disconnettiti dal server
+                break;
+            case GAMES:
+                notifyObservers(new LobbyListRequest());
+                break;
+            case JOIN:
+                if (parts.length != 2) {
+                    System.out.println("Comando non valido!");
+                    return;
+                } else {
+                    notifyObservers(new JoinLobbyRequest(parts[1]));
+                }
+                break;
+            case CREATE:
+                if (parts.length != 2) {
+                    System.out.println("Comando non valido!");
+                    return;
+                } else {
+                    notifyObservers(new CreateLobbyRequest(parts[1]));
+                }
+                break;
+            default:
+                System.err.println("Comando non valido, should never reach this state");
+                break;
+        }
+    }
+
+
+    /* USERNAME insertion stuff */
     /**
      * Asks the player his username
      *
@@ -57,7 +334,7 @@ public class TextualUI extends Observable implements Runnable {
     public String askUsername() {
         String username;
         System.out.print("Enter your name: ");
-        Scanner s = new Scanner(System.in);
+
         username = s.nextLine();
         while (!isValidUsername(username)) {
             System.out.println("Invalid username! The username must contains only literals and numbers, the only allowed special characters are \".\", \"-\" and \"_\".\n" +
@@ -66,6 +343,39 @@ public class TextualUI extends Observable implements Runnable {
         }
         return username;
 
+    }
+    /**
+     * Checks whether the given username is valid according to certain criteria.
+     *
+     * @param username the string representing the username to be validated.
+     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
+     * <p>
+     * Criteria for a valid username:
+     * 1. Does not contain any spaces.
+     * 2. Does not start with a special character (-, _, or .).
+     * 3. Does not end with - or .
+     * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
+     */
+    private boolean isValidUsername(String username) {
+        // Check for spaces in username
+        if (username.contains(" ")) {
+            return false;
+        }
+
+        // Check if username starts or ends with a special character or if it is solely composed of numbers
+        char firstChar = username.charAt(0);
+        if (firstChar == '-' || firstChar == '_' || firstChar == '.' || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
+            return false;
+        }
+
+        // Check for non-literal or non-numeric characters other than '-', '_' and '.'
+        String pattern = "[^a-zA-Z0-9\\-_\\.]";
+        if (username.matches(".*" + pattern + ".*")) {
+            return false;
+        }
+
+        // All checks passed, username is valid
+        return true;
     }
 
     /**
@@ -103,7 +413,6 @@ public class TextualUI extends Observable implements Runnable {
     }
 
     //DRAW PHASE stuff
-
     /**
      * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
      *
@@ -112,69 +421,15 @@ public class TextualUI extends Observable implements Runnable {
      * @param bookshelf   player's bookshelf
      * @param maxNumItems max free cells in a single column in player's bookshelf
      */
-    public void askDraw(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
-        //Game game = Game.getInstance();
-        showBookshelf(username, bookshelf);
-        showBoard(board);
-        //showCommonGoals();
-        ArrayList<Square> hand = new ArrayList<>();
-        String continueResponse;
-        Scanner s = new Scanner(System.in);
-        System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, maxNumItems) + " tessere. Di più non riusciresti a inserirne!");
+    public void showDrawInfo(DrawInfoMessage message) {
+        GameView model = message.getModel();
 
-        for (int i = 0; i < Math.min(3, maxNumItems); i++) {
-            System.out.println("Inserisci le coordinate della " + (i + 1) + "° tessera separate da una virgola (es. riga, colonna) :");
-            hand.add(inputCoords(hand, board, i));
-            if (isPossibleToDrawMore(hand, board) && i < 2) {
-                if (maxNumItems > i + 1) {
-                    do {
-                        System.out.println("Vuoi continuare a prendere tessere? (y/n)");
-                        continueResponse = s.nextLine();
-                    } while (!isYesOrNo(continueResponse));
-                    if (isNo(continueResponse)) {
-                        break;
-                    }
-                }
-            } else {
-                break;
-            }
-        }
-        notifyObservers(new DrawTilesMessage(username, hand));
-/*
-        System.out.println("Inserisci le coordinate della prima tessera separate da una virgola (es. riga, colonna) :");
-        hand.add(inputFirstCoords(board));
-        if(isPossibleToDrawMore(hand, board)) {
-            if (maxNumItems > 1) {
-                do {
-                    System.out.println("Vuoi continuare a prendere tessere? (y/n)");
-                    continueResponse = s.nextLine();
-                } while (!isYesOrNo(continueResponse));
-                if (isNo(continueResponse)) {
-                    notifyObserver(new DrawTilesMessage(username, hand));
-                    return;
-                }
-            }
+        showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
+        showBoard(model.getBoard().getGameboard());
+    }
 
-            System.out.println("Inserisci le coordinate della seconda tessera separate da una virgola (es. riga, colonna) :");
-            hand.add(inputCoords(hand, board));
-            if (isPossibleToDrawMore(hand, board)) {
-                if (maxNumItems > 2) {
-                    do {
-                        System.out.println("Vuoi continuare a prendere tessere? (y/n)");
-                        continueResponse = s.nextLine();
-                    } while (!isYesOrNo(continueResponse));
-                    if (isNo(continueResponse)) {
-                        notifyObserver(new DrawTilesMessage(username, hand));
-                        return;
-                    }
-                }
-                System.out.println("Inserisci le coordinate della terza tessera separate da una virgola (es. riga, colonna) :");
-                hand.add(inputCoords(hand, board));
-            }
-        }
-        notifyObserver(new DrawTilesMessage(username, hand));
-        */
-
+    public ClientState getClientState() {
+        return clientState;
     }
 
     /**
@@ -280,7 +535,7 @@ public class TextualUI extends Observable implements Runnable {
      * @return the Square corresponding to the given coordinates
      */
     private Square inputCoords(ArrayList<Square> hand, Square[][] board, int n) {
-        Scanner s = new Scanner(System.in);
+
         String input = s.nextLine();
         while (invalidCoordFormat(input)) {
             System.out.println("Formato non valido! Inserisci le coordinate nel formato: (riga, colonna) :");
@@ -411,7 +666,7 @@ public class TextualUI extends Observable implements Runnable {
 
 
     private int inputColumn(ArrayList<ItemTile> items, ItemTile[][] bookshelf, ArrayList<Integer> columns) {
-        Scanner s = new Scanner(System.in);
+
         String input = s.nextLine();
         while (invalidColumnFormat(input)) {
             System.out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
@@ -614,7 +869,7 @@ public class TextualUI extends Observable implements Runnable {
      */
     public void orderHand(String username, ArrayList<ItemTile> hand) {
         String continueResponse;
-        Scanner s = new Scanner(System.in);
+
         if (hand.size() == 2) {
             System.out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
             continueResponse = s.nextLine();
@@ -657,7 +912,7 @@ public class TextualUI extends Observable implements Runnable {
      * @param hand hand of player
      */
     private void inputOrder(ArrayList<ItemTile> hand, String username) {
-        Scanner s = new Scanner(System.in);
+
         String input = s.nextLine();
         while (invalidOrderFormat(input, 3)) {
             System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
@@ -761,86 +1016,6 @@ public class TextualUI extends Observable implements Runnable {
 
     }
 
-    private void askConnectionCommand() {
-        ConnectionCommand connectionCommand = null;
-
-        System.out.println("help mostra la lista dei comandi");
-        System.out.print(">>> ");
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        String parts[] = input.split(" ");
-
-        for (ConnectionCommand c : ConnectionCommand.values()) {
-            if (parts[0].toUpperCase().equals(c.toString())) {
-                connectionCommand = c;
-                break;
-            }
-        }
-        while (connectionCommand == null) {
-            System.out.println("Comando non valido! ");
-            System.out.println("help mostra la lista dei comandi");
-            System.out.print(">>>  ");
-            input = s.nextLine();
-            parts = input.split(" ");
-            for (ConnectionCommand c : ConnectionCommand.values()) {
-                if (parts[0].toUpperCase().equals(c.toString())) {
-                    connectionCommand = c;
-                    break;
-                }
-            }
-        }
-        switch (connectionCommand) {
-            case HELP:
-                for (ConnectionCommand c : ConnectionCommand.values()) {
-                    System.out.println(c.toString() + " " + c.getDescription());
-                }
-                askConnectionCommand();
-                break;
-            case USERNAME:
-                if (parts.length != 2) {
-                    System.out.println("Comando non valido!");
-                    askConnectionCommand();
-                } else {
-                    if (!isValidUsername(parts[1])) {
-                        System.out.println("Username non valido");
-                        askConnectionCommand();
-                        break;
-                    } else {
-                        System.out.println("Username impostato a " + parts[1]);
-                        notifyObservers(new UsernameRequest(parts[1]));
-                        break;
-                    }
-                }
-                break;
-            case EXIT:
-                //TODO disconnettiti dal server
-                break;
-            case GAMES:
-                notifyObservers(new LobbyListRequest());
-                break;
-            case JOIN:
-                if (parts.length != 2) {
-                    System.out.println("Comando non valido!");
-                    askConnectionCommand();
-                } else {
-                    notifyObservers(new JoinLobbyRequest(parts[1]));
-                }
-                break;
-            case CREATE:
-                if (parts.length != 2) {
-                    System.out.println("Comando non valido!");
-                    askConnectionCommand();
-                } else {
-                    notifyObservers(new CreateLobbyRequest(parts[1]));
-                }
-                break;
-            default:
-                System.err.println("Comando non valido, should never reach this state");
-                break;
-
-        }
-    }
-
     private void showCommonGoals(GameView model) {
         System.out.println("First Common Goal: " + model.getCommonGoals().get(0).toString() +
                 "\nSecond Common Goal: " + model.getCommonGoals().get(1).toString());
@@ -893,113 +1068,70 @@ public class TextualUI extends Observable implements Runnable {
         }else{
             System.out.println("Username " + username+" già in uso! Riprova con un altro username!");
         }
-        askConnectionCommand();
+         
     }
 
     private void showJoinLobbyResponse(boolean successful, String content) {
         System.out.println(content);
-        if(!successful)
-            askConnectionCommand();
-        else
+        if(!successful){
+            System.out.println(content);;
+        }
+        else {
+            setClientState(ClientState.IN_A_LOBBY);
             showEnteredLobby();
+        }
     }
 
     private void showCreateLobbyResponse(boolean successful) {
         if(successful){
+            setClientState(ClientState.IN_A_LOBBY);
             System.out.println("Partita creata con successo!");
             System.out.println("In attesa di altri giocatori...");
-            askLobbyCommand();
+
+              
         }else{
             System.out.println("Partita non creata! Riprova con un altro nome!");
-            askConnectionCommand();
         }
     }
 
     private void showEnteredLobby() {
         System.out.println("Sei entrato nella partita!");
-        askLobbyCommand();
-    }
-
-    private void askLobbyCommand() {
-        LobbyCommand lobbyCommand = null;
-
-        System.out.println("help mostra la lista dei comandi disponibili nella lobby");
-        System.out.print(">>>  ");
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        String[] parts = input.split(" ");
-        for (LobbyCommand c : LobbyCommand.values()) {
-            if (parts[0].toUpperCase().equals(c.toString())) {
-                lobbyCommand = c;
-                break;
-            }
-        }
-        while (lobbyCommand == null) {
-            System.out.println("Comando non valido!");
-            System.out.print(">>>  ");
-            input = s.nextLine();
-            parts = input.split(" ");
-            for (LobbyCommand c : LobbyCommand.values()) {
-                if (parts[0].toUpperCase().equals(c.toString())) {
-                    lobbyCommand = c;
-                    break;
-                }
-            }
-        }
-        switch (lobbyCommand) {
-            case HELP:
-                System.out.println("Lista dei comandi disponibili nella lobby:");
-                for (LobbyCommand c : LobbyCommand.values()) {
-                    System.out.println(c.toString() + " - " + c.getDescription());
-                }
-                askLobbyCommand();
-                break;
-            case START:
-                notifyObservers(new StartGameRequest());
-                break;
-            case EXIT:
-                notifyObservers(new ExitLobbyRequest());
-                //askLobbyCommand();
-                break;
-            case CHAT:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            case READY:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            case UNREADY:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            case KICK:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            case CHANGE_NUMBER_OF_PLAYERS:
-                System.err.println(lobbyCommand.toString() + " not implemented yet");
-                break;
-            default:
-                System.err.println("Comando non valido, should never reach this state");
-                break;
-        }
     }
 
     private void showExitLobbyResponse(boolean successful) {
         if(successful){
             System.out.println("Uscito dalla lobby");
-            askConnectionCommand();
+            setClientState(ClientState.IN_SERVER);
         }else{
             System.out.println("Errore nell'uscire dalla lobby, riprova");
-            askLobbyCommand();
+              
         }
     }
 
+    private void showGameNotReady() {
+        System.out.println("Non ci sono le condizioni per iniziare la partita");
+          
+    }
+
+    private void showNewAdmin(String old_admin, String new_admin) {
+        System.out.println("Il vecchio admin " + old_admin + " è stato rimosso");
+        System.out.println("Il nuovo admin è " + new_admin);
+    }
+
     private void onGameMessage(GameMessage message) {
+        lastMessage = message;
+        setIsActive(message.getUsername().equals(myUsername));
         switch (message.getType()) {
             case GAME_STARTED:
+                setClientState(ClientState.IN_GAME);
                 //showGameStarted(((GameStartedMessage) message).getGameboard());
                 showGameStarted(((GameStartedMessage) message).getGameView());
                 break;
             case NEW_TURN:
+                tilesToInsert.clear();
+                tilesToDraw.clear();
                 showNewTurn(message.getUsername());
+                setActionType(ActionType.NONE);
                 break;
             case BOARD:
                 showBoard(((BoardMessage) message).getBoard());
@@ -1017,13 +1149,29 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case DRAW_INFO:
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
-                //showBookshelf(m1.getUsername(), m1.getBookshelf());
-                //showBoard(m1.getBoard());
-                askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
+                showDrawInfo(m1);
+                if(isActive) {
+                    System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, m1.getMaxNumItems()) + " tessere. Di più non riusciresti a inserirne!");
+                    System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
+                    setActionType(ActionType.DRAW_TILES);
+                }
+                //askDraw(m1.getUsername(), m1.getBoard(), m1.getBookshelf(), m1.getMaxNumItems());
                 break;
             case INSERT_INFO:
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
-                askInsert(m2.getUsername(), m2.getShelfie(), m2.getHand(), m2.getEnabledColumns());
+                tilesToInsert = m2.getHand();
+                showInsertInfo(m2);
+                if(isActive) {
+                    if (m2.getHand().size() == 1) {
+                        System.out.println("Inserisci la colonna in cui vuoi inserire la tessera");
+                        setActionType(ActionType.INSERT_HAND);
+                    }
+                    else {
+                        setActionType(ActionType.ORDER_HAND);
+                        askOrderHand(m2);
+                    }
+                }
+
                 break;
             case ACHIEVED_COMMON_GOAL:
                 AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
@@ -1051,15 +1199,38 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    private void askOrderHand(InsertInfoMessage m2) {
+        if(m2.getHand().size()==2){
+            System.out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
+        } else if(m2.getHand().size()==3){
+            System.out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
+        } else {
+            System.err.println("Hand size illegal");
+        }
+    }
+
+    private void showInsertInfo(InsertInfoMessage m) {
+        System.out.println("Inizia la insert phase\n");
+        showBookshelf(m.getUsername(), m.getShelfie());
+        showHand(m.getUsername(), tilesToInsert);
+    }
+
+    private void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    private void setActionType(ActionType actionType) {
+        this.actionType = actionType;
+    }
+
     private void onConnectionMessage(ConnectionMessage message) {
         switch (message.getType()){
             case CONNECTED_TO_SERVER:
                 showConnectedToServer();
-                askConnectionCommand();
+                setClientState(ClientState.IN_SERVER);
                 break;
             case LOBBY_LIST_RESPONSE:
                 showLobbyList(((LobbyListResponse) message).getLobbies());
-                askConnectionCommand();
                 break;
             case CREATE_LOBBY_RESPONSE:
                 showCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
@@ -1068,6 +1239,7 @@ public class TextualUI extends Observable implements Runnable {
                 showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
                 break;
             case USERNAME_RESPONSE:
+                this.myUsername = ((UsernameResponse) message).getUsername();
                 showUsernameResponse(((UsernameResponse) message).isSuccessful(), ((UsernameResponse) message).getUsername());
                 break;
             default:
@@ -1094,16 +1266,6 @@ public class TextualUI extends Observable implements Runnable {
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
                 break;
         }
-    }
-
-    private void showGameNotReady() {
-        System.out.println("Non ci sono le condizioni per iniziare la partita");
-        askLobbyCommand();
-    }
-
-    private void showNewAdmin(String old_admin, String new_admin) {
-        System.out.println("Il vecchio admin " + old_admin + " è stato rimosso");
-        System.out.println("Il nuovo admin è " + new_admin);
     }
 
     public void update(Message message) {
