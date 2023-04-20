@@ -28,6 +28,11 @@ public class Lobby {
         addClient(admin);
     }
 
+    /**
+     * @param client the client that wants to join the lobby
+     * @throws ClientAlreadyInLobbyException if the client is already in the lobby
+     * @throws FullLobbyException if the lobby is full
+     */
     public void addClient(Client client) throws ClientAlreadyInLobbyException, FullLobbyException{
         if(inLobbyClients.contains(client))
             throw new ClientAlreadyInLobbyException();
@@ -51,26 +56,45 @@ public class Lobby {
         }
     }
 
+    /**
+     * @return the admin of the lobby
+     */
     public Client getAdmin() {
         return admin;
     }
 
+    /**
+     * @return the name of the lobby
+     */
     public String getName() {
         return lobbyName;
     }
 
+    /**
+     * @return the list of clients in the lobby
+     */
     public ArrayList<Client> getInLobbyClients() {
         return inLobbyClients;
     }
 
+    /**
+     * @return the number of clients in the lobby
+     */
     public int getNumClients() {
         return inLobbyClients.size();
     }
 
+    /**
+     * @return the number of players chosen for the game
+     */
     public int getChosenNumOfPlayers() {
         return model.getChosenPlayersNumber();
     }
 
+    /**
+     * Removes a client from the lobby
+     * @param client the client to remove
+     */
     public void removeClient(Client client) {
         inLobbyClients.remove(client);
         server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);
@@ -88,8 +112,11 @@ public class Lobby {
             server.getLobbies().remove(this);
         }
         //TODO remove observer
-}
+    }
 
+    /**
+     * Starts the game
+     */
     public void startGame() {
         try {
             controller.startGame();
@@ -103,7 +130,10 @@ public class Lobby {
             }
         }
     }
-
+    /**
+     * Changes the number of players chosen for the game
+     * @param chosenNum the new number of players
+     */
     public void changeChosenNumOfPlayers(int chosenNum){
         try {
             controller.changeChosenNumOfPlayers(chosenNum);
@@ -116,6 +146,9 @@ public class Lobby {
         }
     }
 
+    /**
+     * @return the game controller
+     */
     public GameController getController() {
         return controller;
     }

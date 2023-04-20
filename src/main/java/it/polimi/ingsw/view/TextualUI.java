@@ -72,6 +72,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates the input from the user when the client is in a game
+     * @param input
+     */
     private void elaborateGameCommand(String input) {
         switch(actionType){
             case DRAW_TILES:
@@ -94,6 +98,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates the input from the user when insertion info is expected
+     * @param input the input from the user
+     */
     private void elaborateInsertHand(String input) {
         if(inputValidator.invalidColumnFormat(input)){
             System.out.println("Formato non valido! Inserisci la colonna nel formato: (colonna) :");
@@ -112,6 +120,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates the input from the user when info for reordering three tile in the hand is expected
+     * @param input the input from the user
+     */
     private void elaborateReorderThreeTiles(String input) {
         if(InputValidator.invalidOrderFormat(input, 3)){
             System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
@@ -143,6 +155,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates the input from the user when info for ordering the hand is expected
+     * @param input the input from the user
+     */
     private void elaborateOrderHandInput(String input) {
         if(!InputValidator.isYesOrNo(input)){
             System.out.println("Risposta non valida! Inserisci 'y' o 'n'");
@@ -168,6 +184,12 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates the input from the user when info for drawing tiles is expected
+     * @param input the input from the user
+     * @param model the model of the game
+     * @param maxNumItems the maximum number of items that can be drawn
+     */
     private void elaborateDrawInput(String input, GameView model, int maxNumItems) {
         Square[][] board = model.getBoard().getGameboard();
         if(tilesToDraw.size() > 0 &&  input.equalsIgnoreCase("ok")){
@@ -203,6 +225,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates a LobbyCommand from the user
+     * @param input the input from the user
+     */
     private void elaborateLobbyCommand(String input) {
         String[] parts = input.split(" ");
         LobbyCommand lobbyCommand = null;
@@ -253,6 +279,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Elaborates a ConnectionCommand from the user
+     * @param input the input from the user
+     */
     private void elaborateConnectionCommand(String input) {
         String[] parts = input.split(" ");
         ConnectionCommand command = null;
@@ -314,10 +344,17 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Sets the client state
+     * @param clientState the client state
+     */
     public void setClientState(ClientState clientState) {
         this.clientState = clientState;
     }
+
+
     //DRAW PHASE stuff
+
     /**
      * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
      *
@@ -500,10 +537,22 @@ public class TextualUI extends Observable implements Runnable {
     }
 
 
+    /**
+     * Prints the number of points scored by the player when he/she has achieved a common goal
+     * @param username player's username
+     * @param goal common goal achieved
+     * @param points points scored
+     */
     private void showAchievedCommonGoal(String username, CommonGoalCard goal, int points) {
         System.out.println("Player " + username + " has achieved the common goal " + goal + " and has earned " + points + " points!");
     }
 
+    /**
+     * Prints the contents of a player's hand.
+     *
+     * @param username the name of the player whose hand is being displayed
+     * @param hand the ArrayList of ItemTiles representing the player's hand
+     */
     public void showHand(String username, ArrayList<ItemTile> hand) {
         System.out.println("Hand of player " + username);
         for (ItemTile item : hand) {
@@ -512,6 +561,11 @@ public class TextualUI extends Observable implements Runnable {
         System.out.println();
     }
 
+    /**
+     * Displays a message indicating that the game has started, the game board, the common goals, and the leaderboard.
+     *
+     * @param model The GameView object containing information about the game.
+     */
     private void showGameStarted(GameView model) {
         System.out.println("######################################\n" +
                 "#        La partita è iniziata!      #\n" +
@@ -521,12 +575,22 @@ public class TextualUI extends Observable implements Runnable {
         showLeaderboard(model.getLeaderboard());
     }
 
+    /**
+     * Displays a message indicating that a new turn has started for a specific user.
+     *
+     * @param username The username of the user whose turn it is.
+     */
     private void showNewTurn(String username) {
         System.out.println("######################################\n" +
                 "    E' il turno di " + username + "\t\n" +           //migliorabile
                 "######################################");
     }
 
+    /**
+     * Displays the leaderboard with each player's rank, username, and score.
+     *
+     * @param sortedMap A LinkedHashMap containing players' usernames and scores sorted in descending order.
+     */
     public void showLeaderboard(LinkedHashMap<String, Integer> sortedMap) {
         int rank = 1;
         System.out.println("Leaderboard :");
@@ -536,28 +600,49 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Displays a message indicating that the client has successfully connected to the server.
+     */
     private void showConnectedToServer() {
         System.out.println("Connesso al server!");
 
     }
-
+    /**
+     * Prints the first and second common goals from the provided GameView object.
+     *
+     * @param model The GameView object containing the common goals to display.
+     */
     private void showCommonGoals(GameView model) {
         System.out.println("First Common Goal: " + model.getCommonGoals().get(0).toString() +
                 "\nSecond Common Goal: " + model.getCommonGoals().get(1).toString());
     }
-
+    /**
+     * Prints a message with the username and points obtained for a personal goal.
+     *
+     * @param message The PersonalGoalPointsMessage object containing the username and points to display.
+     */
     private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         System.out.println("######################################\n" +
                 message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
                 "######################################");
     }
 
+    /**
+     * Prints a message with the username and points obtained for adjacent items in the library.
+     *
+     * @param message The AdjacentItemsPointsMessage object containing the username and points to display.
+     */
     private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
         System.out.println("######################################\n" +
                 message.getUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
                 "######################################");
     }
 
+    /**
+     * Prints a message indicating that the current turn is the last turn of the game for the provided player.
+     *
+     * @param message The LastTurnMessage object containing the username of the player who triggered the last turn.
+     */
     private void showLastTurn(LastTurnMessage message) {
         System.out.println("######################################\n" +
                 message.getUsername() + " ha riempito la sua libreria!\n" +
@@ -565,6 +650,11 @@ public class TextualUI extends Observable implements Runnable {
                 "######################################");
     }
 
+    /**
+     * Prints the end game message as well as the leaderboard and the winner of the game.
+     *
+     * @param ranking The LinkedHashMap object containing the ranking and scores of all players.
+     */
     private void showEndGame(LinkedHashMap<String, Integer> ranking) {
         System.out.println("######################################\n" +
                 "#        La partita è finita         #\n" +
@@ -574,6 +664,11 @@ public class TextualUI extends Observable implements Runnable {
 
     }
 
+    /**
+     * Displays a list of available game lobbies.
+     *
+     * @param lobbies HashMap containing the available game lobbies.
+     */
     private void showLobbyList(HashMap<String, Map.Entry<Integer, Integer>> lobbies) {
         System.out.println("Lista delle partite disponibili:");
         if(lobbies.size()==0){
@@ -586,7 +681,12 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
-
+    /**
+     * Displays the response for changing a username.
+     *
+     * @param successful A boolean indicating if the username change was successful or not.
+     * @param username The new username.
+     */
     private void showUsernameResponse(boolean successful, String username) {
         if(successful){
             System.out.println("Username cambiato in " + username + "!");
@@ -596,6 +696,12 @@ public class TextualUI extends Observable implements Runnable {
          
     }
 
+    /**
+     * Shows the response of joining a lobby
+     *
+     * @param successful a boolean to indicate if the joining was successful.
+     * @param content    the string content of the response
+     */
     private void showJoinLobbyResponse(boolean successful, String content) {
         System.out.println(content);
         if(!successful){
@@ -607,6 +713,11 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Prints the response of creating a lobby
+     *
+     * @param successful a boolean to indicate if the creation was successful.
+     */
     private void printCreateLobbyResponse(boolean successful) {
         if(successful){
             setClientState(ClientState.IN_A_LOBBY);
@@ -619,10 +730,19 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Prints a message to confirm the client has entered a lobby
+     */
     private void printEnteredLobby() {
         System.out.println("Sei entrato nella partita!");
     }
 
+    /**
+     * Displays a response indicating if the user has successfully exited the lobby.
+     * If successful, update the client state to IN_SERVER.
+     *
+     * @param successful a boolean indicating if the exit was successful or not
+     */
     private void showExitLobbyResponse(boolean successful) {
         if(successful){
             System.out.println("Uscito dalla lobby");
@@ -633,22 +753,76 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Displays a message indicating that the game is not ready to start.
+     */
     private void showGameNotReady() {
         System.out.println("Non ci sono le condizioni per iniziare la partita");
 
     }
 
+    /**
+     * Shows a message indicating that the command entered is invalid.
+     */
     private void showInvalidCommand() {
         System.out.println("Il comando è invalido");
     }
 
+    /**
+     * Shows a message indicating that the user is not the admin.
+     */
     private void showNotAdmin() {
         System.out.println("You are not the admin.");
     }
 
+    /**
+     * Shows a message indicating that the old admin has been removed and a new admin has been set.
+     * @param old_admin The username of the old admin that was removed.
+     * @param new_admin The username of the new admin that has been set.
+     */
     private void showNewAdmin(String old_admin, String new_admin) {
         System.out.println("Il vecchio admin " + old_admin + " è stato rimosso");
         System.out.println("Il nuovo admin è " + new_admin);
+    }
+
+    /**
+     * Asks the user whether they want to change or reverse the order of tiles in their hand.
+     * @param m2 The message containing the player's current hand.
+     */
+    private void askOrderHand(InsertInfoMessage m2) {
+        if(m2.getHand().size()==2){
+            System.out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
+        } else if(m2.getHand().size()==3){
+            System.out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
+        } else {
+            System.err.println("Hand size illegal");
+        }
+    }
+
+    /**
+     * Displays information about the current insert phase, including the player's bookshelf and hand.
+     * @param m The message containing the player's username, bookshelf, and hand.
+     */
+    private void showInsertInfo(InsertInfoMessage m) {
+        System.out.println("Inizia la insert phase\n");
+        showBookshelf(m.getUsername(), m.getShelfie());
+        showHand(m.getUsername(), tilesToInsert);
+    }
+
+    /**
+     * Sets whether the player is currently active (i.e. it is their turn).
+     * @param isActive True if the player is active, false otherwise.
+     */
+    private void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    /**
+     * Sets the action type
+     * @param actionType the action type
+     */
+    private void setActionType(ActionType actionType) {
+        this.actionType = actionType;
     }
 
     private void onGameMessage(GameMessage message) {
@@ -727,30 +901,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
-    private void askOrderHand(InsertInfoMessage m2) {
-        if(m2.getHand().size()==2){
-            System.out.println("Vuoi invertire l'ordine delle tessere? (y/n)");
-        } else if(m2.getHand().size()==3){
-            System.out.println("Vuoi cambiare l'ordine delle tessere? (y/n)");
-        } else {
-            System.err.println("Hand size illegal");
-        }
-    }
-
-    private void showInsertInfo(InsertInfoMessage m) {
-        System.out.println("Inizia la insert phase\n");
-        showBookshelf(m.getUsername(), m.getShelfie());
-        showHand(m.getUsername(), tilesToInsert);
-    }
-
-    private void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    private void setActionType(ActionType actionType) {
-        this.actionType = actionType;
-    }
-
+    /**
+     * Handles a ConnectionMessage
+     * @param message
+     */
     private void onConnectionMessage(ConnectionMessage message) {
         switch (message.getType()){
             case CONNECTED_TO_SERVER:
@@ -776,6 +930,10 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Handles a LobbyMessage
+     * @param message the message to handle
+     */
     private void onLobbyMessage(LobbyMessage message) {
         switch(message.getType()){
             case EXIT_LOBBY_RESPONSE:

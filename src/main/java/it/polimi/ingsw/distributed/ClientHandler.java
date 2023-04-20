@@ -14,6 +14,11 @@ public class ClientHandler {
         this.server = server;
     }
 
+    /**
+     * Handles a message received from a client not in a lobby
+     * @param client the client that sent the message
+     * @param message the message received
+     */
     public void onConnectionMessage(Client client, ConnectionMessage message) {
         switch(message.getType()) {
             case LOBBY_LIST_REQUEST:
@@ -85,6 +90,11 @@ public class ClientHandler {
         }
     }
 
+    /**
+     * Handles lobby messages
+     * @param client the client that sent the message
+     * @param message the message
+     */
     public void onLobbyMessage(Client client, LobbyMessage message) {
         Client admin = server.getLobbyOfClient(client).getAdmin();
         switch (message.getType()){

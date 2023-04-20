@@ -13,9 +13,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Game extends Observable {
-    //NOTE : creo il campo instance rendendo Game un singleton perché devo poi permettere al game di avere un solo controller che lo comandi (o è un bordello)
-    private static Game instance;
-
     private static final int MAX_PLAYERS = 4;
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;
@@ -52,26 +49,6 @@ public class Game extends Observable {
         chosenNumOfPlayers=2; //andrà rimosso, solo per testing
         personalGoals = new HashMap<>();
     }
-    /**
-     *
-     * @return the singleton instance of the game
-     */
-    /*
-    public static Game getInstance() {
-        if(instance == null)
-            instance = new Game();
-        return instance;
-    }
-    */
-
-    /**
-     * Resets the game instance, all game data is lost after this operation.
-     */
-    /*
-    public static void resetInstance(){
-        Game.instance=null;
-    }
-    */
 
 
     /**
