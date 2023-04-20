@@ -258,7 +258,7 @@ public class TextualUI extends Observable implements Runnable {
                         return;
                     } else if(!invalidNumOfPlayersFormat(parts[1])){
                         int chosenNum = Integer.parseInt(parts[1].trim());
-                        System.out.println("Numero di giocatori cambiato a " + chosenNum);
+                        System.out.println("Numero di giocatori cambiato a " + chosenNum); //da spostare. non va bene perchè lo fa anche quando il controllo lato server va male
                         notifyObservers(new ChangeNumOfPlayerRequest(chosenNum));
                     }else{
                         System.out.println("Numero non valido!");
@@ -1091,13 +1091,21 @@ public class TextualUI extends Observable implements Runnable {
             setClientState(ClientState.IN_SERVER);
         }else{
             System.out.println("Errore nell'uscire dalla lobby, riprova");
-              
+
         }
     }
 
     private void showGameNotReady() {
         System.out.println("Non ci sono le condizioni per iniziare la partita");
-          
+
+    }
+
+    private void showInvalidComand() {
+        System.out.println("Il comando è invalido");
+    }
+
+    private void showNotAdmin() {
+        System.out.println("You are not the admin.");
     }
 
     private void showNewAdmin(String old_admin, String new_admin) {
@@ -1252,14 +1260,13 @@ public class TextualUI extends Observable implements Runnable {
             case NOT_ADMIN:
                 showNotAdmin();
                 break;
+            case INVALID_COMAND:
+                showInvalidComand();
+                break;
             default:
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
                 break;
         }
-    }
-
-    private void showNotAdmin() {
-        System.out.println("You are not the admin.");
     }
 
     public void update(Message message) {

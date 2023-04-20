@@ -2,11 +2,9 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
-import it.polimi.ingsw.model.exceptions.FullLobbyException;
-import it.polimi.ingsw.model.exceptions.GameNotReadyException;
-import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.message.lobbymessage.GameNotReadyMessage;
+import it.polimi.ingsw.network.message.lobbymessage.InvalidComandMessage;
 import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
 
 import java.rmi.RemoteException;
@@ -107,7 +105,15 @@ public class Lobby {
     }
 
     public void changeMaxNumClients(int chosenNum){
-        controller.changeNumOfPlayers(chosenNum);
+        try {
+            controller.changeNumOfPlayers(chosenNum);
+        } catch (InvalidComandException e){
+            try {
+                admin.update(new InvalidComandMessage());
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     public GameController getController() {
