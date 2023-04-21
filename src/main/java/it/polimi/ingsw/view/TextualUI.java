@@ -1,14 +1,10 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameController;
-import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.network.message.lobbymessage.*;
-import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
-import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
@@ -26,6 +22,7 @@ import java.util.*;
 public class TextualUI extends Observable implements Runnable {
 
     private final InputValidator inputValidator = new InputValidator();
+    private final Printer printer = new Printer();
     private ClientState clientState;
 
     private ActionType actionType;
@@ -42,6 +39,14 @@ public class TextualUI extends Observable implements Runnable {
         tilesToInsert = new ArrayList<>();
     }
 
+
+    /**
+
+     As an implementation of Runnable interface, this method is the entry point of a new thread.
+     It prompts the user to enter their username and validates it.
+     If the entered username is not valid, it keeps prompting until a valid username is entered.
+     Once a valid username is entered, it notifies its observers with a UsernameRequest object
+     and calls inputListener method. */
     @Override
     public void run() {
         String input;
@@ -59,6 +64,11 @@ public class TextualUI extends Observable implements Runnable {
         inputListener();
     }
 
+    /**
+     * Listens for user input and processes it until the program is terminated.
+     * Prompts the user with the ">>>" symbol to indicate that input is expected.
+     * The input is passed to the elaborateInput() method for processing.
+     */
     public void inputListener(){
         String input;
         while (true) {
@@ -144,7 +154,7 @@ public class TextualUI extends Observable implements Runnable {
     private void elaborateReorderThreeTiles(String input) {
         if(InputValidator.invalidOrderFormat(input, 3)){
             System.out.println("Formato non valido! Questo è l'ordine delle tessere che hai in mano :");
-            showHand(myUsername, tilesToInsert);
+            printer.showHand(myUsername, tilesToInsert);
             System.out.println("Inserisci il nuovo ordine della mano: (ad es. 2,1,3 metterà la tessera 2 in prima posizione, la 1 in seconda e la 3 in terza posizione)");
             return;
         }
@@ -165,7 +175,7 @@ public class TextualUI extends Observable implements Runnable {
             } else {
                 Collections.swap(tilesToInsert, third - 1, 2);
             }
-            showHand(myUsername,tilesToInsert);
+            printer.showHand(myUsername, tilesToInsert);
             System.out.println("Vuoi cambiare ancora l'ordine delle tessere? (y/n)");
             setActionType(ActionType.ORDER_HAND);
             return;
@@ -183,7 +193,7 @@ public class TextualUI extends Observable implements Runnable {
         }else if(inputValidator.isYes(input)){
             if(tilesToInsert.size() == 2){
                 Collections.swap(tilesToInsert, 1, 0);
-                showHand(myUsername, tilesToInsert);
+                printer.showHand(myUsername, tilesToInsert);
                 System.out.println("Vuoi invertire ancora l'ordine delle tessere? (y/n)");
                 return;
             }else if(tilesToInsert.size()==3){
@@ -353,18 +363,23 @@ public class TextualUI extends Observable implements Runnable {
         }
     }
 
-    private boolean elaborateUsernameCommand(String[] parts) {
+    /**
+     * Processes and executes the "username" command, which sets a new username for the user.
+     *
+     * @param parts An array containing the command and its argument, which should be the new username.
+     */
+    private void elaborateUsernameCommand(String[] parts) {
         if (parts.length != 2) {
             System.out.println("Comando non valido!");
-            return false;
+            return;
         } else {
             if (!inputValidator.isValidUsername(parts[1])) {
                 System.out.println("Username non valido");
-                return false;
+                return;
             } else {
                 System.out.println("Username impostato a " + parts[1]);
                 notifyObservers(new UsernameRequest(parts[1]));
-                return true;
+                return;
             }
         }
     }
@@ -384,11 +399,11 @@ public class TextualUI extends Observable implements Runnable {
      * Shows the board, the player's bookshelf and proceeds asking the player to insert the coordinates of the tiles he wants to pick.
      *
      */
-    public void showDrawInfo(DrawInfoMessage message) {
+    private void showDrawInfo(DrawInfoMessage message) {
         GameView model = message.getModel();
 
-        showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
-        showBoard(model.getBoard().getGameboard());
+        printer.showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
+        printer.showBoard(model.getBoard().getGameboard());
     }
 
     public ClientState getClientState() {
@@ -403,7 +418,7 @@ public class TextualUI extends Observable implements Runnable {
      * @param bookshelf   player's bookshelf
      * @param maxNumItems max num of items the player can draw according to its bookshelf
      */
-    public void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
+    private void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
         System.out.println("Invalid draw request! It seems like your client misbehaved... " +
                 "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draware invalid!");
         //showDrawInfo(username, board, bookshelf, maxNumItems);
@@ -411,413 +426,6 @@ public class TextualUI extends Observable implements Runnable {
 
     //INSERT PHASE stuff
 
-    /**
-     * Prints the numbers from 0 to the passed parameter-1 as column indexes (separated by 5 spaces each)
-     *
-     * @param columns number of columns to print
-     */
-    private void printColumnIndexes(int columns) {
-        System.out.print("       ");
-        for (int i = 0; i < columns; i++) {
-            System.out.print("  " + i + "   ");
-        }
-        System.out.print("\n");
-    }
-
-    /**
-     * @param type ItemType
-     * @return the ESC ColorCode to paint the background accordingly to the ItemType received
-     */
-    private String paintBG(ItemType type) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        Color c;
-        switch (type) {
-            case CAT:
-                c = Color.GREEN;
-                break;
-            case PLANT:
-                c = Color.FUCSIA;
-                break;
-            case FRAME:
-                c = Color.BLUE;
-                break;
-            case GAME:
-                c = Color.YELLOW_BOLD;
-                break;
-            case TROPHY:
-                c = Color.CYAN_BOLD;
-                break;
-            case BOOK:
-                c = Color.WHITE;
-                break;
-            default:
-                c = Color.NO_COLOR;
-                break;
-        }
-        return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
-
-    }
-
-    /**
-     * @param type ItemType
-     * @return the ESC ColorCode to paint the foreground accordingly to the ItemType received
-     */
-    private String paintFG(ItemType type) {
-        StringBuilder stringBuilder = new StringBuilder();
-        Color c;
-        switch (type) {
-            case CAT:
-                c = Color.WGREEN;
-                break;
-            case PLANT:
-                c = Color.WFUCSIA;
-                break;
-            case FRAME:
-                c = Color.WBLUE;
-                break;
-            case GAME:
-                c = Color.WYELLOW_BOLD;
-                break;
-            case TROPHY:
-                c = Color.WCYAN_BOLD;
-                break;
-            case BOOK:
-                c = Color.WWHITE;
-                break;
-            default:
-                c = Color.NO_COLOR;
-                break;
-        }
-        return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
-
-    }
-
-    /**
-     * Prints the GameBoard
-     *
-     * @param board matrix of Squares to print
-     */
-    private void showBoard(Square[][] board) {
-        System.out.println("Game Board:");
-        printColumnIndexes(Board.DIMENSIONS);
-        StringBuilder strBoard = new StringBuilder();
-        for (int i = 0; i < Board.DIMENSIONS; i++) {
-            strBoard.append("      ");
-            for (int j = 0; j < Board.DIMENSIONS; j++) {
-                strBoard.append("+-----");
-            }
-            strBoard.append("+\n");
-            strBoard.append("  ").append(i).append("   |");
-            for (int j = 0; j < Board.DIMENSIONS; j++) {
-                //strBoard.append("  ");
-                if (board[i][j].isPickable()) {
-                    //strBoard.append(board[i][j].getItem().toColorString());
-                    strBoard.append(paintBG(board[i][j].getItem().getType()));
-                } else {
-                    //strBoard.append("  ").append(board[i][j].getItem()).append("  ");
-                    strBoard.append(paintFG(board[i][j].getItem().getType()));
-                }
-                //strBoard.append("  |");
-                strBoard.append("|");
-            }
-            strBoard.append("\n");
-        }
-        strBoard.append("      ");
-        for (int j = 0; j < Board.DIMENSIONS; j++) {
-            strBoard.append("+-----");
-        }
-        strBoard.append("+");
-        System.out.println(strBoard);
-    }
-
-    /**
-     * Prints the bookshelf of the player
-     *
-     * @param username username of the player whose bookshelf is printed
-     * @param shelfie  matrix of ItemTiles
-     */
-    public void showBookshelf(String username, ItemTile[][] shelfie) {
-        System.out.println("BookShelf of player " + username);
-        printColumnIndexes(Bookshelf.Columns);
-        StringBuilder strShelf = new StringBuilder();
-        for (int i = 0; i < Bookshelf.Rows; i++) {
-            strShelf.append("      ");
-            for (int j = 0; j < Bookshelf.Columns; j++) {
-                strShelf.append("+-----");
-            }
-            strShelf.append("+\n");
-            strShelf.append("  ").append(i).append("   |");
-            for (int j = 0; j < Bookshelf.Columns; j++) {
-                strShelf.append(paintFG(shelfie[i][j].getType())).append("|");
-            }
-            strShelf.append("\n");
-        }
-        strShelf.append("      ");
-        for (int j = 0; j < Bookshelf.Columns; j++) {
-            strShelf.append("+-----");
-        }
-        strShelf.append("+");
-        System.out.println(strShelf);
-    }
-
-
-    /**
-     * Prints the number of points scored by the player when he/she has achieved a common goal
-     * @param message the message containing the number of points scored
-     */
-    private void showAchievedCommonGoal(AchievedCommonGoalMessage message) {
-        System.out.println(message.getContent());
-    }
-
-    /**
-     * Prints the contents of a player's hand.
-     *
-     * @param username the name of the player whose hand is being displayed
-     * @param hand the ArrayList of ItemTiles representing the player's hand
-     */
-    public void showHand(String username, ArrayList<ItemTile> hand) {
-        System.out.println("Hand of player " + username);
-        for (ItemTile item : hand) {
-            System.out.print(" " + paintFG(item.getType()) + " ");
-        }
-        System.out.println();
-    }
-
-    /**
-     * Displays a message indicating that the game has started, the game board, the common goals, and the leaderboard.
-     *
-     * @param model The GameView object containing information about the game.
-     */
-    private void showGameStarted(GameView model) {
-        System.out.println("######################################\n" +
-                "#        La partita è iniziata!      #\n" +
-                "######################################");
-        showBoard(model.getBoard().getGameboard());
-        showCommonGoals(model);
-        showLeaderboard(model.getLeaderboard());
-    }
-
-    /**
-     * Displays a message indicating that a new turn has started for a specific user.
-     *
-     * @param username The username of the user whose turn it is.
-     */
-    private void showNewTurn(String username) {
-        System.out.println("######################################\n" +
-                "    E' il turno di " + username + "\t\n" +           //migliorabile
-                "######################################");
-    }
-
-    /**
-     * Displays the leaderboard with each player's rank, username, and score.
-     *
-     * @param sortedMap A LinkedHashMap containing players' usernames and scores sorted in descending order.
-     */
-    public void showLeaderboard(LinkedHashMap<String, Integer> sortedMap) {
-        int rank = 1;
-        System.out.println("Leaderboard :");
-        for (String key : sortedMap.keySet()) {
-            System.out.println("#" + rank + ". " + key + " : " + sortedMap.get(key));
-            rank++;
-        }
-    }
-
-    /**
-     * Displays a message indicating that the client has successfully connected to the server.
-     */
-    private void showConnectedToServer() {
-        System.out.println("Connesso al server!");
-
-    }
-    /**
-     * Prints the first and second common goals from the provided GameView object.
-     *
-     * @param model The GameView object containing the common goals to display.
-     */
-    private void showCommonGoals(GameView model) {
-        System.out.println("First Common Goal: " + model.getCommonGoals().get(0).toString() +
-                "\nSecond Common Goal: " + model.getCommonGoals().get(1).toString());
-    }
-    /**
-     * Prints a message with the username and points obtained for a personal goal.
-     *
-     * @param message The PersonalGoalPointsMessage object containing the username and points to display.
-     */
-    private void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
-        System.out.println("######################################\n" +
-                message.getPlayerUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
-                "######################################");
-    }
-
-    /**
-     * Prints a message with the username and points obtained for adjacent items in the library.
-     *
-     * @param message The AdjacentItemsPointsMessage object containing the username and points to display.
-     */
-    private void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
-        System.out.println("######################################\n" +
-                message.getPlayerUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
-                "######################################");
-    }
-
-    /**
-     * Prints a message indicating that the current turn is the last turn of the game for the provided player.
-     *
-     * @param message The LastTurnMessage object containing the username of the player who triggered the last turn.
-     */
-    private void showLastTurn(LastTurnMessage message) {
-        System.out.println("######################################\n" +
-                message.getCurrentPlayer() + " ha riempito la sua libreria!\n" +
-                "Questo è l'ultimo giro di gioco!\n" +
-                "######################################");
-    }
-
-    /**
-     * Prints the end game message as well as the leaderboard and the winner of the game.
-     *
-     * @param ranking The LinkedHashMap object containing the ranking and scores of all players.
-     */
-    private void showEndGame(LinkedHashMap<String, Integer> ranking) {
-        System.out.println("######################################\n" +
-                "#        La partita è finita         #\n" +
-                "######################################");
-        showLeaderboard(ranking);
-        System.out.println("Il vincitore della partita è " + ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
-
-    }
-
-    /**
-     * Displays a list of available game lobbies.
-     *
-     * @param lobbies HashMap containing the available game lobbies.
-     */
-    private void showLobbyList(HashMap<String, Map.Entry<Integer, Integer>> lobbies) {
-        System.out.println("Lista delle partite disponibili:");
-        if(lobbies.size()==0){
-            System.out.println("Non ci sono partite disponibili! Usa il comando create per crearne una nuova!");
-        }
-        else{
-            for (String key : lobbies.keySet()) {
-                System.out.println("Nome partita: " + key + " | Numero giocatori: " + lobbies.get(key).getKey() + "/" + lobbies.get(key).getValue());
-            }
-        }
-    }
-
-    /**
-     * Displays the response for changing a username.
-     *
-     * @param successful A boolean indicating if the username change was successful or not.
-     * @param username The new username.
-     */
-    private void showUsernameResponse(boolean successful, String username) {
-        if(successful){
-            System.out.println("Username cambiato in " + username + "!");
-        }else{
-            System.out.println("Username " + username+" già in uso! Riprova con un altro username!");
-        }
-         
-    }
-
-    /**
-     * Shows the response of joining a lobby
-     *
-     * @param successful a boolean to indicate if the joining was successful.
-     * @param content    the string content of the response
-     */
-    private void showJoinLobbyResponse(boolean successful, String content) {
-        System.out.println(content);
-        if(!successful){
-            System.out.println(content);
-        }
-        else {
-            setClientState(ClientState.IN_A_LOBBY);
-            printEnteredLobby();
-        }
-    }
-
-    /**
-     * Prints the response of creating a lobby
-     *
-     * @param successful a boolean to indicate if the creation was successful.
-     */
-    private void printCreateLobbyResponse(boolean successful) {
-        if(successful){
-            setClientState(ClientState.IN_A_LOBBY);
-            System.out.println("Partita creata con successo!");
-            System.out.println("In attesa di altri giocatori...");
-
-              
-        }else{
-            System.out.println("Partita non creata! Riprova con un altro nome!");
-        }
-    }
-
-    /**
-     * Prints a message to confirm the client has entered a lobby
-     */
-    private void printEnteredLobby() {
-        System.out.println("Sei entrato nella partita!");
-    }
-
-    /**
-     * Displays a response indicating if the user has successfully exited the lobby.
-     * If successful, update the client state to IN_SERVER.
-     *
-     * @param successful a boolean indicating if the exit was successful or not
-     */
-    private void showExitLobbyResponse(boolean successful) {
-        if(successful){
-            System.out.println("Uscito dalla lobby");
-            setClientState(ClientState.IN_SERVER);
-        }else{
-            System.out.println("Errore nell'uscire dalla lobby, riprova");
-
-        }
-    }
-
-    /**
-     * Displays a message indicating that the game is not ready to start.
-     */
-    private void showGameNotReady() {
-        System.out.println("Non ci sono le condizioni per iniziare la partita");
-
-    }
-
-    /**
-     * Shows a message indicating that the command entered is invalid.
-     */
-    private void showInvalidCommand() {
-        System.out.println("Il comando è invalido");
-    }
-
-    /**
-     * Shows a message indicating that the user is not the admin.
-     */
-    private void showNotAdmin() {
-        System.out.println("You are not the admin.");
-    }
-
-    /**
-     * Shows a message indicating that the old admin has been removed and a new admin has been set.
-     * @param old_admin The username of the old admin that was removed.
-     * @param new_admin The username of the new admin that has been set.
-     */
-    private void showNewAdmin(String old_admin, String new_admin) {
-        System.out.println("Il vecchio admin " + old_admin + " è stato rimosso");
-        System.out.println("Il nuovo admin è " + new_admin);
-    }
-
-    private void showPlayerListResponse(ArrayList<String> clients) {
-        System.out.println("Lista dei giocatori nella lobby:");
-        for (String client : clients) {
-            if(client.equals(clients.get(0)))
-                System.out.print(Color.REDTEXT + client + Color.NO_COLOR + "\t");
-            else{
-                System.out.print(client + "\t");
-            }
-        }
-    }
 
     /**
      * Asks the user whether they want to change or reverse the order of tiles in their hand.
@@ -839,8 +447,8 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void showInsertInfo(InsertInfoMessage m) {
         System.out.println("Inizia la insert phase\n");
-        showBookshelf(m.getUsername(), m.getShelfie());
-        showHand(m.getUsername(), tilesToInsert);
+        printer.showBookshelf(m.getUsername(), m.getShelfie());
+        printer.showHand(m.getUsername(), tilesToInsert);
     }
 
     /**
@@ -870,23 +478,23 @@ public class TextualUI extends Observable implements Runnable {
             case GAME_STARTED:
                 setClientState(ClientState.IN_GAME);
                 //showGameStarted(((GameStartedMessage) message).getGameboard());
-                showGameStarted(((GameStartedMessage) message).getGameView());
+                printer.showGameStarted(((GameStartedMessage) message).getGameView());
                 break;
             case NEW_TURN:
                 tilesToInsert.clear();
                 tilesToDraw.clear();
-                showNewTurn(((NewTurnMessage) message).getCurrentPlayer());
+                printer.showNewTurn(((NewTurnMessage) message).getCurrentPlayer());
                 setActionType(ActionType.NONE);
                 break;
             case BOARD:
-                showBoard(((BoardMessage) message).getBoard());
+                printer.showBoard(((BoardMessage) message).getBoard());
                 break;
             case LEADERBOARD:
-                showLeaderboard(((LeaderBoardMessage) message).getLeaderboard());
+                printer.showLeaderboard(((LeaderBoardMessage) message).getLeaderboard());
                 break;
             case BOOKSHELF:
                 BookshelfMessage m = (BookshelfMessage) message;
-                showBookshelf(m.getUsername(), m.getBookshelf());
+                printer.showBookshelf(m.getUsername(), m.getBookshelf());
                 break;
             case DRAW_INFO:
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
@@ -915,23 +523,23 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case ACHIEVED_COMMON_GOAL:
                 AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
-                showAchievedCommonGoal(m3);
+                printer.showAchievedCommonGoal(m3);
                 break;
             case NO_COMMON_GOAL:
                 System.out.println(((NoCommonGoalMessage) message).getContent());
                 break;
             case LAST_TURN:
-                showLastTurn((LastTurnMessage) message);
+                printer.showLastTurn((LastTurnMessage) message);
                 break;
             case ADJACENT_ITEMS_POINTS:
-                showAdjacentItemsPoints((AdjacentItemsPointsMessage) message);
+                printer.showAdjacentItemsPoints((AdjacentItemsPointsMessage) message);
                 break;
             case PERSONAL_GOAL_POINTS:
-                showPersonalGoalPoints((PersonalGoalPointsMessage) message);
+                printer.showPersonalGoalPoints((PersonalGoalPointsMessage) message);
                 break;
             case END_GAME:
                 EndGameMessage m4 = (EndGameMessage) message;
-                showEndGame(m4.getRanking());
+                printer.showEndGame(m4.getRanking());
                 break;
             default:
                 System.err.println("Ignoring event from model");
@@ -946,21 +554,25 @@ public class TextualUI extends Observable implements Runnable {
     private void onConnectionMessage(ConnectionMessage message) {
         switch (message.getType()){
             case CONNECTED_TO_SERVER:
-                showConnectedToServer();
+                printer.showConnectedToServer();
                 setClientState(ClientState.IN_SERVER);
                 break;
             case LOBBY_LIST_RESPONSE:
-                showLobbyList(((LobbyListResponse) message).getLobbies());
+                printer.showLobbyList(((LobbyListResponse) message).getLobbies());
                 break;
             case CREATE_LOBBY_RESPONSE:
-                printCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
+                printer.printCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
+                if(((CreateLobbyResponse) message).isSuccessful())
+                    setClientState(ClientState.IN_A_LOBBY);
                 break;
             case JOIN_LOBBY_RESPONSE:
-                showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
+                printer.showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
+                if(((JoinLobbyResponse) message).isSuccessful())
+                    setClientState(ClientState.IN_A_LOBBY);
                 break;
             case USERNAME_RESPONSE:
                 this.myUsername = ((UsernameResponse) message).getUsername();
-                showUsernameResponse(((UsernameResponse) message).isSuccessful(), ((UsernameResponse) message).getUsername());
+                printer.showUsernameResponse(((UsernameResponse) message).isSuccessful(), ((UsernameResponse) message).getUsername());
                 break;
             default:
                 System.err.println("Ignoring ConnectionMessage from server");
@@ -975,22 +587,24 @@ public class TextualUI extends Observable implements Runnable {
     private void onLobbyMessage(LobbyMessage message) {
         switch(message.getType()){
             case EXIT_LOBBY_RESPONSE:
-                showExitLobbyResponse(((ExitLobbyResponse) message).isSuccessful());
+                printer.showExitLobbyResponse(((ExitLobbyResponse) message).isSuccessful());
+                if(((ExitLobbyResponse) message).isSuccessful())
+                    setClientState(ClientState.IN_SERVER);
                 break;
             case PLAYER_LIST_RESPONSE:
-                showPlayerListResponse(((PlayerListResponse) message).getClients());
+                printer.showPlayerListResponse(((PlayerListResponse) message).getClients());
                 break;
             case NEW_ADMIN:
-                showNewAdmin(((NewAdminMessage) message).getOld_admin(), ((NewAdminMessage) message).getNew_admin());
+                printer.showNewAdmin(((NewAdminMessage) message).getOld_admin(), ((NewAdminMessage) message).getNew_admin());
                 break;
             case GAME_NOT_READY:
-                showGameNotReady();
+                printer.showGameNotReady();
                 break;
             case NOT_ADMIN:
-                showNotAdmin();
+                printer.showNotAdmin();
                 break;
             case INVALID_COMMAND:
-                showInvalidCommand();
+                printer.showInvalidCommand();
                 break;
             case CHANGE_NUM_OF_PLAYER_RESPONSE:
                 System.out.println(((ChangeNumOfPlayerResponse) message).getContent());

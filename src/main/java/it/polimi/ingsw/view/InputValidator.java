@@ -123,14 +123,16 @@ public class InputValidator {
         }
     }
 
+    /**
+     * Checks if the input provided is a valid number of players format.
+     *
+     * @param input the input string to validate as number of players
+     * @return {@code true} if the input is not a valid number of players format, {@code false} otherwise
+     */
     boolean invalidNumOfPlayersFormat(String input) {
         try {
             int chosenNum = Integer.parseInt(input.trim());
-            if (chosenNum >= GameController.MIN_PLAYERS && chosenNum <= GameController.MAX_PLAYERS)
-                return false;
-            else {
-                return true;
-            }
+            return chosenNum < GameController.MIN_PLAYERS || chosenNum > GameController.MAX_PLAYERS;
         } catch (NumberFormatException e) {
             return true;
         }
@@ -230,6 +232,12 @@ public class InputValidator {
         return !columns.contains(column);
     }
 
+    /**
+     * Checks if the given input string represents a positive answer, i.e., "yes" or "y" (case insensitive).
+     *
+     * @param input the input string to check
+     * @return true if the input is "yes" or "y", false otherwise
+     */
     boolean isYes(String input) {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes");
