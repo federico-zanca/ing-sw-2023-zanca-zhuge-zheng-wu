@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.Bookshelf;
@@ -254,6 +255,9 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case EXIT:
                 notifyObservers(new ExitLobbyRequest());
+                break;
+            case PLAYERLIST:
+                notifyObservers(new PlayerListRequest());
                 break;
             case CHAT:
                 System.err.println(lobbyCommand + " not implemented yet");
@@ -783,6 +787,18 @@ public class TextualUI extends Observable implements Runnable {
         System.out.println("Il nuovo admin è " + new_admin);
     }
 
+    private void showPlayerListResponse(ArrayList<String> clients) {
+        System.out.println("Lista dei giocatori nel lobby:");
+        System.out.println("Non ci sono partite disponibili! Usa il comando create per crearne una nuova!");
+        for (String client : clients) {
+            if(client.equals(clients.get(0)))
+                System.out.println("Nome admin: " + client);
+            else{
+                System.out.println("Nome giocatore: " + client);
+            }
+        }
+    }
+
     /**
      * Asks the user whether they want to change or reverse the order of tiles in their hand.
      * @param m2 The message containing the player's current hand.
@@ -941,8 +957,8 @@ public class TextualUI extends Observable implements Runnable {
             case EXIT_LOBBY_RESPONSE:
                 showExitLobbyResponse(((ExitLobbyResponse) message).isSuccessful());
                 break;
-            case PLAYERS_UPDATE:
-                System.err.println("PLAYERS_UPDATE not implemented yet");
+            case PLAYER_LIST_REQUEST:
+                showPlayerListResponse(((PlayerListResponse) message).getClients());
                 break;
             case NEW_ADMIN:
                 showNewAdmin(((NewAdminMessage) message).getOld_admin(), ((NewAdminMessage) message).getNew_admin());

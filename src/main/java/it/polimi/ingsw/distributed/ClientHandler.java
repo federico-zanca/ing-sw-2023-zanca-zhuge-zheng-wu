@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class ClientHandler {
     private final ServerImpl server;
@@ -125,6 +126,15 @@ public class ClientHandler {
                     server.startGame(client);
                 }
                 break;
+            case PLAYER_LIST_REQUEST:
+                ArrayList<Client> inLobbyClients = server.getLobbyOfClient(client).getInLobbyClients();
+                ArrayList<String> inLobbyClientsUsername = server.getLobbyOfClient(client).getClientsUsername(inLobbyClients);
+                try {
+                    client.update(new PlayerListResponse(inLobbyClientsUsername));
+                } catch (RemoteException e) {
+                    System.err.println("Unable to send player list response: " + e);
+                }
+                break;
             case CHANGE_NUM_OF_PLAYER_REQUEST:
                 int chosenNum = ((ChangeNumOfPlayerRequest) message).getChosenNum();
                 if(client.equals(admin))
@@ -136,6 +146,7 @@ public class ClientHandler {
                         throw new RuntimeException(e);
                     }
                 }
+                break;
         }
     }
 }

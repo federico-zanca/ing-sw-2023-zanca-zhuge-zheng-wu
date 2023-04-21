@@ -85,6 +85,15 @@ public class Lobby {
         return inLobbyClients;
     }
 
+    public String getClientUsername(Client client){ return getClientUsername(client);}
+
+    public ArrayList<String> getClientsUsername(ArrayList<Client> clients){
+        ArrayList<String> clientsUsername = new ArrayList<>();
+        for(Client client : clients)
+            clientsUsername.add(getClientUsername(client));
+        return clientsUsername;
+    }
+
     /**
      * @return the number of clients in the lobby
      */
