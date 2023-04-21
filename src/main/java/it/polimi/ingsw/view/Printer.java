@@ -457,7 +457,7 @@ public class Printer {
      * Shows a message indicating that the user is not the admin.
      */
     void showNotAdmin() {
-        System.out.println("Non sei l' admin di questa lobby! Solo l' admin può avviare la partita.");
+        System.out.println("Non sei l' admin di questa lobby! Puoi solo usare playerlist oppure exit.");
     }
 
     /**
@@ -484,6 +484,7 @@ public class Printer {
                 System.out.print(client + "\t");
             }
         }
+        System.out.println();
     }
 
     public void displayPrompt() {
