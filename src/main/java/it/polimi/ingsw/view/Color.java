@@ -2,7 +2,7 @@ package it.polimi.ingsw.view;
 
 public enum Color {
     //pickable colors
-    RED("\033[38;5;255;48;5;160m"),      // RED
+    RED("\033[51;38;5;255;48;5;160m"),      // RED
     FUCSIA("\033[51;38;5;255;48;5;199m"),      // FUCSIA
     GREEN("\033[51;38;5;255;48;5;34m"),    // GREEN  "\u001B[32m"
     BLUE("\033[51;38;5;255;48;5;21m"),     // BLUE
@@ -15,7 +15,7 @@ public enum Color {
 
     //non pickable colors
 
-    WRED("\033[38;5;0;48;5;160m"),      // RED
+    WRED("\033[38;5;255;48;5;160m"),      // RED
     WFUCSIA("\033[38;5;255;48;5;199m"),      // FUCSIA
     WGREEN("\033[38;5;255;48;5;34m"),    // GREEN  "\u001B[32m"
     WBLUE("\033[38;5;255;48;5;27m"),     // BLUE
@@ -25,9 +25,9 @@ public enum Color {
     WCYAN_BOLD("\033[38;5;255;48;5;45m"),   // CYAN
 
     WWHITE("\033[38;5;255;48;5;254m"), //PURPLE
-    NO_COLOR("\033[0m"); //NO_COLOR
+    NO_COLOR("\033[0m"), //NO_COLOR
 
-
+    REDTEXT("\033[38;5;160m");
 
     private final String color;
 

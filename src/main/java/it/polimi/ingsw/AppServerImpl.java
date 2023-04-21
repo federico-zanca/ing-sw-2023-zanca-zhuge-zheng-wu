@@ -67,10 +67,10 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
     }
 
     private static void startRMI() throws RemoteException {
-        AppServerImpl server = getInstance();
+        AppServerImpl instance = getInstance();
 
         Registry registry = LocateRegistry.createRegistry(1099);
-        registry.rebind("server", server);
+        registry.rebind("server", instance);
     }
 
     public static void startSocket() throws RemoteException {

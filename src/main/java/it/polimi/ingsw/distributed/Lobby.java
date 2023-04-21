@@ -85,7 +85,9 @@ public class Lobby {
         return inLobbyClients;
     }
 
-    public String getClientUsername(Client client){ return getClientUsername(client);}
+    public String getClientUsername(Client client){
+        return server.getConnectedClientInfo(client).getClientID();
+    }
 
     public ArrayList<String> getClientsUsername(ArrayList<Client> clients){
         ArrayList<String> clientsUsername = new ArrayList<>();
@@ -154,7 +156,7 @@ public class Lobby {
     public void changeChosenNumOfPlayers(int chosenNum){
         try {
             controller.changeChosenNumOfPlayers(chosenNum);
-        } catch (InvalidComandException e){
+        } catch (InvalidCommandException e){
             try {
                 admin.update(new InvalidComandMessage());
             } catch (RemoteException ex) {

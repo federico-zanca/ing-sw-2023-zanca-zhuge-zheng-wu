@@ -45,6 +45,22 @@ public class TextualUI extends Observable implements Runnable {
     @Override
     public void run() {
         String input;
+        System.out.println("Benvenuto in MyShelfie! Inserisci il tuo username:");
+        System.out.print(">>> ");
+        input = s.nextLine();
+        String[] parts = input.split(" ");
+        while(parts.length != 1 || !inputValidator.isValidUsername(parts[0].trim())){
+            System.err.println("Username non valido");
+            System.out.print(">>> ");
+            input = s.nextLine();
+            parts = input.split(" ");
+        }
+        notifyObservers(new UsernameRequest(parts[0].trim()));
+        inputListener();
+    }
+
+    public void inputListener(){
+        String input;
         while (true) {
             System.out.print(">>> ");
             input = s.nextLine();
@@ -307,18 +323,7 @@ public class TextualUI extends Observable implements Runnable {
                 }
                 break;
             case USERNAME:
-                if (parts.length != 2) {
-                    System.out.println("Comando non valido!");
-                    return;
-                } else {
-                    if (!inputValidator.isValidUsername(parts[1])) {
-                        System.out.println("Username non valido");
-                        return;
-                    } else {
-                        System.out.println("Username impostato a " + parts[1]);
-                        notifyObservers(new UsernameRequest(parts[1]));
-                    }
-                }
+                elaborateUsernameCommand(parts);
                 break;
             case EXIT:
                 //TODO disconnettiti dal server
@@ -345,6 +350,22 @@ public class TextualUI extends Observable implements Runnable {
             default:
                 System.err.println("Comando non valido, should never reach this state");
                 break;
+        }
+    }
+
+    private boolean elaborateUsernameCommand(String[] parts) {
+        if (parts.length != 2) {
+            System.out.println("Comando non valido!");
+            return false;
+        } else {
+            if (!inputValidator.isValidUsername(parts[1])) {
+                System.out.println("Username non valido");
+                return false;
+            } else {
+                System.out.println("Username impostato a " + parts[1]);
+                notifyObservers(new UsernameRequest(parts[1]));
+                return true;
+            }
         }
     }
 
@@ -788,13 +809,12 @@ public class TextualUI extends Observable implements Runnable {
     }
 
     private void showPlayerListResponse(ArrayList<String> clients) {
-        System.out.println("Lista dei giocatori nel lobby:");
-        System.out.println("Non ci sono partite disponibili! Usa il comando create per crearne una nuova!");
+        System.out.println("Lista dei giocatori nella lobby:");
         for (String client : clients) {
             if(client.equals(clients.get(0)))
-                System.out.println("Nome admin: " + client);
+                System.out.print(Color.REDTEXT + client + Color.NO_COLOR + "\t");
             else{
-                System.out.println("Nome giocatore: " + client);
+                System.out.print(client + "\t");
             }
         }
     }
@@ -957,7 +977,7 @@ public class TextualUI extends Observable implements Runnable {
             case EXIT_LOBBY_RESPONSE:
                 showExitLobbyResponse(((ExitLobbyResponse) message).isSuccessful());
                 break;
-            case PLAYER_LIST_REQUEST:
+            case PLAYER_LIST_RESPONSE:
                 showPlayerListResponse(((PlayerListResponse) message).getClients());
                 break;
             case NEW_ADMIN:
