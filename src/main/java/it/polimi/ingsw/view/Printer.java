@@ -151,7 +151,7 @@ public class Printer {
      * @param shelf  matrix of ItemTiles
      */
     void showBookshelf(String username, ItemTile[][] shelf) {
-        System.out.println("BookShelf of player " + username);
+        System.out.println("Libreria di " + username);
         System.out.println();
         StringBuilder strShelf = new StringBuilder();
         for (int i = 0; i < Bookshelf.Rows; i++) {
@@ -269,8 +269,9 @@ public class Printer {
      */
     void showNewTurn(String username) {
         System.out.println();
-        System.out.println("######################################\n" +
-                "    E' il turno di " + username + "\t\n" +           //migliorabile
+        System.out.println(
+                "######################################\n" +
+                "    E' il turno di " + Color.CYANTEXT + username + Color.NO_COLOR + "\t\n" +           //migliorabile
                 "######################################");
     }
 
@@ -313,7 +314,7 @@ public class Printer {
      */
     void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         System.out.println("######################################\n" +
-                message.getPlayerUsername() + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
+                Color.CYANTEXT + message.getPlayerUsername() + Color.NO_COLOR + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
                 "######################################");
     }
 
@@ -324,7 +325,7 @@ public class Printer {
      */
     void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
         System.out.println("######################################\n" +
-                message.getPlayerUsername() + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
+                Color.CYANTEXT + message.getPlayerUsername() + Color.NO_COLOR + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
                 "######################################");
     }
 
@@ -378,11 +379,10 @@ public class Printer {
      */
     void showUsernameResponse(boolean successful, String username) {
         if (successful) {
-            System.out.println("Username cambiato in " + username + "!");
+            System.out.println("Username cambiato in " + Color.CYANTEXT + username + Color.NO_COLOR + "!");
         } else {
-            System.out.println("Username " + username + " già in uso! Riprova con un altro username!");
+            System.out.println("Username " + Color.CYANTEXT + username + Color.NO_COLOR + " già in uso! Riprova con un altro username!");
         }
-
     }
 
     /**
@@ -479,7 +479,7 @@ public class Printer {
         System.out.println("Lista dei giocatori nella lobby:");
         for (String client : clients) {
             if (client.equals(clients.get(0)))
-                System.out.print(Color.REDTEXT + client + Color.NO_COLOR + "\t");
+                System.out.print(Color.CYANTEXT + client + Color.NO_COLOR + "\t");
             else {
                 System.out.print(client + "\t");
             }

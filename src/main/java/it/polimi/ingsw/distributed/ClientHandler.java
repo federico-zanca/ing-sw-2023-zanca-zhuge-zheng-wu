@@ -43,49 +43,66 @@ public class ClientHandler {
                 }
                 break;
             case JOIN_LOBBY_REQUEST:
-                    String content;
-                    boolean success;
-                    //int numClients = 0;
-                    //int maxNumClients = 0;
+                String content;
+                boolean success;
+                //int numClients = 0;
+                //int maxNumClients = 0;
+                try {
+                    server.addClientToLobby(client, ((JoinLobbyRequest) message).getLobbyName());
+                    content = "Joined lobby";
+                    success = true;
+                    //numClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getNumClients();
+                    //maxNumClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getMaxNumClients();
+                } catch (ClientAlreadyInLobbyException e) {
+                    content = "You are already in a lobby";
+                    success = false;
+                } catch (FullLobbyException e) {
+                    content = "Lobby is full";
+                    success = false;
+                } catch (LobbyNotFoundException e) {
+                    content = "Lobby not found";
+                    success = false;
+                }
+                try {
+                    client.update(new JoinLobbyResponse(success, content));
+                } catch (RemoteException e) {
+                    System.err.println("Unable to send lobby list response: " + e);
+                }
+                break;
+            case USERNAME_REQUEST:
+                String username = ((UsernameRequest) message).getUsername();
+                if(server.isUsernameAvailable(username)) {
+                    server.setUsername(client, username);
                     try {
-                        server.addClientToLobby(client, ((JoinLobbyRequest) message).getLobbyName());
-                        content = "Joined lobby";
-                        success = true;
-                        //numClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getNumClients();
-                        //maxNumClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getMaxNumClients();
-                    } catch (ClientAlreadyInLobbyException e) {
-                        content = "You are already in a lobby";
-                        success = false;
-                    } catch (FullLobbyException e) {
-                        content = "Lobby is full";
-                        success = false;
-                    } catch (LobbyNotFoundException e) {
-                        content = "Lobby not found";
-                        success = false;
-                    }
-                    try {
-                        client.update(new JoinLobbyResponse(success, content));
+                        client.update(new UsernameResponse(true, username));
                     } catch (RemoteException e) {
-                        System.err.println("Unable to send lobby list response: " + e);
+                        System.err.println("Unable to send username response: " + e);
                     }
-                    break;
-                case USERNAME_REQUEST:
-                    String username = ((UsernameRequest) message).getUsername();
-                    if(server.isUsernameAvailable(username)) {
-                        server.setUsername(client, username);
-                        try {
-                            client.update(new UsernameResponse(true, username));
-                        } catch (RemoteException e) {
-                            System.err.println("Unable to send username response: " + e);
-                        }
-                    } else {
-                        try {
-                            client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
-                        } catch (RemoteException e) {
-                            System.err.println("Unable to send username response: " + e);
-                        }
+                } else {
+                    try {
+                        client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
+                    } catch (RemoteException e) {
+                        System.err.println("Unable to send username response: " + e);
                     }
-                    break;
+                }
+                break;
+            case LOGIN_REQUEST:
+                String name = ((LoginRequest) message).getUsername();
+                if(server.isUsernameAvailable(name)) {
+                    server.setUsername(client, name);
+                    try {
+                        client.update(new LoginResponse(true, name));
+                    } catch (RemoteException e) {
+                        System.err.println("Unable to send username response: " + e);
+                    }
+                } else {
+                    try {
+                        client.update(new LoginResponse(false, name));
+                    } catch (RemoteException e) {
+                        System.err.println("Unable to send username response: " + e);
+                    }
+                }
+                break;
             default:
                 System.err.println("Invalid message type: not implemented yet");
         }

@@ -24,7 +24,7 @@ public class TextualUI extends Observable implements Runnable {
     private final InputValidator inputValidator = new InputValidator();
     private final Printer printer = new Printer();
     private ClientState clientState;
-    private ActionType actionType;
+    private ActionType actionType = ActionType.LOGIN;
     private GameMessage lastMessage;
     private final Scanner s;
     private String myUsername;
@@ -73,19 +73,7 @@ public class TextualUI extends Observable implements Runnable {
                 }
             }
         }
-        String input;
         System.out.println("Benvenuto in MyShelfie! Inserisci il tuo username:");
-        System.out.print(">>> ");
-        input = s.nextLine();
-        String[] parts = input.split(" ");
-        while(parts.length != 1 || !inputValidator.isValidUsername(parts[0].trim())){
-            System.err.println("Username non valido");
-            System.out.print(">>> ");
-            input = s.nextLine();
-            parts = input.split(" ");
-        }
-        setPlayerState(PlayerState.WATCHING);
-        notifyObservers(new UsernameRequest(parts[0].trim()));
         inputListener();
     }
 
@@ -359,6 +347,10 @@ public class TextualUI extends Observable implements Runnable {
      * @param input the input from the user
      */
     private void elaborateConnectionCommand(String input) {
+        if(actionType == ActionType.LOGIN){
+            elaborateLoginCommand(input);
+            return;
+        }
         String[] parts = input.split(" ");
         ConnectionCommand command = null;
         for (ConnectionCommand c : ConnectionCommand.values()) {
@@ -408,6 +400,23 @@ public class TextualUI extends Observable implements Runnable {
             default:
                 System.err.println("Comando non valido, should never reach this state");
                 break;
+        }
+    }
+
+    private void elaborateLoginCommand(String input) {
+        String[] parts = input.split(" ");
+        if (parts.length != 1) {
+            System.out.println("Username non valido!");
+            return;
+        } else {
+            if (!inputValidator.isValidUsername(parts[0])) {
+                System.out.println("Username non valido");
+                return;
+            } else {
+                setPlayerState(PlayerState.WATCHING);
+                notifyObservers(new LoginRequest(parts[0]));
+                return;
+            }
         }
     }
 
@@ -625,6 +634,12 @@ public class TextualUI extends Observable implements Runnable {
             case USERNAME_RESPONSE:
                 this.myUsername = ((UsernameResponse) message).getUsername();
                 printer.showUsernameResponse(((UsernameResponse) message).isSuccessful(), ((UsernameResponse) message).getUsername());
+                break;
+            case LOGIN_RESPONSE:
+                this.myUsername = ((LoginResponse) message).getUsername();
+                printer.showUsernameResponse(((LoginResponse) message).isSuccessful(), ((LoginResponse) message).getUsername());
+                if(((LoginResponse) message).isSuccessful())
+                    setActionType(ActionType.NONE);
                 break;
             default:
                 System.err.println("Ignoring ConnectionMessage from server");
