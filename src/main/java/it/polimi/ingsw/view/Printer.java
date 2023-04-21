@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Printer {
     public Printer() {
@@ -26,11 +28,10 @@ public class Printer {
      * @param columns number of columns to print
      */
     void printColumnIndexes(int columns) {
-        System.out.print("       ");
+        System.out.print(" ");
         for (int i = 0; i < columns; i++) {
             System.out.print("  " + i + "   ");
         }
-        System.out.print("\n");
     }
 
     /**
@@ -108,8 +109,8 @@ public class Printer {
      * @param board matrix of Squares to print
      */
     void showBoard(Square[][] board) {
+        System.out.println();
         System.out.println("Game Board:");
-        printColumnIndexes(Board.DIMENSIONS);
         StringBuilder strBoard = new StringBuilder();
         for (int i = 0; i < Board.DIMENSIONS; i++) {
             strBoard.append("      ");
@@ -138,17 +139,20 @@ public class Printer {
         }
         strBoard.append("+");
         System.out.println(strBoard);
+        System.out.print("      ");
+        printColumnIndexes(Board.DIMENSIONS);
+        System.out.println();
     }
 
     /**
      * Prints the bookshelf of the player
      *
      * @param username username of the player whose bookshelf is printed
-     * @param shelfie  matrix of ItemTiles
+     * @param shelf  matrix of ItemTiles
      */
-    void showBookshelf(String username, ItemTile[][] shelfie) {
+    void showBookshelf(String username, ItemTile[][] shelf) {
         System.out.println("BookShelf of player " + username);
-        printColumnIndexes(Bookshelf.Columns);
+        System.out.println();
         StringBuilder strShelf = new StringBuilder();
         for (int i = 0; i < Bookshelf.Rows; i++) {
             strShelf.append("      ");
@@ -158,7 +162,7 @@ public class Printer {
             strShelf.append("+\n");
             strShelf.append("  ").append(i).append("   |");
             for (int j = 0; j < Bookshelf.Columns; j++) {
-                strShelf.append(paintFG(shelfie[i][j].getType())).append("|");
+                strShelf.append(paintFG(shelf[i][j].getType())).append("|");
             }
             strShelf.append("\n");
         }
@@ -168,6 +172,57 @@ public class Printer {
         }
         strShelf.append("+");
         System.out.println(strShelf);
+        System.out.print("      ");
+        printColumnIndexes(Bookshelf.Columns);
+        System.out.println();
+    }
+
+    /**
+     * Displays the bookshelves of the given players in a tabular format.
+     *
+     * @param players an ArrayList of Player objects whose bookshelves are to be shown
+     */
+    public void showBookshelves(ArrayList<Player> players) {
+        System.out.println();
+        ArrayList<Bookshelf> bookshelves = players.stream().map(Player::getBookshelf).collect(Collectors.toCollection(ArrayList::new));
+        for (int i = 0; i < bookshelves.size(); i++) {
+            System.out.print("Libreria di " + players.get(i).getUsername() + "\t\t\t\t\t");
+        }
+        System.out.println();
+        for (int i = 0; i < Bookshelf.Rows; i++) {
+            printBookshelvesBorder(bookshelves);
+            for (Bookshelf bookshelf : bookshelves) {
+                System.out.print("|");
+                for (int j = 0; j < Bookshelf.Columns; j++) {
+                    System.out.print(paintFG(bookshelf.getShelfie()[i][j].getType()) + "|");
+                }
+                System.out.print("\t\t");
+            }
+            System.out.println();
+        }
+        printBookshelvesBorder(bookshelves);
+        for (int k = 0; k < bookshelves.size(); k++) {
+            printColumnIndexes(Bookshelf.Columns);
+            System.out.print("\t\t");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Prints the border of all the bookshelves in the given ArrayList.
+     * Each border is a string of plus signs and dashes that represent the
+     * top and bottom edges of the shelves, and vertical bars that separate
+     * the columns of books on each shelf.
+     * @param bookshelves the ArrayList of Bookshelf objects to print borders for
+     */
+    private void printBookshelvesBorder(ArrayList<Bookshelf> bookshelves) {
+        for(int k = 0; k < bookshelves.size(); k++) {
+            for(int j=0; j<Bookshelf.Columns; j++) {
+                System.out.print("+-----");
+            }
+            System.out.print("+\t\t");
+        }
+        System.out.println();
     }
 
     /**
@@ -213,6 +268,7 @@ public class Printer {
      * @param username The username of the user whose turn it is.
      */
     void showNewTurn(String username) {
+        System.out.println();
         System.out.println("######################################\n" +
                 "    E' il turno di " + username + "\t\n" +           //migliorabile
                 "######################################");
@@ -401,7 +457,7 @@ public class Printer {
      * Shows a message indicating that the user is not the admin.
      */
     void showNotAdmin() {
-        System.out.println("Non sei l'admin di questa lobby! Solo l'admin può avviare la partita.");
+        System.out.println("Non sei l' admin di questa lobby! Solo l' admin può avviare la partita.");
     }
 
     /**
@@ -428,5 +484,9 @@ public class Printer {
                 System.out.print(client + "\t");
             }
         }
+    }
+
+    public void displayPrompt() {
+        System.out.print(">>> ");
     }
 }

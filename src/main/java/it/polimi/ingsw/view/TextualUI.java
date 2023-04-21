@@ -138,6 +138,10 @@ public class TextualUI extends Observable implements Runnable {
      * @param input the input from the user
      */
     private void elaborateGameCommand(String input) {
+        if(input.equals("autoplay")){
+            //TODO implement here, for debugging reasons: lo usiamo per avere un bot che giochi da solo al posto nostro e poter fare delle partite in fretta
+            return;
+        }
         switch(actionType){
             case DRAW_TILES:
                 DrawInfoMessage message = (DrawInfoMessage) lastMessage;
@@ -281,7 +285,7 @@ public class TextualUI extends Observable implements Runnable {
         }
         tilesToDraw.add(new Square(new Coordinates(row, column), board[row][column].getItem().getType()));
         if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems))
-            System.out.println("Inserisci le coordinate della " + (tilesToDraw.size() + 1) + "° tessera separate da una virgola (es. riga, colonna) :");
+            System.out.println("Inserisci le coordinate della " + (tilesToDraw.size() + 1) + "° tessera, 'ok' se vuoi fermarti qui a pescare :");
         else{
             setActionType(ActionType.ORDER_HAND);
             setPlayerState(PlayerState.WATCHING);
@@ -446,8 +450,8 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void showDrawInfo(DrawInfoMessage message) {
         GameView model = message.getModel();
-
-        printer.showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
+        printer.showBookshelves(model.getPlayers());
+        //printer.showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
         printer.showBoard(model.getBoard().getGameboard());
     }
 
@@ -465,7 +469,7 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void rejectDrawRequest(String username, Square[][] board, ItemTile[][] bookshelf, int maxNumItems) {
         System.out.println("Invalid draw request! It seems like your client misbehaved... " +
-                "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draware invalid!");
+                "Try re-inserting the coordinates of the tiles you want to draw and if the error persists draw some other tiles because those you are trying to draw are invalid!");
         //showDrawInfo(username, board, bookshelf, maxNumItems);
     }
 
@@ -529,6 +533,7 @@ public class TextualUI extends Observable implements Runnable {
                 tilesToInsert.clear();
                 tilesToDraw.clear();
                 printer.showNewTurn(((NewTurnMessage) message).getCurrentPlayer());
+                printer.displayPrompt();
                 setActionType(ActionType.NONE);
                 break;
             case BOARD:
@@ -548,6 +553,7 @@ public class TextualUI extends Observable implements Runnable {
                     System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, m1.getMaxNumItems()) + " tessere. Di più non riusciresti a inserirne!");
                     System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
                     setActionType(ActionType.DRAW_TILES);
+                    printer.displayPrompt();
                 //}
                 break;
             case INSERT_INFO:
@@ -564,7 +570,6 @@ public class TextualUI extends Observable implements Runnable {
                         askOrderHand(m2);
                     }
                 //}
-
                 break;
             case ACHIEVED_COMMON_GOAL:
                 AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
