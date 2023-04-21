@@ -24,15 +24,30 @@ public class TextualUI extends Observable implements Runnable {
     private final InputValidator inputValidator = new InputValidator();
     private final Printer printer = new Printer();
     private ClientState clientState;
-
     private ActionType actionType;
     private GameMessage lastMessage;
     private final Scanner s;
     private String myUsername;
-    //private boolean isActive;
 
+    private PlayerState playerState = PlayerState.WATCHING;
+
+    private final Object lock = new Object();
     ArrayList<Square> tilesToDraw;
     ArrayList<ItemTile> tilesToInsert;
+
+    private PlayerState getPlayerState() {
+        synchronized (lock) {
+            return playerState;
+        }
+    }
+
+    private void setPlayerState(PlayerState playerState) {
+        synchronized (lock) {
+            this.playerState = playerState;
+            lock.notifyAll();
+        }
+    }
+
     public TextualUI() {
         s = new Scanner(System.in);
         tilesToDraw = new ArrayList<>();
@@ -49,6 +64,15 @@ public class TextualUI extends Observable implements Runnable {
      and calls inputListener method. */
     @Override
     public void run() {
+        while(getPlayerState() == PlayerState.WATCHING){
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    System.err.println("Interrupted while waiting for server: " + e.getMessage());
+                }
+            }
+        }
         String input;
         System.out.println("Benvenuto in MyShelfie! Inserisci il tuo username:");
         System.out.print(">>> ");
@@ -60,6 +84,7 @@ public class TextualUI extends Observable implements Runnable {
             input = s.nextLine();
             parts = input.split(" ");
         }
+        setPlayerState(PlayerState.WATCHING);
         notifyObservers(new UsernameRequest(parts[0].trim()));
         inputListener();
     }
@@ -72,6 +97,15 @@ public class TextualUI extends Observable implements Runnable {
     public void inputListener(){
         String input;
         while (true) {
+            while(getPlayerState() == PlayerState.WATCHING){
+                synchronized (lock) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        System.err.println("Interrupted while waiting for server: " + e.getMessage());
+                    }
+                }
+            }
             System.out.print(">>> ");
             input = s.nextLine();
             elaborateInput(input);
@@ -143,6 +177,7 @@ public class TextualUI extends Observable implements Runnable {
             return;
         } else {
             setActionType(ActionType.NONE);
+            setPlayerState(PlayerState.WATCHING);
             notifyObservers(new InsertTilesMessage(myUsername, tilesToInsert, column));
         }
     }
@@ -220,6 +255,7 @@ public class TextualUI extends Observable implements Runnable {
     private void elaborateDrawInput(String input, GameView model, int maxNumItems) {
         Square[][] board = model.getBoard().getGameboard();
         if(tilesToDraw.size() > 0 &&  input.equalsIgnoreCase("ok")){
+            setPlayerState(PlayerState.WATCHING);
             notifyObservers(new DrawTilesMessage(myUsername, tilesToDraw));
             return;
         }
@@ -248,6 +284,7 @@ public class TextualUI extends Observable implements Runnable {
             System.out.println("Inserisci le coordinate della " + (tilesToDraw.size() + 1) + "° tessera separate da una virgola (es. riga, colonna) :");
         else{
             setActionType(ActionType.ORDER_HAND);
+            setPlayerState(PlayerState.WATCHING);
             notifyObservers(new DrawTilesMessage(myUsername, tilesToDraw));
         }
     }
@@ -277,12 +314,15 @@ public class TextualUI extends Observable implements Runnable {
                 }
                 break;
             case START:
+                setPlayerState(PlayerState.WATCHING);
                 notifyObservers(new StartGameRequest());
                 break;
             case EXIT:
+                setPlayerState(PlayerState.WATCHING);
                 notifyObservers(new ExitLobbyRequest());
                 break;
             case PLAYERLIST:
+                setPlayerState(PlayerState.WATCHING);
                 notifyObservers(new PlayerListRequest());
                 break;
             case CHAT:
@@ -297,6 +337,7 @@ public class TextualUI extends Observable implements Runnable {
                         return;
                     } else if(!inputValidator.invalidNumOfPlayersFormat(parts[1])){
                         int chosenNum = Integer.parseInt(parts[1].trim());
+                        setPlayerState(PlayerState.WATCHING);
                         notifyObservers(new ChangeNumOfPlayerRequest(chosenNum));
                     }else{
                         System.out.println("Numero non valido! La partita deve avere minimo " + GameController.MIN_PLAYERS + " giocatori e massimo " + GameController.MAX_PLAYERS + " giocatori");
@@ -339,6 +380,7 @@ public class TextualUI extends Observable implements Runnable {
                 //TODO disconnettiti dal server
                 break;
             case GAMES:
+                setPlayerState(PlayerState.WATCHING);
                 notifyObservers(new LobbyListRequest());
                 break;
             case JOIN:
@@ -346,6 +388,7 @@ public class TextualUI extends Observable implements Runnable {
                     System.out.println("Comando non valido!");
                     return;
                 } else {
+                    setPlayerState(PlayerState.WATCHING);
                     notifyObservers(new JoinLobbyRequest(parts[1]));
                 }
                 break;
@@ -354,6 +397,7 @@ public class TextualUI extends Observable implements Runnable {
                     System.out.println("Comando non valido!");
                     return;
                 } else {
+                    setPlayerState(PlayerState.WATCHING);
                     notifyObservers(new CreateLobbyRequest(parts[1]));
                 }
                 break;
@@ -378,6 +422,7 @@ public class TextualUI extends Observable implements Runnable {
                 return;
             } else {
                 System.out.println("Username impostato a " + parts[1]);
+                setPlayerState(PlayerState.WATCHING);
                 notifyObservers(new UsernameRequest(parts[1]));
                 return;
             }
@@ -545,6 +590,7 @@ public class TextualUI extends Observable implements Runnable {
                 System.err.println("Ignoring event from model");
                 break;
         }
+        setPlayerState(PlayerState.ACTIVE);
     }
 
     /**
@@ -556,6 +602,7 @@ public class TextualUI extends Observable implements Runnable {
             case CONNECTED_TO_SERVER:
                 printer.showConnectedToServer();
                 setClientState(ClientState.IN_SERVER);
+                setPlayerState(PlayerState.ACTIVE);
                 break;
             case LOBBY_LIST_RESPONSE:
                 printer.showLobbyList(((LobbyListResponse) message).getLobbies());
@@ -578,6 +625,7 @@ public class TextualUI extends Observable implements Runnable {
                 System.err.println("Ignoring ConnectionMessage from server");
                 break;
         }
+        setPlayerState(PlayerState.ACTIVE);
     }
 
     /**
@@ -613,6 +661,7 @@ public class TextualUI extends Observable implements Runnable {
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
                 break;
         }
+        setPlayerState(PlayerState.ACTIVE);
     }
 
     public void update(Message message) {
