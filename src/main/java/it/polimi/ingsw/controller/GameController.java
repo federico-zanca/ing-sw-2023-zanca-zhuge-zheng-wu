@@ -6,12 +6,9 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.GameNotReadyException;
-import it.polimi.ingsw.model.exceptions.InvalidComandException;
+import it.polimi.ingsw.model.exceptions.InvalidCommandException;
 import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
-import it.polimi.ingsw.network.message.gamemessage.ErrorMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
-import it.polimi.ingsw.network.message.gamemessage.LoginRequest;
 
 import java.util.ArrayList;
 
@@ -90,41 +87,8 @@ public class GameController {
     //will be removed and reimplemented in Server class
 
     //phases handling methods
-    /**
-     * Handles the LoginPhase related messages received from the view
-     * @param message
-     */
-    public void loginPhase(GameMessage message){
-        if(message.getType()== GameMessageType.LOGINREQUEST) {
-            handleLoginRequest((LoginRequest) message);
-        }
-        else{
-            model.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
-        }
-    }
-    public void handleLoginRequest(LoginRequest message){
-        String username = message.getUsername();
-        if(validUsernameFormat(username)){
-            if(!model.isUsernameTaken(username)){
-                model.addPlayer(new Player(username));
-            }
-            else{
-                System.err.println("Errore critico: esiste già qualcuno loggato con questo username\n"); //TODO invia messaggio a client: player già esistente
-            }
-        }
-        else{
-            System.err.println("Errore critico: formato dell'username non valido"); //TODO invia messaggio al client per reinserire (formato non valido)
-        }
-        if(model.isGameReadyToStart()){
-            System.err.println("IL GIOCO INIZIA");
-            model.startGame();
-            turnController.setPlayersQueue(model.getPlayers());
-            model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
 
-            //nextGamePhase();
-            turnController.newTurn();
-        }
-    }
+
     /**
      * Handles the PlayPhase related messages received from the view
      * @param message
@@ -194,70 +158,24 @@ public class GameController {
      * @param receivedMessage Message from Active Player.
      */
     public void onMessageReceived(GameMessage receivedMessage) {
-
-        //VirtualView virtualView = virtualViewMap.get(receivedMessage.getNickname());
         switch (model.getGamePhase()) {
             case INIT:
-                //if (inputController.checkUser(receivedMessage)) {
-                //    initState(receivedMessage, virtualView);
-                //}
+                System.err.println("Should not receive messages during this phase");
                 break;
             case PLAY:
-                //if (inputController.checkUser(receivedMessage)) {
-                //inGameState(receivedMessage);
-                //}
                 playPhase(receivedMessage);
                 break;
             case AWARDS:
                 System.err.println("AWARDS phase not handled yet");
                 break;
-            default: // Should never reach this condition
-                //Server.LOGGER.warning(STR_INVALID_STATE);
+            default:
+                System.err.println("Invalid Game Phase: should never reach this state");
                 break;
         }
     }
 
     public void update(Client client, GameMessage message) {
-        //ricevo notifiche solo dalla mia view
-        /*
-        if(client != view){
-            System.err.println("Discarding notification from "+ client);
-            return;
-        }
-        */
         onMessageReceived(message);
-        /*
-        String username = message.getUsername();
-       // Player player = game.getPlayerByUsername(username);
-
-        //DEPRECATED PART
-        switch (message.getType()) {
-            case LOGINREQUEST:
-                game.setChosenNumOfPlayers(4); //andrà tolta
-                handleLoginRequest((LoginRequest) message);
-                //game.startGame();
-                //game.getBoard().enableSquaresWithFreeSide();
-                //int maxNumItems = game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable();
-                //view.askDraw(username, game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), maxNumItems);
-                break;
-            case DRAW_TILES:
-                if(isDrawHandValid((DrawTilesMessage) message)){
-                    ArrayList<Integer> columns = game.getPlayerByUsername(username).getBookshelf().insertableColumns(((DrawTilesMessage) message).getSquares().size());
-                    view.askInsert(username, ((DrawTilesMessage) message).getSquares(), game.getPlayerByUsername(username).getBookshelf(), columns);
-                }else{
-                    view.rejectDrawRequest(message.getUsername(), game.getBoard().getGameboard(), game.getPlayerByUsername(username).getBookshelf().getShelfie(), game.getPlayerByUsername(username).getBookshelf().maxSlotsAvailable());
-                }
-                view.showGreeting();
-                //turnController.drawPhase();
-                view.showBookshelf(username, game.getPlayerByUsername(username).getBookshelf().getShelfie());
-                break;
-            case INSERT_TILES:
-                break;
-            default:
-                System.err.println("Discarding event ");
-
-
-         */
     }
 
     public void startGame() throws GameNotReadyException {
@@ -274,10 +192,22 @@ public class GameController {
         }
     }
 
-    public void changeChosenNumOfPlayers(int chosenNum) throws InvalidComandException{
+    /**
+     * Changes the chosen number of players in the model.
+     *
+     * @param chosenNum the new number of players chosen
+     * @throws InvalidCommandException if the chosen number is invalid
+     */
+    public void changeChosenNumOfPlayers(int chosenNum) throws InvalidCommandException {
         model.setChosenNumOfPlayers(chosenNum);
     }
 
+    /**
+     * Adds a new player to the game with the specified username.
+     *
+     * @param username the username of the new player
+     * @throws InvalidUsernameException if the username is invalid
+     */
     public void addPlayer(String username) throws InvalidUsernameException {
         if(validUsernameFormat(username)){
             model.addPlayer(new Player(username));
@@ -286,18 +216,21 @@ public class GameController {
         }
     }
 
+    /**
+     * Removes the player with the specified username from the game.
+     *
+     * @param username the username of the player to be removed
+     */
     public void removePlayer(String username) {
         model.removePlayer(model.getPlayerByUsername(username));
     }
 
+    /**
+     * Gets the username of the current player.
+     *
+     * @return the username of the current player
+     */
     public String getCurrentPlayerUsername() {
         return model.getCurrentPlayer().getUsername();
     }
-
-
-    //public
-
-    //game initialization : preparing board, extracting common goals...
-
-
 }
