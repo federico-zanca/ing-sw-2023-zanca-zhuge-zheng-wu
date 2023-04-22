@@ -125,16 +125,16 @@ public class Game extends Observable {
      */
     private CommonGoalCard intToCommonGoal(int n){
         switch(n){
-            case 1: return new CommonGoalCard1(chosenNumOfPlayers);
+            case 1: return new CommonGoalCardGroups(chosenNumOfPlayers,6,2);
             case 2: return new CommonGoalCard2(chosenNumOfPlayers);
-            case 3: return new CommonGoalCard3(chosenNumOfPlayers);
+            case 3: return new CommonGoalCardGroups(chosenNumOfPlayers,4,4);
             case 4: return new CommonGoalCard4(chosenNumOfPlayers);
-            case 5: return new CommonGoalCard5(chosenNumOfPlayers);
+            case 5: return new CommonGoalCardLimitTypes(chosenNumOfPlayers,3,1,3,"col");
             case 6: return new CommonGoalCard6(chosenNumOfPlayers);
             case 7: return new CommonGoalCard7(chosenNumOfPlayers);
-            case 8: return new CommonGoalCard8(chosenNumOfPlayers);
-            case 9: return new CommonGoalCard9(chosenNumOfPlayers);
-            case 10: return new CommonGoalCard10(chosenNumOfPlayers);
+            case 8: return new CommonGoalCardLimitTypes(chosenNumOfPlayers,4,1,3,"row");
+            case 9: return new CommonGoalCardLimitTypes(chosenNumOfPlayers,2,6,6,"col");
+            case 10: return new CommonGoalCardLimitTypes(chosenNumOfPlayers,2,5,5,"row");
             case 11: return new CommonGoalCard11(chosenNumOfPlayers);
             default: return new CommonGoalCard12(chosenNumOfPlayers);
         }

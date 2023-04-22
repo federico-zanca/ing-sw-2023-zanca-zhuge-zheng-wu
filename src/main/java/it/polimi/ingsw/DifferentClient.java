@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 public class DifferentClient {
 
     public static void main(String[] args) throws RemoteException {
+
         ServerStub serverStub = new ServerStub("localhost", 1234);
 
         ClientImpl client = new ClientImpl(serverStub);

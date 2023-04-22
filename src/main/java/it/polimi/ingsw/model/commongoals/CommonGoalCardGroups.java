@@ -6,14 +6,20 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
-public class CommonGoalCard3 extends CommonGoalCard{
-        public CommonGoalCard3(int numPlayers){
-            super(numPlayers);
-        }
 
+public class CommonGoalCardGroups extends CommonGoalCard {
+
+        private int num_group;
+        private int num_item;
+
+        public CommonGoalCardGroups(int numPlayers, int num_group, int num_item){
+            super(numPlayers);
+            this.num_group = num_group;
+            this.num_item = num_item;
+        }
         public boolean check(Bookshelf bookshelf){
-        ItemTile[][] matrix;
-        matrix = bookshelf.getShelfie();
+            ItemTile[][] matrix;
+            matrix = bookshelf.getShelfie();
             int groupIDcount = 0;
             int groupCount = 0;
             List<Integer> itemCount = new ArrayList<Integer>();
@@ -40,9 +46,9 @@ public class CommonGoalCard3 extends CommonGoalCard{
                 }
             }
             for (int h = 0; h < groupIDcount; h++) {
-                if (itemCount.get(h) >= 4) {
+                if (itemCount.get(h) >= num_item) {
                     groupCount ++;
-                    if(groupCount == 4){
+                    if(groupCount == num_group){
                         return true;
                     }
                 }
@@ -74,9 +80,10 @@ public class CommonGoalCard3 extends CommonGoalCard{
             return;
         }
 
-    @Override
-    public String toString() {
-        return "Quattro gruppi separati formati ciascuno da quattro tessere adiacenti dello stesso tipo." +
-                "Le tessere di un gruppo possono essere diverse da quelle di un latro gruppo.";
-    }
-}
+        @Override
+        public String toString() {
+            return num_group + " gruppi separati formati ciascuno da " + num_item + "due tessere adiacenti dello stesso tipo." +
+                    "Le tessere di un Gruppo possono essere diverse da quelle di un altro gruppo.";
+        }
+ }
+
