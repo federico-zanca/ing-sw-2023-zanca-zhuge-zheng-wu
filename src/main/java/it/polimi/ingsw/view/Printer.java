@@ -392,9 +392,9 @@ public class Printer {
      * @param content    the string content of the response
      */
     void showJoinLobbyResponse(boolean successful, String content) {
-        System.out.println(content);
+        //System.out.println(content);
         if (!successful) {
-            System.out.println(content);
+            System.out.println(content); //TODO: implement better
         } else {
             printEnteredLobby();
         }
