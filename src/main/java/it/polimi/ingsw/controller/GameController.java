@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameController {
     public static final int MIN_PLAYERS = 2;
@@ -181,15 +182,27 @@ public class GameController {
     public void startGame() throws GameNotReadyException {
         if(model.isGameReadyToStart()){
             System.err.println("IL GIOCO INIZIA");
-            model.startGame();
-            turnController.setPlayersQueue(model.getPlayers());
+            turnController.setPlayersQueue(scramble(model.getPlayers()));
             model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
+            model.startGame();
 
             //nextGamePhase();
             turnController.newTurn();
         } else{
             throw new GameNotReadyException("Game not ready to start");
         }
+    }
+
+    private ArrayList<Player> scramble(ArrayList<Player> modelPlayers) {
+        ArrayList<Player> players = new ArrayList<>(modelPlayers);
+        ArrayList<Player> scrambled = new ArrayList<>();
+        while(players.size()>0){
+            Random random = new Random();
+            int index = random.nextInt(players.size());
+            scrambled.add(players.get(index));
+            players.remove(index);
+        }
+        return scrambled;
     }
 
     /**
