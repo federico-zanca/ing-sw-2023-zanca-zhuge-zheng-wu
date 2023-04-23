@@ -4,10 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
-import it.polimi.ingsw.network.message.lobbymessage.GameNotReadyMessage;
-import it.polimi.ingsw.network.message.lobbymessage.InvalidComandMessage;
-import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
-import it.polimi.ingsw.network.message.lobbymessage.PlayersInLobbyUpdate;
+import it.polimi.ingsw.network.message.lobbymessage.*;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -181,6 +178,16 @@ public class Lobby {
                 } catch (RemoteException e) {
                     System.err.println("Unable to send PlayersInLobbyUpdate : " + e.getMessage());
                 }
+            }
+        }
+    }
+
+    public void sendToAll(LobbyMessage message) {
+        for(int i=0; i < inLobbyClients.size(); i++){
+            try {
+                inLobbyClients.get(i).update(message);
+            } catch (RemoteException e) {
+                System.err.println("Unable to send LobbyMessage : " + e.getMessage());
             }
         }
     }

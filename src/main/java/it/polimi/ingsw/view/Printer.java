@@ -475,11 +475,11 @@ public class Printer {
      * Prints the list of players in the lobby.
      * @param clients an ArrayList of Strings containing the names of the players
      */
-    void showPlayerListResponse(ArrayList<String> clients) {
+    void showLobbyPlayersList(ArrayList<String> clients) {
         System.out.println("Lista dei giocatori nella lobby:");
         for (String client : clients) {
             if (client.equals(clients.get(0)))
-                System.out.print(Color.CYANTEXT + client + Color.NO_COLOR + "\t");
+                System.out.print(Color.MAGENTATEXT + client + Color.NO_COLOR + "\t");
             else {
                 System.out.print(client + "\t");
             }
@@ -494,6 +494,6 @@ public class Printer {
     public void showNewPlayerInLobby(ArrayList<String> allPlayersUsernames, String content) {
         System.out.println();
         System.out.println(content);
-        showPlayerListResponse(allPlayersUsernames);
+        showLobbyPlayersList(allPlayersUsernames);
     }
 }

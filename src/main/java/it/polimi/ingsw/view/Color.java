@@ -27,7 +27,9 @@ public enum Color {
     WWHITE("\033[38;5;255;48;5;254m"), //PURPLE
     NO_COLOR("\033[0m"), //NO_COLOR
 
-    CYANTEXT("\033[38;5;45m");
+    CYANTEXT("\033[38;5;45m"),
+
+    MAGENTATEXT("\033[38;5;199m");
 
     private final String color;
 

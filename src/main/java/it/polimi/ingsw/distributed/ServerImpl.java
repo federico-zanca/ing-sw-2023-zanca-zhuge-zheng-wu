@@ -200,7 +200,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * @param client the client that wants to change the number of players
      * @param chosenNum the number of players chosen by the client
      */
-    public void changeNumOfPlayers(Client client, int chosenNum){
+    public void changeLobbyNumOfPlayers(Client client, int chosenNum){
         if( chosenNum > GameController.MAX_PLAYERS){
             try {
                 client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
@@ -221,11 +221,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
             }
         } else {
             connectedClients.get(client).getLobby().changeChosenNumOfPlayers(chosenNum);
-            try {
-                client.update(new ChangeNumOfPlayerResponse(true, "Numero di giocatori della partita cambiato a " + chosenNum));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
-            }
+            getLobbyOfClient(client).sendToAll(new ChangeNumOfPlayerResponse(true, "\nNumero di giocatori della partita cambiato a " + chosenNum));
         }
     }
 

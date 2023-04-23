@@ -35,12 +35,9 @@ public class ClientHandler {
                     client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);
-                } catch (FullLobbyException e) {
+                } catch (FullLobbyException | ClientAlreadyInLobbyException e) {
                     //TODO: handle exception
-                    throw new RuntimeException(e);
-                } catch (ClientAlreadyInLobbyException e) {
-                    //TODO: handle exception
-                    throw new RuntimeException(e);
+                    System.err.println("Unable to create lobby (should never happen): " + e);
                 }
                 break;
             case JOIN_LOBBY_REQUEST:
@@ -162,7 +159,7 @@ public class ClientHandler {
             case CHANGE_NUM_OF_PLAYER_REQUEST:
                 int chosenNum = ((ChangeNumOfPlayerRequest) message).getChosenNum();
                 if(client.equals(admin))
-                    server.changeNumOfPlayers(client, chosenNum);
+                    server.changeLobbyNumOfPlayers(client, chosenNum);
                 else{
                     try {
                         client.update(new NotAdminMessage());
