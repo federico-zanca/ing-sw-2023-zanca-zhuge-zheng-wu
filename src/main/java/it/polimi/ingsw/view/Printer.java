@@ -490,4 +490,10 @@ public class Printer {
     public void displayPrompt() {
         System.out.print(">>> ");
     }
+
+    public void showNewPlayerInLobby(ArrayList<String> allPlayersUsernames, String content) {
+        System.out.println();
+        System.out.println(content);
+        showPlayerListResponse(allPlayersUsernames);
+    }
 }

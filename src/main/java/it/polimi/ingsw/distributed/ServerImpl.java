@@ -252,4 +252,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         else
             System.err.println("Message not recognized: " + message);
     }
+
+    public String getUsernameOfClient(Client client) {
+        return getConnectedClientInfo(client).getClientID();
+    }
 }

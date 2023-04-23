@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
+import it.polimi.ingsw.view.Color;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -45,10 +46,11 @@ public class ClientHandler {
             case JOIN_LOBBY_REQUEST:
                 String content;
                 boolean success;
+                String lobbyName = ((JoinLobbyRequest) message).getLobbyName();
                 //int numClients = 0;
                 //int maxNumClients = 0;
                 try {
-                    server.addClientToLobby(client, ((JoinLobbyRequest) message).getLobbyName());
+                    server.addClientToLobby(client, lobbyName);
                     content = "Joined lobby";
                     success = true;
                     //numClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getNumClients();
@@ -64,9 +66,13 @@ public class ClientHandler {
                     success = false;
                 }
                 try {
-                    client.update(new JoinLobbyResponse(success, content));
+                    client.update(new JoinLobbyResponse(success, content, server.getLobbyByName(lobbyName).getClientsUsernames()));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);
+                }
+                if(success){
+                    String username = server.getConnectedClientInfo(client).getClientID();
+                    server.getLobbyOfClient(client).sendPlayersListToEveryoneBut(username, Color.CYANTEXT + username + Color.NO_COLOR + " si è unito alla partita");
                 }
                 break;
             case USERNAME_REQUEST:
@@ -121,6 +127,8 @@ public class ClientHandler {
                     String lobbyName = server.getLobbyNameOfClient(client);
                     server.removeClientFromLobby(client);
                     client.update(new ExitLobbyResponse(true, lobbyName));
+                    String content = Color.CYANTEXT + server.getUsernameOfClient(client) + Color.NO_COLOR + " ha abbandonato la lobby";
+                    server.getLobbyByName(lobbyName).sendPlayersListToEveryoneBut(server.getUsernameOfClient(client), content);
                 } catch (RemoteException e) {
                     System.err.println("Unable to send exit lobby response: " + e);
                 }
@@ -144,10 +152,9 @@ public class ClientHandler {
                 }
                 break;
             case PLAYER_LIST_REQUEST:
-                ArrayList<Client> inLobbyClients = server.getLobbyOfClient(client).getInLobbyClients();
-                ArrayList<String> inLobbyClientsUsername = server.getLobbyOfClient(client).getClientsUsername(inLobbyClients);
+                ArrayList<String> inLobbyClientsUsernames = server.getLobbyOfClient(client).getClientsUsernames();
                 try {
-                    client.update(new PlayerListResponse(inLobbyClientsUsername));
+                    client.update(new PlayerListResponse(inLobbyClientsUsernames));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send player list response: " + e);
                 }

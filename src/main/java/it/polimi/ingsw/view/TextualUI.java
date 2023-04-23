@@ -628,8 +628,10 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case JOIN_LOBBY_RESPONSE:
                 printer.showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
-                if(((JoinLobbyResponse) message).isSuccessful())
+                if(((JoinLobbyResponse) message).isSuccessful()) {
                     setClientState(ClientState.IN_A_LOBBY);
+                    printer.showPlayerListResponse(((JoinLobbyResponse) message).getUsernames());
+                }
                 break;
             case USERNAME_RESPONSE:
                 this.myUsername = ((UsernameResponse) message).getUsername();
@@ -676,6 +678,11 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case CHANGE_NUM_OF_PLAYER_RESPONSE:
                 System.out.println(((ChangeNumOfPlayerResponse) message).getContent());
+                break;
+            case NEW_PLAYER_IN_LOBBY:
+                printer.showNewPlayerInLobby(((PlayersInLobbyUpdate) message).getAllPlayersUsernames(), ((PlayersInLobbyUpdate) message).getContent());
+                if(playerState == PlayerState.ACTIVE)
+                    printer.displayPrompt();
                 break;
             default:
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());

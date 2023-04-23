@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.lobbymessage.GameNotReadyMessage;
 import it.polimi.ingsw.network.message.lobbymessage.InvalidComandMessage;
 import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
+import it.polimi.ingsw.network.message.lobbymessage.PlayersInLobbyUpdate;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -89,9 +90,9 @@ public class Lobby {
         return server.getConnectedClientInfo(client).getClientID();
     }
 
-    public ArrayList<String> getClientsUsername(ArrayList<Client> clients){
+    public ArrayList<String> getClientsUsernames(){
         ArrayList<String> clientsUsername = new ArrayList<>();
-        for(Client client : clients)
+        for(Client client : inLobbyClients)
             clientsUsername.add(getClientUsername(client));
         return clientsUsername;
     }
@@ -170,5 +171,17 @@ public class Lobby {
      */
     public GameController getController() {
         return controller;
+    }
+
+    public void sendPlayersListToEveryoneBut(String player, String content) {
+        for(int i=0; i < inLobbyClients.size(); i++){
+            if(!player.equals(getClientUsername(inLobbyClients.get(i)))){
+                try {
+                    inLobbyClients.get(i).update(new PlayersInLobbyUpdate(getClientsUsernames(), content));
+                } catch (RemoteException e) {
+                    System.err.println("Unable to send PlayersInLobbyUpdate : " + e.getMessage());
+                }
+            }
+        }
     }
 }
