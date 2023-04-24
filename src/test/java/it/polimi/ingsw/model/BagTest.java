@@ -1,77 +1,88 @@
 package it.polimi.ingsw.model;
-
 import it.polimi.ingsw.model.enumerations.ItemType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BagTest {
+@DisplayName("Bag class tests")
+public class BagTest {
+    private Bag bag;
 
-    @Test
-    void testEmptyBag() {
-        Bag b = new Bag();
-        //Test when bag is full.
-        assertFalse(b.emptyBag());
-        b.drawItems(132);
-        //test when bag is empty.
-        assertTrue(b.emptyBag());
+    @BeforeEach
+    public void setUp() {
+        bag = new Bag();
+    }
+    @Nested
+    @DisplayName("Tests for emptyBag method")
+    public class EmptyBagTests {
+        @Test
+        @DisplayName("Bag is initially not empty")
+        public void testInitialBagNotEmpty() {
+            assertFalse(bag.emptyBag());
+        }
+
+        @Test
+        @DisplayName("Bag is empty after removing all items")
+        public void testEmptyBag() {
+            bag.drawItems(132);
+            assertEquals(0,bag.getNumItemsLeftInBag());
+        }
     }
 
-    @Test
-    void testDrawItem() {
-        Bag b = new Bag();
-        ItemTile item = b.drawItem();
-        //after drawing an item, the bag(itemTiles hashmap) should have 1 less item of that type.
-        assertEquals(21, b.getItemTiles().get(item.getType()));
-        //and other Itemtypes should not have changed quantity
-        for (ItemType t : b.getAvailableItems()) {
-            if (t != item.getType()) {
-                assertEquals(22, b.getItemTiles().get(t));
-            }
+    @Nested
+    @DisplayName("Tests for drawItem and drawItems methods")
+    public class DrawItemTests {
+        @Test
+        @DisplayName("Drawing all items from bag makes it empty")
+        public void testDrawAllItems() {
+            int numItems = bag.getNumItemsLeftInBag();
+            ArrayList<ItemTile> items = bag.drawItems(numItems);
+            assertEquals(numItems, items.size());
+            assertTrue(bag.emptyBag());
+            assertNull(bag.drawItem());
         }
-        //set the hashmap (ItemTiles) all keys at 0, and drawitem should draw null.
-        for(ItemType t : ItemType.getValues()){
-            b.getItemTiles().remove(t);
-            b.getAvailableItems().remove(t);
-            //b.getItemTiles().put(t, 0);
+
+        @Test
+        @DisplayName("Drawing more items than in bag returns only remaining items")
+        public void testDrawMoreItemsThanInBag() {
+            int numItems = bag.getNumItemsLeftInBag();
+            ArrayList<ItemTile> items = bag.drawItems(numItems + 1);
+            assertEquals(numItems, items.size());
         }
-        assertEquals(0,b.getAvailableItems().size());
-        assertNull(b.drawItem());
-    }
-    @Test
-    void testDrawItems() {
-        Bag b = new Bag();
-        ArrayList<ItemTile> items;
-        //draws all items in the bag
-        items = b.drawItems(132);
-        //all the item drawn should be not null.
-        for(ItemTile t : items){
-            assertNotNull(t);
-        }
-        //for every Itemtype in the bag, the quantity should be zero.
-        for(ItemType t : ItemType.getValues()){
-           assertEquals(0,b.getItemTiles().get(t));
-        }
-        //no more availableitems.
-        assertEquals(0,b.getAvailableItems().size());
     }
 
-    @Test
-    void testPutItem() {
-        Bag b = new Bag();
-        ItemTile item = b.drawItem();
-        assertEquals(131,b.getNumItemsLeftInBag());
-        b.putItem(item);
-        assertEquals(132,b.getNumItemsLeftInBag());
+    @Nested
+    @DisplayName("Tests for putItem method")
+    public class PutItemTest {
+        @Test
+        @DisplayName("Adding an item updates itemTiles and availableItems")
+        public void testAddItem() {
+            ItemTile item = new ItemTile(ItemType.CAT);
+            bag.putItem(item);
+
+            HashMap<ItemType, Integer> itemTiles = bag.getItemTiles();
+            assertEquals(23, itemTiles.get(ItemType.CAT).intValue());
+        }
     }
 
-    @Test
-    void testGetNumItemsLeftInBag() {
-        Bag b = new Bag();
-        assertEquals(132,b.getNumItemsLeftInBag());
-        b.drawItems(5);
-        assertEquals(127,b.getNumItemsLeftInBag());
+    @Nested
+    @DisplayName("Tests for getNumItemsLeftInBag method")
+    public class NumItemsLeftInBagTest {
+        @Test
+        @DisplayName("getNumItemsLeftInBag returns correct number of items")
+        public void testGetNumItemsLeftInBag() {
+            int numItems = bag.getNumItemsLeftInBag();
+            assertEquals(numItems, Bag.INIT_ITEMS_NUM * ItemType.getValues().size());
+
+            ArrayList<ItemTile> items = bag.drawItems(5);
+            numItems = bag.getNumItemsLeftInBag();
+            assertEquals(numItems, Bag.INIT_ITEMS_NUM * ItemType.getValues().size() - 5);
+        }
     }
 }
