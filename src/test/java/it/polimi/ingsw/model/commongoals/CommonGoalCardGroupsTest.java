@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CommonGoalCard3Test {
+class CommonGoalCardGroupsTest {
+
     @Test
     void checkEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard6 cg6 = new CommonGoalCard6(3);
+        CommonGoalCardGroups cg1 = new CommonGoalCardGroups(4,6,2);
+        CommonGoalCardGroups cg2 = new CommonGoalCardGroups(4,4,4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -24,13 +26,51 @@ class CommonGoalCard3Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg6.check(bookshelf));
+        assertFalse(cg1.check(bookshelf));
+        assertFalse(cg2.check(bookshelf));
     }
+
     @Test
+    void check6GroupsTrue() {
+        Bookshelf bookshelf = new Bookshelf();
+        ItemTile[][] itemmatrix;
+        CommonGoalCardGroups cg1 = new CommonGoalCardGroups(4,6,2);
+        String[][] matrix ={
+                {"G","P","E","E","G"},
+                {"G","G","E","E","T"},
+                {"G","G","T","E","F"},
+                {"B","B","T","F","T"},
+                {"G","P","F","G","G"},
+                {"B","P","C","T","T"}
+        };
+        itemmatrix = bookshelf.stringToMat(matrix);
+        bookshelf.setShelfie(itemmatrix);
+        bookshelf.printBookshelf();
+        assertTrue(cg1.check(bookshelf));
+    }
+
+    @Test
+    void check6GroupsFalse() {
+        Bookshelf bookshelf = new Bookshelf();
+        ItemTile[][] itemmatrix;
+        CommonGoalCardGroups cg1 = new CommonGoalCardGroups(4,6,2);
+        String[][] matrix ={
+                {"G","P","E","E","G"},
+                {"G","G","E","E","T"},
+                {"G","G","T","E","F"},
+                {"B","B","T","F","T"},
+                {"G","P","F","G","G"},
+                {"B","P","C","F","T"}
+        };
+        itemmatrix = bookshelf.stringToMat(matrix);
+        bookshelf.setShelfie(itemmatrix);
+        bookshelf.printBookshelf();
+        assertFalse(cg1.check(bookshelf));
+    }
     void check4GroupTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard3 cg3 = new CommonGoalCard3(2);
+        CommonGoalCardGroups cg3 = new CommonGoalCardGroups(2,4,4);
         String[][] matrix ={
                 {"C","P","P","E","E"},
                 {"C","P","P","E","E"},
@@ -49,7 +89,7 @@ class CommonGoalCard3Test {
     void check4GroupFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard3 cg3 = new CommonGoalCard3(4);
+        CommonGoalCardGroups cg3 = new CommonGoalCardGroups(2,4,4);
         String[][] matrix ={
                 {"C","P","P","E","E"},
                 {"C","P","P","E","E"},
