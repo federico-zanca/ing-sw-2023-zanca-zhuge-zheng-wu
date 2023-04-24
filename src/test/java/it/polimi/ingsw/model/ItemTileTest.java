@@ -1,65 +1,119 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.ItemType;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.model.enumerations.ItemType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ItemTileTest {
+@DisplayName("ItemTile tests")
+public class ItemTileTest {
 
-    @Test
-    void testSetType() {
-        ItemTile item = new ItemTile(EMPTY);
-        item.setType(BOOK);
-        assertEquals(BOOK,item.getType());
+    @Nested
+    @DisplayName("getType method")
+    class GetTypeTests {
+        @Test
+        @DisplayName("Returns correct ItemType")
+        public void typeGet_ReturnsCorrectItemType() {
+            ItemTile itemTile = new ItemTile(ItemType.TROPHY);
+            assertEquals(ItemType.TROPHY, itemTile.getType());
+        }
     }
 
-    @Test
-    void testSetGroupId() {
-        ItemTile item = new ItemTile(FRAME);
-        item.setGroupId(3);
-        assertEquals(3,item.getGroupId());
-        item.setGroupId(1);
-        assertEquals(1,item.getGroupId());
-        item.setGroupId(6);
-        assertEquals(6,item.getGroupId());
+    @Nested
+    @DisplayName("setType method")
+    class SetTypeTests {
+        @Test
+        @DisplayName("Changes ItemType correctly")
+        public void typeSet_ChangesItemTypeCorrectly() {
+            ItemTile itemTile = new ItemTile(ItemType.CAT);
+            itemTile.setType(ItemType.FRAME);
+            assertEquals(ItemType.FRAME, itemTile.getType());
+        }
     }
 
-    @Test
-    void testGetGroupId() {
-        ItemTile item = new ItemTile(FRAME);
-        assertEquals(0,item.getGroupId());
+    @Nested
+    @DisplayName("setGroupId method")
+    class SetGroupIdTests {
+        @Test
+        @DisplayName("Sets GroupId correctly")
+        public void groupSet_SetsGroupIdCorrectly() {
+            ItemTile itemTile = new ItemTile(ItemType.PLANT);
+            itemTile.setGroupId(5);
+            assertEquals(5, itemTile.getGroupId());
+        }
+
     }
 
-    @Test
-    void testGetType() {
-        ItemTile item = new ItemTile(FRAME);
-        assertEquals(FRAME,item.getType());
+    @Nested
+    @DisplayName("isEmpty method")
+    class IsEmptyTests {
+        @Test
+        @DisplayName("Returns true if ItemType is EMPTY")
+        public void isTypeEmpty_ReturnsTrueIfItemTypeIsEmpty() {
+            ItemTile itemTile = new ItemTile(ItemType.EMPTY);
+            assertTrue(itemTile.isEmpty());
+        }
+
+        @Test
+        @DisplayName("Returns false if ItemType is not EMPTY")
+        public void isTypeEmpty_ReturnsFalseIfItemTypeIsNotEmpty() {
+            ItemTile itemTile = new ItemTile(ItemType.PLANT);
+            assertFalse(itemTile.isEmpty());
+        }
     }
 
-    @Test
-    void testIsEmpty() {
-        ItemTile item = new ItemTile(EMPTY);
-        assertTrue(item.isEmpty());
-        item.setType(BOOK);
-        assertFalse(item.isEmpty());
+    @Nested
+    @DisplayName("isForbidden method")
+    class IsForbiddenTests {
+        @Test
+        @DisplayName("Returns true if ItemType is FORBIDDEN")
+        public void isTypeForbidden_ReturnsTrueIfItemTypeIsForbidden() {
+            ItemTile itemTile = new ItemTile(ItemType.FORBIDDEN);
+            assertTrue(itemTile.isForbidden());
+        }
+
+        @Test
+        @DisplayName("Returns false if ItemType is not FORBIDDEN")
+        public void isTypeForbidden_ReturnsFalseIfItemTypeIsNotForbidden() {
+            ItemTile itemTile = new ItemTile(ItemType.PLANT);
+            assertFalse(itemTile.isForbidden());
+        }
     }
 
-    @Test
-    void testIsForbidden() {
-        ItemTile item = new ItemTile(FORBIDDEN);
-        assertTrue(item.isForbidden());
-        item.setType(EMPTY);
-        assertFalse(item.isForbidden());
+    @Nested
+    @DisplayName("hasSomething method")
+    class HasSomethingTests {
+        @Test
+        @DisplayName("Returns true if ItemType is not FORBIDDEN or EMPTY")
+        public void hasTypeSomething_ReturnsTrueIfItemTypeIsNotForbiddenOrEmpty() {
+            ItemTile itemTile1 = new ItemTile(ItemType.TROPHY);
+            assertTrue(itemTile1.hasSomething());
+
+            ItemTile itemTile2 = new ItemTile(ItemType.PLANT);
+            assertTrue(itemTile2.hasSomething());
+        }
+
+        @Test
+        @DisplayName("Returns false if ItemType is FORBIDDEN or EMPTY")
+        public void hasTypeSomething_ReturnsFalseIfItemTypeIsForbiddenOrEmpty() {
+            ItemTile itemTile1 = new ItemTile(ItemType.EMPTY);
+            assertFalse(itemTile1.hasSomething());
+
+            ItemTile itemTile2 = new ItemTile(ItemType.FORBIDDEN);
+            assertFalse(itemTile2.hasSomething());
+        }
     }
 
-    @Test
-    void testHasSomething() {
-        ItemTile item = new ItemTile(FORBIDDEN);
-        assertFalse(item.hasSomething());
-        item.setType(EMPTY);
-        assertFalse(item.hasSomething());
-        item.setType(BOOK);
-        assertTrue(item.hasSomething());
+    @Nested
+    @DisplayName("toString method")
+    class ToStringTests {
+        @Test
+        @DisplayName("Returns the ItemType as a string")
+        public void toString_ReturnsItemTypeAsString() {
+            ItemTile itemTile = new ItemTile(ItemType.TROPHY);
+            assertEquals("T", itemTile.toString());
+        }
     }
 }
