@@ -2,10 +2,11 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommonGoalCardGroupsTest {
 
@@ -14,7 +15,7 @@ class CommonGoalCardGroupsTest {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCardGroups cg1 = new CommonGoalCardGroups(4,6,2);
-        CommonGoalCardGroups cg2 = new CommonGoalCardGroups(4,4,4);
+        CommonGoalCardGroups cg3 = new CommonGoalCardGroups(4,4,4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -26,13 +27,16 @@ class CommonGoalCardGroupsTest {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg1);
         assertFalse(cg1.check(bookshelf));
-        assertFalse(cg2.check(bookshelf));
+        System.out.println(cg3);
+        assertFalse(cg3.check(bookshelf));
     }
 
     @Test
     void check6GroupsTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCardGroups cg1 = new CommonGoalCardGroups(4,6,2);
         String[][] matrix ={
@@ -47,6 +51,12 @@ class CommonGoalCardGroupsTest {
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
         assertTrue(cg1.check(bookshelf));
+        assertEquals(8,cg1.peek());
+        cg1.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg1.achievedBy(p));
+        assertTrue(cg1.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg1.peek());
     }
 
     @Test
@@ -69,7 +79,8 @@ class CommonGoalCardGroupsTest {
     }
     @Test
     void check4GroupTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCardGroups cg3 = new CommonGoalCardGroups(2,4,4);
         String[][] matrix ={
@@ -84,6 +95,12 @@ class CommonGoalCardGroupsTest {
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
         assertTrue(cg3.check(bookshelf));
+        assertEquals(8,cg3.peek());
+        cg3.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg3.achievedBy(p));
+        assertTrue(cg3.getThoseWhoAchieved().contains(p));
+        assertEquals(4,cg3.peek());
     }
 
     @Test

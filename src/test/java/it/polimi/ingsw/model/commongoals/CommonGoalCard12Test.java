@@ -2,10 +2,11 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommonGoalCard12Test {
     @Test
@@ -24,14 +25,16 @@ class CommonGoalCard12Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg12);
         assertFalse(cg12.check(bookshelf));
     }
 
     @Test
     void checkStairDecFromRightUpTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCard12 cg12 = new CommonGoalCard12(2);
         String[][] matrix ={
                 {"E","E","E","E","T"},
                 {"E","E","E","T","T"},
@@ -44,6 +47,12 @@ class CommonGoalCard12Test {
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
         assertTrue(cg12.check(bookshelf));
+        assertEquals(8,cg12.peek());
+        cg12.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg12.achievedBy(p));
+        assertTrue(cg12.getThoseWhoAchieved().contains(p));
+        assertEquals(4,cg12.peek());
     }
     @Test
     void checkStairDecFromRightDownTrue() {

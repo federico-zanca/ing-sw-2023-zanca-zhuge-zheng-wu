@@ -2,10 +2,11 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommonGoalCard11Test {
     @Test
@@ -24,12 +25,14 @@ class CommonGoalCard11Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg11);
         assertFalse(cg11.check(bookshelf));
     }
 
     @Test
     void checkExactXTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard11 cg11 = new CommonGoalCard11(4);
         String[][] matrix ={
@@ -44,7 +47,12 @@ class CommonGoalCard11Test {
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
         assertTrue(cg11.check(bookshelf));
-    }
+        assertEquals(8,cg11.peek());
+        cg11.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg11.achievedBy(p));
+        assertTrue(cg11.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg11.peek());    }
 
     @Test
     void checkXTrue() {

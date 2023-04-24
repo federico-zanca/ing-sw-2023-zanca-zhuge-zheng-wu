@@ -2,10 +2,11 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommonGoalCardLimitTypesTest {
 
@@ -28,15 +29,20 @@ class CommonGoalCardLimitTypesTest {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg5);
         assertFalse(cg5.check(bookshelf));
+        System.out.println(cg8);
         assertFalse(cg8.check(bookshelf));
+        System.out.println(cg9);
         assertFalse(cg9.check(bookshelf));
+        System.out.println(cg10);
         assertFalse(cg10.check(bookshelf));
     }
 
     @Test
     void check3ColumnsTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCardLimitTypes cg5 = new CommonGoalCardLimitTypes(4,3,1,3,"col");
         String[][] matrix ={
@@ -50,7 +56,13 @@ class CommonGoalCardLimitTypesTest {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertTrue(cg5.check(bookshelf));
+        assertTrue(cg5.check(p.getBookshelf()));
+        assertEquals(8,cg5.peek());
+        cg5.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg5.achievedBy(p));
+        assertTrue(cg5.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg5.peek());
     }
     @Test
     void checkNot3ColumnsFull() {

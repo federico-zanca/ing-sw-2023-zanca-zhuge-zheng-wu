@@ -2,16 +2,18 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CommonGoalCard4Test {
 
     @Test
     void checkSquareTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
         CommonGoalCard4 cg4 = new CommonGoalCard4(4);
         String[][] matrix ={
@@ -25,7 +27,14 @@ class CommonGoalCard4Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg4);
         assertTrue(cg4.check(bookshelf));
+        assertEquals(8,cg4.peek());
+        cg4.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg4.achievedBy(p));
+        assertTrue(cg4.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg4.peek());
     }
 
     @Test
