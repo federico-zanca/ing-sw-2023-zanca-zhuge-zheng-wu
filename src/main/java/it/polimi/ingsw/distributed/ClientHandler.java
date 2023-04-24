@@ -42,34 +42,52 @@ public class ClientHandler {
                 break;
             case JOIN_LOBBY_REQUEST:
                 String content;
-                boolean success;
+                JoinType joinSuccess;
+                ArrayList<String> usernames = new ArrayList<>();
                 String lobbyName = ((JoinLobbyRequest) message).getLobbyName();
-                //int numClients = 0;
-                //int maxNumClients = 0;
+                String name = server.getUsernameOfClient(client);
                 try {
-                    server.addClientToLobby(client, lobbyName);
-                    content = "Joined lobby";
-                    success = true;
-                    //numClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getNumClients();
-                    //maxNumClients = server.getLobbyByName(((JoinLobbyRequest) message).getLobbyName()).getMaxNumClients();
+                    if(server.getLobbyByName(lobbyName).getController().getTurnController().getPlayersToSkipUsernames().contains(name) && server.getLobbyByName(lobbyName).isGameStarted()) {
+                        server.addClientToLobby(client, lobbyName);
+                        joinSuccess = JoinType.REJOINED;
+                        content = "Rejoined lobby";
+                        usernames = server.getLobbyByName(lobbyName).getClientsUsernames();
+                        server.getConnectedClientInfo(client).setClientState(ClientState.IN_GAME);
+                    } else{
+                        if(!server.getLobbyByName(lobbyName).isGameStarted()){
+                            server.addClientToLobby(client, lobbyName);
+                            joinSuccess = JoinType.JOINED;
+                            content = "Joined lobby";
+                            usernames = server.getLobbyByName(lobbyName).getClientsUsernames();
+                        } else{
+                            joinSuccess = JoinType.REFUSED;
+                            content = "Can't join! Game already started";
+                            usernames = new ArrayList<>();
+                        }
+                    }
                 } catch (ClientAlreadyInLobbyException e) {
                     content = "You are already in a lobby";
-                    success = false;
+                    joinSuccess = JoinType.REFUSED;
+                    usernames = server.getLobbyOfClient(client).getClientsUsernames();
                 } catch (FullLobbyException e) {
                     content = "Lobby is full";
-                    success = false;
+                    joinSuccess = JoinType.REFUSED;
+                    usernames = new ArrayList<>();
                 } catch (LobbyNotFoundException e) {
                     content = "Lobby not found";
-                    success = false;
+                    joinSuccess = JoinType.REFUSED;
+                    usernames = new ArrayList<>();
                 }
                 try {
-                    client.update(new JoinLobbyResponse(success, content, server.getLobbyByName(lobbyName).getClientsUsernames()));
+                    client.update(new JoinLobbyResponse(joinSuccess, content, usernames));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);
                 }
-                if(success){
+                if(joinSuccess == JoinType.JOINED || joinSuccess == JoinType.REJOINED) {
                     String username = server.getConnectedClientInfo(client).getClientID();
-                    server.getLobbyOfClient(client).sendPlayersListToEveryoneBut(username, Color.CYANTEXT + username + Color.NO_COLOR + " si è unito alla partita");
+                    //sends to everyone but the client that joined the lobby the new list of players
+                    if(!server.getLobbyOfClient(client).isGameStarted())
+                        server.getLobbyOfClient(client).sendPlayersListToEveryoneBut(username, Color.CYANTEXT + username + Color.NO_COLOR + " si è unito alla partita");
                 }
                 break;
             case USERNAME_REQUEST:
@@ -90,17 +108,17 @@ public class ClientHandler {
                 }
                 break;
             case LOGIN_REQUEST:
-                String name = ((LoginRequest) message).getUsername();
-                if(server.isUsernameAvailable(name)) {
-                    server.setUsername(client, name);
+                String playername = ((LoginRequest) message).getUsername();
+                if(server.isUsernameAvailable(playername)) {
+                    server.setUsername(client, playername);
                     try {
-                        client.update(new LoginResponse(true, name));
+                        client.update(new LoginResponse(true, playername));
                     } catch (RemoteException e) {
                         System.err.println("Unable to send username response: " + e);
                     }
                 } else {
                     try {
-                        client.update(new LoginResponse(false, name));
+                        client.update(new LoginResponse(false, playername));
                     } catch (RemoteException e) {
                         System.err.println("Unable to send username response: " + e);
                     }
@@ -125,7 +143,13 @@ public class ClientHandler {
                     server.removeClientFromLobby(client);
                     client.update(new ExitLobbyResponse(true, lobbyName));
                     String content = Color.CYANTEXT + server.getUsernameOfClient(client) + Color.NO_COLOR + " ha abbandonato la lobby";
-                    server.getLobbyByName(lobbyName).sendPlayersListToEveryoneBut(server.getUsernameOfClient(client), content);
+
+                    try {
+                        server.getLobbyByName(lobbyName).sendPlayersListToEveryoneBut(server.getUsernameOfClient(client), content);
+                    } catch (LobbyNotFoundException e) {
+                        System.err.println("Lobby not found: " + e); //not an error, the lobby was deleted. This is the expected behaviour
+                        System.err.println("Probably the lobby was deleted because the last player in it left");
+                    }
                 } catch (RemoteException e) {
                     System.err.println("Unable to send exit lobby response: " + e);
                 }

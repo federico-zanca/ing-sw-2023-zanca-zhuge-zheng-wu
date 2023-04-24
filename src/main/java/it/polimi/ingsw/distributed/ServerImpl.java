@@ -8,8 +8,10 @@ import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessag
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
+import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerResponse;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
+import it.polimi.ingsw.view.LobbyDisplayInfo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -93,10 +95,17 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     /**
      * @return an HashMap containing the name of the lobbies as key and the number of players in the lobby as value, associated with the number of players needed to start the game
      */
-    public HashMap<String, Map.Entry<Integer, Integer>> getLobbiesInfo() {
-        HashMap <String, Map.Entry<Integer, Integer>> availableLobbies = new HashMap<>();
-        for(Lobby l : lobbies)
-            availableLobbies.put(l.getName(), new AbstractMap.SimpleEntry<>(l.getInLobbyClients().size(), l.getChosenNumOfPlayers()));
+    public ArrayList<LobbyDisplayInfo> getLobbiesInfo() {
+        String status;
+        ArrayList<LobbyDisplayInfo> availableLobbies = new ArrayList<>();
+
+        if (lobbies != null) {
+            for (Lobby l : lobbies) {
+                status = l.isGameStarted() ? "STARTED" : "WAITING";
+                availableLobbies.add(new LobbyDisplayInfo(l.getName(), l.getInLobbyClients().size(), l.getChosenNumOfPlayers(), status));
+            }
+        }
+
         return availableLobbies;
     }
 
@@ -114,9 +123,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
                 throw new ClientAlreadyInLobbyException();
             }
             if (l.getName().equals(lobbyName)) {
+                connectedClients.get(client).setClientState(ClientState.IN_A_LOBBY);
                 l.addClient(client);
                 connectedClients.get(client).setLobby(l);
-                connectedClients.get(client).setClientState(ClientState.IN_A_LOBBY);
                 return;
             }
         }
@@ -149,11 +158,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * @param lobbyName the name of the lobby to get
      * @return the lobby having the given name
      */
-    public Lobby getLobbyByName(String lobbyName) {
+    public Lobby getLobbyByName(String lobbyName) throws LobbyNotFoundException {
         for(Lobby l : lobbies)
             if(l.getName().equals(lobbyName))
                 return l;
-        return null;
+        throw new LobbyNotFoundException();
     }
 
     /**
@@ -239,7 +248,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         System.out.println("Received message: " + message);
         if(message instanceof GameMessage) {
             Lobby lobby = getLobbyOfClient(client);
-            lobby.getController().update(client, (GameMessage) message);
+            if(((GameMessage) message ).getType()== GameMessageType.EXIT_GAME_REQUEST){
+                clientExitsFromItsLobby(client);
+            }
+            lobby.getController().update(getUsernameOfClient(client), (GameMessage) message);
         }
         else if(message instanceof ConnectionMessage)
             this.clientHandler.onConnectionMessage(client, (ConnectionMessage) message);
@@ -248,6 +260,13 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         else
             System.err.println("Message not recognized: " + message);
     }
+
+    private void clientExitsFromItsLobby(Client client) {
+        connectedClients.get(client).getLobby().exitClient(client);
+        connectedClients.get(client).setLobby(null);
+        connectedClients.get(client).setClientState(ClientState.IN_SERVER);
+    }
+
 
     public String getUsernameOfClient(Client client) {
         return getConnectedClientInfo(client).getClientID();

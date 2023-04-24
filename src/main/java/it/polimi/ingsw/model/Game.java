@@ -27,6 +27,7 @@ public class Game extends Observable {
     private HashMap<String,PersonalGoalCard> personalGoals;
     private Board board;
     private Bag bag;
+    private boolean gameStarted;
 
     public Game(){
         init();
@@ -176,6 +177,7 @@ public class Game extends Observable {
      * - assigns a personal goal to each player
      */
     public void startGame(){
+        setGameStarted(true);
         setGamePhase(GamePhase.INIT);
         setGameBoard(chosenNumOfPlayers);
         fillBoard();
@@ -193,6 +195,9 @@ public class Game extends Observable {
         //fai vedere commongoals
     }
 
+    private void setGameStarted(boolean b) {
+        this.gameStarted = b;
+    }
 
 
     //  METHODS FOR DRAW
@@ -561,5 +566,13 @@ public class Game extends Observable {
 
     public void removePlayer(Player player) {
         players.remove(player);
+    }
+
+    public void playerRejoined(Player player) {
+        notifyObservers(new PlayerRejoinedMessage("", player.getUsername()));
+    }
+
+    public boolean isGameStarted() {
+        return gameStarted;
     }
 }

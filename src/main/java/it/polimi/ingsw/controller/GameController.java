@@ -8,7 +8,9 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.GameNotReadyException;
 import it.polimi.ingsw.model.exceptions.InvalidCommandException;
 import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
+import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
+import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -175,8 +177,15 @@ public class GameController {
         }
     }
 
-    public void update(Client client, GameMessage message) {
-        onMessageReceived(message);
+    public void update(String senderUsername, GameMessage message) {
+        if(message.getType() == GameMessageType.EXIT_GAME_REQUEST){
+            turnController.addPlayerToSkip(model.getPlayerByUsername(senderUsername));
+        }
+        else if(model.getGamePhase()==GamePhase.PLAY && senderUsername.equals(model.getCurrentPlayer().getUsername())) {
+                onMessageReceived(message);
+        } else {
+            System.err.println("Discarding game message: wrong GamePhase or not CurrentPlayer ");
+        }
     }
 
     public void startGame() throws GameNotReadyException {
@@ -245,5 +254,9 @@ public class GameController {
      */
     public String getCurrentPlayerUsername() {
         return model.getCurrentPlayer().getUsername();
+    }
+
+    public void reconnectExitedPlayer(String username) {
+        turnController.reconnectExitedPlayer(model.getPlayerByUsername(username));
     }
 }

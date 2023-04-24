@@ -5,17 +5,16 @@ import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TurnController {
     private final Game model;
     private final GameController gameController;
     private ArrayList<Player> playerQueue;
+    private ArrayList<Player> playersToSkip;
 
     /**
      * Constructor of the TurnController
@@ -24,6 +23,7 @@ public class TurnController {
     public TurnController(GameController gameController) {
         this.model = gameController.getModel();
         this.gameController = gameController;
+        this.playersToSkip = new ArrayList<>();
     }
 
     /**
@@ -33,8 +33,12 @@ public class TurnController {
         if (model.getGamePhase() != GamePhase.PLAY) {
             return;
         }
-        model.updateLeaderBoard(getPlayerQueueUsernames());
-        model.handleDrawPhase();
+        if(!playersToSkip.contains(model.getCurrentPlayer())) {
+            model.updateLeaderBoard(getPlayerQueueUsernames());
+            model.handleDrawPhase();
+        } else {
+            loadNextPlayer();
+        }
         //game.setGamePhase(TurnPhase.DRAW);
     }
 
@@ -189,5 +193,24 @@ public class TurnController {
 
     public void setPlayersQueue(ArrayList<Player> players) {
         this.playerQueue = players;
+    }
+
+    public void addPlayerToSkip(Player player) {
+        playersToSkip.add(player);
+        if(playersToSkip.size()==playerQueue.size())
+            //TODO leggi bene
+            model.nextGamePhase(); //se esce l'ultimo giocatore, passa alla fase AWARDS (che non vedrà nessuno, si può cambiare)
+        else if(player.equals(model.getCurrentPlayer()))
+            loadNextPlayer();
+    }
+
+
+    public List<String> getPlayersToSkipUsernames(){
+        return playersToSkip.stream().map(Player::getUsername).collect(Collectors.toList());
+    }
+
+    public void reconnectExitedPlayer(Player player) {
+        playersToSkip.remove(player);
+        model.playerRejoined(player);
     }
 }

@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class Bag implements Serializable {
     private static final long serialVersionUID = -4755443721464701726L;
+    public static final int INIT_ITEMS_NUM = 22;
     private ArrayList<PersonalGoalCard> personalGoals;
     //private ArrayList<ItemTile> itemTiles;
     private HashMap<ItemType, Integer> itemTiles;
@@ -19,7 +20,7 @@ public class Bag implements Serializable {
         itemTiles = new HashMap<>();
         availableItems = ItemType.getValues();
         for(ItemType t: availableItems){
-            itemTiles.put(t,22);
+            itemTiles.put(t,INIT_ITEMS_NUM);
         }
         //TODO inserisci personal goal cards (non si sa come generarle)
     }
@@ -54,7 +55,7 @@ public class Bag implements Serializable {
         ItemType k;
         //TODO define constants class
 
-        if (availableItems.size() == 0) {
+        if (availableItems.isEmpty()) {
             return null;
         }
         else{
@@ -100,8 +101,8 @@ public class Bag implements Serializable {
      */
     public int getNumItemsLeftInBag(){
         int sum=0;
-        for(ItemType i : availableItems){
-            sum+=itemTiles.get(i);
+        for (int count : itemTiles.values()) {
+            sum += count;
         }
         return sum;
     }
