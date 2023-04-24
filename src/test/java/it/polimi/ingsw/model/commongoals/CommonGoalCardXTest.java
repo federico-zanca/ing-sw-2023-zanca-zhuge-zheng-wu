@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard11Test {
+class CommonGoalCardXTest {
     @Test
     void checkEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
+        CommonGoalCardX cg11 = new CommonGoalCardX(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -34,7 +34,7 @@ class CommonGoalCard11Test {
         Player p = new Player("Player_1");
         Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
+        CommonGoalCardX cg11 = new CommonGoalCardX(4);
         String[][] matrix ={
                 {"G","P","E","E","E"},
                 {"C","G","E","E","E"},
@@ -58,7 +58,7 @@ class CommonGoalCard11Test {
     void checkXTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
+        CommonGoalCardX cg11 = new CommonGoalCardX(4);
         String[][] matrix ={
                 {"G","P","E","E","E"},
                 {"C","G","E","E","E"},
@@ -76,7 +76,7 @@ class CommonGoalCard11Test {
     void checkXFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard11 cg11 = new CommonGoalCard11(4);
+        CommonGoalCardX cg11 = new CommonGoalCardX(4);
         String[][] matrix ={
                 {"G","E","E","E","E"},
                 {"G","E","E","E","T"},

@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.commongoals;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
-public class CommonGoalCard11 extends CommonGoalCard {
-    public CommonGoalCard11(int numPlayers){
+public class CommonGoalCardX extends CommonGoalCard {
+    public CommonGoalCardX(int numPlayers){
         super(numPlayers);
     }
     public boolean check(Bookshelf bookshelf){

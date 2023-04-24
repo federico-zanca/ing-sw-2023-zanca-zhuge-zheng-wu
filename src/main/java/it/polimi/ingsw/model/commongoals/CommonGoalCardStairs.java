@@ -2,9 +2,9 @@ package it.polimi.ingsw.model.commongoals;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
-public class CommonGoalCard12 extends CommonGoalCard {
+public class CommonGoalCardStairs extends CommonGoalCard {
 
-    public CommonGoalCard12(int numPlayers){
+    public CommonGoalCardStairs(int numPlayers){
         super(numPlayers);
     }
     public boolean check(Bookshelf bookshelf){

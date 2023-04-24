@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard4Test {
+class CommonGoalCardSquareTest {
 
     @Test
     void checkSquareTrue() {
         Player p = new Player("Player_1");
         Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(4);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(4);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","P","P","E","E"},
@@ -41,7 +41,7 @@ class CommonGoalCard4Test {
     void checkSquareFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(4);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(4);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","C","P","E","E"},
@@ -60,7 +60,7 @@ class CommonGoalCard4Test {
     void checkSquareEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(2);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(2);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -79,7 +79,7 @@ class CommonGoalCard4Test {
     void checkSquareAdjacentSame() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(3);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(3);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","C","P","E","E"},
@@ -98,7 +98,7 @@ class CommonGoalCard4Test {
     void checkSquareAdjacentDifferent() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(4);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(4);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","C","P","E","E"},

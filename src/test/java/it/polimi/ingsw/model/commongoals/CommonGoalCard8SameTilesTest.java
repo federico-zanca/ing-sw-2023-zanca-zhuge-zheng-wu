@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard7Test {
+class CommonGoalCard8SameTilesTest {
 
     @Test
     void checkEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCard8SameTiles cg6 = new CommonGoalCard8SameTiles(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -26,62 +26,43 @@ class CommonGoalCard7Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        System.out.println(cg7);
-        assertFalse(cg7.check(bookshelf));
+        System.out.println(cg6);
+        assertFalse(cg6.check(bookshelf));
     }
 
     @Test
-    void checkDiagFromLeftTrue() {
+    void check8SameTypeTrue() {
         Player p = new Player("Player_1");
         Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCard8SameTiles cg6 = new CommonGoalCard8SameTiles(4);
         String[][] matrix ={
                 {"G","P","E","E","G"},
-                {"C","G","E","E","T"},
-                {"G","G","G","E","T"},
-                {"B","P","T","G","T"},
-                {"G","P","T","T","G"},
-                {"B","P","G","T","G"}
+                {"C","P","E","E","T"},
+                {"G","G","E","E","T"},
+                {"B","P","E","E","T"},
+                {"G","P","E","E","G"},
+                {"B","P","G","F","G"}
         };
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertTrue(cg7.check(bookshelf));
-        assertEquals(8,cg7.peek());
-        cg7.takePoints(p);
+        assertEquals(8,cg6.peek());
+        cg6.takePoints(p);
         assertEquals(8,p.getScore());
-        assertTrue(cg7.achievedBy(p));
-        assertTrue(cg7.getThoseWhoAchieved().contains(p));
-        assertEquals(6,cg7.peek());
-    }
-
-    @Test
-    void checkDiagFromRightTrue() {
-        Bookshelf bookshelf = new Bookshelf();
-        ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
-        String[][] matrix ={
-                {"G","P","E","E","G"},
-                {"C","G","E","E","T"},
-                {"G","G","G","T","T"},
-                {"B","P","T","B","T"},
-                {"G","T","P","P","G"},
-                {"T","P","G","P","G"}
-        };
-        itemmatrix = bookshelf.stringToMat(matrix);
-        bookshelf.setShelfie(itemmatrix);
-        bookshelf.printBookshelf();
-        assertTrue(cg7.check(bookshelf));
+        assertTrue(cg6.achievedBy(p));
+        assertTrue(cg6.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg6.peek());
+        assertTrue(cg6.check(bookshelf));
     }
     @Test
-    void checkDiagonalFalse() {
+    void check8SameTypeFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCard8SameTiles cg6 = new CommonGoalCard8SameTiles(4);
         String[][] matrix ={
                 {"G","P","E","E","E"},
-                {"C","G","E","E","T"},
+                {"C","P","E","E","T"},
                 {"G","P","E","E","T"},
                 {"B","P","E","E","T"},
                 {"B","P","E","E","G"},
@@ -90,6 +71,7 @@ class CommonGoalCard7Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
-        assertFalse(cg7.check(bookshelf));
+        assertFalse(cg6.check(bookshelf));
     }
+
 }

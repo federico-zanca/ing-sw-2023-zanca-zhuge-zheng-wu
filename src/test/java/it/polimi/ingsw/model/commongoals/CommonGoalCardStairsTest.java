@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard12Test {
+class CommonGoalCardStairsTest {
     @Test
     void checkEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -34,7 +34,7 @@ class CommonGoalCard12Test {
         Player p = new Player("Player_1");
         Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(2);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(2);
         String[][] matrix ={
                 {"E","E","E","E","T"},
                 {"E","E","E","T","T"},
@@ -58,7 +58,7 @@ class CommonGoalCard12Test {
     void checkStairDecFromRightDownTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","T"},
@@ -76,7 +76,7 @@ class CommonGoalCard12Test {
     void checkStairDecFromLeftUpTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"G","E","E","E","E"},
                 {"P","F","E","E","E"},
@@ -94,7 +94,7 @@ class CommonGoalCard12Test {
     void checkStairDecFromLeftDownTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"P","E","E","E","E"},
@@ -112,7 +112,7 @@ class CommonGoalCard12Test {
     void checkStairNot5ColFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -131,7 +131,7 @@ class CommonGoalCard12Test {
     void checkStairEmptyColLeftFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"G","E","E","E","E"},
                 {"P","F","E","E","E"},
@@ -150,7 +150,7 @@ class CommonGoalCard12Test {
     void checkStairOverColLeftFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"P","E","E","E","E"},
@@ -168,7 +168,7 @@ class CommonGoalCard12Test {
     void checkStairOverColRightFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","T"},
                 {"E","E","C","T","T"},
@@ -186,7 +186,7 @@ class CommonGoalCard12Test {
     void checkStairEmptyColRightFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard12 cg12 = new CommonGoalCard12(4);
+        CommonGoalCardStairs cg12 = new CommonGoalCardStairs(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","T"},
