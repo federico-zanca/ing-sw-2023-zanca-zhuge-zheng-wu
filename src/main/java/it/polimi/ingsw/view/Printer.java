@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.distributed.JoinType;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
@@ -360,13 +361,13 @@ public class Printer {
      *
      * @param lobbies HashMap containing the available game lobbies.
      */
-    void showLobbyList(HashMap<String, Map.Entry<Integer, Integer>> lobbies) {
-        System.out.println("Lista delle partite disponibili:");
-        if (lobbies.size() == 0) {
-            System.out.println("Non ci sono partite disponibili! Usa il comando create per crearne una nuova!");
+    void showLobbyList(ArrayList<LobbyDisplayInfo> lobbies) {
+
+        if(lobbies.size() == 0) {
+            System.out.println("Nessuna partita disponibile! Crea una nuova partita con il comando 'create'!");
         } else {
-            for (String key : lobbies.keySet()) {
-                System.out.println("Nome partita: " + key + " | Numero giocatori: " + lobbies.get(key).getKey() + "/" + lobbies.get(key).getValue());
+            for (LobbyDisplayInfo lobby : lobbies) {
+                System.out.println("Nome: " + lobby.getLobbyName() + " | " + lobby.getNumPlayers() + "/" + lobby.getNumPlayersChosen() + " | " + "Stato: " + Color.BRIGHT_PURPLE_TEXT + lobby.isGameStarted() + Color.NO_COLOR);
             }
         }
     }
@@ -388,16 +389,10 @@ public class Printer {
     /**
      * Shows the response of joining a lobby
      *
-     * @param successful a boolean to indicate if the joining was successful.
      * @param content    the string content of the response
      */
-    void showJoinLobbyResponse(boolean successful, String content) {
-        //System.out.println(content);
-        if (!successful) {
-            System.out.println(content); //TODO: implement better
-        } else {
-            printEnteredLobby();
-        }
+    void showJoinLobbyResponse(String content) {
+        System.out.println(content);
     }
 
     /**
@@ -450,14 +445,14 @@ public class Printer {
      * Shows a message indicating that the command entered is invalid.
      */
     void showInvalidCommand() {
-        System.out.println("Il comando è invalido");
+        System.out.println("Comando non valido! Usa il comando help per vedere la lista dei comandi disponibili!");
     }
 
     /**
      * Shows a message indicating that the user is not the admin.
      */
     void showNotAdmin() {
-        System.out.println("Non sei l' admin di questa lobby! Puoi solo usare playerlist oppure exit.");
+        System.out.println("Non sei l' admin di questa lobby! Solo l'admin può usare questo comando.");
     }
 
     /**
@@ -467,8 +462,8 @@ public class Printer {
      * @param new_admin The username of the new admin that has been set.
      */
     void showNewAdmin(String old_admin, String new_admin) {
-        System.out.println("Il vecchio admin " + old_admin + " è stato rimosso");
-        System.out.println("Il nuovo admin è " + new_admin);
+        System.out.println("\nIl vecchio admin " + old_admin + " è stato rimosso");
+        System.out.println("Il nuovo admin è " + Color.MAGENTATEXT + new_admin + Color.NO_COLOR);
     }
 
     /**
@@ -495,5 +490,20 @@ public class Printer {
         System.out.println();
         System.out.println(content);
         showLobbyPlayersList(allPlayersUsernames);
+    }
+
+    public void showPlayerRejoined(String username) {
+        System.out.println();
+        System.out.println(username + " si è riconnesso alla partita!");
+    }
+
+    public void showExitGameResponse(String content) {
+        System.out.println();
+        System.out.println(content);
+    }
+
+    public void showPlayerLeft(String content) {
+        System.out.println();
+        System.out.println(content);
     }
 }

@@ -6,7 +6,7 @@ public enum ConnectionCommand {
     GAMES("mostra la lista di partite disponibili"),
     JOIN("<nome partita> entra in una partita"),
     CREATE("<nome partita> crea una nuova partita"),
-    USERNAME("<username> imposta il tuo username");
+    USERNAME("<username> cambia il tuo username");
 
     private String description;
 

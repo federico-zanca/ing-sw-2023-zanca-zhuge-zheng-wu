@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.distributed.Lobby;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.view.LobbyDisplayInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,15 +11,15 @@ import java.util.Map;
 public class LobbyListResponse extends ConnectionMessage {
 
 
-    private final HashMap<String, Map.Entry<Integer, Integer>> lobbies;
+    private final ArrayList<LobbyDisplayInfo> lobbies;
 
-    public LobbyListResponse(HashMap<String, Map.Entry<Integer, Integer>> lobbies) {
+    public LobbyListResponse(ArrayList<LobbyDisplayInfo> lobbies) {
         super(ConnectionMessageType.LOBBY_LIST_RESPONSE);
         this.lobbies = lobbies;
     }
 
 
-    public HashMap<String, Map.Entry<Integer, Integer>> getLobbies() {
+    public ArrayList<LobbyDisplayInfo> getLobbies() {
         return lobbies;
     }
 }

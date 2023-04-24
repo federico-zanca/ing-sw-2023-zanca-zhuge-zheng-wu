@@ -3,10 +3,13 @@ package it.polimi.ingsw.distributed;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.network.message.gamemessage.ExitGameResponse;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
+import it.polimi.ingsw.network.message.gamemessage.PlayerLeftMessage;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 
 import java.rmi.RemoteException;
+import java.rmi.ServerError;
 import java.util.ArrayList;
 
 public class Lobby {
@@ -33,25 +36,31 @@ public class Lobby {
      * @throws FullLobbyException if the lobby is full
      */
     public void addClient(Client client) throws ClientAlreadyInLobbyException, FullLobbyException{
-        if(inLobbyClients.contains(client))
+        if(inLobbyClients.contains(client)) {
             throw new ClientAlreadyInLobbyException();
+        }
         else if(inLobbyClients.size() == model.getChosenPlayersNumber())
             throw new FullLobbyException();
         else {
             inLobbyClients.add(client);
-            try {
-                controller.addPlayer(server.getConnectedClientInfo(client).getClientID());
-            } catch (InvalidUsernameException e) {
-                //TODO migliora
-                System.err.println("Invalid username: " + e.getMessage() + ". Skipping the update...");
+            if(model.getPlayersUsernames().contains(server.getUsernameOfClient(client)) && controller.getTurnController().getPlayersToSkipUsernames().contains(server.getUsernameOfClient(client))) {
+                controller.reconnectExitedPlayer(server.getConnectedClientInfo(client).getClientID());
+                server.getConnectedClientInfo(client).setClientState(ClientState.IN_GAME);
+            } else {
+                try {
+                    controller.addPlayer(server.getConnectedClientInfo(client).getClientID());
+                } catch (InvalidUsernameException e) {
+                    System.err.println("Can't add player to the model: " + e.getMessage());
+                }
             }
             this.model.addObserver((arg) -> {
                 try {
                     if(arg instanceof GameMessage) {
-                        if (controller.getCurrentPlayerUsername().equals(server.getConnectedClientInfo(client).getClientID()) && ((GameMessage) arg).getUsername().equals(server.getConnectedClientInfo(client).getClientID()))
+                        if(((GameMessage) arg).getUsername().equals(""))
                             client.update(arg);
-                        else if(((GameMessage) arg).getUsername().equals(""))
+                        else if (model.isGameStarted() && controller.getCurrentPlayerUsername().equals(server.getConnectedClientInfo(client).getClientID()) && ((GameMessage) arg).getUsername().equals(server.getConnectedClientInfo(client).getClientID())) {
                             client.update(arg);
+                        }
                     } else {
                         System.err.println("Unable to update the client: " + arg + " is not a GameMessage. Skipping the update...");
                     }
@@ -113,6 +122,7 @@ public class Lobby {
      * @param client the client to remove
      */
     public void removeClient(Client client) {
+        this.model.removeObserver(inLobbyClients.indexOf(client));
         inLobbyClients.remove(client);
         server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);
         controller.removePlayer(server.getConnectedClientInfo(client).getClientID());
@@ -128,7 +138,7 @@ public class Lobby {
         }else if(inLobbyClients.size() == 0){
             server.getLobbies().remove(this);
         }
-        //TODO remove observer
+
     }
 
     /**
@@ -190,5 +200,44 @@ public class Lobby {
                 System.err.println("Unable to send LobbyMessage : " + e.getMessage());
             }
         }
+    }
+
+    public void exitClient(Client client) {
+        //TODO handle bug when last client exits
+        this.model.removeObserver(inLobbyClients.indexOf(client));
+        inLobbyClients.remove(client);
+        server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);
+        for(Client c : inLobbyClients){
+            try {
+                String content = getClientUsername(client) + " left the game. ";
+                if(model.isGameStarted()){
+                    content += "His turn will be skipped until he rejoins the game.";
+                }
+                c.update(new PlayerLeftMessage("", content));
+            } catch (RemoteException e) {
+                System.err.println("Unable to send PlayersInLobbyUpdate " + e);
+            }
+        }
+        try {
+            client.update(new ExitGameResponse(getClientUsername(client), "You exited the game"));
+        } catch (RemoteException e) {
+            System.err.println("Unable to send ExitGameResponse " + e);
+        }
+        if(client.equals(admin) && inLobbyClients.size() > 0) {
+            admin = inLobbyClients.get(0);
+            for (Client c : inLobbyClients) {
+                try {
+                    c.update(new NewAdminMessage(server.getConnectedClientInfo(client).getClientID(), server.getConnectedClientInfo(admin).getClientID()));
+                } catch (RemoteException e) {
+                    System.err.println("Unable to send preGameMessage " + e);
+                }
+            }
+        }else if(inLobbyClients.size() == 0){
+            server.getLobbies().remove(this);
+        }
+    }
+
+    public boolean isGameStarted() {
+        return model.isGameStarted();
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
+import it.polimi.ingsw.distributed.JoinType;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
@@ -117,7 +118,7 @@ public class TextualUI extends Observable implements Runnable {
                 elaborateGameCommand(input);
                 break;
             default:
-                System.err.println("Stato client non supportato wtf bro");
+                System.err.println("Stato client non supportato ");
         }
     }
 
@@ -126,6 +127,12 @@ public class TextualUI extends Observable implements Runnable {
      * @param input the input from the user
      */
     private void elaborateGameCommand(String input) {
+        if(input.equalsIgnoreCase("exit")){
+            setPlayerState(PlayerState.WATCHING);
+            notifyObservers(new ExitGameRequest(myUsername));
+            return;
+        }
+
         if(input.equals("autoplay")){
             //TODO implement here, for debugging reasons: lo usiamo per avere un bot che giochi da solo al posto nostro e poter fare delle partite in fretta
             return;
@@ -295,7 +302,7 @@ public class TextualUI extends Observable implements Runnable {
             }
         }
         if(lobbyCommand == null){
-            System.out.println("Comando non valido!");
+            printer.showInvalidCommand();
             return;
         }
         switch (lobbyCommand) {
@@ -325,7 +332,7 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case NUMPLAYERS:
                     if (parts.length != 2) {
-                        System.out.println("Comando non valido!");
+                        printer.showInvalidCommand();
                         return;
                     } else if(!inputValidator.invalidNumOfPlayersFormat(parts[1])){
                         int chosenNum = Integer.parseInt(parts[1].trim());
@@ -360,7 +367,7 @@ public class TextualUI extends Observable implements Runnable {
             }
         }
         if(command == null){
-            System.out.println("Comando non valido!");
+            printer.showInvalidCommand();
             return;
         }
         switch (command) {
@@ -381,7 +388,7 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case JOIN:
                 if (parts.length != 2) {
-                    System.out.println("Comando non valido!");
+                    printer.showInvalidCommand();
                     return;
                 } else {
                     setPlayerState(PlayerState.WATCHING);
@@ -390,7 +397,7 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case CREATE:
                 if (parts.length != 2) {
-                    System.out.println("Comando non valido!");
+                    printer.showInvalidCommand();
                     return;
                 } else {
                     setPlayerState(PlayerState.WATCHING);
@@ -427,14 +434,13 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void elaborateUsernameCommand(String[] parts) {
         if (parts.length != 2) {
-            System.out.println("Comando non valido!");
+            printer.showInvalidCommand();
             return;
         } else {
             if (!inputValidator.isValidUsername(parts[1])) {
-                System.out.println("Username non valido");
+                System.out.println("Username non valido! Riprova");
                 return;
             } else {
-                System.out.println("Username impostato a " + parts[1]);
                 setPlayerState(PlayerState.WATCHING);
                 notifyObservers(new UsernameRequest(parts[1]));
                 return;
@@ -530,42 +536,46 @@ public class TextualUI extends Observable implements Runnable {
      * @param message The game message.
      */
     private void onGameMessage(GameMessage message) {
-        lastMessage = message;
         setIsActive(message.getUsername().equals(myUsername));
         switch (message.getType()) {
             case GAME_STARTED:
+                lastMessage = message;
                 setClientState(ClientState.IN_GAME);
                 //showGameStarted(((GameStartedMessage) message).getGameboard());
                 printer.showGameStarted(((GameStartedMessage) message).getGameView());
                 break;
             case NEW_TURN:
+                lastMessage = message;
                 tilesToInsert.clear();
                 tilesToDraw.clear();
                 printer.showNewTurn(((NewTurnMessage) message).getCurrentPlayer());
-                printer.displayPrompt();
                 setActionType(ActionType.NONE);
                 break;
             case BOARD:
+                lastMessage = message;
                 printer.showBoard(((BoardMessage) message).getBoard());
                 break;
             case LEADERBOARD:
+                lastMessage = message;
                 printer.showLeaderboard(((LeaderBoardMessage) message).getLeaderboard());
                 break;
             case BOOKSHELF:
+                lastMessage = message;
                 BookshelfMessage m = (BookshelfMessage) message;
                 printer.showBookshelf(m.getUsername(), m.getBookshelf());
                 break;
             case DRAW_INFO:
+                lastMessage = message;
                 DrawInfoMessage m1 = (DrawInfoMessage) message;
                 showDrawInfo(m1);
                 //if(isActive) {
                     System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, m1.getMaxNumItems()) + " tessere. Di più non riusciresti a inserirne!");
                     System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
                     setActionType(ActionType.DRAW_TILES);
-                    printer.displayPrompt();
                 //}
                 break;
             case INSERT_INFO:
+                lastMessage = message;
                 InsertInfoMessage m2 = (InsertInfoMessage) message;
                 tilesToInsert = m2.getHand();
                 showInsertInfo(m2);
@@ -581,29 +591,52 @@ public class TextualUI extends Observable implements Runnable {
                 //}
                 break;
             case ACHIEVED_COMMON_GOAL:
+                lastMessage = message;
                 AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
                 printer.showAchievedCommonGoal(m3);
                 break;
             case NO_COMMON_GOAL:
+                lastMessage = message;
                 System.out.println(((NoCommonGoalMessage) message).getContent());
                 break;
             case LAST_TURN:
+                lastMessage = message;
                 printer.showLastTurn((LastTurnMessage) message);
                 break;
             case ADJACENT_ITEMS_POINTS:
+                lastMessage = message;
                 printer.showAdjacentItemsPoints((AdjacentItemsPointsMessage) message);
                 break;
             case PERSONAL_GOAL_POINTS:
+                lastMessage = message;
                 printer.showPersonalGoalPoints((PersonalGoalPointsMessage) message);
                 break;
             case END_GAME:
+                lastMessage = message;
                 EndGameMessage m4 = (EndGameMessage) message;
                 printer.showEndGame(m4.getRanking());
+                break;
+            case PLAYER_REJOINED:
+                printer.showPlayerRejoined(((PlayerRejoinedMessage) message).getPlayer());
+                break;
+            case EXIT_GAME_RESPONSE:
+                printer.showExitGameResponse(((ExitGameResponse) message).getContent());
+                this.clientState = ClientState.IN_SERVER;
+                break;
+            case PLAYER_LEFT:
+                printer.showPlayerLeft(((PlayerLeftMessage) message).getContent());
                 break;
             default:
                 System.err.println("Ignoring event from model");
                 break;
         }
+        /*
+        if(playerState == PlayerState.WATCHING){
+            System.out.println();
+            printer.displayPrompt();
+        }
+        */
+
         setPlayerState(PlayerState.ACTIVE);
     }
 
@@ -627,9 +660,13 @@ public class TextualUI extends Observable implements Runnable {
                     setClientState(ClientState.IN_A_LOBBY);
                 break;
             case JOIN_LOBBY_RESPONSE:
-                printer.showJoinLobbyResponse(((JoinLobbyResponse) message).isSuccessful(), ((JoinLobbyResponse) message).getContent());
-                if(((JoinLobbyResponse) message).isSuccessful()) {
+                printer.showJoinLobbyResponse(((JoinLobbyResponse) message).getContent());
+                if(((JoinLobbyResponse) message).getJoinType() == JoinType.JOINED){
                     setClientState(ClientState.IN_A_LOBBY);
+                    printer.showLobbyPlayersList(((JoinLobbyResponse) message).getUsernames());
+                } else if(((JoinLobbyResponse) message).getJoinType() == JoinType.REJOINED){
+                    setClientState(ClientState.IN_GAME);
+                    setActionType(ActionType.NONE);
                     printer.showLobbyPlayersList(((JoinLobbyResponse) message).getUsernames());
                 }
                 break;
@@ -678,18 +715,20 @@ public class TextualUI extends Observable implements Runnable {
                 break;
             case CHANGE_NUM_OF_PLAYER_RESPONSE:
                 System.out.println(((ChangeNumOfPlayerResponse) message).getContent());
-                if(playerState == PlayerState.ACTIVE)
-                    printer.displayPrompt();
                 break;
             case NEW_PLAYER_IN_LOBBY:
                 printer.showNewPlayerInLobby(((PlayersInLobbyUpdate) message).getAllPlayersUsernames(), ((PlayersInLobbyUpdate) message).getContent());
-                if(playerState == PlayerState.ACTIVE)
-                    printer.displayPrompt();
                 break;
             default:
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
                 break;
         }
+        /*
+        if(playerState == PlayerState.WATCHING) {
+            System.out.println();
+            printer.displayPrompt();
+        }
+         */
         setPlayerState(PlayerState.ACTIVE);
     }
 

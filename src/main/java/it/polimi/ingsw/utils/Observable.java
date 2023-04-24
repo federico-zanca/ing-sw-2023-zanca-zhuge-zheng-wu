@@ -40,4 +40,8 @@ public class Observable {
             observer.update(message);
         }
     }
+
+    public void removeObserver(int index) {
+        observers.remove(index);
+    }
 }
