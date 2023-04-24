@@ -29,7 +29,8 @@ public enum Color {
 
     CYANTEXT("\033[38;5;45m"),
 
-    MAGENTATEXT("\033[38;5;199m");
+    MAGENTATEXT("\033[38;5;199m"),
+    BRIGHT_PURPLE_TEXT("\033[38;5;201m");
 
     private final String color;
 
