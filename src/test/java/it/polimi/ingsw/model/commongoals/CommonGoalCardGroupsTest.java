@@ -67,6 +67,7 @@ class CommonGoalCardGroupsTest {
         bookshelf.printBookshelf();
         assertFalse(cg1.check(bookshelf));
     }
+    @Test
     void check4GroupTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
