@@ -2,18 +2,20 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard4Test {
+class CommonGoalCardSquareTest {
 
     @Test
     void checkSquareTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(4);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(4);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","P","P","E","E"},
@@ -25,14 +27,21 @@ class CommonGoalCard4Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg4);
         assertTrue(cg4.check(bookshelf));
+        assertEquals(8,cg4.peek());
+        cg4.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg4.achievedBy(p));
+        assertTrue(cg4.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg4.peek());
     }
 
     @Test
     void checkSquareFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(4);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(4);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","C","P","E","E"},
@@ -51,7 +60,7 @@ class CommonGoalCard4Test {
     void checkSquareEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(2);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(2);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -70,7 +79,7 @@ class CommonGoalCard4Test {
     void checkSquareAdjacentSame() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(3);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(3);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","C","P","E","E"},
@@ -89,7 +98,7 @@ class CommonGoalCard4Test {
     void checkSquareAdjacentDifferent() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard4 cg4 = new CommonGoalCard4(4);
+        CommonGoalCardSquare cg4 = new CommonGoalCardSquare(4);
         String[][] matrix ={
                 {"G","G","P","E","E"},
                 {"G","C","P","E","E"},

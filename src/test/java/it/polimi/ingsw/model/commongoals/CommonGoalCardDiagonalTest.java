@@ -2,18 +2,19 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard7Test {
+class CommonGoalCardDiagonalTest {
 
     @Test
     void checkEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCardDiagonal cg7 = new CommonGoalCardDiagonal(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -25,14 +26,16 @@ class CommonGoalCard7Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg7);
         assertFalse(cg7.check(bookshelf));
     }
 
     @Test
     void checkDiagFromLeftTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCardDiagonal cg7 = new CommonGoalCardDiagonal(4);
         String[][] matrix ={
                 {"G","P","E","E","G"},
                 {"C","G","E","E","T"},
@@ -45,13 +48,19 @@ class CommonGoalCard7Test {
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
         assertTrue(cg7.check(bookshelf));
+        assertEquals(8,cg7.peek());
+        cg7.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg7.achievedBy(p));
+        assertTrue(cg7.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg7.peek());
     }
 
     @Test
     void checkDiagFromRightTrue() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCardDiagonal cg7 = new CommonGoalCardDiagonal(4);
         String[][] matrix ={
                 {"G","P","E","E","G"},
                 {"C","G","E","E","T"},
@@ -69,7 +78,7 @@ class CommonGoalCard7Test {
     void checkDiagonalFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard7 cg7 = new CommonGoalCard7(4);
+        CommonGoalCardDiagonal cg7 = new CommonGoalCardDiagonal(4);
         String[][] matrix ={
                 {"G","P","E","E","E"},
                 {"C","G","E","E","T"},

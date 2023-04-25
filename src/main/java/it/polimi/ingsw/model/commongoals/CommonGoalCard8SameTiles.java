@@ -4,8 +4,8 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 
 
-public class CommonGoalCard6 extends CommonGoalCard{
-    public CommonGoalCard6(int numPlayers){
+public class CommonGoalCard8SameTiles extends CommonGoalCard{
+    public CommonGoalCard8SameTiles(int numPlayers){
         super(numPlayers);
     }
 

@@ -4,9 +4,9 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
-public class CommonGoalCard4 extends CommonGoalCard{
+public class CommonGoalCardSquare extends CommonGoalCard{
 
-    public CommonGoalCard4(int numPlayers){
+    public CommonGoalCardSquare(int numPlayers){
         super(numPlayers);
     }
 

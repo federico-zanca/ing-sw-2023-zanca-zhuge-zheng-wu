@@ -2,18 +2,19 @@ package it.polimi.ingsw.model.commongoals;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CommonGoalCard6Test {
+class CommonGoalCard8SameTilesTest {
 
     @Test
     void checkEmpty() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard6 cg6 = new CommonGoalCard6(4);
+        CommonGoalCard8SameTiles cg6 = new CommonGoalCard8SameTiles(4);
         String[][] matrix ={
                 {"E","E","E","E","E"},
                 {"E","E","E","E","E"},
@@ -25,14 +26,16 @@ class CommonGoalCard6Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        System.out.println(cg6);
         assertFalse(cg6.check(bookshelf));
     }
 
     @Test
     void check8SameTypeTrue() {
-        Bookshelf bookshelf = new Bookshelf();
+        Player p = new Player("Player_1");
+        Bookshelf bookshelf = p.getBookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard6 cg6 = new CommonGoalCard6(4);
+        CommonGoalCard8SameTiles cg6 = new CommonGoalCard8SameTiles(4);
         String[][] matrix ={
                 {"G","P","E","E","G"},
                 {"C","P","E","E","T"},
@@ -44,13 +47,19 @@ class CommonGoalCard6Test {
         itemmatrix = bookshelf.stringToMat(matrix);
         bookshelf.setShelfie(itemmatrix);
         bookshelf.printBookshelf();
+        assertEquals(8,cg6.peek());
+        cg6.takePoints(p);
+        assertEquals(8,p.getScore());
+        assertTrue(cg6.achievedBy(p));
+        assertTrue(cg6.getThoseWhoAchieved().contains(p));
+        assertEquals(6,cg6.peek());
         assertTrue(cg6.check(bookshelf));
     }
     @Test
     void check8SameTypeFalse() {
         Bookshelf bookshelf = new Bookshelf();
         ItemTile[][] itemmatrix;
-        CommonGoalCard6 cg6 = new CommonGoalCard6(4);
+        CommonGoalCard8SameTiles cg6 = new CommonGoalCard8SameTiles(4);
         String[][] matrix ={
                 {"G","P","E","E","E"},
                 {"C","P","E","E","T"},

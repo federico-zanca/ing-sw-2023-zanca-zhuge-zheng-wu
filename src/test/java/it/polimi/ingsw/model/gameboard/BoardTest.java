@@ -162,4 +162,21 @@ class BoardTest {
             }
         }
     }
+
+    @Test
+    void testPickItems() {
+        Board board = new Board();
+        board.initBoard(2);
+        ArrayList<Square> items = new ArrayList<>();
+        Square firstSquare = board.getSquare(new Coordinates(1,3));
+        Square secondSquare = board.getSquare(new Coordinates(1,4));
+        ItemTile firstItem = firstSquare.getItem();
+        ItemTile secondItem = secondSquare.getItem();
+        items.add(firstSquare);
+        items.add(secondSquare);
+        ArrayList<ItemTile> hand = board.pickItems(items);
+        assertEquals(firstItem.getType(),hand.get(0).getType());
+        assertEquals(secondItem.getType(),hand.get(1).getType());
+    }
+
 }
