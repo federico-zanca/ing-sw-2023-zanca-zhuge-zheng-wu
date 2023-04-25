@@ -1,4 +1,4 @@
-package it.polimi.ingsw.distributed;
+package it.polimi.ingsw.model.enumerations;
 
 public enum JoinType {
     JOINED,

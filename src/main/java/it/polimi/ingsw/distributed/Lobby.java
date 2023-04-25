@@ -93,10 +93,17 @@ public class Lobby {
         return inLobbyClients;
     }
 
+    /**
+     * @param client the client whose username is requested
+     * @return the username of the client
+     */
     public String getClientUsername(Client client){
         return server.getConnectedClientInfo(client).getClientID();
     }
 
+    /**
+     * @return the list of clients' usernames in the lobby
+     */
     public ArrayList<String> getClientsUsernames(){
         ArrayList<String> clientsUsername = new ArrayList<>();
         for(Client client : inLobbyClients)
@@ -137,6 +144,11 @@ public class Lobby {
 
     }
 
+    /**
+     * Updates the admin of the current lobby.
+     *
+     * @param client The client that triggered the update.
+     */
     private void updateAdmin(Client client) {
         admin = inLobbyClients.get(0);
         for (Client c : inLobbyClients) {
@@ -148,6 +160,11 @@ public class Lobby {
         }
     }
 
+    /**
+     * Checks if the game has ended.
+     *
+     * @return true if the game has ended, false otherwise.
+     */
     private boolean isGameEnded() {
         return model.getGamePhase()== GamePhase.ENDED;
     }
@@ -191,6 +208,11 @@ public class Lobby {
         return controller;
     }
 
+    /**
+     * Sends a list of players in the lobby to all clients except for one specified player.
+     * @param player the player to exclude from the client list
+     * @param content the content to send to the clients along with the player list
+     */
     public void sendPlayersListToEveryoneBut(String player, String content) {
         for(int i=0; i < inLobbyClients.size(); i++){
             if(!player.equals(getClientUsername(inLobbyClients.get(i)))){
@@ -203,6 +225,10 @@ public class Lobby {
         }
     }
 
+    /**
+     * Sends a message to all clients in the lobby
+     * @param message the message to send
+     */
     public void sendToAll(LobbyMessage message) {
         for(int i=0; i < inLobbyClients.size(); i++){
             try {
@@ -213,6 +239,13 @@ public class Lobby {
         }
     }
 
+    /**
+     * Removes the given client from the lobby and notifies the other clients.
+     * If the client was the admin of the lobby and there are still other clients
+     * in the lobby, assigns a new admin to the lobby.
+     * If the client was the last one in the lobby, removes the lobby from the server.
+     * @param client the client to remove from the lobby
+     */
     public void exitClient(Client client) {
         //TODO handle bug when last client exits
         this.model.removeObserver(inLobbyClients.indexOf(client));
@@ -241,10 +274,16 @@ public class Lobby {
         }
     }
 
+    /**
+     * @return true if the game has started, false otherwise
+     */
     public boolean isGameStarted() {
         return model.isGameStarted();
     }
 
+    /**
+     * Ends the game and removes the lobby from the server.
+     */
     public void endGame() {
         for(Client client : inLobbyClients){
             removeClient(client);
@@ -252,6 +291,9 @@ public class Lobby {
         destroyLobby();
     }
 
+    /**
+     * Destroys the lobby by removing it from the server's list of lobbies.
+     */
     private void destroyLobby() {
         server.getLobbies().remove(this);
     }

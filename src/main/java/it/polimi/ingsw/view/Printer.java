@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.distributed.JoinType;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
@@ -14,9 +13,7 @@ import it.polimi.ingsw.network.message.gamemessage.LastTurnMessage;
 import it.polimi.ingsw.network.message.gamemessage.PersonalGoalPointsMessage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Printer {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.distributed;
 
+import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;

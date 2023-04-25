@@ -1,15 +1,14 @@
 package it.polimi.ingsw.distributed;
 
 public class ClientInfo {
+    private boolean connected;
     private String clientID;
     private ClientState clientState;
-    private ClientConnectionState clientConnectionState;
-
     private Lobby lobby;
     public ClientInfo(Client client) {
         this.clientID = client.toString();
         this.clientState = ClientState.IN_SERVER;
-        this.clientConnectionState = ClientConnectionState.CONNECTED;
+        this.connected = true;
     }
 
     public String getClientID() {
@@ -24,14 +23,6 @@ public class ClientInfo {
         this.clientState = clientState;
     }
 
-    public ClientConnectionState getClientConnectionState() {
-        return clientConnectionState;
-    }
-
-    public void setClientConnectionState(ClientConnectionState clientConnectionState) {
-        this.clientConnectionState = clientConnectionState;
-    }
-
     public Lobby getLobby() {
         return lobby;
     }
@@ -42,5 +33,13 @@ public class ClientInfo {
 
     public void setClientID(String username) {
         this.clientID = username;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 }

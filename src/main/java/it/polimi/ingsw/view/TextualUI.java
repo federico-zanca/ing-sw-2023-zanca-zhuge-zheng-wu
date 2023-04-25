@@ -2,7 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
-import it.polimi.ingsw.distributed.JoinType;
+import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
