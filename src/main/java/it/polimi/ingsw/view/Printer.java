@@ -353,7 +353,11 @@ public class Printer {
                 "######################################");
         showLeaderboard(ranking);
         System.out.println("Il vincitore della partita è " + ranking.keySet().toArray()[0] + " con " + ranking.values().toArray()[0] + " punti!");
-
+        System.out.println();
+        System.out.println("Grazie per aver giocato a MyShelfie!");
+        System.out.println();
+        System.out.println("Sei uscito dalla partita. Digita 'help' per vedere la lista di comandi disponibili.");
+        System.out.println();
     }
 
     /**

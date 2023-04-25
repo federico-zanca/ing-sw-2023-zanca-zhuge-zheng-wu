@@ -615,6 +615,7 @@ public class TextualUI extends Observable implements Runnable {
                 lastMessage = message;
                 EndGameMessage m4 = (EndGameMessage) message;
                 printer.showEndGame(m4.getRanking());
+                setClientState(ClientState.IN_SERVER);
                 break;
             case PLAYER_REJOINED:
                 printer.showPlayerRejoined(((PlayerRejoinedMessage) message).getPlayer());

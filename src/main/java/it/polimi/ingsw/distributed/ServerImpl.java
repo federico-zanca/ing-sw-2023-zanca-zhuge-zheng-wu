@@ -171,7 +171,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      */
     public void removeClientFromLobby(Client client) {
         connectedClients.get(client).getLobby().removeClient(client);
-        connectedClients.get(client).setLobby(null);
         connectedClients.get(client).setClientState(ClientState.IN_SERVER);
     }
 

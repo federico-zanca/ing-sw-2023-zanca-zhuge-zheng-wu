@@ -2,6 +2,7 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.message.gamemessage.ExitGameResponse;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
@@ -23,7 +24,7 @@ public class Lobby {
     public Lobby(ServerImpl server, Client admin, String lobbyName) throws FullLobbyException, ClientAlreadyInLobbyException {
         this.server = server;
         this.model = new Game();
-        this.controller = new GameController(model);
+        this.controller = new GameController(model, this);
         this.lobbyName = lobbyName;
         this.admin = admin;
         this.inLobbyClients = new ArrayList<>();
@@ -125,20 +126,30 @@ public class Lobby {
         this.model.removeObserver(inLobbyClients.indexOf(client));
         inLobbyClients.remove(client);
         server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);
+        server.getConnectedClientInfo(client).setLobby(null);
         controller.removePlayer(server.getConnectedClientInfo(client).getClientID());
-        if(client.equals(admin) && inLobbyClients.size() > 0) {
-            admin = inLobbyClients.get(0);
-            for (Client c : inLobbyClients) {
-                try {
-                    c.update(new NewAdminMessage(server.getConnectedClientInfo(client).getClientID(), server.getConnectedClientInfo(admin).getClientID()));
-                } catch (RemoteException e) {
-                    System.err.println("Unable to send preGameMessage " + e);
-                }
-            }
+
+        if(client.equals(admin) && inLobbyClients.size() > 0 && !isGameEnded()) {
+            updateAdmin(client);
         }else if(inLobbyClients.size() == 0){
-            server.getLobbies().remove(this);
+            destroyLobby();
         }
 
+    }
+
+    private void updateAdmin(Client client) {
+        admin = inLobbyClients.get(0);
+        for (Client c : inLobbyClients) {
+            try {
+                c.update(new NewAdminMessage(server.getConnectedClientInfo(client).getClientID(), server.getConnectedClientInfo(admin).getClientID()));
+            } catch (RemoteException e) {
+                System.err.println("Unable to send preGameMessage " + e);
+            }
+        }
+    }
+
+    private boolean isGameEnded() {
+        return model.getGamePhase()== GamePhase.ENDED;
     }
 
     /**
@@ -224,14 +235,7 @@ public class Lobby {
             System.err.println("Unable to send ExitGameResponse " + e);
         }
         if(client.equals(admin) && inLobbyClients.size() > 0) {
-            admin = inLobbyClients.get(0);
-            for (Client c : inLobbyClients) {
-                try {
-                    c.update(new NewAdminMessage(server.getConnectedClientInfo(client).getClientID(), server.getConnectedClientInfo(admin).getClientID()));
-                } catch (RemoteException e) {
-                    System.err.println("Unable to send preGameMessage " + e);
-                }
-            }
+            updateAdmin(client);
         }else if(inLobbyClients.size() == 0){
             server.getLobbies().remove(this);
         }
@@ -239,5 +243,16 @@ public class Lobby {
 
     public boolean isGameStarted() {
         return model.isGameStarted();
+    }
+
+    public void endGame() {
+        for(Client client : inLobbyClients){
+            removeClient(client);
+        }
+        destroyLobby();
+    }
+
+    private void destroyLobby() {
+        server.getLobbies().remove(this);
     }
 }

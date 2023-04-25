@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 
 import it.polimi.ingsw.distributed.Client;
+import it.polimi.ingsw.distributed.Lobby;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
@@ -18,6 +19,7 @@ import java.util.Random;
 public class GameController {
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 4;
+    private final Lobby lobby;
     private Game model;
     //stuff for the view
     private TurnController turnController;
@@ -26,7 +28,8 @@ public class GameController {
     /**
      * Controller of the game
      */
-    public GameController(Game model){
+    public GameController(Game model, Lobby lobby){
+        this.lobby = lobby;
         setupGameController(model);
     }
     /**
@@ -83,7 +86,7 @@ public class GameController {
         winner = declareWinner();
         setGamePhase(GamePhase.ENDED);
         model.endGame(winner, turnController.getPlayerQueueUsernames());
-        //TODO send broadcast message
+        lobby.endGame();
     }
 
 
