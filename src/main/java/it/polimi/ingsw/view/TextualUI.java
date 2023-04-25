@@ -2,7 +2,9 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
+import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.enumerations.JoinType;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
@@ -29,7 +31,8 @@ public class TextualUI extends Observable implements Runnable {
     private GameMessage lastMessage;
     private final Scanner s;
     private String myUsername;
-
+    private PersonalGoalCard personalGoalCard;
+    private ItemType[][] personalObjective;
     private PlayerState playerState = PlayerState.WATCHING;
 
     private final Object lock = new Object();
@@ -468,6 +471,8 @@ public class TextualUI extends Observable implements Runnable {
         printer.showBookshelves(model.getPlayers());
         //printer.showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
         printer.showBoard(model.getBoard().getGameboard());
+        printer.showPersonalGoalCard(personalObjective);
+
     }
 
     public ClientState getClientState() {
@@ -563,6 +568,12 @@ public class TextualUI extends Observable implements Runnable {
                 lastMessage = message;
                 BookshelfMessage m = (BookshelfMessage) message;
                 printer.showBookshelf(m.getUsername(), m.getBookshelf());
+                break;
+            case PERSONALGOALCARD:
+                lastMessage = message;
+                PersonalGoalCardMessage m5 = (PersonalGoalCardMessage) message;
+                setPersonalGoalCard(m5.getPersonalGoalCard());
+                setPersonalObjective(m5.getObjective());
                 break;
             case DRAW_INFO:
                 lastMessage = message;
@@ -751,5 +762,13 @@ public class TextualUI extends Observable implements Runnable {
 
     public void setLastMessage(GameMessage lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
+        this.personalGoalCard = personalGoalCard;
+    }
+
+    public void setPersonalObjective(ItemType[][] personalObjective) {
+        this.personalObjective = personalObjective;
     }
 }

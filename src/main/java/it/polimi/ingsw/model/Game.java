@@ -185,6 +185,7 @@ public class Game extends Observable {
 
         for(Player player : players){
             personalGoals.put(player.getUsername(), randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
+            notifyObservers(new PersonalGoalCardMessage(player.getUsername(),personalGoals.get(player.getUsername()),personalGoals.get(player.getUsername()).getObjective()));
         }
 
         initLeaderBoard();

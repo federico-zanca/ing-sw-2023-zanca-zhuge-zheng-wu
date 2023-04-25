@@ -7,10 +7,8 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.gamemessage.AchievedCommonGoalMessage;
-import it.polimi.ingsw.network.message.gamemessage.AdjacentItemsPointsMessage;
-import it.polimi.ingsw.network.message.gamemessage.LastTurnMessage;
-import it.polimi.ingsw.network.message.gamemessage.PersonalGoalPointsMessage;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.gamemessage.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -64,7 +62,6 @@ public class Printer {
                 break;
         }
         return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
-
     }
 
     /**
@@ -506,5 +503,28 @@ public class Printer {
     public void showPlayerLeft(String content) {
         System.out.println();
         System.out.println(content);
+    }
+
+    public void showPersonalGoalCard(ItemType[][] personalObjective){
+        System.out.println();
+        System.out.println("Your personal goal:");
+        for(int i = 0;i < PersonalGoalCard.Rows;i++){
+            System.out.print("      ");
+            for(int j = 0;j < PersonalGoalCard.Columns;j++){
+                System.out.print("+-----");
+            }
+            System.out.println("+");
+            System.out.print("  "+i+"   |");
+            for(int j = 0;j < PersonalGoalCard.Columns;j++){
+                System.out.print(paintFG(personalObjective[i][j]) + "|");
+            }
+            System.out.println();
+        }
+        System.out.print("      ");
+        for (int j = 0; j < Bookshelf.Columns; j++) {
+            System.out.print("+-----");
+        }
+        System.out.print("+");
+        System.out.println();
     }
 }
