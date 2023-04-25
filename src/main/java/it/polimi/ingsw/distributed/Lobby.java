@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class Lobby {
     private final ServerImpl server;
-    private String lobbyName;
+    private final String lobbyName;
     private ArrayList<Client> inLobbyClients;
     private Client admin;
     private final Game model;
@@ -37,29 +37,38 @@ public class Lobby {
      * @throws FullLobbyException if the lobby is full
      */
     public void addClient(Client client) throws ClientAlreadyInLobbyException, FullLobbyException{
-        if(inLobbyClients.contains(client)) {
+        //TODO ottimizzato, da testare
+        if (inLobbyClients.contains(client)) {
             throw new ClientAlreadyInLobbyException();
-        }
-        else if(inLobbyClients.size() == model.getChosenPlayersNumber())
+        } else if (inLobbyClients.size() == model.getChosenPlayersNumber()) {
             throw new FullLobbyException();
-        else {
+        } else {
             inLobbyClients.add(client);
-            if(model.getPlayersUsernames().contains(server.getUsernameOfClient(client)) && controller.getTurnController().getPlayersToSkipUsernames().contains(server.getUsernameOfClient(client))) {
-                controller.reconnectExitedPlayer(server.getConnectedClientInfo(client).getClientID());
-                server.getConnectedClientInfo(client).setClientState(ClientState.IN_GAME);
+            ClientInfo connectedClientInfo = server.getConnectedClientInfo(client);
+            String clientID = connectedClientInfo.getClientID();
+
+            if (model.getPlayersUsernames().contains(server.getUsernameOfClient(client)) &&
+                controller.getTurnController().getPlayersToSkipUsernames().contains(clientID)) {
+                controller.reconnectExitedPlayer(clientID);
+                connectedClientInfo.setClientState(ClientState.IN_GAME);
             } else {
                 try {
-                    controller.addPlayer(server.getConnectedClientInfo(client).getClientID());
+                    controller.addPlayer(clientID);
                 } catch (InvalidUsernameException e) {
                     System.err.println("Can't add player to the model: " + e.getMessage());
                 }
             }
+
+            int lobbySize = inLobbyClients.size(); // store size in variable
             this.model.addObserver((arg) -> {
                 try {
-                    if(arg instanceof GameMessage) {
-                        if(((GameMessage) arg).getUsername().equals(""))
+                    if (arg instanceof GameMessage) {
+                        GameMessage gameMessage = (GameMessage) arg; // cast once
+                        String username = gameMessage.getUsername();
+                        if (username.equals("")) {
                             client.update(arg);
-                        else if (model.isGameStarted() && controller.getCurrentPlayerUsername().equals(server.getConnectedClientInfo(client).getClientID()) && ((GameMessage) arg).getUsername().equals(server.getConnectedClientInfo(client).getClientID())) {
+                        } else if (model.isGameStarted() &&
+                                   username.equals(clientID)) {
                             client.update(arg);
                         }
                     } else {
@@ -69,8 +78,9 @@ public class Lobby {
                     System.err.println("Unable to update the client: " + e.getMessage() + ". Skipping the update...");
                 }
             });
-        }
     }
+}
+
 
     /**
      * @return the admin of the lobby
@@ -296,5 +306,9 @@ public class Lobby {
      */
     private void destroyLobby() {
         server.getLobbies().remove(this);
+    }
+
+    public void disconnectClient(Client client) {
+        controller.disconnectPlayer(server.getConnectedClientInfo(client).getClientID());
     }
 }
