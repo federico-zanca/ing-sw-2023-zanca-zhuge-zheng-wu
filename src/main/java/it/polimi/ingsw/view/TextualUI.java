@@ -740,7 +740,7 @@ public class TextualUI extends Observable implements Runnable {
             onConnectionMessage((ConnectionMessage) message);
         } else if (message instanceof LobbyMessage) {
             onLobbyMessage((LobbyMessage) message);
-        } else {
+        } else if(!(message instanceof PingMessage)) {
             System.err.println("Ignoring message from server");
         }
     }

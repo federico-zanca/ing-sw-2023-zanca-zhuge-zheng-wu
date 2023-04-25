@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
+import it.polimi.ingsw.network.message.PingMessage;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
@@ -22,9 +23,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerImpl extends UnicastRemoteObject implements Server {
+public class ServerImpl extends UnicastRemoteObject implements Server, Runnable {
     private HashMap<Client, ClientInfo> connectedClients;
 
+    private final Object clientsLock = new Object();
     private ArrayList<Lobby> lobbies;
 
     private ClientHandler clientHandler;
@@ -242,6 +244,17 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
 
 
+    private void clientExitsFromItsLobby(Client client) {
+        connectedClients.get(client).getLobby().exitClient(client);
+        connectedClients.get(client).setLobby(null);
+        connectedClients.get(client).setClientState(ClientState.IN_SERVER);
+    }
+
+
+    public String getUsernameOfClient(Client client) {
+        return getConnectedClientInfo(client).getClientID();
+    }
+
     @Override
     public void update(Client client, Message message){
         System.out.println("Received message: " + message);
@@ -256,18 +269,41 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
             this.clientHandler.onConnectionMessage(client, (ConnectionMessage) message);
         else if(message instanceof LobbyMessage)
             this.clientHandler.onLobbyMessage(client, (LobbyMessage) message);
+        else if(message instanceof PingMessage){
+            return;
+        }
         else
             System.err.println("Message not recognized: " + message);
     }
 
-    private void clientExitsFromItsLobby(Client client) {
-        connectedClients.get(client).getLobby().exitClient(client);
-        connectedClients.get(client).setLobby(null);
-        connectedClients.get(client).setClientState(ClientState.IN_SERVER);
+    public void run(){
+        while(!Thread.currentThread().isInterrupted()){
+            synchronized (clientsLock){
+                for(Client client : connectedClients.keySet()){
+                    if(getConnectedClientInfo(client).isConnected()) {
+                        try{
+                            client.ping();
+                        } catch (RemoteException e){
+                            System.err.println("Client " + getConnectedClientInfo(client).getClientID() + " disconnected");
+                            if(getConnectedClientInfo(client).getClientState() == ClientState.IN_A_LOBBY)
+                                clientExitsFromItsLobby(client);
+                            else if(getConnectedClientInfo(client).getClientState() == ClientState.IN_GAME){
+                                getConnectedClientInfo(client).setConnected(false);
+                                getLobbyOfClient(client).disconnectClient(client);
+                            }
+                            else{
+                                connectedClients.remove(client);
+                            }
+                        }
+                    }
+                }
+            }
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
-
-    public String getUsernameOfClient(Client client) {
-        return getConnectedClientInfo(client).getClientID();
-    }
 }

@@ -86,9 +86,10 @@ public class ClientHandler {
                 }
                 if(joinSuccess == JoinType.JOINED || joinSuccess == JoinType.REJOINED) {
                     String username = server.getConnectedClientInfo(client).getClientID();
+                    Lobby lobbyOfClient = server.getLobbyOfClient(client);
                     //sends to everyone but the client that joined the lobby the new list of players
-                    if(!server.getLobbyOfClient(client).isGameStarted())
-                        server.getLobbyOfClient(client).sendPlayersListToEveryoneBut(username, Color.CYANTEXT + username + Color.NO_COLOR + " si è unito alla partita");
+                    if(!lobbyOfClient.isGameStarted())
+                        lobbyOfClient.sendPlayersListToEveryoneBut(username, Color.CYANTEXT + username + Color.NO_COLOR + " si è unito alla partita");
                 }
                 break;
             case USERNAME_REQUEST:

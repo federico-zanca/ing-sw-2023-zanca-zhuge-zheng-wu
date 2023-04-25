@@ -4,6 +4,7 @@ import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.PingMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -50,5 +51,9 @@ public class ClientSkeleton implements Client {
         }
         //se ricevo correttamente l'oggetto...
         server.update(this, m);
+    }
+
+    public void ping() throws RemoteException {
+        update(new PingMessage());
     }
 }

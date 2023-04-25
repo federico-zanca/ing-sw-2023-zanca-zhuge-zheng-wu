@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
-import it.polimi.ingsw.distributed.JoinType;
-import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.model.enumerations.JoinType;
 
 import java.util.ArrayList;
 

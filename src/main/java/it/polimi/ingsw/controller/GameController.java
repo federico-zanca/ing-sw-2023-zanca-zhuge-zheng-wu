@@ -262,4 +262,9 @@ public class GameController {
     public void reconnectExitedPlayer(String username) {
         turnController.reconnectExitedPlayer(model.getPlayerByUsername(username));
     }
+
+    public void disconnectPlayer(String username) {
+        Player player = model.getPlayerByUsername(username);
+        turnController.addPlayerToSkip(player);
+    }
 }
