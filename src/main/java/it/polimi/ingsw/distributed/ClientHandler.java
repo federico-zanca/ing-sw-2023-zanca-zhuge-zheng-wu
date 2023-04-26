@@ -26,14 +26,16 @@ public class ClientHandler {
         switch(message.getType()) {
             case LOBBY_LIST_REQUEST:
                 try {
-                    client.update(new LobbyListResponse(server.getLobbiesInfo()));
+                    server.sendMessage(client, new LobbyListResponse(server.getLobbiesInfo()));
+                    //client.update(new LobbyListResponse(server.getLobbiesInfo()));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);
                 }
                 break;
             case CREATE_LOBBY_REQUEST:
                 try {
-                    client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
+                    server.sendMessage(client, new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
+                    //client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);
                 } catch (FullLobbyException | ClientAlreadyInLobbyException e) {
@@ -80,7 +82,8 @@ public class ClientHandler {
                     usernames = new ArrayList<>();
                 }
                 try {
-                    client.update(new JoinLobbyResponse(joinSuccess, content, usernames));
+                    server.sendMessage(client, new JoinLobbyResponse(joinSuccess, content, usernames));
+                    //client.update(new JoinLobbyResponse(joinSuccess, content, usernames));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);
                 }
@@ -97,13 +100,15 @@ public class ClientHandler {
                 if(server.isUsernameAvailable(username)) {
                     server.setUsername(client, username);
                     try {
-                        client.update(new UsernameResponse(true, username));
+                        server.sendMessage(client, new UsernameResponse(true, username));
+                        //client.update(new UsernameResponse(true, username));
                     } catch (RemoteException e) {
                         System.err.println("Unable to send username response: " + e);
                     }
                 } else {
                     try {
-                        client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
+                        server.sendMessage(client, new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
+                        //client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
                     } catch (RemoteException e) {
                         System.err.println("Unable to send username response: " + e);
                     }
@@ -113,22 +118,74 @@ public class ClientHandler {
                 String playername = ((LoginRequest) message).getUsername();
                 if(server.isUsernameAvailable(playername)) {
                     server.setUsername(client, playername);
+
+
+                    System.err.println("Username " + playername + " accettato semplicemente");
+
+
                     try {
-                        client.update(new LoginResponse(true, playername));
+                        server.sendMessage(client, new LoginResponse(true, playername));
+                        //client.update(new LoginResponse(true, playername));
                     } catch (RemoteException e) {
                         System.err.println("Unable to send username response: " + e);
                     }
                 } else {
-                    try {
-                        client.update(new LoginResponse(false, playername));
-                    } catch (RemoteException e) {
-                        System.err.println("Unable to send username response: " + e);
+                    Client oldClient = server.getClientByUsername(playername);
+
+
+                    System.err.println("Username " + playername + " preso da un altro client");
+
+
+                    if (oldClient!= null && server.getConnectedClientInfo(oldClient).getClientState() == ClientState.IN_GAME &&
+                            !server.getConnectedClientInfo(oldClient).isConnected()){
+
+
+                        System.err.println("Username " + playername + " accettato perche' il client che lo aveva preso e' disconnesso");
+
+
+                        try {
+                            server.sendMessage(client, new LoginResponse(true, playername));
+                            //client.update(new LoginResponse(true, playername));
+                        } catch (RemoteException e) {
+                            throw new RuntimeException(e);
+                        }
+                        replaceClient(oldClient, client);
+                    } else {
+
+
+                        System.err.println("Username " + playername + " rifiutato");
+
+
+                        try {
+                            server.sendMessage(client, new LoginResponse(false, playername));
+                            //client.update(new LoginResponse(false, playername));
+                        } catch (RemoteException e) {
+                            System.err.println("Unable to send username response: " + e);
+                        }
                     }
                 }
                 break;
             default:
                 System.err.println("Invalid message type: not implemented yet");
         }
+    }
+
+    private void replaceClient(Client oldClient, Client client) {
+        String username = server.getUsernameOfClient(oldClient);
+
+
+        System.err.println("Rimpiazzo il client " + oldClient + " con il client " + client + " per l'utente " + username);
+
+
+        Lobby lobby = server.getLobbyOfClient(oldClient);
+
+
+        System.err.println("La lobby del client " + oldClient + " e' " + lobby);
+
+
+        lobby.reconnectClient(oldClient, client, username);
+        server.getConnectedClientInfo(client).setLobby(lobby);
+        server.removeClient(oldClient);
     }
 
     /**
@@ -143,7 +200,8 @@ public class ClientHandler {
                 try {
                     String lobbyName = server.getLobbyNameOfClient(client);
                     server.removeClientFromLobby(client);
-                    client.update(new ExitLobbyResponse(true, lobbyName));
+                    server.sendMessage(client, new ExitLobbyResponse(true, lobbyName));
+                    //client.update(new ExitLobbyResponse(true, lobbyName));
                     String content = Color.CYANTEXT + server.getUsernameOfClient(client) + Color.NO_COLOR + " ha abbandonato la lobby";
 
                     try {
@@ -160,13 +218,15 @@ public class ClientHandler {
                 int numPlayers = server.getLobbyOfClient(client).getNumClients();
                 if(!client.equals(admin) ){
                     try {
-                        client.update(new NotAdminMessage());
+                        server.sendMessage(client, new NotAdminMessage());
+                        //client.update(new NotAdminMessage());
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
                 }else if(numPlayers != server.getLobbyOfClient(client).getChosenNumOfPlayers()){
                     try {
-                        client.update(new GameNotReadyMessage("game not ready to start"));
+                        server.sendMessage(client, new GameNotReadyMessage("game not ready to start"));
+                        //client.update(new GameNotReadyMessage("game not ready to start"));
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -177,7 +237,8 @@ public class ClientHandler {
             case PLAYER_LIST_REQUEST:
                 ArrayList<String> inLobbyClientsUsernames = server.getLobbyOfClient(client).getClientsUsernames();
                 try {
-                    client.update(new PlayerListResponse(inLobbyClientsUsernames));
+                    server.sendMessage(client, new PlayerListResponse(inLobbyClientsUsernames));
+                    //client.update(new PlayerListResponse(inLobbyClientsUsernames));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send player list response: " + e);
                 }
@@ -188,7 +249,8 @@ public class ClientHandler {
                     server.changeLobbyNumOfPlayers(client, chosenNum);
                 else{
                     try {
-                        client.update(new NotAdminMessage());
+                        server.sendMessage(client, new NotAdminMessage());
+                        //client.update(new NotAdminMessage());
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }

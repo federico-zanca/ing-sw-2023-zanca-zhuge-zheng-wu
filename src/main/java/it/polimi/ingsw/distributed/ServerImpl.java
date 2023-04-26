@@ -18,12 +18,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class ServerImpl extends UnicastRemoteObject implements Server, Runnable {
+public class ServerImpl extends UnicastRemoteObject implements Server {
+    private static final int HEARTBEAT_TIMEOUT = 6000;
     private HashMap<Client, ClientInfo> connectedClients;
 
     private final Object clientsLock = new Object();
@@ -54,22 +52,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Runnable 
         connectedClients.put(client, new ClientInfo(client));
 
         try {
-            client.update(new ConnectedToServerMessage(client));
+            sendMessage(client, new ConnectedToServerMessage(client));
+            //client.update(new ConnectedToServerMessage(client));
         } catch (RemoteException e) {
             System.err.println("Unable to send preGameMessage "+ e);
         }
-
-        /*
-        //TODO move in lobby
-        this.model.addObserver((arg) -> {
-            try {
-                client.update(arg);
-            } catch (RemoteException e) {
-                System.err.println("Unable to update the client: " + e.getMessage() + ". Skipping the update...");
-            }
-        });
-        */
-
+        startHeartBeat(client);
     }
 
     /**
@@ -140,10 +128,18 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Runnable 
      * @return true if the username is available, false otherwise
      */
     public boolean isUsernameAvailable(String username) {
+        for(Lobby l : lobbies){
+            if(l.containsAPlayerWithThisUsername(username))
+                return false;
+        }
+        return true;
+/*
         for(ClientInfo c : connectedClients.values())
             if(c.getClientID().equals(username))
                 return false;
         return true;
+        */
+
     }
 
     /**
@@ -213,19 +209,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Runnable 
     public void changeLobbyNumOfPlayers(Client client, int chosenNum){
         if( chosenNum > GameController.MAX_PLAYERS){
             try {
-                client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
+                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
+                //client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
             } catch (RemoteException e) {
                 System.err.println("Unable to send ChangeNumOfPlayerResponse message");
             }
         } else if (chosenNum < GameController.MIN_PLAYERS){
             try {
-                client.update(new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
+                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
+                //client.update(new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
             } catch (RemoteException e) {
                 System.err.println("Unable to send ChangeNumOfPlayerResponse message");
             }
         } else if (chosenNum < connectedClients.get(client).getLobby().getInLobbyClients().size()){
             try {
-                client.update(new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
+                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
+                //client.update(new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
             } catch (RemoteException e) {
                 System.err.println("Unable to send ChangeNumOfPlayerResponse message");
             }
@@ -257,25 +256,30 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Runnable 
 
     @Override
     public void update(Client client, Message message){
-        System.out.println("Received message: " + message);
         if(message instanceof GameMessage) {
+            System.out.println("Received message: " + message);
             Lobby lobby = getLobbyOfClient(client);
             if(((GameMessage) message ).getType()== GameMessageType.EXIT_GAME_REQUEST){
                 clientExitsFromItsLobby(client);
             }
             lobby.getController().update(getUsernameOfClient(client), (GameMessage) message);
         }
-        else if(message instanceof ConnectionMessage)
+        else if(message instanceof ConnectionMessage) {
+            System.out.println("Received message: " + message);
             this.clientHandler.onConnectionMessage(client, (ConnectionMessage) message);
-        else if(message instanceof LobbyMessage)
+        }
+        else if(message instanceof LobbyMessage){
+            System.out.println("Received message: " + message);
             this.clientHandler.onLobbyMessage(client, (LobbyMessage) message);
+        }
         else if(message instanceof PingMessage){
-            return;
+            receiveHeartBeat(client);
         }
         else
             System.err.println("Message not recognized: " + message);
     }
 
+    /*
     public void run(){
         while(!Thread.currentThread().isInterrupted()){
             synchronized (clientsLock){
@@ -305,5 +309,69 @@ public class ServerImpl extends UnicastRemoteObject implements Server, Runnable 
             }
         }
     }
+    */
 
+
+    public void startHeartBeat(Client client){
+        Timer timer = new Timer();
+        getConnectedClientInfo(client).setHeartbeatTimer(timer);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                disconnect(client);
+            }
+        }, HEARTBEAT_TIMEOUT);
+    }
+
+    public void receiveHeartBeat(Client client){
+        Timer timer = getConnectedClientInfo(client).getHeartbeatTimer();
+        if(timer != null){
+            timer.cancel();
+            startHeartBeat(client);
+        }
+    }
+
+    public void stopHeartBeat(Client client){
+        getConnectedClientInfo(client).setConnected(false);
+        Timer timer = getConnectedClientInfo(client).getHeartbeatTimer();
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+        }
+    }
+
+    private void disconnect(Client client){
+        if(getConnectedClientInfo(client).isConnected()) {
+            stopHeartBeat(client);
+            System.err.println("Client " + getConnectedClientInfo(client).getClientID() + " disconnected");
+            System.err.println(connectedClients);
+            if (getConnectedClientInfo(client).getClientState() == ClientState.IN_A_LOBBY)
+                clientExitsFromItsLobby(client);
+            else if (getConnectedClientInfo(client).getClientState() == ClientState.IN_GAME) {
+                getConnectedClientInfo(client).setConnected(false);
+                getLobbyOfClient(client).disconnectClient(client);
+            } else {
+                connectedClients.remove(client);
+            }
+        }
+    }
+
+    public Client getClientByUsername(String playername) {
+        for(Client client : connectedClients.keySet()){
+            if(getUsernameOfClient(client).equals(playername))
+                return client;
+        }
+        return null;
+    }
+
+    public void removeClient(Client client) {
+        //WARNING : removes the client from the hashmap, but doesn't touch the lobby: use carefully
+        connectedClients.remove(client);
+    }
+
+    public void sendMessage(Client client, Message message) throws RemoteException {
+        System.err.println("Sending message to " + getUsernameOfClient(client) + " : " + message);
+        client.update(message);
+    }
 }

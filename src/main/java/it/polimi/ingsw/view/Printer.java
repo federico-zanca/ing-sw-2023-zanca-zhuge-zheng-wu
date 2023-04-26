@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.message.gamemessage.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Printer {
@@ -177,7 +178,7 @@ public class Printer {
      *
      * @param players an ArrayList of Player objects whose bookshelves are to be shown
      */
-    public void showBookshelves(ArrayList<Player> players) {
+    public void showBookshelves(List<Player> players) {
         System.out.println();
         ArrayList<Bookshelf> bookshelves = players.stream().map(Player::getBookshelf).collect(Collectors.toCollection(ArrayList::new));
         for (int i = 0; i < bookshelves.size(); i++) {
@@ -526,5 +527,16 @@ public class Printer {
         }
         System.out.print("+");
         System.out.println();
+    }
+
+    public void showReconnection(GameView model, String content, PersonalGoalCard personalGoal) {
+        System.out.println();
+        System.out.println(content);
+        System.out.println("RIEPILOGO DELLA PARTITA:");
+
+        showNewTurn(model.getCurrentPlayer().getUsername());
+        showBookshelves(model.getPlayers());
+        showBoard(model.getBoard().getGameboard());
+        showPersonalGoalCard(personalGoal.getObjective());
     }
 }

@@ -32,7 +32,6 @@ public class TextualUI extends Observable implements Runnable {
     private final Scanner s;
     private String myUsername;
     private PersonalGoalCard personalGoalCard;
-    private ItemType[][] personalObjective;
     private PlayerState playerState = PlayerState.WATCHING;
 
     private final Object lock = new Object();
@@ -471,7 +470,7 @@ public class TextualUI extends Observable implements Runnable {
         printer.showBookshelves(model.getPlayers());
         //printer.showBookshelf(model.getCurrentPlayer().getUsername(), model.getCurrentPlayer().getBookshelf().getShelfie());
         printer.showBoard(model.getBoard().getGameboard());
-        printer.showPersonalGoalCard(personalObjective);
+        printer.showPersonalGoalCard(personalGoalCard.getObjective());
 
     }
 
@@ -573,7 +572,6 @@ public class TextualUI extends Observable implements Runnable {
                 lastMessage = message;
                 PersonalGoalCardMessage m5 = (PersonalGoalCardMessage) message;
                 setPersonalGoalCard(m5.getPersonalGoalCard());
-                setPersonalObjective(m5.getObjective());
                 break;
             case DRAW_INFO:
                 lastMessage = message;
@@ -692,6 +690,12 @@ public class TextualUI extends Observable implements Runnable {
                 if(((LoginResponse) message).isSuccessful())
                     setActionType(ActionType.NONE);
                 break;
+            case RECONNECTION:
+                setClientState(ClientState.IN_GAME);
+                setActionType(ActionType.NONE);
+                this.personalGoalCard = ((ReconnectionMessage) message).getPersonalGoal();
+                printer.showReconnection(((ReconnectionMessage) message).getModel(), ((ReconnectionMessage) message).getContent(), ((ReconnectionMessage) message).getPersonalGoal());
+                break;
             default:
                 System.err.println("Ignoring ConnectionMessage from server");
                 break;
@@ -768,7 +772,4 @@ public class TextualUI extends Observable implements Runnable {
         this.personalGoalCard = personalGoalCard;
     }
 
-    public void setPersonalObjective(ItemType[][] personalObjective) {
-        this.personalObjective = personalObjective;
-    }
 }

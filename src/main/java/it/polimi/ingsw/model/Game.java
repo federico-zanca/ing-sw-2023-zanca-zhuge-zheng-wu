@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.model.enumerations.GamePhase;
+import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
@@ -575,5 +576,9 @@ public class Game extends Observable {
 
     public boolean isGameStarted() {
         return gameStarted;
+    }
+
+    public PersonalGoalCard getPersonalGoalOfPlayer(String username) {
+        return personalGoals.get(username);
     }
 }

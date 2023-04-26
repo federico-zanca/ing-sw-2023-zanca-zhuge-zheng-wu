@@ -18,7 +18,6 @@ public class GameView implements Serializable {
     private final LinkedHashMap<String, Integer> leaderboard;
     private final ArrayList<CommonGoalCard> commonGoals;
     private final Board board;
-    private final Bag bag;
 
 
     //attributes for each single player, initialized thanks to the username passed to the constructor
@@ -50,12 +49,6 @@ public class GameView implements Serializable {
             this.board = null;
         }
 
-        if (model.getBag() != null) {
-            this.bag = model.getBag();
-        } else {
-            this.bag = null;
-        }
-
         if(model.getCurrentPlayer() != null) {
             this.currentPlayer = model.getCurrentPlayer();
         } else {
@@ -81,10 +74,6 @@ public class GameView implements Serializable {
         return this.commonGoals;
     }
 
-    public Bag getBag() {
-        return this.bag;
-    }
-
     public ArrayList<Player> getPlayers() {
         return this.players;
     }
@@ -99,6 +88,14 @@ public class GameView implements Serializable {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public ArrayList<Bookshelf> getBookshelves() {
+        ArrayList<Bookshelf> bookshelves = new ArrayList<>();
+        for (Player p : players) {
+            bookshelves.add(p.getBookshelf());
+        }
+        return bookshelves;
     }
 }
 /*

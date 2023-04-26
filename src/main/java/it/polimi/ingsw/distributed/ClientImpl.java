@@ -8,9 +8,12 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
 
+    private static final int HEARTBEAT_INTERVAL = 5000;
     private final Server server;
     private TextualUI view;
 
@@ -19,6 +22,19 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
         view = new TextualUI();
         this.server = server;
         initialize(server);
+
+        //TODO spostare in un thread/metodo a parte e farlo partire solo quando il client è connesso
+        Timer heartbeatTimer = new Timer();
+        heartbeatTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    server.update(ClientImpl.this, new PingMessage());
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, 0 , HEARTBEAT_INTERVAL);
     }
 
     public ClientImpl(Server server, int port) throws RemoteException {
@@ -44,7 +60,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
             }
         });
         server.register(this);
-
     }
 
     @Override
@@ -56,15 +71,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
         view.run();
     }
 
-    @Override
-    public void ping(){
-        //TODO togli system.err quando non serve più
-        try {
-            server.update(this, new PingMessage());
-        } catch (RemoteException e) {
-            System.err.println("Megaerrore pinging");
-            throw new RuntimeException(e);
-        }
-    }
+
 }
 

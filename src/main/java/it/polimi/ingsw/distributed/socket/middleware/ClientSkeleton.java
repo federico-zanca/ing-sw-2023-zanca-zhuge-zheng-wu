@@ -17,14 +17,24 @@ public class ClientSkeleton implements Client {
     private final ObjectOutputStream oos;
     private final ObjectInputStream ois;
 
+    private final Object outLock = new Object();
+
+    private final Object inLock = new Object();
+
+    private final Socket socket;
     public ClientSkeleton(Socket socket) throws RemoteException {
+        this.socket = socket;
         try {
-            this.oos = new ObjectOutputStream(socket.getOutputStream()); //importante aprire prima l'output stream! evito possibili deadlock
+            synchronized (outLock) {
+                this.oos = new ObjectOutputStream(socket.getOutputStream()); //importante aprire prima l'output stream! evito possibili deadlock
+            }
         } catch (IOException e) {
             throw new RemoteException("Cannot create output stream: " + e.getMessage());
         }
         try {
-            this.ois = new ObjectInputStream(socket.getInputStream());
+            synchronized (inLock) {
+                this.ois = new ObjectInputStream(socket.getInputStream());
+            }
         } catch (IOException e) {
             throw new RemoteException("Cannot create input stream: " + e.getMessage());
         }
@@ -33,8 +43,10 @@ public class ClientSkeleton implements Client {
     @Override
     public void update(Message message) throws RemoteException {
         try {
-            oos.writeObject(message);
-            oos.reset();
+            synchronized (outLock) {
+                oos.writeObject(message);
+                oos.reset();
+            }
         } catch (IOException e) {
             throw new RemoteException("Cannot send message: " + e.getMessage());
         }
@@ -51,9 +63,5 @@ public class ClientSkeleton implements Client {
         }
         //se ricevo correttamente l'oggetto...
         server.update(this, m);
-    }
-
-    public void ping() throws RemoteException {
-        update(new PingMessage());
     }
 }

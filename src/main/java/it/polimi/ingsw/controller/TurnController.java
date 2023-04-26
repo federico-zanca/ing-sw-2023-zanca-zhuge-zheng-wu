@@ -30,6 +30,7 @@ public class TurnController {
      * Creates a new turn
      */
     public void newTurn() {
+        System.err.println(playersToSkip);
         if (model.getGamePhase() != GamePhase.PLAY) {
             return;
         }

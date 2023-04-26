@@ -1,10 +1,14 @@
 package it.polimi.ingsw.distributed;
 
+import java.util.Timer;
+
 public class ClientInfo {
     private boolean connected;
     private String clientID;
     private ClientState clientState;
     private Lobby lobby;
+
+    private Timer heartbeatTimer;
     public ClientInfo(Client client) {
         this.clientID = client.toString();
         this.clientState = ClientState.IN_SERVER;
@@ -41,5 +45,13 @@ public class ClientInfo {
 
     public void setConnected(boolean connected) {
         this.connected = connected;
+    }
+
+    public void setHeartbeatTimer(Timer heartbeatTimer) {
+        this.heartbeatTimer = heartbeatTimer;
+    }
+
+    public Timer getHeartbeatTimer() {
+        return heartbeatTimer;
     }
 }

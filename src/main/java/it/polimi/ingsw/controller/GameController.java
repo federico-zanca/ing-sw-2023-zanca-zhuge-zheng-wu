@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 
-import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.distributed.Lobby;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.Player;
@@ -9,7 +8,6 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.GameNotReadyException;
 import it.polimi.ingsw.model.exceptions.InvalidCommandException;
 import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
-import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 
@@ -259,7 +257,7 @@ public class GameController {
         return model.getCurrentPlayer().getUsername();
     }
 
-    public void reconnectExitedPlayer(String username) {
+    public void reconnectPlayer(String username) {
         turnController.reconnectExitedPlayer(model.getPlayerByUsername(username));
     }
 
