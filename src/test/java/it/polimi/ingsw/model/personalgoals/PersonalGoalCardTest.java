@@ -15,7 +15,7 @@ class PersonalGoalCardTest {
         PersonalGoalCard card = new PersonalGoalCard(n);
         for(int i=0; i<6; i++){
             for(int j=0; j<5; j++){
-                System.out.printf("%s \t", card.getObjective(i,j).toString());
+                System.out.printf("%s \t", card.getSingleObjective(i,j).toString());
             }
             System.out.print("\n");
         }

@@ -12,8 +12,8 @@ import java.util.List;
 
 public class PersonalGoalCard implements Serializable {
     private static final long serialVersionUID = -4793133503754805698L;
-    final int Rows=6;
-    final int Columns=5;
+    public static final int Rows=6;
+    public static final int Columns=5;
     protected ItemType[][] objective;
 
     /**
@@ -63,8 +63,11 @@ public class PersonalGoalCard implements Serializable {
      * @param row,col of cell in Objective
      * @return itemtype contained in cell
      */
-    public ItemType getObjective(int row, int col) {
+    public ItemType getSingleObjective(int row, int col) {
         return objective[row][col];
+    }
+    public ItemType[][] getObjective() {
+        return this.objective;
     }
 }
 
