@@ -186,12 +186,12 @@ public class Game extends Observable {
 
         for(Player player : players){
             personalGoals.put(player.getUsername(), randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
-            notifyObservers(new PersonalGoalCardMessage(player.getUsername(),personalGoals.get(player.getUsername()),personalGoals.get(player.getUsername()).getObjective()));
+            notifyObservers(new PersonalGoalCardMessage(player.getUsername(),personalGoals.get(player.getUsername())));
         }
 
         initLeaderBoard();
         setCurrentPlayer(getFirstPlayer());
-        notifyObservers(new GameStartedMessage("", new GameView(this), board.getGameboard(), commonGoals));
+        notifyObservers(new GameStartedMessage("", new GameView(this)));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
@@ -426,7 +426,7 @@ public class Game extends Observable {
     public void prepareForInsertPhase() {
         nextTurnPhase();
         ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
-        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), getDrawnTiles(), currentPlayer.getBookshelf().getShelfie(), insertableColumns));
+        notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(), getDrawnTiles(), currentPlayer.getBookshelf(), insertableColumns));
     }
 
     /**
@@ -437,7 +437,7 @@ public class Game extends Observable {
     public void insertTiles(ArrayList<ItemTile> items, int column) {
         currentPlayer.getBookshelf().insertItems(items, column);
         currentPlayer.getHand().clear();
-        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf().getShelfie()));
+        notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf()));
     }
 
     //  CALCULATE PHASE METHODS
@@ -548,7 +548,6 @@ public class Game extends Observable {
             leaderboard.put(p.getUsername(), 0);
         }
     }
-
     public boolean isLastTurn() {
         return lastTurn;
     }

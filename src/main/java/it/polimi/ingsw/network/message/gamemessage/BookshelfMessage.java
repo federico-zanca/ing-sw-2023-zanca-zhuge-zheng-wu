@@ -1,16 +1,19 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 
-public class BookshelfMessage extends GameMessage {
-    private final ItemTile[][] bookshelf;
+import java.awt.print.Book;
 
-    public BookshelfMessage(String username, ItemTile[][] bookshelf){
+public class BookshelfMessage extends GameMessage {
+    private final Bookshelf bookshelf;
+
+    public BookshelfMessage(String username, Bookshelf bookshelf){
         super(username, GameMessageType.BOOKSHELF);
-        this.bookshelf = bookshelf;
+        this.bookshelf = new Bookshelf (bookshelf);
     }
 
-    public ItemTile[][] getBookshelf(){
+    public Bookshelf getBookshelf(){
         return bookshelf;
     }
 }

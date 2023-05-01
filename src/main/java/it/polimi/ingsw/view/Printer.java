@@ -144,9 +144,10 @@ public class Printer {
      * Prints the bookshelf of the player
      *
      * @param username username of the player whose bookshelf is printed
-     * @param shelf  matrix of ItemTiles
+     * @param bookshelf  bookshelf
      */
-    void showBookshelf(String username, ItemTile[][] shelf) {
+    void showBookshelf(String username, Bookshelf bookshelf) {
+        ItemTile[][] shelf = bookshelf.getShelfie();
         System.out.println("Libreria di " + username);
         System.out.println();
         StringBuilder strShelf = new StringBuilder();

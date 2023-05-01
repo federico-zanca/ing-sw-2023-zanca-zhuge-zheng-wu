@@ -17,6 +17,15 @@ public class Square implements Serializable {
         this.item = new ItemTile(ItemType.EMPTY);
     }
 
+    /**
+     * This is a copy constructor used to make deep copies of the squares in board.
+     * @param other
+     */
+    public Square(Square other){
+        this.coords = other.coords;
+        this.item = other.item;
+    }
+
     public Square(Coordinates inputCoords, ItemType type) {
         this.coords = inputCoords;
         this.item = new ItemTile(type);

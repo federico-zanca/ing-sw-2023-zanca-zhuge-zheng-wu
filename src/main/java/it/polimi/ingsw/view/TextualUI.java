@@ -515,7 +515,7 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void showInsertInfo(InsertInfoMessage m) {
         System.out.println("Inizia la insert phase\n");
-        printer.showBookshelf(m.getUsername(), m.getShelfie());
+        printer.showBookshelf(m.getUsername(), m.getBookshelf());
         printer.showHand(m.getUsername(), tilesToInsert);
     }
 

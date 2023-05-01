@@ -43,6 +43,20 @@ public class PersonalGoalCard implements Serializable {
     }
 
     /**
+     * Copy constructor to make deep copies of personal goals.
+     * @param other
+     */
+    public PersonalGoalCard(PersonalGoalCard other) {
+        this.objective = new ItemType[Rows][Columns];
+        for (int i = 0; i < Rows; i++) {
+            for (int j = 0; j < Columns; j++) {
+                this.objective[i][j] = other.objective[i][j];
+            }
+        }
+    }
+
+
+    /**
      * Calculate number of matches between personalGoalCard and shelfie
      * @param shelfie bookshelf to be compared
      * @return the number of matches
