@@ -4,7 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
-import it.polimi.ingsw.network.message.PingMessage;
+import it.polimi.ingsw.network.message.HeartBeatMessage;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
@@ -272,7 +272,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
             System.out.println("Received message: " + message);
             this.clientHandler.onLobbyMessage(client, (LobbyMessage) message);
         }
-        else if(message instanceof PingMessage){
+        else if(message instanceof HeartBeatMessage){
             receiveHeartBeat(client);
         }
         else

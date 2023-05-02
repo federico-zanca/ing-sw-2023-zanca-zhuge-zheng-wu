@@ -4,8 +4,10 @@ import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
 
-public class ReconnectionMessage extends ConnectionMessage {
+public class ReconnectionMessage extends ConnectionMessage implements MessageToClient {
     private final GameView model;
     private final String content;
     private final PersonalGoalCard personalGoal;
@@ -27,5 +29,10 @@ public class ReconnectionMessage extends ConnectionMessage {
 
     public PersonalGoalCard getPersonalGoal() {
         return personalGoal;
+    }
+
+    @Override
+    public void execute(View view) {
+        view.onReconnectionMessage(this);
     }
 }

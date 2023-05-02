@@ -34,7 +34,9 @@ public class ClientHandler {
                 break;
             case CREATE_LOBBY_REQUEST:
                 try {
-                    server.sendMessage(client, new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
+                    Lobby newLobby = new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName());
+                    boolean success = server.addLobby(newLobby);
+                    server.sendMessage(client, new CreateLobbyResponse(success));
                     //client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
                 } catch (RemoteException e) {
                     System.err.println("Unable to send lobby list response: " + e);

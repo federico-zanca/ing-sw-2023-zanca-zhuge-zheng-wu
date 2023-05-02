@@ -1,10 +1,12 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.model.enumerations.JoinType;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
 
-public class JoinLobbyResponse extends ConnectionMessage {
+public class JoinLobbyResponse extends ConnectionMessage implements MessageToClient {
     private final String content;
     private final ArrayList<String> usernames;
     private final JoinType joinType;
@@ -32,6 +34,11 @@ public class JoinLobbyResponse extends ConnectionMessage {
     public JoinType getJoinType() {
         return joinType;
     }
+
+    @Override
+    public void execute(View view) {
+        view.onJoinLobbyResponse(this);
+    }
 /*
     public int getNumClients() {
         return numClients;
@@ -42,4 +49,5 @@ public class JoinLobbyResponse extends ConnectionMessage {
     }
 
  */
+
 }

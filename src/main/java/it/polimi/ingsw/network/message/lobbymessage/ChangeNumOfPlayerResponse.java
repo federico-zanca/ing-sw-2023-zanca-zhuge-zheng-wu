@@ -1,8 +1,10 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
 
-public class ChangeNumOfPlayerResponse extends LobbyMessage {
+public class ChangeNumOfPlayerResponse extends LobbyMessage implements MessageToClient {
 
     private final boolean successful;
     private final String content;
@@ -19,5 +21,10 @@ public class ChangeNumOfPlayerResponse extends LobbyMessage {
 
     public String getContent() {
         return content;
+    }
+
+    @Override
+    public void execute(View view) {
+        view.onChangeNumOfPlayerResponse(this);
     }
 }

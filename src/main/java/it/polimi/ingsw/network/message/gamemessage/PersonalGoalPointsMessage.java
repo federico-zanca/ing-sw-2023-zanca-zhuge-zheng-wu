@@ -2,9 +2,11 @@ package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.view.View;
 
-public class PersonalGoalPointsMessage extends GameMessage {
+public class PersonalGoalPointsMessage extends GameMessage implements MessageToClient {
     private final PersonalGoalCard personalGoal;
     private final int points;
     private final String playerUsername;
@@ -26,5 +28,10 @@ public class PersonalGoalPointsMessage extends GameMessage {
 
     public String getPlayerUsername() {
         return playerUsername;
+    }
+
+    @Override
+    public void execute(View view) {
+        view.onPersonalGoalPointsMessage(this);
     }
 }

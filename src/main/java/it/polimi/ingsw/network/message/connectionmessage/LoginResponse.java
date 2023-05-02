@@ -1,8 +1,10 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
 
-public class LoginResponse extends ConnectionMessage {
+public class LoginResponse extends ConnectionMessage implements MessageToClient {
     private final boolean successful;
     private final String username;
 
@@ -18,5 +20,11 @@ public class LoginResponse extends ConnectionMessage {
 
     public String getUsername() {
         return username;
+    }
+
+
+    @Override
+    public void execute(View view) {
+        view.onLoginResponse(this);
     }
 }

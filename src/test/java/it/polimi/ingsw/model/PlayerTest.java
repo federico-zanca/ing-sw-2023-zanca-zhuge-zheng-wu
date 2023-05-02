@@ -202,5 +202,7 @@ class PlayerTest {
         assertEquals(21, p.calculateAdjacentItemsPoints());
     }
 
+
  */
+
 }

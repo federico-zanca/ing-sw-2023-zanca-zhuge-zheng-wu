@@ -1,6 +1,9 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-public class AdjacentItemsPointsMessage extends GameMessage {
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
+
+public class AdjacentItemsPointsMessage extends GameMessage  implements MessageToClient {
     private final int points;
     private final String playerUsername;
 
@@ -17,4 +20,10 @@ public class AdjacentItemsPointsMessage extends GameMessage {
     public String getPlayerUsername() {
         return playerUsername;
     }
+
+    @Override
+    public void execute(View view) {
+        view.onAdjacentItemsPointsMessage(this);
+    }
+
 }

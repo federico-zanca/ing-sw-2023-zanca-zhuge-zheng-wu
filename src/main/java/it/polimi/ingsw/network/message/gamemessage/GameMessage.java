@@ -1,8 +1,10 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
 
-public abstract class GameMessage extends Message {
+public abstract class GameMessage extends Message implements MessageToClient {
 
     private final String username;
 
@@ -22,4 +24,8 @@ public abstract class GameMessage extends Message {
         return type;
     }
 
+
+    public void execute(View view){
+        System.err.println("Operation not allowed!");
+    }
 }

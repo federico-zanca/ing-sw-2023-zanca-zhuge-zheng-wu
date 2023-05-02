@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
 
 public class ErrorMessage extends GameMessage {
 

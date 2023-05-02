@@ -2,7 +2,6 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
-import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.lobbymessage.*;
@@ -22,7 +21,7 @@ import it.polimi.ingsw.utils.Observable;
 
 import java.util.*;
 
-public class TextualUI extends Observable implements Runnable {
+public class TextualUI extends Observable implements View, Runnable {
 
     private final InputValidator inputValidator = new InputValidator();
     private final Printer printer = new Printer();
@@ -323,8 +322,6 @@ public class TextualUI extends Observable implements Runnable {
                 notifyObservers(new ExitLobbyRequest());
                 break;
             case PLAYERLIST:
-                setPlayerState(PlayerState.WATCHING);
-                notifyObservers(new PlayerListRequest());
                 break;
             case CHAT:
                 System.err.println(lobbyCommand + " not implemented yet");
@@ -541,105 +538,65 @@ public class TextualUI extends Observable implements Runnable {
      */
     private void onGameMessage(GameMessage message) {
         setIsActive(message.getUsername().equals(myUsername));
+        message.execute(this);
+        /*
         switch (message.getType()) {
             case GAME_STARTED:
-                lastMessage = message;
-                setClientState(ClientState.IN_GAME);
-                //showGameStarted(((GameStartedMessage) message).getGameboard());
-                printer.showGameStarted(((GameStartedMessage) message).getGameView());
+
                 break;
             case NEW_TURN:
-                lastMessage = message;
-                tilesToInsert.clear();
-                tilesToDraw.clear();
-                printer.showNewTurn(((NewTurnMessage) message).getCurrentPlayer());
-                setActionType(ActionType.NONE);
+
                 break;
             case BOARD:
-                lastMessage = message;
-                printer.showBoard(((BoardMessage) message).getBoard());
+
                 break;
             case LEADERBOARD:
-                lastMessage = message;
-                printer.showLeaderboard(((LeaderBoardMessage) message).getLeaderboard());
+
                 break;
             case BOOKSHELF:
-                lastMessage = message;
-                BookshelfMessage m = (BookshelfMessage) message;
-                printer.showBookshelf(m.getUsername(), m.getBookshelf());
+
                 break;
             case PERSONALGOALCARD:
-                lastMessage = message;
-                PersonalGoalCardMessage m5 = (PersonalGoalCardMessage) message;
-                setPersonalGoalCard(m5.getPersonalGoalCard());
+
                 break;
             case DRAW_INFO:
-                lastMessage = message;
-                DrawInfoMessage m1 = (DrawInfoMessage) message;
-                showDrawInfo(m1);
-                //if(isActive) {
-                    System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, m1.getMaxNumItems()) + " tessere. Di più non riusciresti a inserirne!");
-                    System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
-                    setActionType(ActionType.DRAW_TILES);
+
                 //}
                 break;
             case INSERT_INFO:
-                lastMessage = message;
-                InsertInfoMessage m2 = (InsertInfoMessage) message;
-                tilesToInsert = m2.getHand();
-                showInsertInfo(m2);
-                //if(isActive) {
-                    if (m2.getHand().size() == 1) {
-                        System.out.println("Inserisci la colonna in cui vuoi inserire la tessera");
-                        setActionType(ActionType.INSERT_HAND);
-                    }
-                    else {
-                        setActionType(ActionType.ORDER_HAND);
-                        askOrderHand(m2);
-                    }
+
                 //}
                 break;
             case ACHIEVED_COMMON_GOAL:
-                lastMessage = message;
-                AchievedCommonGoalMessage m3 = (AchievedCommonGoalMessage) message;
-                printer.showAchievedCommonGoal(m3);
+
                 break;
             case NO_COMMON_GOAL:
-                lastMessage = message;
-                System.out.println(((NoCommonGoalMessage) message).getContent());
+
                 break;
             case LAST_TURN:
-                lastMessage = message;
-                printer.showLastTurn((LastTurnMessage) message);
+
                 break;
             case ADJACENT_ITEMS_POINTS:
-                lastMessage = message;
-                printer.showAdjacentItemsPoints((AdjacentItemsPointsMessage) message);
+
                 break;
             case PERSONAL_GOAL_POINTS:
-                lastMessage = message;
-                printer.showPersonalGoalPoints((PersonalGoalPointsMessage) message);
+
                 break;
             case END_GAME:
-                lastMessage = message;
-                EndGameMessage m4 = (EndGameMessage) message;
-                printer.showEndGame(m4.getRanking());
-                setClientState(ClientState.IN_SERVER);
+
                 break;
             case PLAYER_REJOINED:
-                printer.showPlayerRejoined(((PlayerRejoinedMessage) message).getPlayer());
                 break;
             case EXIT_GAME_RESPONSE:
-                printer.showExitGameResponse(((ExitGameResponse) message).getContent());
-                this.clientState = ClientState.IN_SERVER;
+
                 break;
             case PLAYER_LEFT:
-                printer.showPlayerLeft(((PlayerLeftMessage) message).getContent());
                 break;
             default:
                 System.err.println("Ignoring event from model");
                 break;
         }
+        */
         /*
         if(playerState == PlayerState.WATCHING){
             System.out.println();
@@ -655,51 +612,32 @@ public class TextualUI extends Observable implements Runnable {
      * @param message
      */
     private void onConnectionMessage(ConnectionMessage message) {
+        message.execute(this);
+        /*
         switch (message.getType()){
             case CONNECTED_TO_SERVER:
-                printer.showConnectedToServer();
-                setClientState(ClientState.IN_SERVER);
-                setPlayerState(PlayerState.ACTIVE);
+
                 break;
             case LOBBY_LIST_RESPONSE:
-                printer.showLobbyList(((LobbyListResponse) message).getLobbies());
                 break;
             case CREATE_LOBBY_RESPONSE:
-                printer.printCreateLobbyResponse(((CreateLobbyResponse) message).isSuccessful());
-                if(((CreateLobbyResponse) message).isSuccessful())
-                    setClientState(ClientState.IN_A_LOBBY);
+
                 break;
             case JOIN_LOBBY_RESPONSE:
-                printer.showJoinLobbyResponse(((JoinLobbyResponse) message).getContent());
-                if(((JoinLobbyResponse) message).getJoinType() == JoinType.JOINED){
-                    setClientState(ClientState.IN_A_LOBBY);
-                    printer.showLobbyPlayersList(((JoinLobbyResponse) message).getUsernames());
-                } else if(((JoinLobbyResponse) message).getJoinType() == JoinType.REJOINED){
-                    setClientState(ClientState.IN_GAME);
-                    setActionType(ActionType.NONE);
-                    printer.showLobbyPlayersList(((JoinLobbyResponse) message).getUsernames());
-                }
+
                 break;
             case USERNAME_RESPONSE:
-                this.myUsername = ((UsernameResponse) message).getUsername();
-                printer.showUsernameResponse(((UsernameResponse) message).isSuccessful(), ((UsernameResponse) message).getUsername());
                 break;
             case LOGIN_RESPONSE:
-                this.myUsername = ((LoginResponse) message).getUsername();
-                printer.showUsernameResponse(((LoginResponse) message).isSuccessful(), ((LoginResponse) message).getUsername());
-                if(((LoginResponse) message).isSuccessful())
-                    setActionType(ActionType.NONE);
+
                 break;
             case RECONNECTION:
-                setClientState(ClientState.IN_GAME);
-                setActionType(ActionType.NONE);
-                this.personalGoalCard = ((ReconnectionMessage) message).getPersonalGoal();
-                printer.showReconnection(((ReconnectionMessage) message).getModel(), ((ReconnectionMessage) message).getContent(), ((ReconnectionMessage) message).getPersonalGoal());
                 break;
             default:
                 System.err.println("Ignoring ConnectionMessage from server");
                 break;
         }
+        */
         setPlayerState(PlayerState.ACTIVE);
     }
 
@@ -708,37 +646,32 @@ public class TextualUI extends Observable implements Runnable {
      * @param message the message to handle
      */
     private void onLobbyMessage(LobbyMessage message) {
+        message.execute(this);
+        /*
         switch(message.getType()){
             case EXIT_LOBBY_RESPONSE:
-                printer.showExitLobbyResponse(((ExitLobbyResponse) message).isSuccessful());
-                if(((ExitLobbyResponse) message).isSuccessful())
-                    setClientState(ClientState.IN_SERVER);
+
                 break;
             case PLAYER_LIST_RESPONSE:
                 printer.showLobbyPlayersList(((PlayerListResponse) message).getClients());
                 break;
             case NEW_ADMIN:
-                printer.showNewAdmin(((NewAdminMessage) message).getOld_admin(), ((NewAdminMessage) message).getNew_admin());
                 break;
             case GAME_NOT_READY:
-                printer.showGameNotReady();
                 break;
             case NOT_ADMIN:
-                printer.showNotAdmin();
                 break;
             case INVALID_COMMAND:
-                printer.showInvalidCommand();
                 break;
             case CHANGE_NUM_OF_PLAYER_RESPONSE:
-                System.out.println(((ChangeNumOfPlayerResponse) message).getContent());
                 break;
             case NEW_PLAYER_IN_LOBBY:
-                printer.showNewPlayerInLobby(((PlayersInLobbyUpdate) message).getAllPlayersUsernames(), ((PlayersInLobbyUpdate) message).getContent());
                 break;
             default:
                 System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
                 break;
         }
+        */
         /*
         if(playerState == PlayerState.WATCHING) {
             System.out.println();
@@ -748,6 +681,323 @@ public class TextualUI extends Observable implements Runnable {
         setPlayerState(PlayerState.ACTIVE);
     }
 
+    /**
+     * @param connectedToServerMessage
+     */
+    @Override
+    public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
+        printer.showConnectedToServer();
+        setClientState(ClientState.IN_SERVER);
+        setPlayerState(PlayerState.ACTIVE);
+    }
+
+    /**
+     * @param createLobbyResponse
+     */
+    @Override
+    public void onCreateLobbyResponse(CreateLobbyResponse createLobbyResponse) {
+        printer.printCreateLobbyResponse((createLobbyResponse).isSuccessful());
+        if((createLobbyResponse).isSuccessful())
+            setClientState(ClientState.IN_A_LOBBY);
+    }
+
+    /**
+     * @param joinLobbyResponse
+     */
+    @Override
+    public void onJoinLobbyResponse(JoinLobbyResponse joinLobbyResponse) {
+        printer.showJoinLobbyResponse(joinLobbyResponse.getContent());
+        if(joinLobbyResponse.getJoinType() == JoinType.JOINED){
+            setClientState(ClientState.IN_A_LOBBY);
+            printer.showLobbyPlayersList(joinLobbyResponse.getUsernames());
+        } else if(joinLobbyResponse.getJoinType() == JoinType.REJOINED){
+            setClientState(ClientState.IN_GAME);
+            setActionType(ActionType.NONE);
+            printer.showLobbyPlayersList(joinLobbyResponse.getUsernames());
+        }
+    }
+
+    /**
+     * @param lobbyListResponse
+     */
+    @Override
+    public void onLobbyListResponse(LobbyListResponse lobbyListResponse) {
+        printer.showLobbyList(lobbyListResponse.getLobbies());
+
+    }
+
+    /**
+     * @param loginResponse
+     */
+    @Override
+    public void onLoginResponse(LoginResponse loginResponse) {
+        this.myUsername = loginResponse.getUsername();
+        printer.showUsernameResponse(loginResponse.isSuccessful(), loginResponse.getUsername());
+        if(loginResponse.isSuccessful())
+            setActionType(ActionType.NONE);
+    }
+
+    /**
+     * @param reconnectionMessage
+     */
+    @Override
+    public void onReconnectionMessage(ReconnectionMessage reconnectionMessage) {
+        setClientState(ClientState.IN_GAME);
+        setActionType(ActionType.NONE);
+        this.personalGoalCard = reconnectionMessage.getPersonalGoal();
+        printer.showReconnection(reconnectionMessage.getModel(), reconnectionMessage.getContent(), reconnectionMessage.getPersonalGoal());
+
+    }
+
+    /**
+     * @param usernameResponse
+     */
+    @Override
+    public void onUsernameResponse(UsernameResponse usernameResponse) {
+        this.myUsername = usernameResponse.getUsername();
+        printer.showUsernameResponse(usernameResponse.isSuccessful(), usernameResponse.getUsername());
+
+    }
+
+    /**
+     * @param achievedCommonGoalMessage
+     */
+    @Override
+    public void onAchievedCommonGoalMessage(AchievedCommonGoalMessage achievedCommonGoalMessage) {
+        lastMessage = achievedCommonGoalMessage;
+        printer.showAchievedCommonGoal(achievedCommonGoalMessage);
+    }
+
+    /**
+     * @param adjacentItemsPointsMessage
+     */
+    @Override
+    public void onAdjacentItemsPointsMessage(AdjacentItemsPointsMessage adjacentItemsPointsMessage) {
+        lastMessage = adjacentItemsPointsMessage;
+        printer.showAdjacentItemsPoints(adjacentItemsPointsMessage);
+    }
+
+    /**
+     * @param boardMessage
+     */
+    @Override
+    public void onBoardMessage(BoardMessage boardMessage) {
+        lastMessage = boardMessage;
+        printer.showBoard(boardMessage.getBoard());
+    }
+
+    /**
+     * @param bookshelfMessage
+     */
+    @Override
+    public void onBookshelfMessage(BookshelfMessage bookshelfMessage) {
+        lastMessage = bookshelfMessage;
+        printer.showBookshelf(bookshelfMessage.getUsername(), bookshelfMessage.getBookshelf());
+    }
+
+    /**
+     * @param drawInfoMessage
+     */
+    @Override
+    public void onDrawInfoMessage(DrawInfoMessage drawInfoMessage) {
+        lastMessage = drawInfoMessage;
+        showDrawInfo(drawInfoMessage);
+        //if(isActive) {
+        System.out.println("Guardando la tua libreria, puoi prendere al massimo " + Math.min(3, drawInfoMessage.getMaxNumItems()) + " tessere. Di più non riusciresti a inserirne!");
+        System.out.println("Inserisci le coordinate della 1° tessera separate da una virgola (es. riga, colonna) :");
+        setActionType(ActionType.DRAW_TILES);
+    }
+
+    /**
+     * @param endGameMessage
+     */
+    @Override
+    public void onEndGameMessage(EndGameMessage endGameMessage) {
+        lastMessage = endGameMessage;
+        printer.showEndGame(endGameMessage.getRanking());
+        setClientState(ClientState.IN_SERVER);
+    }
+
+    /**
+     * @param exitGameResponse
+     */
+    @Override
+    public void onExitGameResponse(ExitGameResponse exitGameResponse) {
+        printer.showExitGameResponse(exitGameResponse.getContent());
+        this.clientState = ClientState.IN_SERVER;
+    }
+
+    /**
+     * @param gameStartedMessage
+     */
+    @Override
+    public void onGameStartedMessage(GameStartedMessage gameStartedMessage) {
+        lastMessage = gameStartedMessage;
+        setClientState(ClientState.IN_GAME);
+        //showGameStarted(((GameStartedMessage) message).getGameboard());
+        printer.showGameStarted(gameStartedMessage.getGameView());
+    }
+
+    /**
+     * @param insertInfoMessage
+     */
+    @Override
+    public void onInsertInfoMessage(InsertInfoMessage insertInfoMessage) {
+        lastMessage = insertInfoMessage;
+        tilesToInsert = insertInfoMessage.getHand();
+        showInsertInfo(insertInfoMessage);
+        //if(isActive) {
+        if (insertInfoMessage.getHand().size() == 1) {
+            System.out.println("Inserisci la colonna in cui vuoi inserire la tessera");
+            setActionType(ActionType.INSERT_HAND);
+        }
+        else {
+            setActionType(ActionType.ORDER_HAND);
+            askOrderHand(insertInfoMessage);
+        }
+    }
+
+    /**
+     * @param lastTurnMessage
+     */
+    @Override
+    public void onLastTurnMessage(LastTurnMessage lastTurnMessage) {
+        lastMessage = lastTurnMessage;
+        printer.showLastTurn(lastTurnMessage);
+    }
+
+    /**
+     * @param leaderBoardMessage
+     */
+    @Override
+    public void onLeaderBoardMessage(LeaderBoardMessage leaderBoardMessage) {
+        lastMessage = leaderBoardMessage;
+        printer.showLeaderboard(leaderBoardMessage.getLeaderboard());
+    }
+
+    /**
+     * @param newTurnMessage
+     */
+    @Override
+    public void onNewTurnMessage(NewTurnMessage newTurnMessage) {
+        lastMessage = newTurnMessage;
+        tilesToInsert.clear();
+        tilesToDraw.clear();
+        printer.showNewTurn(newTurnMessage.getCurrentPlayer());
+        setActionType(ActionType.NONE);
+    }
+
+    /**
+     * @param noCommonGoalMessage
+     */
+    @Override
+    public void onNoCommonGoalMessage(NoCommonGoalMessage noCommonGoalMessage) {
+        lastMessage = noCommonGoalMessage;
+        System.out.println(noCommonGoalMessage.getContent());
+    }
+
+    /**
+     * @param personalGoalCardMessage
+     */
+    @Override
+    public void onPersonalGoalCardMessage(PersonalGoalCardMessage personalGoalCardMessage) {
+        lastMessage = personalGoalCardMessage;
+        setPersonalGoalCard(personalGoalCardMessage.getPersonalGoalCard());
+    }
+
+    /**
+     * @param personalGoalPointsMessage
+     */
+    @Override
+    public void onPersonalGoalPointsMessage(PersonalGoalPointsMessage personalGoalPointsMessage) {
+        lastMessage = personalGoalPointsMessage;
+        printer.showPersonalGoalPoints(personalGoalPointsMessage);
+    }
+
+    /**
+     * @param playerLeftMessage
+     */
+    @Override
+    public void onPlayerLeftMessage(PlayerLeftMessage playerLeftMessage) {
+        printer.showPlayerLeft(playerLeftMessage.getContent());
+    }
+
+    /**
+     * @param playerRejoinedMessage
+     */
+    @Override
+    public void onPlayerRejoinedMessage(PlayerRejoinedMessage playerRejoinedMessage) {
+        printer.showPlayerRejoined(playerRejoinedMessage.getPlayer());
+    }
+
+    /**
+     * @param changeNumOfPlayerResponse
+     */
+    @Override
+    public void onChangeNumOfPlayerResponse(ChangeNumOfPlayerResponse changeNumOfPlayerResponse) {
+        System.out.println(changeNumOfPlayerResponse.getContent());
+    }
+
+    /**
+     * @param exitLobbyResponse
+     */
+    @Override
+    public void onExitLobbyResponse(ExitLobbyResponse exitLobbyResponse) {
+        printer.showExitLobbyResponse(exitLobbyResponse.isSuccessful());
+        if(exitLobbyResponse.isSuccessful())
+            setClientState(ClientState.IN_SERVER);
+    }
+
+    /**
+     * @param gameNotReadyMessage
+     */
+    @Override
+    public void onGameNotReadyMessage(GameNotReadyMessage gameNotReadyMessage) {
+        printer.showGameNotReady();
+    }
+
+    /**
+     * @param invalidCommandMessage
+     */
+    @Override
+    public void onInvalidCommandMessage(InvalidCommandMessage invalidCommandMessage) {
+        printer.showInvalidCommand();
+    }
+
+    /**
+     * @param newAdminMessage
+     */
+    @Override
+    public void onNewAdminMessage(NewAdminMessage newAdminMessage) {
+        printer.showNewAdmin(newAdminMessage.getOld_admin(), newAdminMessage.getNew_admin());
+    }
+
+    /**
+     * @param notAdminMessage
+     */
+    @Override
+    public void onNotAdminMessage(NotAdminMessage notAdminMessage) {
+        printer.showNotAdmin();
+    }
+
+    /**
+     * @param playerListResponse
+     */
+    @Override
+    public void onPlayerListResponse(PlayerListResponse playerListResponse) {
+        setPlayerState(PlayerState.WATCHING);
+        notifyObservers(new PlayerListRequest());
+    }
+
+    /**
+     * @param playersInLobbyUpdate
+     */
+    @Override
+    public void onPlayersInLobbyUpdate(PlayersInLobbyUpdate playersInLobbyUpdate) {
+        printer.showNewPlayerInLobby(playersInLobbyUpdate.getAllPlayersUsernames(), playersInLobbyUpdate.getContent());
+    }
+
+    @Override
     public void update(Message message) {
         if (message instanceof GameMessage) {
             onGameMessage((GameMessage) message);
@@ -755,7 +1005,9 @@ public class TextualUI extends Observable implements Runnable {
             onConnectionMessage((ConnectionMessage) message);
         } else if (message instanceof LobbyMessage) {
             onLobbyMessage((LobbyMessage) message);
-        } else if(!(message instanceof PingMessage)) {
+        } else
+            //if(!(message instanceof HeartBeatMessage))
+            {
             System.err.println("Ignoring message from server");
         }
     }

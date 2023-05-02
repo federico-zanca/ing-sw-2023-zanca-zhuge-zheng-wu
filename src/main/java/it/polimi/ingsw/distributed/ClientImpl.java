@@ -1,7 +1,7 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.PingMessage;
+import it.polimi.ingsw.network.message.HeartBeatMessage;
 import it.polimi.ingsw.view.TextualUI;
 
 import java.rmi.RemoteException;
@@ -29,7 +29,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
             @Override
             public void run() {
                 try {
-                    server.update(ClientImpl.this, new PingMessage());
+                    server.update(ClientImpl.this, new HeartBeatMessage());
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }

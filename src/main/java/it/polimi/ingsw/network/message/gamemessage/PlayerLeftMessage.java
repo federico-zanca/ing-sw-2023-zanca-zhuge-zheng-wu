@@ -1,6 +1,9 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-public class PlayerLeftMessage extends GameMessage {
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.view.View;
+
+public class PlayerLeftMessage extends GameMessage implements MessageToClient {
     private final String content;
 
     public PlayerLeftMessage(String username, String content) {
@@ -10,5 +13,10 @@ public class PlayerLeftMessage extends GameMessage {
 
     public String getContent() {
         return content;
+    }
+
+    @Override
+    public void execute(View view) {
+        view.onPlayerLeftMessage(this);
     }
 }

@@ -3,12 +3,14 @@ package it.polimi.ingsw.network.message.gamemessage;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.view.View;
 
 import java.awt.print.Book;
 import java.util.ArrayList;
 
-public class InsertInfoMessage extends GameMessage {
+public class InsertInfoMessage extends GameMessage implements MessageToClient {
     private final Bookshelf bookshelf;
     private final ArrayList<ItemTile> hand;
     private final ArrayList<Integer> insertableColumns;
@@ -30,5 +32,10 @@ public class InsertInfoMessage extends GameMessage {
 
     public ArrayList<Integer> getEnabledColumns() {
         return insertableColumns;
+    }
+
+    @Override
+    public void execute(View view) {
+        view.onInsertInfoMessage(this);
     }
 }
