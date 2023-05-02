@@ -336,7 +336,7 @@ public class TextualUI extends Observable implements View, Runnable {
                     } else if(!inputValidator.invalidNumOfPlayersFormat(parts[1])){
                         int chosenNum = Integer.parseInt(parts[1].trim());
                         setPlayerState(PlayerState.WATCHING);
-                        notifyObservers(new ChangeNumOfPlayerRequest(chosenNum));
+                        notifyObservers(new ChangeNumOfPlayersRequest(chosenNum));
                     }else{
                         System.out.println("Numero non valido! La partita deve avere minimo " + GameController.MIN_PLAYERS + " giocatori e massimo " + GameController.MAX_PLAYERS + " giocatori");
                         return;

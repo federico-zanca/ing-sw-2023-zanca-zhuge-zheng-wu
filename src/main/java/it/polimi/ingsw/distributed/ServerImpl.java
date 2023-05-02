@@ -1,6 +1,7 @@
 package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.controller.GameController;
+import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
@@ -27,12 +28,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     private final Object clientsLock = new Object();
     private ArrayList<Lobby> lobbies;
 
-    private ClientHandler clientHandler;
+    private PreGameController preGameController;
 
     public ServerImpl() throws RemoteException {
         super();
         this.connectedClients = new HashMap<>();
-        this.clientHandler = new ClientHandler(this);
+        this.preGameController = new PreGameController(this);
         this.lobbies = new ArrayList<>();
     }
 
@@ -266,11 +267,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
         else if(message instanceof ConnectionMessage) {
             System.out.println("Received message: " + message);
-            this.clientHandler.onConnectionMessage(client, (ConnectionMessage) message);
+            this.preGameController.onConnectionMessage(client, (ConnectionMessage) message);
         }
         else if(message instanceof LobbyMessage){
             System.out.println("Received message: " + message);
-            this.clientHandler.onLobbyMessage(client, (LobbyMessage) message);
+            this.preGameController.onLobbyMessage(client, (LobbyMessage) message);
         }
         else if(message instanceof HeartBeatMessage){
             receiveHeartBeat(client);

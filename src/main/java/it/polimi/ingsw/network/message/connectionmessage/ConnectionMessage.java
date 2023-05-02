@@ -1,11 +1,13 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
+import it.polimi.ingsw.controller.PreGameController;
+import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.view.View;
 
-public abstract class ConnectionMessage extends Message implements MessageToClient {
+public abstract class ConnectionMessage extends Message implements MessageToClient, MessageToServer{
     private final ConnectionMessageType type;
 
     public ConnectionMessage(ConnectionMessageType type) {
@@ -17,6 +19,10 @@ public abstract class ConnectionMessage extends Message implements MessageToClie
     }
 
     public void execute(View view){
-        System.err.println("Operation not allowed!");
+        System.err.println("Operation on client not allowed!");
+    }
+
+    public void execute(Client client, PreGameController preGameController){
+        System.err.println("Operation on server not allowed!");
     }
 }

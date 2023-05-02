@@ -1,10 +1,13 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
+import it.polimi.ingsw.controller.PreGameController;
+import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.view.View;
 
-public abstract class LobbyMessage extends Message implements MessageToClient {
+public abstract class LobbyMessage extends Message implements MessageToClient, MessageToServer {
     private final LobbyMessageType type;
 
     public LobbyMessage(LobbyMessageType type) {
@@ -16,6 +19,11 @@ public abstract class LobbyMessage extends Message implements MessageToClient {
     }
 
     public void execute(View view){
-        System.err.println("Operation not allowed!");
+        System.err.println("Operation on client not allowed!");
+    }
+
+    @Override
+    public void execute(Client client, PreGameController preGameController) {
+        System.err.println("Operation on server not allowed!");
     }
 }
