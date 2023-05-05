@@ -6,10 +6,10 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 import java.util.Objects;
 
 public class CommonGoalCardLimitTypes extends CommonGoalCard{
-    private int num_target;
-    private int min_type;
-    private int max_type;
-    private String rowOrCol;
+    private final int num_target;
+    private final int min_type;
+    private final int max_type;
+    private final String rowOrCol;
     public CommonGoalCardLimitTypes(int numPlayers, int num_target, int min_type, int max_type, String rowOrCol){
         super(numPlayers);
         this.num_target = num_target;
@@ -23,7 +23,7 @@ public class CommonGoalCardLimitTypes extends CommonGoalCard{
         matrix = bookshelf.getShelfie();
         int iter1;
         int iter2;
-        if (rowOrCol == "row"){
+        if (Objects.equals(rowOrCol, "row")){
             iter1 = NROW;
             iter2 = NCOL;
         }else{
@@ -38,7 +38,7 @@ public class CommonGoalCardLimitTypes extends CommonGoalCard{
             //creo array per elementi presenti nella riga/colonna
             ItemTile[] items = new ItemTile[iter2];
             for (int j = 0; j < iter2; j++){
-                if (rowOrCol == "row"){
+                if (Objects.equals(rowOrCol, "row")){
                     items[j] = matrix[i][j];
                 }else{
                     items[j] = matrix[j][i];
@@ -80,13 +80,13 @@ public class CommonGoalCardLimitTypes extends CommonGoalCard{
 
     @Override
     public String toString() {
-        if (num_target == 3 && min_type ==1 && max_type == 3 && rowOrCol == "col"){
+        if (num_target == 3 && min_type ==1 && max_type == 3 && Objects.equals(rowOrCol, "col")){
             return "Tre colonne formate ciascuna da 6 tessere di uno, due o tre tipi differenti." +
                     "Colonne diverse possono avere combinazioni diverse di tipi di tessere.";
-        }else if (num_target == 4 && min_type ==1 && max_type == 3 && rowOrCol == "row"){
+        }else if (num_target == 4 && min_type ==1 && max_type == 3 && Objects.equals(rowOrCol, "row")){
             return "Quattro righe formate ciascuna da 5 tessere di uno, due o tre tipo differenti." +
                     "Righe diverse possono avere combinazioni diverse di tipi di tessere.";
-        }else if (num_target == 2 && min_type ==6 && max_type == 6 && rowOrCol == "col"){
+        }else if (num_target == 2 && min_type ==6 && max_type == 6 && Objects.equals(rowOrCol, "col")){
             return "Due colonne formate ciascuna da 6 diversi tipi di tessere.";
         }else{
             return "Due righe formate ciascuna da 5 diversi tipi di tessere.";
