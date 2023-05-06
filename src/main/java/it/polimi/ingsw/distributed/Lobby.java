@@ -26,6 +26,8 @@ public class Lobby {
     private final Game model;
     private final GameController controller;
 
+    private ArrayList<ChatMessage> chat;
+
     public Lobby(ServerImpl server, Client admin, String lobbyName) throws FullLobbyException, ClientAlreadyInLobbyException {
         this.server = server;
         this.model = new Game();
@@ -33,6 +35,7 @@ public class Lobby {
         this.lobbyName = lobbyName;
         this.admin = admin;
         this.inLobbyClients = new ArrayList<>();
+        this.chat = new ArrayList<>();
         addClient(admin);
     }
 
@@ -387,6 +390,7 @@ public class Lobby {
     public void onChatMessage(Client client, ChatMessage message) {
         message.setSender(getClientUsername(client));
         if(message.getReceiver()==null){
+            chat.add(message); //aggiungo il messaggio alla chat lato server solo se è un messaggio per tutti
             sendToAll(message);
         }else{
             Client receiver = getClientByUsername(message.getReceiver());

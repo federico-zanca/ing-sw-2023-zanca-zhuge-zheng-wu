@@ -534,7 +534,7 @@ public class Printer {
     public void showReconnection(GameView model, String content, PersonalGoalCard personalGoal) {
         System.out.println();
         System.out.println(content);
-        System.out.println("RIEPILOGO DELLA PARTITA:");
+        System.out.println(Color.BRIGHT_RED_TEXT + "RIEPILOGO DELLA PARTITA:" + Color.NO_COLOR);
 
         showNewTurn(model.getCurrentPlayer().getUsername());
         showBookshelves(model.getPlayers());
@@ -543,12 +543,16 @@ public class Printer {
     }
 
     public void printChatMessage(ChatMessage message) {
-        System.out.println(Color.GOLD_TEXT + message.getSender() + Color.NO_COLOR + "\t" + message.getContent());
+        String prefix = "";
+        if(message.getReceiver() != null){
+            prefix = Color.BRIGHT_RED_TEXT +"PRIVATE MESSAGE FROM " + Color.NO_COLOR;
+        }
+        System.out.println(prefix + Color.GOLD_TEXT + message.getSender() + Color.NO_COLOR + "\t" + message.getContent());
     }
 
     public void printChat(ArrayList<ChatMessage> chat) {
         System.out.println();
-        System.out.println("CHAT DI GIOCO - SCRIVI UN MESSAGGIO E PREMI INVIO PER INVIARLO - /quit PER USCIRE");
+        System.out.println(Color.BRIGHT_RED_TEXT + "CHAT DI GIOCO - SCRIVI UN MESSAGGIO E PREMI INVIO PER INVIARLO - /quit PER USCIRE" + Color.NO_COLOR);
         for (ChatMessage message : chat) {
             printChatMessage(message);
         }

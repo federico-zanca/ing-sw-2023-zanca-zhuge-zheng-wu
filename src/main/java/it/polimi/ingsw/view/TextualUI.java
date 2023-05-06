@@ -1068,7 +1068,14 @@ public class TextualUI extends VirtualView implements View, Runnable {
     public void sendChatMessage(String messageText) {
         String recipientusername = null;
         messageText = messageText.trim();
+        if(messageText.isEmpty()) {
+            return;
+        }
         if(messageText.startsWith("@")) {
+            if (messageText.indexOf(" ") == -1) {
+                System.out.println(Color.BRIGHT_RED_TEXT + "Invalid message format!" + Color.NO_COLOR);
+                return;
+            }
             recipientusername = messageText.substring(1, messageText.indexOf(" "));
             messageText = messageText.substring(messageText.indexOf(" ") + 1);
         }
