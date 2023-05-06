@@ -5,6 +5,7 @@ import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
+import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.HeartBeatMessage;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessage;
 import it.polimi.ingsw.network.message.Message;
@@ -275,6 +276,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
         else if(message instanceof HeartBeatMessage){
             receiveHeartBeat(client);
+        }
+        else if(message instanceof ChatMessage){
+            System.out.println("Received message: " + message);
+            Lobby lobby = getLobbyOfClient(client);
+            if(lobby != null)
+                lobby.onChatMessage(client, (ChatMessage) message);
         }
         else
             System.err.println("Message not recognized: " + message);

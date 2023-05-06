@@ -3,6 +3,7 @@ package it.polimi.ingsw.distributed;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.HeartBeatMessage;
 import it.polimi.ingsw.view.TextualUI;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -15,7 +16,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
 
     private static final int HEARTBEAT_INTERVAL = 5000;
     private final Server server;
-    private TextualUI view;
+    private VirtualView view;
 
     public ClientImpl(Server server) throws RemoteException {
         super();

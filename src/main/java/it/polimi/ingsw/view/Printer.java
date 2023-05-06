@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.gamemessage.*;
 
 import java.util.ArrayList;
@@ -539,5 +540,17 @@ public class Printer {
         showBookshelves(model.getPlayers());
         showBoard(model.getBoard().getGameboard());
         showPersonalGoalCard(personalGoal.getObjective());
+    }
+
+    public void printChatMessage(ChatMessage message) {
+        System.out.println(Color.GOLD_TEXT + message.getSender() + Color.NO_COLOR + "\t" + message.getContent());
+    }
+
+    public void printChat(ArrayList<ChatMessage> chat) {
+        System.out.println();
+        System.out.println("CHAT DI GIOCO - SCRIVI UN MESSAGGIO E PREMI INVIO PER INVIARLO - /quit PER USCIRE");
+        for (ChatMessage message : chat) {
+            printChatMessage(message);
+        }
     }
 }

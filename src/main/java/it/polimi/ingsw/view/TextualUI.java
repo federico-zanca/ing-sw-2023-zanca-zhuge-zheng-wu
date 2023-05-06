@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import com.sun.javafx.logging.Logger;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.model.enumerations.JoinType;
@@ -21,7 +22,7 @@ import it.polimi.ingsw.utils.Observable;
 
 import java.util.*;
 
-public class TextualUI extends Observable implements View, Runnable {
+public class TextualUI extends VirtualView implements View, Runnable {
 
     private final InputValidator inputValidator = new InputValidator();
     private final Printer printer = new Printer();
@@ -36,6 +37,8 @@ public class TextualUI extends Observable implements View, Runnable {
     private final Object lock = new Object();
     ArrayList<Square> tilesToDraw;
     ArrayList<ItemTile> tilesToInsert;
+    private ArrayList<ChatMessage> chat;
+    private boolean isChatting=false;
 
     private PlayerState getPlayerState() {
         synchronized (lock) {
@@ -52,6 +55,7 @@ public class TextualUI extends Observable implements View, Runnable {
 
     public TextualUI() {
         s = new Scanner(System.in);
+        chat = new ArrayList<>();
         tilesToDraw = new ArrayList<>();
         tilesToInsert = new ArrayList<>();
     }
@@ -96,7 +100,7 @@ public class TextualUI extends Observable implements View, Runnable {
                     }
                 }
             }
-            System.out.print(">>> ");
+            //System.out.print(">>> ");
             input = s.nextLine();
             elaborateInput(input);
         }
@@ -107,7 +111,10 @@ public class TextualUI extends Observable implements View, Runnable {
      * @param input the input from the user
      */
     private void elaborateInput(String input) {
-
+        if(isChatting){
+            elaborateChatInput(input);
+            return;
+        }
         switch(clientState){
             case IN_SERVER:
                 elaborateConnectionCommand(input);
@@ -123,12 +130,23 @@ public class TextualUI extends Observable implements View, Runnable {
         }
     }
 
+    private void elaborateChatInput(String input) {
+        if(input.equalsIgnoreCase("/quit")){
+            isChatting=false;
+            return;
+        }
+        sendChatMessage(input);
+    }
+
     /**
      * Elaborates the input from the user when the client is in a game
      * @param input the input from the user
      */
     private void elaborateGameCommand(String input) {
-        if(input.equalsIgnoreCase("exit")){
+        if(input .equals("chat")){
+            startChatting();
+            return;
+        }else if(input.equalsIgnoreCase("exit")){
             setPlayerState(PlayerState.WATCHING);
             notifyObservers(new ExitGameRequest(myUsername));
             return;
@@ -294,6 +312,10 @@ public class TextualUI extends Observable implements View, Runnable {
      * @param input the input from the user
      */
     private void elaborateLobbyCommand(String input) {
+        if(input .equals("chat")){
+            startChatting();
+            return;
+        }
         String[] parts = input.split(" ");
         LobbyCommand lobbyCommand = null;
         for (LobbyCommand c : LobbyCommand.values()) {
@@ -346,6 +368,16 @@ public class TextualUI extends Observable implements View, Runnable {
                 System.err.println("Comando non valido, should never reach this state");
                 break;
         }
+    }
+
+    private void startChatting() {
+        isChatting = true;
+        printer.printChat(chat);
+        reduceChat();
+    }
+
+    private void reduceChat() {
+        chat = new ArrayList<>(chat.subList(Math.max(chat.size() - 10, 0), chat.size()));
     }
 
     /**
@@ -1005,6 +1037,8 @@ public class TextualUI extends Observable implements View, Runnable {
             onConnectionMessage((ConnectionMessage) message);
         } else if (message instanceof LobbyMessage) {
             onLobbyMessage((LobbyMessage) message);
+        } else if (message instanceof ChatMessage) {
+            onChatMessage((ChatMessage) message);
         } else
             //if(!(message instanceof HeartBeatMessage))
             {
@@ -1022,6 +1056,24 @@ public class TextualUI extends Observable implements View, Runnable {
 
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
+    }
+
+    private void onChatMessage(ChatMessage message) {
+        chat.add(message);
+        if(isChatting){
+            printer.printChatMessage(message);
+        }
+    }
+
+    public void sendChatMessage(String messageText) {
+        String recipientusername = null;
+        messageText = messageText.trim();
+        if(messageText.startsWith("@")) {
+            recipientusername = messageText.substring(1, messageText.indexOf(" "));
+            messageText = messageText.substring(messageText.indexOf(" ") + 1);
+        }
+        ChatMessage chatMessage = new ChatMessage(messageText, recipientusername);
+        notifyObservers(chatMessage);
     }
 
 }

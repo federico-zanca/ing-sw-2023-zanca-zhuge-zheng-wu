@@ -7,6 +7,8 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.ChatMessage;
+import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.ReconnectionMessage;
 import it.polimi.ingsw.network.message.gamemessage.ExitGameResponse;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
@@ -262,7 +264,7 @@ public class Lobby {
      * Sends a message to all clients in the lobby
      * @param message the message to send
      */
-    public void sendToAll(LobbyMessage message) {
+    public void sendToAll(Message message) {
         for (Client c : inLobbyClients) {
             if (server.getConnectedClientInfo(c).isConnected()) {
                 try {
@@ -380,5 +382,30 @@ public class Lobby {
 
     public boolean containsAPlayerWithThisUsername(String username) {
         return model.getPlayersUsernames().contains(username);
+    }
+
+    public void onChatMessage(Client client, ChatMessage message) {
+        message.setSender(getClientUsername(client));
+        if(message.getReceiver()==null){
+            sendToAll(message);
+        }else{
+            Client receiver = getClientByUsername(message.getReceiver());
+            if(receiver!=null){
+                try {
+                    server.sendMessage(receiver, message);
+                } catch (RemoteException e) {
+                    System.err.println("Unable to send ChatMessage " + e);
+                }
+            }
+        }
+}
+
+    private Client getClientByUsername(String username) {
+        for(Client c : inLobbyClients){
+            if(getClientUsername(c).equals(username)){
+                return c;
+            }
+        }
+        return null;
     }
 }
