@@ -59,13 +59,17 @@ public class Lobby {
                 controller.getTurnController().getPlayersToSkipUsernames().contains(clientID)) {
                 connectedClientInfo.setClientState(ClientState.IN_GAME);
                 controller.reconnectPlayer(clientID);
-            } else {
+            }
+            /*
+            else {
+
                 try {
                     controller.addPlayer(clientID);
                 } catch (InvalidUsernameException e) {
                     System.err.println("Can't add player to the model: " + e.getMessage());
                 }
             }
+            */
 
             this.model.addObserver((arg) -> {
                 try {
@@ -209,10 +213,12 @@ public class Lobby {
      */
     public void startGame() {
         try {
+            loadPlayersIntoGame();
             controller.startGame();
             for(Client client : inLobbyClients)
                 server.getConnectedClientInfo(client).setClientState(ClientState.IN_GAME);
         } catch (GameNotReadyException e) {
+            unloadPlayersFromGame();
             try {
                 server.sendMessage(admin, new GameNotReadyMessage("Game not ready to start"));
                 //admin.update(new GameNotReadyMessage("Game not ready to start"));
@@ -221,6 +227,21 @@ public class Lobby {
             }
         }
     }
+
+    private void unloadPlayersFromGame() {
+        controller.resetPlayers();
+    }
+
+    private void loadPlayersIntoGame() {
+        for(Client c : inLobbyClients){
+            try {
+                controller.addPlayer(server.getConnectedClientInfo(c).getClientID());
+            } catch (InvalidUsernameException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     /**
      * Changes the number of players chosen for the game
      * @param chosenNum the new number of players
@@ -359,6 +380,7 @@ public class Lobby {
                 }
             }
         }
+        //rimuovi observer
     }
 
     public void reconnectClient(Client oldClient, Client client, String username) {

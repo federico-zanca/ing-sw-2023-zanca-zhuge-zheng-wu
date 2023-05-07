@@ -265,4 +265,8 @@ public class GameController {
         Player player = model.getPlayerByUsername(username);
         turnController.addPlayerToSkip(player);
     }
+
+    public void resetPlayers() {
+        model.resetPlayers();
+    }
 }

@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.gamemessage.PlayerLeftMessage;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerResponse;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 import it.polimi.ingsw.view.LobbyDisplayInfo;
@@ -130,10 +131,16 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * @return true if the username is available, false otherwise
      */
     public boolean isUsernameAvailable(String username) {
+        Client client = getClientByUsername(username);
+        if(client != null)
+            return false;
+        /*
         for(Lobby l : lobbies){
             if(l.containsAPlayerWithThisUsername(username))
                 return false;
         }
+
+         */
         return true;
 /*
         for(ClientInfo c : connectedClients.values())
@@ -341,7 +348,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
 
     public void stopHeartBeat(Client client){
-        getConnectedClientInfo(client).setConnected(false);
         Timer timer = getConnectedClientInfo(client).getHeartbeatTimer();
         if(timer != null){
             timer.cancel();
@@ -354,8 +360,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
             stopHeartBeat(client);
             System.err.println("Client " + getConnectedClientInfo(client).getClientID() + " disconnected");
             System.err.println(connectedClients);
-            if (getConnectedClientInfo(client).getClientState() == ClientState.IN_A_LOBBY)
-                clientExitsFromItsLobby(client);
+            if (getConnectedClientInfo(client).getClientState() == ClientState.IN_A_LOBBY) {
+                Lobby lobby = getLobbyOfClient(client);
+                String username = getConnectedClientInfo(client).getClientID();
+                getConnectedClientInfo(client).setConnected(false);
+                removeClientFromLobby(client);
+                connectedClients.remove(client);
+                lobby.sendToAll(new PlayerLeftMessage("", username + "left the game. His turn will be skipped until he reconnects."));
+            }
             else if (getConnectedClientInfo(client).getClientState() == ClientState.IN_GAME) {
                 getConnectedClientInfo(client).setConnected(false);
                 getLobbyOfClient(client).disconnectClient(client);

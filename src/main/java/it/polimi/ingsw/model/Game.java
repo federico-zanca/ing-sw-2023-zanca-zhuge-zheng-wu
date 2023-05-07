@@ -580,4 +580,8 @@ public class Game extends Observable {
     public PersonalGoalCard getPersonalGoalOfPlayer(String username) {
         return personalGoals.get(username);
     }
+
+    public void resetPlayers() {
+        players = new ArrayList<>();
+    }
 }
