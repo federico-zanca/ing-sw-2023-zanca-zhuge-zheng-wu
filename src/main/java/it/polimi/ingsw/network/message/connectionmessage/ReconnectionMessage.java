@@ -3,20 +3,25 @@ package it.polimi.ingsw.network.message.connectionmessage;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.view.View;
+
+import java.util.ArrayList;
 
 public class ReconnectionMessage extends ConnectionMessage implements MessageToClient {
     private final GameView model;
     private final String content;
     private final PersonalGoalCard personalGoal;
+    private final ArrayList<ChatMessage> chat;
 
-    public ReconnectionMessage(GameView gameView, String content, PersonalGoalCard personalGoal) {
+    public ReconnectionMessage(GameView gameView, String content, PersonalGoalCard personalGoal, ArrayList<ChatMessage> chat) {
         super(ConnectionMessageType.RECONNECTION);
         this.model = gameView;
         this.content = content;
         this.personalGoal = personalGoal;
+        this.chat = chat;
     }
 
     public GameView getModel() {
@@ -34,5 +39,9 @@ public class ReconnectionMessage extends ConnectionMessage implements MessageToC
     @Override
     public void execute(View view) {
         view.onReconnectionMessage(this);
+    }
+
+    public ArrayList<ChatMessage> getChat() {
+        return chat;
     }
 }

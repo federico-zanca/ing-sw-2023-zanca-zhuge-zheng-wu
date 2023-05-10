@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
+import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.view.Color;
@@ -52,11 +53,17 @@ public class PreGameController {
     }
 
     private void replaceClient(Client oldClient, Client client) {
+        migrateChat(oldClient, client);
         String username = server.getUsernameOfClient(oldClient);
         Lobby lobby = server.getLobbyOfClient(oldClient);
         lobby.reconnectClient(oldClient, client, username);
         server.getConnectedClientInfo(client).setLobby(lobby);
         server.removeClient(oldClient);
+    }
+
+    private void migrateChat(Client oldClient, Client client) {
+        ArrayList<ChatMessage> chat = server.getConnectedClientInfo(oldClient).getChat();
+        server.getConnectedClientInfo(client).setChat(chat);
     }
 
     /**

@@ -777,6 +777,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
         setClientState(ClientState.IN_GAME);
         setActionType(ActionType.NONE);
         this.personalGoalCard = reconnectionMessage.getPersonalGoal();
+        this.chat = reconnectionMessage.getChat();
         printer.showReconnection(reconnectionMessage.getModel(), reconnectionMessage.getContent(), reconnectionMessage.getPersonalGoal());
 
     }

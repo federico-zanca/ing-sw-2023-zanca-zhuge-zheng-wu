@@ -398,7 +398,8 @@ public class Lobby {
         }
         try {
             PersonalGoalCard personalGoal = model.getPersonalGoalOfPlayer(username);
-            server.sendMessage(client, new ReconnectionMessage(new GameView(model), "You reconnected to the game you left: " + lobbyName + "\n", personalGoal));
+            ArrayList<ChatMessage> chat = server.getConnectedClientInfo(client).getChat();
+            server.sendMessage(client, new ReconnectionMessage(new GameView(model), "You reconnected to the game you left: " + lobbyName + "\n", personalGoal, chat));
             //client.update(new ReconnectionMessage(new GameView(model), "You reconnected to the game you left: " + lobbyName + "\n", personalGoal));
         } catch (RemoteException e) {
             System.err.println("Can't send Reconnection Message :" + e.getMessage());
@@ -412,11 +413,15 @@ public class Lobby {
     public void onChatMessage(Client client, ChatMessage message) {
         message.setSender(getClientUsername(client));
         if(message.getReceiver()==null){
+            for(Client c : inLobbyClients){
+                server.getConnectedClientInfo(c).addChatMessage(message);
+            }
             chat.add(message); //aggiungo il messaggio alla chat lato server solo se è un messaggio per tutti
             sendToAll(message);
         }else{
             Client receiver = getClientByUsername(message.getReceiver());
             if(receiver!=null){
+                server.getConnectedClientInfo(client).addChatMessage(message);
                 try {
                     server.sendMessage(receiver, message);
                 } catch (RemoteException e) {
