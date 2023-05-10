@@ -1,53 +1,96 @@
 package it.polimi.ingsw.view.gui;
+import it.polimi.ingsw.view.ActionType;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.gui.sceneControllers.Controller;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class JavaFXApp extends Application{
-    Button button;
+    private Scene currentScene;
+    private Scene oldScene;
+    private Stage currentStage;
+    private final HashMap<String,Controller> controllers;
+    private final HashMap<ActionType,String> fxml;
+    private final HashMap<String,Scene> scenes;
+
+    private ActionType actionType;
+
+    public JavaFXApp (){
+        controllers = new HashMap<>();
+        fxml = new HashMap<>();
+        scenes = new HashMap<>();
+        actionType = ActionType.LOGIN;
+    }
+
     public static void main(String[] args){
         launch(args);
     }
-
     @Override
     public void start(Stage stage) throws Exception {
-        Gui view = new Gui();
-        //ClientController clientController = new ClientController(view);
-        //view.addObserver(clientController);
+        this.currentStage = stage;
+        initializationFXMLParameter();
+        initMenuStage();
+    }
 
-        // Load root layout from fxml file.
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/menu_scene.fxml"));
-        Parent rootLayout = null;
+    public void initializationFXMLParameter() {
+        List<GameFxml> fxmlFiles = new ArrayList<>(Arrays.asList(GameFxml.values()));
         try {
-            rootLayout = loader.load();
+            for (GameFxml path : fxmlFiles) {
+                URL url = getClass().getClassLoader().getResource("fxml/" + path.s);
+                FXMLLoader loader = new FXMLLoader(url);
+                Scene scene = new Scene(loader.load());
+                scenes.put(path.s,scene);
+                Controller controller = loader.getController();
+                controller.setApp(this);
+                controllers.put(path.s, controller);
+                //phases.put(scene,path.getGamePhases());
+                fxml.put(path.getActionType(),path.s);
+            }
         } catch (IOException e) {
-            //Client.LOGGER.severe(e.getMessage());
-            System.exit(1);
+            e.printStackTrace();
         }
-        //MenuSceneController controller = loader.getController();
-        //controller.addObserver(clientController);
+        currentScene = scenes.get(GameFxml.MENU_SCENE.s);
+    }
+    public void initMenuStage(){
+        currentStage.setTitle("My shelfie Board Game");
+        currentStage.setScene(currentScene);
+        currentStage.setWidth(1280d);
+        currentStage.setHeight(720d);
+        currentStage.setResizable(false);
+        currentStage.show();
+    }
+    public void changeScene() {
 
-        // Show the scene containing the root layout.
-        Scene scene = new Scene(rootLayout);
-        stage.setScene(scene);
-        stage.setWidth(1280d);
-        stage.setHeight(720d);
-        stage.setResizable(false);
-        //stage.setMaximized(true);
-        //stage.setFullScreen(true);
-        //stage.setFullScreenExitHint("");
-        //stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.setTitle("My shelfie Board Game");
-        stage.show();
+        Platform.runLater(()->{
+            currentStage.setScene(currentScene);
+            controllers.get(fxml.get(actionType)).initialize();
+            currentStage.show();
+        });
+    }
+    public Scene getCurrentScene() {
+        return currentScene;
+    }
+
+    public Scene getOldScene() {
+        return oldScene;
+    }
+
+    public Stage getCurrentStage() {
+        return currentStage;
+    }
+
+    public ActionType getActionType() {
+        return actionType;
     }
 }
+
