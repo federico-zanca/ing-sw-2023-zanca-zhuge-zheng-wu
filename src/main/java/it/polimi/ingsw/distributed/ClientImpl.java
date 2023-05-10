@@ -21,8 +21,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
 
     public ClientImpl(Server server) throws RemoteException {
         super();
-        //view = new TextualUI();
-        view = new Gui();
+        view = new TextualUI();
+        //view = new Gui();
         this.server = server;
         initialize(server);
 
