@@ -1,13 +1,40 @@
 package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.distributed.ClientState;
+import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
-import it.polimi.ingsw.utils.Observable;
+import it.polimi.ingsw.view.ActionType;
+import it.polimi.ingsw.view.PlayerState;
 import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.VirtualView;
+import javafx.application.Application;
 
-public class Gui extends Observable implements View {
+import java.util.ArrayList;
+
+public class Gui extends VirtualView implements View {
+    private final JavaFXApp app;
+    private ClientState clientState;
+    private ActionType actionType = ActionType.LOGIN;
+    private GameMessage lastMessage;
+    private String myUsername;
+    private PlayerState playerState = PlayerState.WATCHING;
+    private final Object lock = new Object();
+    ArrayList<Square> tilesToDraw;
+    ArrayList<ItemTile> tilesToInsert;
+    private ArrayList<ChatMessage> chat;
+    private boolean isChatting=false;
+
+    public Gui(){
+        chat = new ArrayList<>();
+        tilesToDraw = new ArrayList<>();
+        tilesToInsert = new ArrayList<>();
+        app = new JavaFXApp();
+    }
 
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
@@ -172,5 +199,10 @@ public class Gui extends Observable implements View {
     @Override
     public void update(Message message) {
 
+    }
+
+    @Override
+    public void run() {
+        Application.launch(app.getClass());
     }
 }
