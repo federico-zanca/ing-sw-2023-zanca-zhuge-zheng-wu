@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <StackPane prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" stylesheets="@../css/menu_scene.css"
            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="it.polimi.ingsw.view.gui.scene.MenuSceneController">
+           fx:controller="it.polimi.ingsw.view.gui.sceneControllers.MenuSceneController">
     <children>
         <Group scaleX="1.5" scaleY="1.5">
             <children>
