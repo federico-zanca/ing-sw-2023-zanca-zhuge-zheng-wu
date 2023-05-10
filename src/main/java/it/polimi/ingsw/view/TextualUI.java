@@ -344,6 +344,8 @@ public class TextualUI extends VirtualView implements View, Runnable {
                 notifyObservers(new ExitLobbyRequest());
                 break;
             case PLAYERLIST:
+                setPlayerState(PlayerState.WATCHING);
+                notifyObservers(new PlayerListRequest());
                 break;
             case CHAT:
                 System.err.println(lobbyCommand + " not implemented yet");
@@ -1021,8 +1023,8 @@ public class TextualUI extends VirtualView implements View, Runnable {
      */
     @Override
     public void onPlayerListResponse(PlayerListResponse playerListResponse) {
-        setPlayerState(PlayerState.WATCHING);
-        notifyObservers(new PlayerListRequest());
+        printer.showLobbyPlayersList(playerListResponse.getClients());
+        return;
     }
 
     /**
