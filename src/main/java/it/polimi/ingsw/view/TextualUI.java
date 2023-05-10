@@ -858,6 +858,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
     public void onExitGameResponse(ExitGameResponse exitGameResponse) {
         printer.showExitGameResponse(exitGameResponse.getContent());
         this.clientState = ClientState.IN_SERVER;
+        chat = new ArrayList<>();
     }
 
     /**
@@ -977,8 +978,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     @Override
     public void onExitLobbyResponse(ExitLobbyResponse exitLobbyResponse) {
         printer.showExitLobbyResponse(exitLobbyResponse.isSuccessful());
-        if(exitLobbyResponse.isSuccessful())
+        if(exitLobbyResponse.isSuccessful()) {
+            chat = new ArrayList<>();
             setClientState(ClientState.IN_SERVER);
+        }
     }
 
     /**

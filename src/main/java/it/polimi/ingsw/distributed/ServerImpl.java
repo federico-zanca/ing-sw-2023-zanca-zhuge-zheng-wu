@@ -24,7 +24,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
-    private static final int HEARTBEAT_TIMEOUT = 6000;
+    private static final int HEARTBEAT_TIMEOUT = 10000;
     private HashMap<Client, ClientInfo> connectedClients;
 
     private final Object clientsLock = new Object();
