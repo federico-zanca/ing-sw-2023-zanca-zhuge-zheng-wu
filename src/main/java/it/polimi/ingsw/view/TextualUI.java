@@ -133,6 +133,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
     private void elaborateChatInput(String input) {
         if(input.equalsIgnoreCase("/quit")){
             isChatting=false;
+            System.out.println(Color.BRIGHT_RED_TEXT+"Hai chiuso la chat"+Color.NO_COLOR);
             return;
         }
         sendChatMessage(input);
@@ -312,10 +313,13 @@ public class TextualUI extends VirtualView implements View, Runnable {
      * @param input the input from the user
      */
     private void elaborateLobbyCommand(String input) {
+        /*
         if(input .equals("chat")){
             startChatting();
             return;
         }
+
+         */
         String[] parts = input.split(" ");
         LobbyCommand lobbyCommand = null;
         for (LobbyCommand c : LobbyCommand.values()) {
@@ -348,23 +352,20 @@ public class TextualUI extends VirtualView implements View, Runnable {
                 notifyObservers(new PlayerListRequest());
                 break;
             case CHAT:
-                System.err.println(lobbyCommand + " not implemented yet");
-                break;
-            case KICK:
-                System.err.println(lobbyCommand + " not implemented yet");
-                break;
+                startChatting();
+                return;
             case NUMPLAYERS:
-                    if (parts.length != 2) {
-                        printer.showInvalidCommand();
-                        return;
-                    } else if(!inputValidator.invalidNumOfPlayersFormat(parts[1])){
-                        int chosenNum = Integer.parseInt(parts[1].trim());
-                        setPlayerState(PlayerState.WATCHING);
-                        notifyObservers(new ChangeNumOfPlayersRequest(chosenNum));
-                    }else{
-                        System.out.println("Numero non valido! La partita deve avere minimo " + GameController.MIN_PLAYERS + " giocatori e massimo " + GameController.MAX_PLAYERS + " giocatori");
-                        return;
-                    }
+                if (parts.length != 2) {
+                    printer.showInvalidCommand();
+                    return;
+                } else if(!inputValidator.invalidNumOfPlayersFormat(parts[1])){
+                    int chosenNum = Integer.parseInt(parts[1].trim());
+                    setPlayerState(PlayerState.WATCHING);
+                    notifyObservers(new ChangeNumOfPlayersRequest(chosenNum));
+                }else{
+                    System.out.println("Numero non valido! La partita deve avere minimo " + GameController.MIN_PLAYERS + " giocatori e massimo " + GameController.MAX_PLAYERS + " giocatori");
+                    return;
+                }
                 break;
             default:
                 System.err.println("Comando non valido, should never reach this state");

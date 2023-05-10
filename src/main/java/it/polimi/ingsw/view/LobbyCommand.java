@@ -5,8 +5,7 @@ public enum LobbyCommand {
     EXIT("termina la connessione"),
     START("avvia la partita"),
     PLAYERLIST("mostra la lista dei giocatori"),
-    KICK("<username> espelli un giocatore dalla partita"),
-    CHAT("<messaggio> invia un messaggio nella chat"),
+    CHAT("apre la chat"),
     NUMPLAYERS("<numero giocatori> cambia il numero di giocatori della partita");
 
     private String description;
