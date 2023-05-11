@@ -4,6 +4,7 @@ import it.polimi.ingsw.network.message.connectionmessage.LoginRequest;
 import it.polimi.ingsw.view.gui.JavaFXApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
@@ -16,6 +17,9 @@ public class MenuSceneController implements Controller{
     @FXML
     private Button quit;
 
+    @FXML
+    private TextField usernameField;
+
     @Override
     public void setApp(JavaFXApp app) {
         this.app = app;
@@ -27,3 +31,4 @@ public class MenuSceneController implements Controller{
         quit.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.exit(0));
     }
 }
+

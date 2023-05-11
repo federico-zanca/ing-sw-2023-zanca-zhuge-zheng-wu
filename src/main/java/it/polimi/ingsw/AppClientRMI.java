@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.view.TextualUI;
+import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.Gui;
 import it.polimi.ingsw.view.gui.JavaFXApp;
 import javafx.application.Application;
@@ -19,15 +20,18 @@ public class AppClientRMI {
         Registry registry = LocateRegistry.getRegistry(1099);
         AppServer server = (AppServer) registry.lookup("server");
 
-        ClientImpl client = new ClientImpl(server.connect());
+        VirtualView view;
         System.out.println("Inserisci 0 per avviare la TUI, qualsiasi altro carattere o parola per la GUI");
         Scanner scanner = new Scanner(System.in);
         String s = scanner.nextLine();
         if (s.equals("0")) {
-            client.run();
+            view = new TextualUI();
         } else {
-            Application.launch(JavaFXApp.class);
+            view = new Gui();
         }
+
+        ClientImpl client = new ClientImpl(server.connect(), view);
+        client.run();
 
         /*
             if (args.length > 0 && args[0].equalsIgnoreCase("CLI")) {

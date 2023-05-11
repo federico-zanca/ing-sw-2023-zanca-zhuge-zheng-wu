@@ -19,9 +19,30 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
     private final Server server;
     private VirtualView view;
 
+    public ClientImpl(Server server, VirtualView view) throws RemoteException {
+        super();
+        this.view = view;
+        //view = new Gui();
+        this.server = server;
+        initialize(server);
+
+        //TODO spostare in un thread/metodo a parte e farlo partire solo quando il client è connesso
+        Timer heartbeatTimer = new Timer();
+        heartbeatTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    server.update(ClientImpl.this, new HeartBeatMessage());
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, 0 , HEARTBEAT_INTERVAL);
+    }
+
     public ClientImpl(Server server) throws RemoteException {
         super();
-        view = new TextualUI();
+        this.view = new TextualUI();
         //view = new Gui();
         this.server = server;
         initialize(server);
