@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui;
-import it.polimi.ingsw.view.ActionType;
-import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.gui.sceneControllers.Controller;
 import javafx.application.Application;
 import javafx.application.Platform;

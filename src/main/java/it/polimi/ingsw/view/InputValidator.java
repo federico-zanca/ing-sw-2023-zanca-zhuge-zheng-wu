@@ -22,7 +22,7 @@ public class InputValidator {
      * 3. Does not end with - or .
      * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
      */
-    boolean isValidUsername(String username) {
+    public boolean isValidUsername(String username) {
         // Check for spaces in username
         if (username.contains(" ")) {
             return false;
@@ -51,7 +51,7 @@ public class InputValidator {
      * @param board gameboard
      * @return true if there are other tiles the player can pick (based on what he's already picked and the board configuration)
      */
-    boolean isPossibleToDrawMore(ArrayList<Square> hand, Square[][] board) {
+    public boolean isPossibleToDrawMore(ArrayList<Square> hand, Square[][] board) {
         ArrayList<Integer> rows = new ArrayList<Integer>();
         ArrayList<Integer> columns = new ArrayList<Integer>();
         for (Square sq : hand) {
@@ -114,7 +114,7 @@ public class InputValidator {
      * @param input chosen column
      * @return valid column
      */
-    boolean invalidColumnFormat(String input) {
+    public boolean invalidColumnFormat(String input) {
         try {
             int col = Integer.parseInt(input.trim());
             return false;
@@ -129,7 +129,7 @@ public class InputValidator {
      * @param input the input string to validate as number of players
      * @return {@code true} if the input is not a valid number of players format, {@code false} otherwise
      */
-    boolean invalidNumOfPlayersFormat(String input) {
+    public boolean invalidNumOfPlayersFormat(String input) {
         try {
             int chosenNum = Integer.parseInt(input.trim());
             return chosenNum < GameController.MIN_PLAYERS || chosenNum > GameController.MAX_PLAYERS;
@@ -144,7 +144,7 @@ public class InputValidator {
      * @param x ArrayList of integers
      * @return true if the elements of the passed ArrayList are all equal
      */
-    boolean allCoordsAreEqual(ArrayList<Integer> x) {
+    public boolean allCoordsAreEqual(ArrayList<Integer> x) {
         for (int i = 0; i < x.size() - 1; i++) {
             if (x.get(i) != x.get(i + 1)) {
                 return false;
@@ -159,7 +159,7 @@ public class InputValidator {
      * @param x ArrayList of integers
      * @return true if the elements in the given arraylist are consecutive (in whatever order they are presented)
      */
-    boolean allCoordsAreAdjacent(ArrayList<Integer> x) {
+    public boolean allCoordsAreAdjacent(ArrayList<Integer> x) {
         Collections.sort(x);
         for (int i = 0; i < x.size() - 1; i++) {
             if (x.get(i) != x.get(i + 1) - 1) return false;
@@ -175,7 +175,7 @@ public class InputValidator {
      * @param hand   List of Squares (tiles) already picked by the player during this turn
      * @return true if the passed coordinates are those of a Square which is in a straight line (horizontal or vertical) and adjacent to the ones in the player's hand
      */
-    boolean inLineTile(int row, int column, ArrayList<Square> hand) {
+    public boolean inLineTile(int row, int column, ArrayList<Square> hand) {
         ArrayList<Integer> rows = new ArrayList<Integer>();
         ArrayList<Integer> columns = new ArrayList<Integer>();
         rows.add(row);
@@ -195,7 +195,7 @@ public class InputValidator {
      * @param hand   List of Squares (tiles) already picked by the player during this turn
      * @return true if the passed coordinates are those of a tile which is already in the player's hand
      */
-    boolean isTileAlreadyOnHand(int row, int column, ArrayList<Square> hand) {
+    public boolean isTileAlreadyOnHand(int row, int column, ArrayList<Square> hand) {
         if (hand.size() == 0) return false;
         for (Square sq : hand) {
             if (sq.getCoordinates().getRow() == row && sq.getCoordinates().getColumn() == column) return true;
@@ -228,7 +228,7 @@ public class InputValidator {
      * @param columns arraylist of available columns
      * @return valid chosen column
      */
-    boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
+    public boolean columnHasLessSpace(int column, ArrayList<Integer> columns) {
         return !columns.contains(column);
     }
 
@@ -238,7 +238,7 @@ public class InputValidator {
      * @param input the input string to check
      * @return true if the input is "yes" or "y", false otherwise
      */
-    boolean isYes(String input) {
+    public boolean isYes(String input) {
         input = input.toLowerCase();
         return input.equals("y") || input.equals("yes");
     }

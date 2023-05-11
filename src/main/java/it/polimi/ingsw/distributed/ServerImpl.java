@@ -15,7 +15,7 @@ import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 import it.polimi.ingsw.network.message.gamemessage.PlayerLeftMessage;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerResponse;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
-import it.polimi.ingsw.view.LobbyDisplayInfo;
+import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;

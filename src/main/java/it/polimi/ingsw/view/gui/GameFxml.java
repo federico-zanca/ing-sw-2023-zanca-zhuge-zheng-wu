@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.view.ActionType;
+import it.polimi.ingsw.view.tui.ActionType;
 
 public enum GameFxml {
     MENU_SCENE("menu_scene.fxml");

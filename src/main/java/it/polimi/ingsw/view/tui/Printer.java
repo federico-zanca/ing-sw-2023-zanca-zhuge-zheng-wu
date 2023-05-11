@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.tui;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;

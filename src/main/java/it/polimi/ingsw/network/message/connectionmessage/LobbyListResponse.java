@@ -1,14 +1,10 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
-import it.polimi.ingsw.distributed.Lobby;
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
-import it.polimi.ingsw.view.LobbyDisplayInfo;
+import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LobbyListResponse extends ConnectionMessage implements MessageToClient {
 

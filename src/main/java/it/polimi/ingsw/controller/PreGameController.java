@@ -11,7 +11,7 @@ import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
-import it.polimi.ingsw.view.Color;
+import it.polimi.ingsw.view.tui.Color;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

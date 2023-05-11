@@ -1,12 +1,9 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.distributed.Server;
 import it.polimi.ingsw.distributed.ClientImpl;
-import it.polimi.ingsw.view.TextualUI;
+import it.polimi.ingsw.view.tui.TextualUI;
 import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.Gui;
-import it.polimi.ingsw.view.gui.JavaFXApp;
-import javafx.application.Application;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

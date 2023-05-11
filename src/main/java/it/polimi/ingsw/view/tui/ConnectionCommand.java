@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.tui;
 
 public enum ConnectionCommand {
     HELP("mostra la lista dei comandi"),

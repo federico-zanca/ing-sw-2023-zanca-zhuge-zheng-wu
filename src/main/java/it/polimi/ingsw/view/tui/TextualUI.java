@@ -1,6 +1,5 @@
-package it.polimi.ingsw.view;
+package it.polimi.ingsw.view.tui;
 
-import com.sun.javafx.logging.Logger;
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.model.enumerations.JoinType;
@@ -18,7 +17,9 @@ import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyResponse;
 import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
-import it.polimi.ingsw.utils.Observable;
+import it.polimi.ingsw.view.InputValidator;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
 
