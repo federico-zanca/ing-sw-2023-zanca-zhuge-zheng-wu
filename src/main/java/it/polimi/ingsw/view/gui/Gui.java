@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.view.tui.ActionType;
+import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.tui.PlayerState;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
@@ -17,7 +18,6 @@ import javafx.application.Application;
 import java.util.ArrayList;
 
 public class Gui extends VirtualView implements View {
-    private final JavaFXApp app;
     private ClientState clientState;
     private ActionType actionType = ActionType.LOGIN;
     private GameMessage lastMessage;
@@ -26,6 +26,12 @@ public class Gui extends VirtualView implements View {
     private final Object lock = new Object();
     ArrayList<Square> tilesToDraw;
     ArrayList<ItemTile> tilesToInsert;
+
+    ArrayList<LobbyDisplayInfo> lobbies;
+
+    public ArrayList<LobbyDisplayInfo> getLobbies() {
+        return lobbies;
+    }
     private ArrayList<ChatMessage> chat;
     private boolean isChatting=false;
 
@@ -33,7 +39,6 @@ public class Gui extends VirtualView implements View {
         chat = new ArrayList<>();
         tilesToDraw = new ArrayList<>();
         tilesToInsert = new ArrayList<>();
-        app = new JavaFXApp();
     }
 
     @Override
@@ -53,7 +58,7 @@ public class Gui extends VirtualView implements View {
 
     @Override
     public void onLobbyListResponse(LobbyListResponse lobbyListResponse) {
-
+        this.lobbies = lobbyListResponse.getLobbies();
     }
 
     @Override
@@ -198,11 +203,38 @@ public class Gui extends VirtualView implements View {
 
     @Override
     public void update(Message message) {
+        if (message instanceof GameMessage) {
+            onGameMessage((GameMessage) message);
+        }else if(message instanceof ConnectionMessage){
+            onConnectionMessage((ConnectionMessage) message);
+        } else if (message instanceof LobbyMessage) {
+            onLobbyMessage((LobbyMessage) message);
+        } else if (message instanceof ChatMessage) {
+            onChatMessage((ChatMessage) message);
+        } else
+        //if(!(message instanceof HeartBeatMessage))
+        {
+            System.err.println("Ignoring message from server");
+        }
+    }
 
+    private void onChatMessage(ChatMessage message) {
+
+    }
+
+    private void onLobbyMessage(LobbyMessage message) {
+        message.execute(this);
+    }
+
+    private void onConnectionMessage(ConnectionMessage message) {
+        message.execute(this);
+    }
+
+    private void onGameMessage(GameMessage message) {
+        message.execute(this);
     }
 
     @Override
     public void run() {
-        Application.launch(app.getClass());
     }
 }

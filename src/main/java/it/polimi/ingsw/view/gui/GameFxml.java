@@ -1,21 +1,25 @@
 package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 import it.polimi.ingsw.view.tui.ActionType;
 
 public enum GameFxml {
-    MENU_SCENE("menu_scene.fxml");
+    MENU_SCENE("menu_scene.fxml"),
+    LOBBY_SCENE("lobby_scene.fxml");
 
-    private ActionType actionType;
+    private GuiPhase phase;
 
     public final String s;
     static{
-        MENU_SCENE.actionType = ActionType.LOGIN;
+        MENU_SCENE.phase = GuiPhase.LOGIN;
+        LOBBY_SCENE.phase = GuiPhase.LOBBY;
     }
     GameFxml(String s) {
         this.s=s;
     }
-    public ActionType getActionType() {
-        return actionType;
+
+    GuiPhase getGuiPhase(){
+        return phase;
     }
 
 }
