@@ -1,59 +1,64 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.distributed.ClientState;
-import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
-import it.polimi.ingsw.view.tui.ActionType;
+import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
-import it.polimi.ingsw.view.tui.PlayerState;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
-import javafx.application.Application;
 
 import java.util.ArrayList;
 
-public class Gui extends VirtualView implements View {
-    private ClientState clientState;
-    private ActionType actionType = ActionType.LOGIN;
-    private GameMessage lastMessage;
-    private String myUsername;
-    private PlayerState playerState = PlayerState.WATCHING;
-    private final Object lock = new Object();
-    ArrayList<Square> tilesToDraw;
-    ArrayList<ItemTile> tilesToInsert;
-
+public class MessageHandler extends VirtualView implements View {
+    private final GUI gui;
     ArrayList<LobbyDisplayInfo> lobbies;
+    private String myLobby = "";
+    private String myUsername = "";
 
-    public ArrayList<LobbyDisplayInfo> getLobbies() {
-        return lobbies;
-    }
-    private ArrayList<ChatMessage> chat;
-    private boolean isChatting=false;
 
-    public Gui(){
-        chat = new ArrayList<>();
-        tilesToDraw = new ArrayList<>();
-        tilesToInsert = new ArrayList<>();
+    public MessageHandler(GUI gui){
+        this.gui = gui;
     }
 
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
+    }
+    public String getMyLobby() {
+        return myLobby;
+    }
 
+    public ArrayList<LobbyDisplayInfo> getLobbies() {
+        return lobbies;
+    }
+    public void setMyLobby(String myLobby) {
+        this.myLobby = myLobby;
     }
 
     @Override
     public void onCreateLobbyResponse(CreateLobbyResponse createLobbyResponse) {
-
+        if(createLobbyResponse.isSuccessful()){
+            gui.setPhase(GuiPhase.IN_LOBBY);
+            gui.setCurrentScene(gui.getScene(GameFxml.IN_LOBBY_SCENE.s));
+            gui.changeScene();
+            gui.setAdminName(myUsername);
+        }
+        //TODO settare error in caso di fallimento
     }
 
     @Override
     public void onJoinLobbyResponse(JoinLobbyResponse joinLobbyResponse) {
-
+        if(joinLobbyResponse.getJoinType() == JoinType.REFUSED){
+            gui.setError(joinLobbyResponse.getContent());
+        }else if(joinLobbyResponse.getJoinType() == JoinType.JOINED){
+            gui.setPhase(GuiPhase.IN_LOBBY);
+            gui.setCurrentScene(gui.getScene(GameFxml.IN_LOBBY_SCENE.s));
+            gui.changeScene();
+            gui.setAllPlayersNames(joinLobbyResponse.getUsernames());
+        }
     }
 
     @Override
@@ -63,7 +68,14 @@ public class Gui extends VirtualView implements View {
 
     @Override
     public void onLoginResponse(LoginResponse loginResponse) {
-
+        if(loginResponse.isSuccessful()) {
+            //this.myUsername = loginResponse.getUsername();
+            gui.setPhase(GuiPhase.LOBBY);
+            gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
+            gui.changeScene();
+        }else{
+            gui.setError("Username is already in use!");
+        }
     }
 
     @Override
@@ -198,7 +210,7 @@ public class Gui extends VirtualView implements View {
 
     @Override
     public void onPlayersInLobbyUpdate(PlayersInLobbyUpdate playersInLobbyUpdate) {
-
+        gui.setAllPlayersNames(playersInLobbyUpdate.getAllPlayersUsernames());
     }
 
     @Override
@@ -217,24 +229,22 @@ public class Gui extends VirtualView implements View {
             System.err.println("Ignoring message from server");
         }
     }
-
     private void onChatMessage(ChatMessage message) {
-
     }
-
     private void onLobbyMessage(LobbyMessage message) {
         message.execute(this);
     }
-
     private void onConnectionMessage(ConnectionMessage message) {
         message.execute(this);
     }
-
     private void onGameMessage(GameMessage message) {
         message.execute(this);
     }
-
     @Override
     public void run() {
+    }
+
+    public void setMyUsername(String myUsername) {
+        this.myUsername = myUsername;
     }
 }

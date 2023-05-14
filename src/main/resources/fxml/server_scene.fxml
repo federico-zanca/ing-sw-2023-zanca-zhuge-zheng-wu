@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.LobbySceneController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ServerSceneController">
   <children>
      <Button fx:id="Unisciti" layoutX="225.0" layoutY="209.0" mnemonicParsing="false" onAction="#joinLobby" prefHeight="30.0" prefWidth="150.0" text="Unisciti" textFill="#ff0505">
         <font>
