@@ -2,7 +2,7 @@ package it.polimi.ingsw.distributed;
 
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.HeartBeatMessage;
-import it.polimi.ingsw.view.gui.Gui;
+import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.TextualUI;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -19,10 +19,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
     private final Server server;
     private VirtualView view;
 
-    public ClientImpl(Server server, Gui gui) throws RemoteException {
+    public ClientImpl(Server server, MessageHandler messageHandler) throws RemoteException {
         super();
-        this.view = gui;
-        //view = new Gui();
+        this.view = messageHandler;
+        //view = new MessageHandler();
         this.server = server;
         initialize(server);
 
@@ -43,7 +43,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
     public ClientImpl(Server server) throws RemoteException {
         super();
         this.view = new TextualUI();
-        //view = new Gui();
+        //view = new MessageHandler();
         this.server = server;
         initialize(server);
 

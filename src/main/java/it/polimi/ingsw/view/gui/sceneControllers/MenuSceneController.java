@@ -1,10 +1,11 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+
 import it.polimi.ingsw.network.message.connectionmessage.LoginRequest;
 import it.polimi.ingsw.view.InputValidator;
-import it.polimi.ingsw.view.gui.GameFxml;
-import it.polimi.ingsw.view.gui.Gui;
-import it.polimi.ingsw.view.gui.JavaFXApp;
+import it.polimi.ingsw.view.gui.MessageHandler;
+import it.polimi.ingsw.view.gui.GUI;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -13,8 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 public class MenuSceneController implements Controller{
-    private Gui gui;
-    private JavaFXApp app;
+    private MessageHandler messageHandler;
+    private GUI gui;
     private final InputValidator inputValidator = new InputValidator();
     @FXML
     private AnchorPane rootPane;
@@ -28,16 +29,19 @@ public class MenuSceneController implements Controller{
     private TextField usernameField;
 
     @Override
-    public void setGui(Gui gui) {
-        this.gui = gui;
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
     @Override
-    public void setApp(JavaFXApp app){this.app = app;}
+    public void setGui(GUI gui){this.gui = gui;}
 
     @Override
     public void initialize() {
-        play.addEventHandler(MouseEvent.MOUSE_CLICKED, e-> checkUsername());
-        quit.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> System.exit(0));
+        if(gui == null){
+            return;
+        }else{
+            System.out.println(messageHandler.getMyLobby());
+        }
     }
     public void checkUsername(){
         if(!inputValidator.isValidUsername(usernameField.getText())){
@@ -45,11 +49,18 @@ public class MenuSceneController implements Controller{
             error.setVisible(true);
             return;
         }else{
-            app.setPhase(GuiPhase.LOBBY);
-            gui.notifyObservers(new LoginRequest(usernameField.getText()));
-            app.setCurrentScene(app.getScene(GameFxml.LOBBY_SCENE.s));
-            app.changeScene();
+            messageHandler.setMyUsername(usernameField.getText());
+            messageHandler.notifyObservers(new LoginRequest(usernameField.getText()));
+            Platform.runLater(this::checkForError);
+            //TODO spostare le due righe nella messageHandler
         }
+    }
+    public void checkForError(){
+        error.setText(gui.getError());
+        error.setVisible(true);
+    }
+    public void quitGame(){
+        System.exit(0);
     }
 }
 

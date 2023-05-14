@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.ClientImpl;
-import it.polimi.ingsw.view.gui.JavaFXApp;
+import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.tui.TextualUI;
 import it.polimi.ingsw.view.VirtualView;
 import javafx.application.Application;
@@ -26,8 +26,8 @@ public class AppClientRMI {
             ClientImpl client = new ClientImpl(server.connect());
             client.run();
         } else {
-            //view = new Gui();
-            Application.launch(JavaFXApp.class);
+            //view = new MessageHandler();
+            Application.launch(GUI.class);
         }
 
         //ClientImpl client = new ClientImpl(server.connect(), view);
@@ -46,7 +46,7 @@ public class AppClientRMI {
                                 "\n");
                 new TextualUI().run();
             } else {
-                Application.launch(JavaFXApp.class);
+                Application.launch(GUI.class);
             }
     }
 

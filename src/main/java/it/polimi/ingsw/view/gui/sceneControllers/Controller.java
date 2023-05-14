@@ -1,10 +1,10 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
-import it.polimi.ingsw.view.gui.Gui;
-import it.polimi.ingsw.view.gui.JavaFXApp;
+import it.polimi.ingsw.view.gui.MessageHandler;
+import it.polimi.ingsw.view.gui.GUI;
 
 public interface Controller {
-    void setGui(Gui gui);
-    void setApp(JavaFXApp app);
+    void setMessageHandler(MessageHandler messageHandler);
+    void setGui(GUI gui);
     void initialize();
 }
