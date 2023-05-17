@@ -12,7 +12,7 @@ public enum GameFxml {
 
     static{
         MENU_SCENE.phase = GuiPhase.LOGIN;
-        SERVER_SCENE.phase = GuiPhase.LOBBY;
+        SERVER_SCENE.phase = GuiPhase.SERVER;
         IN_LOBBY_SCENE.phase = GuiPhase.IN_LOBBY;
     }
     GameFxml(String s) {

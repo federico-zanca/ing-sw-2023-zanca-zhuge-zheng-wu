@@ -70,7 +70,7 @@ public class MessageHandler extends VirtualView implements View {
     public void onLoginResponse(LoginResponse loginResponse) {
         if(loginResponse.isSuccessful()) {
             //this.myUsername = loginResponse.getUsername();
-            gui.setPhase(GuiPhase.LOBBY);
+            gui.setPhase(GuiPhase.SERVER);
             gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
             gui.changeScene();
         }else{
@@ -180,7 +180,11 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onExitLobbyResponse(ExitLobbyResponse exitLobbyResponse) {
-
+        if(exitLobbyResponse.isSuccessful()){
+            gui.setPhase(GuiPhase.SERVER);
+            gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
+            gui.changeScene();
+        }
     }
 
     @Override

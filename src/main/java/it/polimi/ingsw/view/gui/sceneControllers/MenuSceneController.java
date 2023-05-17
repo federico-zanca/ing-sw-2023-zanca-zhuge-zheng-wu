@@ -45,7 +45,6 @@ public class MenuSceneController implements Controller{
     }
     public void checkUsername(){
         if(!inputValidator.isValidUsername(usernameField.getText())){
-            System.out.println("error shows");
             error.setVisible(true);
             return;
         }else{
