@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ServerSceneController">
   <children>
-      <ImageView fitHeight="760.0" fitWidth="1043.0" layoutX="-4.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.5">
+      <ImageView fitHeight="698.0" fitWidth="1053.0" layoutX="-4.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.5">
          <image>
             <Image url="@../images/Publisher_material/Display_1.jpg" />
          </image>
