@@ -14,7 +14,7 @@
          <children>
             <ImageView fitWidth="1300.0" layoutX="-6.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/misc/sfondo%20parquet.jpg" />
+                  <Image url="@../images/misc/sfondo_parquet.jpg" />
                </image>
                <viewport>
                   <Rectangle2D />
@@ -24,7 +24,7 @@
                <children>
                   <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/common%20goal%20cards/1.jpg" />
+                        <Image url="@../images/common_goal_cards/1.jpg" />
                      </image>
                      <effect>
                         <DropShadow radius="11.0" width="25.0" />
@@ -32,7 +32,7 @@
                   </ImageView>
                   <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/common%20goal%20cards/7.jpg" />
+                        <Image url="@../images/common_goal_cards/7.jpg" />
                      </image>
                      <effect>
                         <DropShadow radius="11.0" width="25.0" />
@@ -40,7 +40,7 @@
                   </ImageView>
                   <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/misc/Sacchetto%20Chiuso.png" />
+                        <Image url="@../images/misc/Sacchetto_Chiuso.png" />
                      </image>
                      <effect>
                         <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
