@@ -31,21 +31,16 @@
                 <Font name="Curlz MT" size="35.0" />
             </font>
         </Button>
-         <Label fx:id="lobbyName" layoutX="625.0" layoutY="175.0" text="Lobby">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dfa041" height="131.0" layoutX="346.5" layoutY="236.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="607.0" />
+         <Label fx:id="lobbyName" ellipsisString="......" layoutX="520.0" layoutY="316.0" prefHeight="27.0" prefWidth="259.0" text="Lobby" textAlignment="CENTER" textFill="#5b3f0e">
              <font>
-                 <Font name="Arial Black" size="16.0" />
+                 <Font name="Arial Bold Italic" size="36.0" />
              </font>
          </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dfa041" height="131.0" layoutX="346.5" layoutY="236.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="607.0" />
       <Text fill="#5b3f0e" layoutX="440.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You are in Lobby ...">
          <font>
             <Font name="Arial Bold Italic" size="48.0" />
          </font>
       </Text>
-      <Label layoutX="607.0" layoutY="315.0" text="(Lobby)" textFill="#5b3f0e">
-         <font>
-            <Font name="Arial Bold Italic" size="24.0" />
-         </font>
-      </Label>
     </children>
 </AnchorPane>

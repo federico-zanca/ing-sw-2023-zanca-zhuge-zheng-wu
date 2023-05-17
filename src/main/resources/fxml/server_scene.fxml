@@ -15,29 +15,32 @@
             <Image url="@../images/Publisher_material/Display_1.jpg" />
          </image>
       </ImageView>
-     <Button fx:id="Unisciti" layoutX="517.5" layoutY="321.0" mnemonicParsing="false" onAction="#joinLobby" prefHeight="35.0" prefWidth="265.0" text="Unisciti" textFill="#100000">
+     <Button fx:id="Unisciti" layoutX="517.0" layoutY="317.0" mnemonicParsing="false" onAction="#joinLobby" prefHeight="0.0" prefWidth="265.0" text="Unisciti" textFill="#754207">
         <font>
-           <Font name="Arial Black" size="16.0" />
+           <Font name="Curlz MT" size="24.0" />
         </font>
      </Button>
-     <Button fx:id="CambiaUsername" layoutX="517.5" layoutY="487.0" mnemonicParsing="false" onAction="#changeName" prefHeight="30.0" text="Cambia Username">
+     <Button fx:id="CambiaUsername" layoutX="517.5" layoutY="487.0" mnemonicParsing="false" onAction="#changeName" prefHeight="30.0" text="Cambia Username" textFill="#754207">
          <font>
             <Font name="Arial" size="14.0" />
          </font></Button>
-     <Button fx:id="Esci" layoutX="732.0" layoutY="486.0" mnemonicParsing="false" onAction="#exitButton" prefHeight="30.0" text="Esci">
+     <Button fx:id="Esci" layoutX="732.0" layoutY="486.0" mnemonicParsing="false" onAction="#exitButton" prefHeight="30.0" text="Esci" textFill="#754207">
          <font>
             <Font name="Arial Black" size="14.0" />
          </font></Button>
-     <Button fx:id="CreateGame" layoutX="517.5" layoutY="402.0" mnemonicParsing="false" onAction="#createLobby" prefHeight="35.0" prefWidth="266.0" text="Crea Partita">
+     <Button fx:id="CreateGame" layoutX="517.5" layoutY="402.0" mnemonicParsing="false" onAction="#createLobby" prefHeight="40.0" prefWidth="266.0" text="Crea Partita" textFill="#754207">
          <font>
-            <Font name="Arial Black" size="16.0" />
+            <Font name="Curlz MT" size="24.0" />
          </font></Button>
-     <Label layoutX="644.0" layoutY="369.0" text="O" textFill="#f2f2f2">
+     <Label layoutX="644.0" layoutY="375.0" text="O" textFill="#f2f2f2">
          <font>
             <Font name="Arial Black" size="16.0" />
          </font></Label>
       <TextField fx:id="LobbyName" layoutX="517.5" layoutY="266.0" prefHeight="35.0" prefWidth="200.0" promptText="Lobby name" />
-      <Button fx:id="Lobbies" layoutX="717.5" layoutY="266.0" mnemonicParsing="false" onAction="#lobbyList" prefHeight="35.0" prefWidth="65.0" text="Lobbies" />
+      <Button fx:id="Lobbies" layoutX="717.5" layoutY="266.0" mnemonicParsing="false" onAction="#lobbyList" prefHeight="35.0" prefWidth="65.0" text="Lobbies" textFill="#754207">
+         <font>
+            <Font name="Curlz MT" size="14.0" />
+         </font></Button>
 
   </children>
 </AnchorPane>
