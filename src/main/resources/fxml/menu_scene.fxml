@@ -35,14 +35,14 @@
                         <Font name="Arial Bold Italic" size="18.0" />
                      </font>
                   </Label>
-                  <Button fx:id="play" graphicTextGap="0.0" layoutX="343.0" layoutY="353.0" mnemonicParsing="false" onAction="#checkUsername" prefHeight="21.0" prefWidth="99.0" text="Avvia" textAlignment="CENTER" textFill="#764206" textOverrun="CLIP">
+                  <Button fx:id="play" graphicTextGap="0.0" layoutX="349.0" layoutY="355.0" mnemonicParsing="false" onAction="#checkUsername" prefHeight="21.0" prefWidth="99.0" text="Avvia" textAlignment="CENTER" textFill="#764206" textOverrun="CLIP">
                      <font>
-                        <Font name="Arial Black" size="14.0" />
+                        <Font name="Curlz MT" size="17.0" />
                      </font>
                   </Button>
-                  <Button fx:id="quit" layoutX="371.0" layoutY="439.0" mnemonicParsing="false" text="Esci" textFill="#764206">
+                  <Button fx:id="quit" layoutX="377.0" layoutY="406.0" mnemonicParsing="false" text="Esci" textFill="#764206">
                      <font>
-                        <Font name="Arial Black" size="13.0" />
+                        <Font name="Curlz MT" size="14.0" />
                      </font>
                   </Button>
                   <Text fx:id="error" cache="true" fill="#f20505" layoutX="308.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username not valid!" textAlignment="CENTER" visible="false">
