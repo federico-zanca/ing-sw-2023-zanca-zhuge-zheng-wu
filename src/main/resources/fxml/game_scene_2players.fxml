@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
 <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <AnchorPane prefHeight="1300.0" prefWidth="1300.0">
          <children>
-            <ImageView fitWidth="1300.0" layoutX="-6.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitWidth="1300.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/misc/sfondo_parquet.jpg" />
                </image>
@@ -46,7 +52,7 @@
                         <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
                      </effect>
                   </ImageView>
-                  <ImageView fx:id="livingRoomBoard" fitWidth="480.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/boards/livingroom.png" />
                      </image>
@@ -58,23 +64,76 @@
             </Pane>
             <Pane layoutX="500.0" prefHeight="760.0" prefWidth="500.0">
                <children>
-                  <ImageView fitWidth="400.0" layoutX="34.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="myBookshelf" fitHeight="381.0" fitWidth="377.0" layoutX="22.0" layoutY="144.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/boards/bookshelf.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="134.0" layoutY="316.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitWidth="120.0" layoutX="149.0" layoutY="485.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/misc/retang.png" />
+                     </image>
+                     <effect>
+                        <InnerShadow choke="0.3">
+                           <color>
+                              <Color red="0.2800000011920929" green="0.13518883287906647" blue="0.05040000006556511" />
+                           </color>
+                        </InnerShadow>
+                     </effect></ImageView>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="34.0" layoutX="149.0" layoutY="487.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect>
+                  </Rectangle>
+                  <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/personal_goal_cards/Personal_Goals.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="namePlayerOnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="495.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Pane layoutX="320.0" layoutY="760.0" prefHeight="540.0" prefWidth="500.0">
                <children>
-                  <ImageView fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="oth1BookShelf" fitWidth="380.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/boards/bookshelf_orth.png" />
                      </image>
                   </ImageView>
+                  <ImageView fitWidth="120.0" layoutX="130.0" layoutY="342.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/misc/retang.png" />
+                     </image>
+                     <effect>
+                        <InnerShadow choke="0.3">
+                           <color>
+                              <Color red="0.2800000011920929" green="0.13518883287906647" blue="0.05040000006556511" />
+                           </color>
+                        </InnerShadow>
+                     </effect>
+                  </ImageView>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="34.0" layoutX="130.0" layoutY="345.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
+                     <effect>
+                        <InnerShadow />
+                     </effect>
+                  </Rectangle>
+                  <Label fx:id="nameOrth1OnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="130.0" layoutY="353.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#68d127">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="380.0" layoutY="151.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/personal_goal_cards/back.jpg" />
+                     </image>
+                  </ImageView>
                </children>
             </Pane>
+            <VBox fx:id="players" layoutX="1086.0" layoutY="51.0" prefHeight="200.0" prefWidth="200.0" />
          </children>
       </AnchorPane>
    </content>
