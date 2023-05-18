@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.gui.sceneControllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class GameScene2PlayersController {
@@ -15,6 +16,12 @@ public class GameScene2PlayersController {
 
     @FXML
     private ImageView livingRoomBoard;
+
+    @FXML
+    private GridPane livingRoomGrid;
+
+    @FXML
+    private GridPane myBookShelfGrid;
 
     @FXML
     private ImageView myBookshelf;
