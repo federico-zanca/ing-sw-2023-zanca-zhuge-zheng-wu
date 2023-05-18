@@ -18,7 +18,7 @@ public class MessageHandler extends VirtualView implements View {
     ArrayList<LobbyDisplayInfo> lobbies;
     private String myLobby = "";
     private String myUsername = "";
-
+    private GameMessage lastMessage;
 
     public MessageHandler(GUI gui){
         this.gui = gui;
@@ -120,12 +120,14 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onExitGameResponse(ExitGameResponse exitGameResponse) {
-
     }
 
     @Override
     public void onGameStartedMessage(GameStartedMessage gameStartedMessage) {
-
+        lastMessage = gameStartedMessage;
+        gui.setPhase(GuiPhase.GAME);
+        gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
+        gui.changeScene();
     }
 
     @Override
@@ -189,7 +191,7 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onGameNotReadyMessage(GameNotReadyMessage gameNotReadyMessage) {
-
+        gui.setError("Non ci sono le condizioni per iniziare la partita!");
     }
 
     @Override
@@ -204,12 +206,11 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onNotAdminMessage(NotAdminMessage notAdminMessage) {
-
+        gui.setError("Non sei l'admin di questa lobby! Solo l'admin può usare questo comando.");
     }
 
     @Override
     public void onPlayerListResponse(PlayerListResponse playerListResponse) {
-
     }
 
     @Override

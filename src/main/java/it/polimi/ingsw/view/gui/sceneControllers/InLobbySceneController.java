@@ -1,10 +1,12 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
+import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -12,6 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InLobbySceneController implements Controller{
     private MessageHandler messageHandler;
@@ -44,8 +47,25 @@ public class InLobbySceneController implements Controller{
         }
     }
     public void startGame(){
-        //TODO START GAME, FINISH ALL OTHER THINGS BEFORE THIS ONE!!
+        messageHandler.notifyObservers(new StartGameRequest());
+        checkForErrors();
     }
+
+    private void checkForErrors() {
+        Platform.runLater(()->{
+            if(Objects.equals(gui.getError(), "Non sei l'admin di questa lobby! Solo l'admin può usare questo comando.")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(gui.getError());
+                alert.showAndWait();
+            }else if(Objects.equals(gui.getError(),"Non ci sono le condizioni per iniziare la partita!")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText(gui.getError());
+                alert.showAndWait();
+            }
+            gui.setError("");
+        });
+    }
+
     public void exitLobby(){
         messageHandler.notifyObservers(new ExitLobbyRequest());
     }

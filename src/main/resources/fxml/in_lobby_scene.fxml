@@ -18,8 +18,13 @@
             <Image url="@../images/Publisher_material/Display_1.jpg" />
          </image>
       </ImageView>
-        <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="0.0" spacing="10.0">
-            <VBox fx:id="playerNames" alignment="CENTER" />
+        <VBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="210.0" prefWidth="190.0" spacing="10.0">
+         <Label alignment="TOP_LEFT" prefHeight="0.0" prefWidth="94.0" text="PLAYERS:" textFill="#5fea24">
+            <font>
+               <Font size="20.0" />
+            </font>
+         </Label>
+            <VBox fx:id="playerNames" alignment="CENTER" prefHeight="0.0" prefWidth="132.0" />
 
         </VBox>
         <Button fx:id="startGameButton" contentDisplay="CENTER" layoutX="390.0" layoutY="433.0" mnemonicParsing="false" onAction="#startGame" prefHeight="76.0" prefWidth="200.0" style="-fx-background-color: #8B4513;" text="Start Game" textFill="WHITE">
@@ -39,7 +44,7 @@
          </effect>
         </Button>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dfa041" height="131.0" layoutX="346.5" layoutY="236.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="607.0" />
-         <Label fx:id="lobbyName" ellipsisString="......" layoutX="520.0" layoutY="316.0" prefHeight="27.0" prefWidth="259.0" text="Lobby" textAlignment="CENTER" textFill="#5b3f0e">
+         <Label fx:id="lobbyName" ellipsisString="......" layoutX="520.0" layoutY="317.0" prefHeight="27.0" prefWidth="259.0" text="Lobby" textAlignment="CENTER" textFill="#5b3f0e">
              <font>
                  <Font name="Arial Bold Italic" size="36.0" />
              </font>
