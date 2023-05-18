@@ -9,6 +9,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -52,6 +54,12 @@ public class MenuSceneController implements Controller{
             messageHandler.notifyObservers(new LoginRequest(usernameField.getText()));
             Platform.runLater(this::checkForError);
             //TODO spostare le due righe nella messageHandler
+        }
+    }
+    @FXML
+    void enterCheckUserName(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            checkUsername();
         }
     }
     public void checkForError(){
