@@ -177,7 +177,11 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onChangeNumOfPlayerResponse(ChangeNumOfPlayerResponse changeNumOfPlayerResponse) {
-
+        if(changeNumOfPlayerResponse.isSuccessful()){
+            gui.setError("");
+        }else{
+            gui.setError(changeNumOfPlayerResponse.getContent());
+        }
     }
 
     @Override

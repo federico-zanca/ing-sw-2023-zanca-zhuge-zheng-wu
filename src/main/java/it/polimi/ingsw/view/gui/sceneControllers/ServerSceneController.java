@@ -6,10 +6,9 @@ import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -29,7 +28,6 @@ public class ServerSceneController implements Controller{
     private Button CambiaUsername;
     @FXML
     private Button Esci;
-
     @FXML
     private Button CreateGame;
     @Override
@@ -50,29 +48,13 @@ public class ServerSceneController implements Controller{
     }
     public void showLobbies(){
         lobbies = messageHandler.getLobbies();
-        Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("List of Lobbies");
-        dialog.setHeaderText("Available Lobbies:");
-
-        // Create a VBox to display lobby information
-        VBox vBox = new VBox();
+        ArrayList<String> lobbyNames = new ArrayList<>();
         for (LobbyDisplayInfo lobby : lobbies) {
-            Text lobbyName = new Text(lobby.getLobbyName());
-            Text playersNum = new Text(lobby.getNumPlayers() + " out of " + lobby.getNumPlayersChosen() + " players");
-            vBox.getChildren().addAll(lobbyName, playersNum);
+            lobbyNames.add(lobby.getLobbyName());
         }
-
-        // Set the content of the dialog box to be the VBox
-        dialog.getDialogPane().setContent(vBox);
-
-        // Add a close button to the dialog box
-        ButtonType closeButton = new ButtonType("Close", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().add(closeButton);
-
-        // Display the dialog box
-        dialog.showAndWait();
-        //TODO move the creation of these elements(vbox and dialog in the fxml file)
+        lobbySelectBox.setItems(FXCollections.observableList(lobbyNames));
     }
+
     public void joinLobby(){
         messageHandler.setMyLobby(lobbySelectBox.getValue());
         messageHandler.notifyObservers(new JoinLobbyRequest(lobbySelectBox.getValue()));

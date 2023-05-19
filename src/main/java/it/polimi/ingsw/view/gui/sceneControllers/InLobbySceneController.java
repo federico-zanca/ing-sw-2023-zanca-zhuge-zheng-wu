@@ -1,12 +1,13 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayersRequest;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
 import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,12 +27,8 @@ public class InLobbySceneController implements Controller{
     private Label lobbyName;
     @FXML
     private VBox playerNames;
-
     @FXML
     private Spinner<Integer> numPlayersSpinner;
-
-    SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4,2);
-
     @FXML
     private Button startGameButton;
     @FXML
@@ -53,10 +50,37 @@ public class InLobbySceneController implements Controller{
         }else{
             String lobbyN = messageHandler.getMyLobby();
             lobbyName.setText(lobbyN);
+            SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4,2);
             numPlayersSpinner.setValueFactory(svf);
             playerNames.setStyle("-fx-alignment: top-left");
+            for (Node node : numPlayersSpinner.lookupAll(".repeat-buttons .increment-button, .repeat-buttons .decrement-button")) {
+                Button btn = (Button) node;
+                int step = btn.getStyleClass().contains("increment-button") ? +1 : -1;
+
+                btn.setOnAction(evt -> {
+                    evt.consume();
+                    handleNumPlayersChange(numPlayersSpinner.getValue() + step);
+                });
+            }
+            numPlayersSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+                handleNumPlayersChange(newValue);
+            });
         }
     }
+
+    private void handleNumPlayersChange(Integer newValue) {
+        messageHandler.notifyObservers(new ChangeNumOfPlayersRequest(newValue));
+        Platform.runLater(() -> {
+            String error = gui.getError();
+            if (!error.isEmpty()) {
+                new Alert(Alert.AlertType.ERROR, error).showAndWait();
+                gui.setError("");
+            } else {
+                numPlayersSpinner.getValueFactory().setValue(newValue);
+            }
+        });
+    }
+
     public void startGame(){
         messageHandler.notifyObservers(new StartGameRequest());
         checkForErrors();

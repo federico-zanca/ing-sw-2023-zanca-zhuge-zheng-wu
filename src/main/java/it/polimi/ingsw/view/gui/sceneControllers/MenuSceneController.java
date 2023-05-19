@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -64,6 +63,7 @@ public class MenuSceneController implements Controller{
     }
     public void checkForError(){
         error.setText(gui.getError());
+        gui.setError("");
         error.setVisible(true);
     }
     public void quitGame(){

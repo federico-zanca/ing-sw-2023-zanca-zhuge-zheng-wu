@@ -1,10 +1,9 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -12,17 +11,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
-
-import static com.sun.javafx.scene.control.skin.Utils.getResource;
-import static javafx.fxml.FXMLLoader.load;
-
-public class GameScene2PlayersController {
-
+public class GameScene2PlayersController implements Controller {
+    private MessageHandler messageHandler;
+    private GUI gui;
     @FXML
     private ImageView ItemLivRoomR0C3, ItemLivRoomR0C4,ItemLivRoomR1C3, ItemLivRoomR1C4, ItemLivRoomR1C5,ItemLivRoomR2C2,
             ItemLivRoomR2C3,ItemLivRoomR2C4,ItemLivRoomR2C5,ItemLivRoomR2C6,ItemLivRoomR3C1,ItemLivRoomR3C2,ItemLivRoomR3C3,
@@ -360,4 +352,18 @@ public class GameScene2PlayersController {
 
     }
 
+    @Override
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
+    }
+
+    @Override
+    public void setGui(GUI gui) {
+        this.gui = gui;
+    }
+
+    @Override
+    public void initialize() {
+
+    }
 }
