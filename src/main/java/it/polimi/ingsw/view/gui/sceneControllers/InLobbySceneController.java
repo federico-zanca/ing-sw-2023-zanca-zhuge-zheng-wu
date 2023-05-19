@@ -73,7 +73,7 @@ public class InLobbySceneController implements Controller{
         Platform.runLater(()->{
             playerNames.getChildren().clear();
             Label label = new Label(username);
-            label.setStyle("-fx-font-weight: regular;-fx-font-style: italic; -fx-text-fill: #000000; -fx-font-size: 18; -fx-text-alignment: left; -fx-pref-width: 600;");
+            label.setStyle("-fx-font-weight: regular;-fx-font-style: italic; -fx-text-fill: #000000; -fx-font-size: 18; -fx-text-alignment: left; -fx-pref-width: 600;-fx-pref-height: 40;");
             playerNames.getChildren().add(label);
         });
     }
