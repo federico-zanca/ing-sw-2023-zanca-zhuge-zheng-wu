@@ -47,7 +47,13 @@ public class GameScene2PlayersController {
     private ImageView firstCommonGoal, secondCommonGoal;
 
     @FXML
+    private ImageView firstCommonGoalScoreBox, secondCommonGoalScoreBox;
+
+    @FXML
     private ImageView livingRoomBoard;
+
+    @FXML
+    private ImageView endGameTokenBox;
 
     @FXML
     private GridPane livingRoomGrid;
@@ -77,25 +83,13 @@ public class GameScene2PlayersController {
     private Polygon selectCol1, selectCol2, selectCol3, selectCol4, selectCol5;
 
     @FXML
-    private ImageView hand1;
-
-    @FXML
-    private ImageView hand2;
-
-    @FXML
-    private ImageView hand3;
+    private ImageView hand1, hand2, hand3;
 
     @FXML
     private Rectangle handRegion;
 
     @FXML
-    private Label orderHand1;
-
-    @FXML
-    private Label orderHand2;
-
-    @FXML
-    private Label orderHand3;
+    private Label orderHand1, orderHand2, orderHand3;
 
     @FXML
     void clicked1stCol(MouseEvent event) {

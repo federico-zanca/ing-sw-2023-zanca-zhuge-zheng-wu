@@ -5,10 +5,13 @@ import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -23,6 +26,12 @@ public class InLobbySceneController implements Controller{
     private Label lobbyName;
     @FXML
     private VBox playerNames;
+
+    @FXML
+    private Spinner<Integer> numPlayersSpinner;
+
+    SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4,2);
+
     @FXML
     private Button startGameButton;
     @FXML
@@ -44,6 +53,8 @@ public class InLobbySceneController implements Controller{
         }else{
             String lobbyN = messageHandler.getMyLobby();
             lobbyName.setText(lobbyN);
+            numPlayersSpinner.setValueFactory(svf);
+            playerNames.setStyle("-fx-alignment: top-left");
         }
     }
     public void startGame(){
@@ -90,7 +101,7 @@ public class InLobbySceneController implements Controller{
         Platform.runLater(()->{
             playerNames.getChildren().clear();
             Label label = new Label(username);
-            label.setStyle("-fx-font-weight: bold; -fx-text-fill: red;");
+            label.setStyle("-fx-font-weight: regular;-fx-font-style: italic; -fx-text-fill: #000000; -fx-font-size: 18; -fx-text-alignment: left; -fx-pref-width: 600;-fx-pref-height: 40;");
             playerNames.getChildren().add(label);
         });
     }
