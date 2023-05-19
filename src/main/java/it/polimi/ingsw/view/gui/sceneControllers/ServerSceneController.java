@@ -20,15 +20,16 @@ public class ServerSceneController implements Controller{
     private ArrayList<LobbyDisplayInfo> lobbies;
     private InputValidator inputValidator = new InputValidator();
     @FXML
-    private TextField LobbyName;
+    private TextField newLobbyName;
+    @FXML
+    private ComboBox<String> lobbySelectBox;
     @FXML
     private Button Unisciti;
     @FXML
     private Button CambiaUsername;
     @FXML
     private Button Esci;
-    @FXML
-    private Button Lobbies;
+
     @FXML
     private Button CreateGame;
     @Override
@@ -73,12 +74,12 @@ public class ServerSceneController implements Controller{
         //TODO move the creation of these elements(vbox and dialog in the fxml file)
     }
     public void joinLobby(){
-        messageHandler.setMyLobby(LobbyName.getText());
-        messageHandler.notifyObservers(new JoinLobbyRequest(LobbyName.getText()));
+        messageHandler.setMyLobby(lobbySelectBox.getValue());
+        messageHandler.notifyObservers(new JoinLobbyRequest(lobbySelectBox.getValue()));
     }
     public void createLobby(){
-        messageHandler.setMyLobby(LobbyName.getText());
-        messageHandler.notifyObservers(new CreateLobbyRequest(LobbyName.getText()));
+        messageHandler.setMyLobby(newLobbyName.getText());
+        messageHandler.notifyObservers(new CreateLobbyRequest(newLobbyName.getText()));
     }
     public void changeName(){
         TextInputDialog dialog = new TextInputDialog();
