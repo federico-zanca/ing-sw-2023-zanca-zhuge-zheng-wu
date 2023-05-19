@@ -125,7 +125,6 @@ public class GameScene2PlayersController {
     void translateTriangle (Polygon polyg){
         TranslateTransition tr = new TranslateTransition();
         tr.setNode(polyg);
-        tr.setToY(polyg.getLayoutX()+20);
         tr.setToY(polyg.getLayoutY()+20);
     }
     @FXML
