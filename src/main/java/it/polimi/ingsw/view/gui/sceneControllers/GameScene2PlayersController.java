@@ -1,11 +1,25 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
+
+import static com.sun.javafx.scene.control.skin.Utils.getResource;
+import static javafx.fxml.FXMLLoader.load;
 
 public class GameScene2PlayersController {
 
@@ -60,8 +74,32 @@ public class GameScene2PlayersController {
     private VBox players;
 
     @FXML
-    void clicked1stCol(MouseEvent event) {
+    private Polygon selectCol1, selectCol2, selectCol3, selectCol4, selectCol5;
 
+    @FXML
+    private ImageView hand1;
+
+    @FXML
+    private ImageView hand2;
+
+    @FXML
+    private ImageView hand3;
+
+    @FXML
+    private Rectangle handRegion;
+
+    @FXML
+    private Label orderHand1;
+
+    @FXML
+    private Label orderHand2;
+
+    @FXML
+    private Label orderHand3;
+
+    @FXML
+    void clicked1stCol(MouseEvent event) {
+        translateTriangle(selectCol1);
     }
 
     @FXML
@@ -82,6 +120,13 @@ public class GameScene2PlayersController {
     @FXML
     void clicked5thCol(MouseEvent event) {
 
+    }
+
+    void translateTriangle (Polygon polyg){
+        TranslateTransition tr = new TranslateTransition();
+        tr.setNode(polyg);
+        tr.setToY(polyg.getLayoutX()+20);
+        tr.setToY(polyg.getLayoutY()+20);
     }
     @FXML
     void clickedItemLivRoomR0C3(MouseEvent event) {
@@ -305,6 +350,20 @@ public class GameScene2PlayersController {
 
     @FXML
     void clickedItemLivRoomR8C5(MouseEvent event) {
+
+    }
+    @FXML
+    void clickHand1(MouseEvent event) {
+
+    }
+
+    @FXML
+    void clickHand2(MouseEvent event) {
+
+    }
+
+    @FXML
+    void clickHand3(MouseEvent event) {
 
     }
 

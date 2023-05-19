@@ -5,6 +5,7 @@
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
@@ -24,7 +25,7 @@
    <content>
       <AnchorPane prefHeight="1300.0" prefWidth="1300.0">
          <children>
-            <ImageView fitWidth="1300.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitWidth="1300.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/misc/sfondo_parquet.jpg" />
                </image>
@@ -34,7 +35,7 @@
             </ImageView>
             <Pane prefHeight="760.0" prefWidth="500.0">
                <children>
-                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/common_goal_cards/1.jpg" />
                      </image>
@@ -42,7 +43,7 @@
                         <DropShadow radius="11.0" width="25.0" />
                      </effect>
                   </ImageView>
-                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/common_goal_cards/7.jpg" />
                      </image>
@@ -50,7 +51,7 @@
                         <DropShadow radius="11.0" width="25.0" />
                      </effect>
                   </ImageView>
-                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/misc/Sacchetto_Chiuso.png" />
                      </image>
@@ -424,7 +425,7 @@
                         </ImageView>
                      </children>
                   </GridPane>
-                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseClicked="#clicked1stCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ff341f" strokeType="INSIDE" strokeWidth="0.0">
+                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseClicked="#clicked1stCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                     <points>
                       <Double fx:value="-50.0" />
                       <Double fx:value="40.0" />
@@ -433,8 +434,11 @@
                       <Double fx:value="0.0" />
                       <Double fx:value="-60.0" />
                     </points>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseClicked="#clicked2ndCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ff341f" strokeType="INSIDE" strokeWidth="0.0">
+                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseClicked="#clicked2ndCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -443,8 +447,11 @@
                         <Double fx:value="0.0" />
                         <Double fx:value="-60.0" />
                      </points>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseClicked="#clicked3rdCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ff341f" strokeType="INSIDE" strokeWidth="0.0">
+                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseClicked="#clicked3rdCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -453,8 +460,11 @@
                         <Double fx:value="0.0" />
                         <Double fx:value="-60.0" />
                      </points>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseClicked="#clicked4thCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ff341f" strokeType="INSIDE" strokeWidth="0.0">
+                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseClicked="#clicked4thCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -463,8 +473,11 @@
                         <Double fx:value="0.0" />
                         <Double fx:value="-60.0" />
                      </points>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseClicked="#clicked5thCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ff341f" strokeType="INSIDE" strokeWidth="0.0">
+                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseClicked="#clicked5thCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -473,7 +486,34 @@
                         <Double fx:value="0.0" />
                         <Double fx:value="-60.0" />
                      </points>
+                     <effect>
+                        <DropShadow />
+                     </effect>
                   </Polygon>
+                  <Rectangle fx:id="handRegion" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
+                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="13.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="hand1" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="65.0" onMouseClicked="#clickHand1" pickOnBounds="true" preserveRatio="true">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickHand2" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickHand3" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="orderHand1" layoutX="100.0" layoutY="65.0" text="L1" textFill="#fff30f">
+                     <font>
+                        <Font name="Arial Black" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="orderHand2" layoutX="185.0" layoutY="65.0" text="L2" textFill="#fff30f">
+                     <font>
+                        <Font name="Arial Black" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="orderHand3" layoutX="270.0" layoutY="65.0" text="L3" textFill="#fff30f">
+                     <font>
+                        <Font name="Arial Black" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Pane layoutX="320.0" layoutY="760.0" prefHeight="540.0" prefWidth="500.0">
@@ -696,7 +736,15 @@
                   </GridPane>
                </children>
             </Pane>
-            <VBox fx:id="players" layoutX="1086.0" layoutY="51.0" prefHeight="200.0" prefWidth="200.0" />
+            <VBox fx:id="players" layoutX="1050.0" layoutY="61.0" prefHeight="200.0" prefWidth="200.0" />
+            <Label layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
+               <font>
+                  <Font name="Century" size="16.0" />
+               </font>
+               <effect>
+                  <Bloom threshold="0.2" />
+               </effect>
+            </Label>
          </children>
       </AnchorPane>
    </content>
