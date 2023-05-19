@@ -6,8 +6,9 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -21,7 +22,10 @@ public class InLobbySceneController implements Controller{
     private VBox playerNames;
 
     @FXML
-    private ComboBox<Integer> playerNumberComboBox;
+    private Spinner<Integer> numPlayersSpinner;
+
+    SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4,2);
+
     @FXML
     private Button startGameButton;
     @FXML
@@ -43,7 +47,8 @@ public class InLobbySceneController implements Controller{
         }else{
             String lobbyN = messageHandler.getMyLobby();
             lobbyName.setText(lobbyN);
-            playerNumberComboBox.setItems(FXCollections.observableArrayList(2,3,4));
+            numPlayersSpinner.setValueFactory(svf);
+            playerNames.setStyle("-fx-alignment: top-left");
         }
     }
     public void startGame(){
@@ -68,7 +73,7 @@ public class InLobbySceneController implements Controller{
         Platform.runLater(()->{
             playerNames.getChildren().clear();
             Label label = new Label(username);
-            label.setStyle("-fx-font-weight: bold; -fx-text-fill: red;");
+            label.setStyle("-fx-font-weight: regular;-fx-font-style: italic; -fx-text-fill: #000000; -fx-font-size: 18; -fx-text-alignment: left; -fx-pref-width: 600;");
             playerNames.getChildren().add(label);
         });
     }
