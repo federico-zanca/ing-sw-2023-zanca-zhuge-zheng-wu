@@ -19,7 +19,9 @@ public class ServerSceneController implements Controller{
     private GUI gui;
     private ArrayList<LobbyDisplayInfo> lobbies;
     @FXML
-    private TextField LobbyName;
+    private TextField newLobbyName;
+    @FXML
+    private ComboBox<String> lobbySelectBox;
     @FXML
     private Button Unisciti;
     @FXML
@@ -72,13 +74,13 @@ public class ServerSceneController implements Controller{
         //TODO move the creation of these elements(vbox and dialog in the fxml file)
     }
     public void joinLobby(){
-        messageHandler.setMyLobby(LobbyName.getText());
-        messageHandler.notifyObservers(new JoinLobbyRequest(LobbyName.getText()));
+        messageHandler.setMyLobby(lobbySelectBox.getValue());
+        messageHandler.notifyObservers(new JoinLobbyRequest(lobbySelectBox.getValue()));
         //TODO INLOBBYSCENE
     }
     public void createLobby(){
-        messageHandler.setMyLobby(LobbyName.getText());
-        messageHandler.notifyObservers(new CreateLobbyRequest(LobbyName.getText()));
+        messageHandler.setMyLobby(newLobbyName.getText());
+        messageHandler.notifyObservers(new CreateLobbyRequest(newLobbyName.getText()));
     }
     public void changeName(){
         //TODO POP UP WINDOW TO CHANGE USERNAME, AFTERWARDS IT RETURNS TO THE LOBBYSCENE.

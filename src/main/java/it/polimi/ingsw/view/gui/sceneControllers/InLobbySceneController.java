@@ -3,8 +3,10 @@ package it.polimi.ingsw.view.gui.sceneControllers;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -17,6 +19,9 @@ public class InLobbySceneController implements Controller{
     private Label lobbyName;
     @FXML
     private VBox playerNames;
+
+    @FXML
+    private ComboBox<Integer> playerNumberComboBox;
     @FXML
     private Button startGameButton;
     @FXML
@@ -38,6 +43,7 @@ public class InLobbySceneController implements Controller{
         }else{
             String lobbyN = messageHandler.getMyLobby();
             lobbyName.setText(lobbyN);
+            playerNumberComboBox.setItems(FXCollections.observableArrayList(2,3,4));
         }
     }
     public void startGame(){
