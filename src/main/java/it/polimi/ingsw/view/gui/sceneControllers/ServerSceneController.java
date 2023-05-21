@@ -9,6 +9,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -38,6 +40,13 @@ public class ServerSceneController implements Controller{
     public void setGui(GUI gui){this.gui = gui;}
     @Override
     public void initialize() {
+        if(gui == null){
+            return;
+        }else{
+            gui.getCurrentStage().setOnCloseRequest(e->{
+                System.exit(0);
+            });
+        }
     }
     public void exitButton(){
         System.exit(0);
@@ -60,8 +69,16 @@ public class ServerSceneController implements Controller{
         messageHandler.notifyObservers(new JoinLobbyRequest(lobbySelectBox.getValue()));
     }
     public void createLobby(){
-        messageHandler.setMyLobby(newLobbyName.getText());
-        messageHandler.notifyObservers(new CreateLobbyRequest(newLobbyName.getText()));
+        if(inputValidator.isValidUsername(newLobbyName.getText())){
+            messageHandler.setMyLobby(newLobbyName.getText());
+            messageHandler.notifyObservers(new CreateLobbyRequest(newLobbyName.getText()));
+        }
+    }
+    @FXML
+    void enterCreateLobby(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            createLobby();
+        }
     }
     public void changeName(){
         TextInputDialog dialog = new TextInputDialog();

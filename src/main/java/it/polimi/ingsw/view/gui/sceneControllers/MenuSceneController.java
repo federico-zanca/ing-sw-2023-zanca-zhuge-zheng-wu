@@ -41,7 +41,9 @@ public class MenuSceneController implements Controller{
         if(gui == null){
             return;
         }else{
-            System.out.println(messageHandler.getMyLobby());
+            gui.getCurrentStage().setOnCloseRequest(e->{
+                System.exit(0);
+            });
         }
     }
     public void checkUsername(){

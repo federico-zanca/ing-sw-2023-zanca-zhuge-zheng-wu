@@ -48,6 +48,9 @@ public class InLobbySceneController implements Controller{
         if(gui == null){
             return;
         }else{
+            gui.getCurrentStage().setOnCloseRequest(e->{
+                System.exit(0);
+            });
             String lobbyN = messageHandler.getMyLobby();
             lobbyName.setText(lobbyN);
             SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4,2);

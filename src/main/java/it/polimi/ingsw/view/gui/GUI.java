@@ -1,6 +1,8 @@
 package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.AppServer;
 import it.polimi.ingsw.distributed.ClientImpl;
+import it.polimi.ingsw.model.GameView;
+import it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController;
 import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 import it.polimi.ingsw.view.gui.sceneControllers.Controller;
 import it.polimi.ingsw.view.gui.sceneControllers.InLobbySceneController;
@@ -8,6 +10,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Dialog;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
@@ -139,5 +142,17 @@ public class GUI extends Application{
         }
     }
 
+    public Stage getCurrentStage() {
+        return currentStage;
+    }
+
+    public void setGameScene(GameView model) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard());
+            });
+        }
+    }
 }
 

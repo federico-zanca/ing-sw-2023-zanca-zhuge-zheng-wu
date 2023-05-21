@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.model.enumerations.JoinType;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.connectionmessage.*;
@@ -10,6 +11,8 @@ import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
+import javafx.application.Platform;
+
 
 import java.util.ArrayList;
 
@@ -19,6 +22,7 @@ public class MessageHandler extends VirtualView implements View {
     private String myLobby = "";
     private String myUsername = "";
     private GameMessage lastMessage;
+    private PersonalGoalCard personalGoalCard;
 
     public MessageHandler(GUI gui){
         this.gui = gui;
@@ -128,6 +132,9 @@ public class MessageHandler extends VirtualView implements View {
         gui.setPhase(GuiPhase.GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
         gui.changeScene();
+        Platform.runLater(()->{
+            gui.setGameScene(gameStartedMessage.getGameView());
+        });
     }
 
     @Override
@@ -157,7 +164,8 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onPersonalGoalCardMessage(PersonalGoalCardMessage personalGoalCardMessage) {
-
+        lastMessage = personalGoalCardMessage;
+        setPersonalGoalCard(personalGoalCardMessage.getPersonalGoalCard());
     }
 
     @Override
@@ -255,5 +263,8 @@ public class MessageHandler extends VirtualView implements View {
 
     public void setMyUsername(String myUsername) {
         this.myUsername = myUsername;
+    }
+    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
+        this.personalGoalCard = personalGoalCard;
     }
 }

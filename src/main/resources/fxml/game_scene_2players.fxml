@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.Double?>
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.effect.Bloom?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Polygon?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <content>
       <AnchorPane prefHeight="1300.0" prefWidth="1300.0">
          <children>
@@ -33,129 +22,6 @@
                   <Rectangle2D />
                </viewport>
             </ImageView>
-            <Pane prefHeight="760.0" prefWidth="500.0">
-               <children>
-                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/common_goal_cards/1.jpg" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="11.0" width="25.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/common_goal_cards/7.jpg" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="11.0" width="25.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/misc/Sacchetto_Chiuso.png" />
-                     </image>
-                     <effect>
-                        <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/boards/livingroom.png" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="12.25" width="30.0" />
-                     </effect>
-                  </ImageView>
-                  <GridPane fx:id="livingRoomGrid" layoutX="39.0" layoutY="213.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.5" minWidth="46.5" prefWidth="46.5" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="46.5" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="46.0" minHeight="46.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <ImageView fx:id="ItemLivRoomR0C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR0C4" fitHeight="46.5" fitWidth="46.5" layoutX="57.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR0C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR1C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR1C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <ImageView fx:id="ItemLivRoomR1C4" fitHeight="46.5" fitWidth="46.5" onMouseClicked="#clickedItemLivRoomR1C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <ImageView fx:id="ItemLivRoomR1C5" fitHeight="46.5" fitWidth="46.5" onMouseClicked="#clickedItemLivRoomR1C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                        <ImageView fx:id="ItemLivRoomR2C2" fitHeight="46.5" fitWidth="46.5" onMouseClicked="#clickedItemLivRoomR2C2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <ImageView fx:id="ItemLivRoomR2C3" fitHeight="46.5" fitWidth="46.5" layoutX="104.0" layoutY="104.0" onMouseClicked="#clickedItemLivRoomR2C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <ImageView fx:id="ItemLivRoomR2C4" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR2C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <ImageView fx:id="ItemLivRoomR2C5" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR2C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                        <ImageView fx:id="ItemLivRoomR2C6" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR2C6" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="2" />
-                        <ImageView fx:id="ItemLivRoomR3C1" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C1" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C2" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C4" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C5" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C6" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C6" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C7" fitHeight="46.5" fitWidth="46.5" layoutX="292.0" layoutY="150.0" onMouseClicked="#clickedItemLivRoomR3C7" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR3C8" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR3C8" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                        <ImageView fx:id="ItemLivRoomR4C0" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR4C0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C1" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR4C1" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C2" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR4C2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR4C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C4" fitHeight="46.5" fitWidth="46.5" layoutX="198.0" layoutY="150.0" onMouseClicked="#clickedItemLivRoomR4C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C5" fitHeight="46.5" fitWidth="46.5" layoutX="198.0" layoutY="150.0" onMouseClicked="#clickedItemLivRoomR4C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C6" fitHeight="46.5" fitWidth="46.5" layoutX="198.0" layoutY="150.0" onMouseClicked="#clickedItemLivRoomR4C6" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C7" fitHeight="46.5" fitWidth="46.5" layoutX="151.0" layoutY="150.0" onMouseClicked="#clickedItemLivRoomR4C7" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR4C8" fitHeight="46.5" fitWidth="46.5" layoutX="151.0" layoutY="150.0" onMouseClicked="#clickedItemLivRoomR4C8" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="9" GridPane.rowIndex="4" />
-                        <ImageView fx:id="ItemLivRoomR5C0" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C1" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C1" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C2" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C4" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C5" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C6" fitHeight="46.5" fitWidth="46.5" layoutX="245.0" layoutY="244.0" onMouseClicked="#clickedItemLivRoomR5C6" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR5C7" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR5C7" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR6C2" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR6C2" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                        <ImageView fx:id="ItemLivRoomR6C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR6C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                        <ImageView fx:id="ItemLivRoomR6C4" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR6C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-                        <ImageView fx:id="ItemLivRoomR6C5" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR6C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6" GridPane.rowIndex="5" />
-                        <ImageView fx:id="ItemLivRoomR6C6" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR6C6" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="6" />
-                        <ImageView fx:id="ItemLivRoomR7C3" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR7C3" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="7" />
-                        <ImageView fx:id="ItemLivRoomR7C4" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR7C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="7" />
-                        <ImageView fx:id="ItemLivRoomR7C5" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR7C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="7" />
-                        <ImageView fx:id="ItemLivRoomR8C4" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR8C4" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-                        <ImageView fx:id="ItemLivRoomR8C5" fitHeight="46.5" fitWidth="46.5" layoutX="10.0" layoutY="10.0" onMouseClicked="#clickedItemLivRoomR8C5" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.rowIndex="8" />
-                     </children>
-                  </GridPane>
-                  <ImageView fx:id="endGameTokenBox" fitHeight="50.0" fitWidth="50.0" layoutX="394.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/end_game.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="firstCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="100.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="secondCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="282.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
             <Pane layoutX="500.0" prefHeight="760.0" prefWidth="500.0">
                <children>
                   <ImageView fx:id="myBookshelf" fitHeight="381.0" fitWidth="377.0" layoutX="22.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
@@ -440,7 +306,7 @@
                         </ImageView>
                      </children>
                   </GridPane>
-                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseClicked="#clicked1stCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                     <points>
                       <Double fx:value="-50.0" />
                       <Double fx:value="40.0" />
@@ -453,7 +319,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseClicked="#clicked2ndCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -466,7 +332,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseClicked="#clicked3rdCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -479,7 +345,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseClicked="#clicked4thCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -492,7 +358,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseClicked="#clicked5thCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -507,13 +373,13 @@
                   </Polygon>
                   <Rectangle fx:id="handRegion" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
                   <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="13.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="hand1" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="65.0" onMouseClicked="#clickHand1" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="hand1" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true">
                      <effect>
                         <DropShadow />
                      </effect>
                   </ImageView>
-                  <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickHand2" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickHand3" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="orderHand1" layoutX="100.0" layoutY="65.0" text="L1" textFill="#fff30f">
                      <font>
                         <Font name="Arial Black" size="12.0" />
@@ -760,6 +626,82 @@
                   <Bloom threshold="0.2" />
                </effect>
             </Label>
+            <Pane prefHeight="760.0" prefWidth="500.0">
+               <children>
+                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/common_goal_cards/1.jpg" />
+                     </image>
+                     <effect>
+                        <DropShadow radius="11.0" width="25.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/common_goal_cards/7.jpg" />
+                     </image>
+                     <effect>
+                        <DropShadow radius="11.0" width="25.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/misc/Sacchetto_Chiuso.png" />
+                     </image>
+                     <effect>
+                        <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/boards/livingroom.png" />
+                     </image>
+                     <effect>
+                        <DropShadow radius="12.25" width="30.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="endGameTokenBox" fitHeight="50.0" fitWidth="50.0" layoutX="394.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
+                     <image>
+                        <Image url="@../images/scoring_tokens/end_game.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="firstCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="100.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
+                     <image>
+                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="secondCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="282.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
+                     <image>
+                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
+                     </image>
+                  </ImageView>
+                  <GridPane fx:id="livingRoomGrid" layoutX="39.0" layoutY="213.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.5" minWidth="46.5" prefWidth="46.5" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="46.5" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="46.0" minHeight="46.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+               </children>
+            </Pane>
          </children>
       </AnchorPane>
    </content>

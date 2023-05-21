@@ -41,7 +41,7 @@
             <Font name="Arial Black" size="16.0" />
          </font></Label>
       <ComboBox fx:id="lobbySelectBox" layoutX="517.5" layoutY="206.0" onMouseClicked="#lobbyList" prefHeight="50.0" prefWidth="265.0" promptText="Select Lobby" />
-      <TextField fx:id="newLobbyName" layoutX="517.0" layoutY="382.0" prefHeight="50.0" prefWidth="265.0" promptText="Enter New Lobby Name" />
+      <TextField fx:id="newLobbyName" layoutX="517.0" layoutY="382.0" prefHeight="50.0" prefWidth="265.0" onKeyPressed="#enterCreateLobby" promptText="Enter New Lobby Name" />
 
   </children>
 </AnchorPane>
