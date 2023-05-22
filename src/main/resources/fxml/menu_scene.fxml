@@ -19,7 +19,7 @@
             <children>
                 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="511.0" prefWidth="797.0">
                     <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dfa041" height="67.0" layoutX="210.0" layoutY="214.0" opacity="0.51" stroke="#ea2323" strokeType="INSIDE" strokeWidth="0.0" width="366.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dfa041" height="67.0" layoutX="220.0" layoutY="214.0" opacity="0.51" stroke="#ea2323" strokeType="INSIDE" strokeWidth="0.0" width="366.0" />
                   <TextField fx:id="usernameField" layoutX="289.0" layoutY="289.0" onKeyPressed="#enterCheckUserName" prefHeight="34.0" prefWidth="227.0" promptText="Username">
                      <effect>
                         <DropShadow />

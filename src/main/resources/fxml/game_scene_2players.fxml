@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.Double?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <content>
       <AnchorPane prefHeight="1300.0" prefWidth="1300.0">
          <children>
@@ -22,6 +33,90 @@
                   <Rectangle2D />
                </viewport>
             </ImageView>
+            <Label layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
+               <font>
+                  <Font name="Century" size="16.0" />
+               </font>
+               <effect>
+                  <Bloom threshold="0.2" />
+               </effect>
+            </Label>
+            <Pane prefHeight="760.0" prefWidth="500.0">
+               <children>
+                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/common_goal_cards/1.jpg" />
+                     </image>
+                     <effect>
+                        <DropShadow radius="11.0" width="25.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/common_goal_cards/7.jpg" />
+                     </image>
+                     <effect>
+                        <DropShadow radius="11.0" width="25.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/misc/Sacchetto_Chiuso.png" />
+                     </image>
+                     <effect>
+                        <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/boards/livingroom.png" />
+                     </image>
+                     <effect>
+                        <DropShadow radius="12.25" width="30.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fx:id="endGameTokenBox" fitHeight="50.0" fitWidth="50.0" layoutX="394.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
+                     <image>
+                        <Image url="@../images/scoring_tokens/end_game.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="firstCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="100.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
+                     <image>
+                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="secondCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="282.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
+                     <image>
+                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
+                     </image>
+                  </ImageView>
+                  <GridPane fx:id="livingRoomGrid" layoutX="39.0" layoutY="213.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.5" minWidth="46.5" prefWidth="46.5" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="46.5" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="46.0" minHeight="46.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+               </children>
+            </Pane>
             <Pane layoutX="500.0" prefHeight="760.0" prefWidth="500.0">
                <children>
                   <ImageView fx:id="myBookshelf" fitHeight="381.0" fitWidth="377.0" layoutX="22.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
@@ -618,90 +713,6 @@
                </children>
             </Pane>
             <VBox fx:id="players" layoutX="1050.0" layoutY="61.0" prefHeight="200.0" prefWidth="200.0" />
-            <Label layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
-               <font>
-                  <Font name="Century" size="16.0" />
-               </font>
-               <effect>
-                  <Bloom threshold="0.2" />
-               </effect>
-            </Label>
-            <Pane prefHeight="760.0" prefWidth="500.0">
-               <children>
-                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/common_goal_cards/1.jpg" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="11.0" width="25.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/common_goal_cards/7.jpg" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="11.0" width="25.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/misc/Sacchetto_Chiuso.png" />
-                     </image>
-                     <effect>
-                        <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/boards/livingroom.png" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="12.25" width="30.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="endGameTokenBox" fitHeight="50.0" fitWidth="50.0" layoutX="394.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/end_game.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="firstCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="100.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="secondCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="282.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
-                     </image>
-                  </ImageView>
-                  <GridPane fx:id="livingRoomGrid" layoutX="39.0" layoutY="213.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.5" minWidth="46.5" prefWidth="46.5" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="46.5" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="46.0" minHeight="46.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
-               </children>
-            </Pane>
          </children>
       </AnchorPane>
    </content>
