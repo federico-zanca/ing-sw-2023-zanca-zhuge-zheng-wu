@@ -3,6 +3,7 @@
 <?import java.lang.Double?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.Bloom?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
@@ -23,7 +25,7 @@
 
 <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <content>
-      <AnchorPane prefHeight="1300.0" prefWidth="1300.0">
+      <AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0">
          <children>
             <ImageView fitWidth="1300.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -33,7 +35,7 @@
                   <Rectangle2D />
                </viewport>
             </ImageView>
-            <Label layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
+            <Label fx:id="notification" layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
                <font>
                   <Font name="Century" size="16.0" />
                </font>
@@ -115,9 +117,10 @@
                         <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
                     </rowConstraints>
                   </GridPane>
+                  <Button fx:id="okButton" layoutX="326.0" layoutY="676.0" mnemonicParsing="false" onAction="#clickedOk" text="Ok" />
                </children>
             </Pane>
-            <Pane layoutX="500.0" prefHeight="760.0" prefWidth="500.0">
+            <Pane fx:id="bookshelfPane" layoutX="500.0" prefHeight="760.0" prefWidth="500.0">
                <children>
                   <ImageView fx:id="myBookshelf" fitHeight="381.0" fitWidth="377.0" layoutX="22.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -167,239 +170,6 @@
                         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
-                     <children>
-                        <ImageView fx:id="myBS00" fitHeight="44.0" fitWidth="44.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets bottom="2.0" right="3.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS01" fitHeight="44.0" fitWidth="44.0" layoutX="17.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets bottom="2.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS02" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets bottom="2.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS03" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets bottom="2.0" left="1.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS04" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets bottom="2.0" left="3.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS10" fitHeight="44.0" fitWidth="44.0" layoutX="254.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="myBS11" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="myBS12" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="myBS13" fitHeight="44.0" fitWidth="44.0" layoutX="136.0" layoutY="64.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="1.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS14" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="1.0" top="1.5" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS20" fitHeight="43.0" fitWidth="43.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="3.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS21" fitHeight="43.0" fitWidth="43.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="2.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS22" fitHeight="43.0" fitWidth="43.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="2.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS23" fitHeight="43.0" fitWidth="43.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="2.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS24" fitHeight="43.0" fitWidth="43.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="2.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS30" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="2.0" top="5.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS31" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="2.0" top="5.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS32" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="5.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS33" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="5.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS34" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS40" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="3.0" top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS41" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="3.5" top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS42" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS43" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS44" fitHeight="42.5" fitWidth="42.5" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets right="2.0" top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS50" fitHeight="40.0" fitWidth="40.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="4.0" top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS51" fitHeight="42.0" fitWidth="42.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets left="4.0" top="7.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS52" fitHeight="42.0" fitWidth="42.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS53" fitHeight="42.0" fitWidth="42.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets right="3.0" top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="myBS54" fitHeight="41.0" fitWidth="41.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets right="5.0" top="6.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                     </children>
                   </GridPane>
                   <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                     <points>
@@ -490,6 +260,7 @@
                         <Font name="Arial Black" size="12.0" />
                      </font>
                   </Label>
+                  <HBox fx:id="chatBox" layoutX="343.0" layoutY="676.0" prefHeight="100.0" prefWidth="200.0" />
                </children>
             </Pane>
             <Pane layoutX="320.0" layoutY="760.0" prefHeight="540.0" prefWidth="500.0">

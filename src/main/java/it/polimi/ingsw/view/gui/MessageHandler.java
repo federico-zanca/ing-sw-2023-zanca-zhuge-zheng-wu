@@ -8,9 +8,11 @@ import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
+import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
+import it.polimi.ingsw.view.tui.PlayerState;
 import javafx.application.Platform;
 
 
@@ -20,28 +22,18 @@ public class MessageHandler extends VirtualView implements View {
     private final GUI gui;
     ArrayList<LobbyDisplayInfo> lobbies;
     private String myLobby = "";
+
     private String myUsername = "";
+
     private GameMessage lastMessage;
+
     private PersonalGoalCard personalGoalCard;
-
-    public MessageHandler(GUI gui){
-        this.gui = gui;
-    }
-
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
+        gui.setPhase(GuiPhase.LOGIN);
+        gui.setCurrentScene(gui.getScene(GameFxml.MENU_SCENE.s));
+        gui.changeScene();
     }
-    public String getMyLobby() {
-        return myLobby;
-    }
-
-    public ArrayList<LobbyDisplayInfo> getLobbies() {
-        return lobbies;
-    }
-    public void setMyLobby(String myLobby) {
-        this.myLobby = myLobby;
-    }
-
     @Override
     public void onCreateLobbyResponse(CreateLobbyResponse createLobbyResponse) {
         if(createLobbyResponse.isSuccessful()){
@@ -64,10 +56,10 @@ public class MessageHandler extends VirtualView implements View {
             gui.setAllPlayersNames(joinLobbyResponse.getUsernames());
         }
     }
-
     @Override
     public void onLobbyListResponse(LobbyListResponse lobbyListResponse) {
         this.lobbies = lobbyListResponse.getLobbies();
+        gui.setLobbies(lobbies);
     }
 
     @Override
@@ -104,17 +96,21 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onBoardMessage(BoardMessage boardMessage) {
-
+        gui.setGameBoard(boardMessage.getBoard());
     }
 
     @Override
     public void onBookshelfMessage(BookshelfMessage bookshelfMessage) {
-
+        gui.setBookshelf(bookshelfMessage.getBookshelf());
     }
 
     @Override
     public void onDrawInfoMessage(DrawInfoMessage drawInfoMessage) {
-
+        lastMessage = drawInfoMessage;
+        gui.setPlayerState(PlayerState.ACTIVE);
+        gui.setActionType(ActionType.DRAW_TILES);
+        gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
+        gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard());
     }
 
     @Override
@@ -132,14 +128,19 @@ public class MessageHandler extends VirtualView implements View {
         gui.setPhase(GuiPhase.GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
         gui.changeScene();
-        Platform.runLater(()->{
-            gui.setGameScene(gameStartedMessage.getGameView());
-        });
+        gui.setGameScene(gameStartedMessage.getGameView());
     }
 
     @Override
     public void onInsertInfoMessage(InsertInfoMessage insertInfoMessage) {
-
+        lastMessage = insertInfoMessage;
+        //if(insertInfoMessage.getHand().size() == 1){
+        gui.setPlayerState(PlayerState.ACTIVE);
+        gui.setActionType(ActionType.INSERT_HAND);
+        //}//else{
+            //gui.setActionType(ActionType.ORDER_HAND);
+       // }
+        gui.setHand(insertInfoMessage.getHand());
     }
 
     @Override
@@ -154,7 +155,14 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onNewTurnMessage(NewTurnMessage newTurnMessage) {
-
+        lastMessage = newTurnMessage;
+        gui.clearTiles();
+        gui.setActionType(ActionType.NONE);
+        if(myUsername.equals(newTurnMessage.getCurrentPlayer())){
+            gui.setGameNotification("è il tuo turno");
+        }else{
+            gui.setGameNotification(newTurnMessage.getContent());
+        }
     }
 
     @Override
@@ -246,11 +254,15 @@ public class MessageHandler extends VirtualView implements View {
             System.err.println("Ignoring message from server");
         }
     }
+
     private void onChatMessage(ChatMessage message) {
+        gui.setChatMessage(message);
     }
+
     private void onLobbyMessage(LobbyMessage message) {
         message.execute(this);
     }
+
     private void onConnectionMessage(ConnectionMessage message) {
         message.execute(this);
     }
@@ -260,9 +272,28 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void run() {
     }
+    public MessageHandler(GUI gui){
+        this.gui = gui;
+    }
+    public String getMyLobby() {
+        return myLobby;
+    }
 
+    public ArrayList<LobbyDisplayInfo> getLobbies() {
+        return lobbies;
+    }
+
+    public void setMyLobby(String myLobby) {
+        this.myLobby = myLobby;
+    }
+    public String getMyUsername() {
+        return myUsername;
+    }
     public void setMyUsername(String myUsername) {
         this.myUsername = myUsername;
+    }
+    public GameMessage getLastMessage() {
+        return lastMessage;
     }
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;

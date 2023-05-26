@@ -1,11 +1,16 @@
 package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.AppServer;
 import it.polimi.ingsw.distributed.ClientImpl;
+import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
-import it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController;
-import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
-import it.polimi.ingsw.view.gui.sceneControllers.Controller;
-import it.polimi.ingsw.view.gui.sceneControllers.InLobbySceneController;
+import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.gameboard.Board;
+import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.network.message.ChatMessage;
+import it.polimi.ingsw.view.gui.sceneControllers.*;
+import it.polimi.ingsw.view.tui.ActionType;
+import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
+import it.polimi.ingsw.view.tui.PlayerState;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -40,13 +45,6 @@ public class GUI extends Application{
         scenes = new HashMap<>();
         phase = GuiPhase.LOGIN;
         messageHandler = new MessageHandler(this);
-        try{
-            Registry registry = LocateRegistry.getRegistry(1099);
-            AppServer server = (AppServer) registry.lookup("server");
-            ClientImpl client = new ClientImpl(server.connect(), messageHandler);
-        }catch(RemoteException | NotBoundException e){
-            e.printStackTrace();
-        }
     }
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
@@ -87,7 +85,7 @@ public class GUI extends Application{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        currentScene = scenes.get(GameFxml.MENU_SCENE.s);
+        currentScene = scenes.get(GameFxml.CONNECTION_SCENE.s);
     }
 
     public void initMenuStage(){
@@ -145,12 +143,89 @@ public class GUI extends Application{
     public Stage getCurrentStage() {
         return currentStage;
     }
+    public void setLobbies(ArrayList<LobbyDisplayInfo> lobbies){
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof ServerSceneController){
+            Platform.runLater(()->{
+                ((ServerSceneController)currentController).showLobbies(lobbies);
+            });
+        }
+    }
 
     public void setGameScene(GameView model) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
                 ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard());
+            });
+        }
+    }
+    public void setGameBoard(Square[][] board){
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setBoard(board);
+            });
+        }
+    }
+    public void setPlayerState(PlayerState state){
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setPlayerState(state);
+            });
+        }
+    }
+
+    public void setGameNotification(String notification) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setNotification(notification);
+            });
+        }
+    }
+
+    public void setHand(ArrayList<ItemTile> hand) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setHand(hand);
+            });
+        }
+    }
+
+    public void setActionType(ActionType actionType) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setActionType(actionType);
+            });
+        }
+    }
+
+    public void setBookshelf(Bookshelf bookshelf) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setBookshelf(bookshelf);
+            });
+        }
+    }
+    public void clearTiles(){
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).clearTiles();
+            });
+        }
+    }
+
+    public void setChatMessage(ChatMessage message) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setChatMessage(message);
             });
         }
     }

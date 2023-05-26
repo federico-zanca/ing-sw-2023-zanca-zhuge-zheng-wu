@@ -4,6 +4,7 @@ public enum GuiPhase {
     LOGIN,
     SERVER,
     IN_LOBBY,
+
     GAME,
     CONNECTION
 }

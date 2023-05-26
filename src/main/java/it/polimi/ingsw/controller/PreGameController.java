@@ -11,7 +11,7 @@ import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
-import it.polimi.ingsw.view.tui.Color;
+import it.polimi.ingsw.view.tui.TextColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -154,7 +154,7 @@ public class PreGameController {
             Lobby lobbyOfClient = server.getLobbyOfClient(client);
             //sends to everyone but the client that joined the lobby the new list of players
             if(!lobbyOfClient.isGameStarted())
-                lobbyOfClient.sendPlayersListToEveryoneBut(username, Color.CYANTEXT + username + Color.NO_COLOR + " si è unito alla partita");
+                lobbyOfClient.sendPlayersListToEveryoneBut(username, TextColor.CYANTEXT + username + TextColor.NO_COLOR + " si è unito alla partita");
         }
     }
 
@@ -240,7 +240,7 @@ public class PreGameController {
             server.removeClientFromLobby(client);
             server.sendMessage(client, new ExitLobbyResponse(true, lobbyName));
             //client.update(new ExitLobbyResponse(true, lobbyName));
-            String content = Color.CYANTEXT + server.getUsernameOfClient(client) + Color.NO_COLOR + " ha abbandonato la lobby";
+            String content = TextColor.CYANTEXT + server.getUsernameOfClient(client) + TextColor.NO_COLOR + " ha abbandonato la lobby";
 
             try {
                 server.getLobbyByName(lobbyName).sendPlayersListToEveryoneBut(server.getUsernameOfClient(client), content);

@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 public enum GameFxml {
+    CONNECTION_SCENE("connection.fxml"),
     MENU_SCENE("menu_scene.fxml"),
     SERVER_SCENE("server_scene.fxml"),
     IN_LOBBY_SCENE("in_lobby_scene.fxml"),
@@ -12,6 +13,7 @@ public enum GameFxml {
     public final String s;
 
     static{
+        CONNECTION_SCENE.phase = GuiPhase.CONNECTION;
         MENU_SCENE.phase = GuiPhase.LOGIN;
         SERVER_SCENE.phase = GuiPhase.SERVER;
         IN_LOBBY_SCENE.phase = GuiPhase.IN_LOBBY;

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+import it.polimi.ingsw.distributed.Lobby;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.gui.GUI;
@@ -18,7 +19,6 @@ import java.util.Optional;
 public class ServerSceneController implements Controller{
     private MessageHandler messageHandler;
     private GUI gui;
-    private ArrayList<LobbyDisplayInfo> lobbies;
     private InputValidator inputValidator = new InputValidator();
     @FXML
     private TextField newLobbyName;
@@ -53,10 +53,9 @@ public class ServerSceneController implements Controller{
     }
     public void lobbyList(){
         messageHandler.notifyObservers(new LobbyListRequest());
-        Platform.runLater(this::showLobbies);
     }
-    public void showLobbies(){
-        lobbies = messageHandler.getLobbies();
+
+    public void showLobbies(ArrayList<LobbyDisplayInfo> lobbies){
         ArrayList<String> lobbyNames = new ArrayList<>();
         for (LobbyDisplayInfo lobby : lobbies) {
             lobbyNames.add(lobby.getLobbyName());
