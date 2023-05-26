@@ -134,7 +134,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
     private void elaborateChatInput(String input) {
         if(input.equalsIgnoreCase("/quit")){
             isChatting=false;
-            System.out.println(Color.BRIGHT_RED_TEXT+"Hai chiuso la chat"+Color.NO_COLOR);
+            System.out.println(TextColor.BRIGHT_RED_TEXT+"Hai chiuso la chat"+ TextColor.NO_COLOR);
             return;
         }
         sendChatMessage(input);
@@ -1081,7 +1081,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
         }
         if(messageText.startsWith("@")) {
             if (messageText.indexOf(" ") == -1) {
-                System.out.println(Color.BRIGHT_RED_TEXT + "Invalid message format!" + Color.NO_COLOR);
+                System.out.println(TextColor.BRIGHT_RED_TEXT + "Invalid message format!" + TextColor.NO_COLOR);
                 return;
             }
             recipientusername = messageText.substring(1, messageText.indexOf(" "));

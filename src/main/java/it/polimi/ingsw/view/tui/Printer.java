@@ -39,31 +39,31 @@ public class Printer {
     String paintBG(ItemType type) {
 
         StringBuilder stringBuilder = new StringBuilder();
-        Color c;
+        TextColor c;
         switch (type) {
             case CAT:
-                c = Color.GREEN;
+                c = TextColor.GREEN;
                 break;
             case PLANT:
-                c = Color.FUCSIA;
+                c = TextColor.FUCSIA;
                 break;
             case FRAME:
-                c = Color.BLUE;
+                c = TextColor.BLUE;
                 break;
             case GAME:
-                c = Color.YELLOW_BOLD;
+                c = TextColor.YELLOW_BOLD;
                 break;
             case TROPHY:
-                c = Color.CYAN_BOLD;
+                c = TextColor.CYAN_BOLD;
                 break;
             case BOOK:
-                c = Color.WHITE;
+                c = TextColor.WHITE;
                 break;
             default:
-                c = Color.NO_COLOR;
+                c = TextColor.NO_COLOR;
                 break;
         }
-        return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
+        return stringBuilder.append(c).append("  ").append(type).append("  ").append(TextColor.NO_COLOR).toString();
     }
 
     /**
@@ -72,31 +72,31 @@ public class Printer {
      */
     String paintFG(ItemType type) {
         StringBuilder stringBuilder = new StringBuilder();
-        Color c;
+        TextColor c;
         switch (type) {
             case CAT:
-                c = Color.WGREEN;
+                c = TextColor.WGREEN;
                 break;
             case PLANT:
-                c = Color.WFUCSIA;
+                c = TextColor.WFUCSIA;
                 break;
             case FRAME:
-                c = Color.WBLUE;
+                c = TextColor.WBLUE;
                 break;
             case GAME:
-                c = Color.WYELLOW_BOLD;
+                c = TextColor.WYELLOW_BOLD;
                 break;
             case TROPHY:
-                c = Color.WCYAN_BOLD;
+                c = TextColor.WCYAN_BOLD;
                 break;
             case BOOK:
-                c = Color.WWHITE;
+                c = TextColor.WWHITE;
                 break;
             default:
-                c = Color.NO_COLOR;
+                c = TextColor.NO_COLOR;
                 break;
         }
-        return stringBuilder.append(c).append("  ").append(type).append("  ").append(Color.NO_COLOR).toString();
+        return stringBuilder.append(c).append("  ").append(type).append("  ").append(TextColor.NO_COLOR).toString();
 
     }
 
@@ -269,7 +269,7 @@ public class Printer {
         System.out.println();
         System.out.println(
                 "######################################\n" +
-                "    E' il turno di " + Color.CYANTEXT + username + Color.NO_COLOR + "\t\n" +           //migliorabile
+                "    E' il turno di " + TextColor.CYANTEXT + username + TextColor.NO_COLOR + "\t\n" +           //migliorabile
                 "######################################");
     }
 
@@ -312,7 +312,7 @@ public class Printer {
      */
     void showPersonalGoalPoints(PersonalGoalPointsMessage message) {
         System.out.println("######################################\n" +
-                Color.CYANTEXT + message.getPlayerUsername() + Color.NO_COLOR + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
+                TextColor.CYANTEXT + message.getPlayerUsername() + TextColor.NO_COLOR + " ha ottenuto " + message.getPoints() + " punti per il suo obiettivo personale!\n" +
                 "######################################");
     }
 
@@ -323,7 +323,7 @@ public class Printer {
      */
     void showAdjacentItemsPoints(AdjacentItemsPointsMessage message) {
         System.out.println("######################################\n" +
-                Color.CYANTEXT + message.getPlayerUsername() + Color.NO_COLOR + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
+                TextColor.CYANTEXT + message.getPlayerUsername() + TextColor.NO_COLOR + " ha ottenuto " + message.getPoints() + " punti per i gruppi di tessere uguali adiacenti nella libreria!\n" +
                 "######################################");
     }
 
@@ -368,7 +368,7 @@ public class Printer {
             System.out.println("Nessuna partita disponibile! Crea una nuova partita con il comando 'create'!");
         } else {
             for (LobbyDisplayInfo lobby : lobbies) {
-                System.out.println("Nome: " + lobby.getLobbyName() + " | " + lobby.getNumPlayers() + "/" + lobby.getNumPlayersChosen() + " | " + "Stato: " + Color.BRIGHT_PURPLE_TEXT + lobby.isGameStarted() + Color.NO_COLOR);
+                System.out.println("Nome: " + lobby.getLobbyName() + " | " + lobby.getNumPlayers() + "/" + lobby.getNumPlayersChosen() + " | " + "Stato: " + TextColor.BRIGHT_PURPLE_TEXT + lobby.isGameStarted() + TextColor.NO_COLOR);
             }
         }
     }
@@ -381,9 +381,9 @@ public class Printer {
      */
     void showUsernameResponse(boolean successful, String username) {
         if (successful) {
-            System.out.println("Username cambiato in " + Color.CYANTEXT + username + Color.NO_COLOR + "!");
+            System.out.println("Username cambiato in " + TextColor.CYANTEXT + username + TextColor.NO_COLOR + "!");
         } else {
-            System.out.println("Username " + Color.CYANTEXT + username + Color.NO_COLOR + " già in uso! Riprova con un altro username!");
+            System.out.println("Username " + TextColor.CYANTEXT + username + TextColor.NO_COLOR + " già in uso! Riprova con un altro username!");
         }
     }
 
@@ -464,7 +464,7 @@ public class Printer {
      */
     void showNewAdmin(String old_admin, String new_admin) {
         System.out.println("\nIl vecchio admin " + old_admin + " è stato rimosso");
-        System.out.println("Il nuovo admin è " + Color.MAGENTATEXT + new_admin + Color.NO_COLOR);
+        System.out.println("Il nuovo admin è " + TextColor.MAGENTATEXT + new_admin + TextColor.NO_COLOR);
     }
 
     /**
@@ -475,7 +475,7 @@ public class Printer {
         System.out.println("Lista dei giocatori nella lobby:");
         for (String client : clients) {
             if (client.equals(clients.get(0)))
-                System.out.print(Color.MAGENTATEXT + client + Color.NO_COLOR + "\t");
+                System.out.print(TextColor.MAGENTATEXT + client + TextColor.NO_COLOR + "\t");
             else {
                 System.out.print(client + "\t");
             }
@@ -534,7 +534,7 @@ public class Printer {
     public void showReconnection(GameView model, String content, PersonalGoalCard personalGoal) {
         System.out.println();
         System.out.println(content);
-        System.out.println(Color.BRIGHT_RED_TEXT + "RIEPILOGO DELLA PARTITA:" + Color.NO_COLOR);
+        System.out.println(TextColor.BRIGHT_RED_TEXT + "RIEPILOGO DELLA PARTITA:" + TextColor.NO_COLOR);
 
         showNewTurn(model.getCurrentPlayer().getUsername());
         showBookshelves(model.getPlayers());
@@ -545,14 +545,14 @@ public class Printer {
     public void printChatMessage(ChatMessage message) {
         String prefix = "";
         if(message.getReceiver() != null){
-            prefix = Color.BRIGHT_RED_TEXT +"PRIVATE MESSAGE FROM " + Color.NO_COLOR;
+            prefix = TextColor.BRIGHT_RED_TEXT +"PRIVATE MESSAGE FROM " + TextColor.NO_COLOR;
         }
-        System.out.println(prefix + Color.GOLD_TEXT + message.getSender() + Color.NO_COLOR + "\t" + message.getContent());
+        System.out.println(prefix + TextColor.GOLD_TEXT + message.getSender() + TextColor.NO_COLOR + "\t" + message.getContent());
     }
 
     public void printChat(ArrayList<ChatMessage> chat) {
         System.out.println();
-        System.out.println(Color.BRIGHT_RED_TEXT + "CHAT DI GIOCO - SCRIVI UN MESSAGGIO E PREMI INVIO PER INVIARLO - /quit PER USCIRE" + Color.NO_COLOR);
+        System.out.println(TextColor.BRIGHT_RED_TEXT + "CHAT DI GIOCO - SCRIVI UN MESSAGGIO E PREMI INVIO PER INVIARLO - /quit PER USCIRE" + TextColor.NO_COLOR);
         for (ChatMessage message : chat) {
             printChatMessage(message);
         }

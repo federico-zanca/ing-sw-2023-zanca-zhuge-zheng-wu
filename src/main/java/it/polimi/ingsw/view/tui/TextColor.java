@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.tui;
 
-public enum Color {
+public enum TextColor {
     //pickable colors
     RED("\033[51;38;5;255;48;5;160m"),      // RED
     FUCSIA("\033[51;38;5;255;48;5;199m"),      // FUCSIA
@@ -38,7 +38,7 @@ public enum Color {
 
     private final String color;
 
-    Color(String color){
+    TextColor(String color){
         this.color=color;
     }
 
