@@ -218,28 +218,28 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     public void changeLobbyNumOfPlayers(Client client, int chosenNum){
         if( chosenNum > GameController.MAX_PLAYERS){
             try {
-                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
+                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS, chosenNum));
                 //client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
             } catch (RemoteException e) {
                 System.err.println("Unable to send ChangeNumOfPlayerResponse message");
             }
         } else if (chosenNum < GameController.MIN_PLAYERS){
             try {
-                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
+                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS, chosenNum));
                 //client.update(new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
             } catch (RemoteException e) {
                 System.err.println("Unable to send ChangeNumOfPlayerResponse message");
             }
         } else if (chosenNum < connectedClients.get(client).getLobby().getInLobbyClients().size()){
             try {
-                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
+                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa", chosenNum));
                 //client.update(new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
             } catch (RemoteException e) {
                 System.err.println("Unable to send ChangeNumOfPlayerResponse message");
             }
         } else {
             connectedClients.get(client).getLobby().changeChosenNumOfPlayers(chosenNum);
-            getLobbyOfClient(client).sendToAll(new ChangeNumOfPlayerResponse(true, "\nNumero di giocatori della partita cambiato a " + chosenNum));
+            getLobbyOfClient(client).sendToAll(new ChangeNumOfPlayerResponse(true, "\nNumero di giocatori della partita cambiato a " + chosenNum,chosenNum));
         }
     }
 

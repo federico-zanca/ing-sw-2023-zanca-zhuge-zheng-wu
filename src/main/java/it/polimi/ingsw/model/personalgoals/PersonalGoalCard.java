@@ -15,12 +15,14 @@ public class PersonalGoalCard implements Serializable {
     public static final int Rows=6;
     public static final int Columns=5;
     protected ItemType[][] objective;
+    private int identificator;
 
     /**
      * Constructor of PersonalGoalCard
      * @param n identificator of PersonalGoalCard to create
      */
     public PersonalGoalCard(int n){
+        this.identificator = n;
         objective = new ItemType[Rows][Columns];
         for(int i=0; i<Rows; i++){
             for(int j=0; j<Columns; j++){
@@ -47,12 +49,16 @@ public class PersonalGoalCard implements Serializable {
      * @param other
      */
     public PersonalGoalCard(PersonalGoalCard other) {
+        this.identificator = other.getIdentificator();
         this.objective = new ItemType[Rows][Columns];
         for (int i = 0; i < Rows; i++) {
             for (int j = 0; j < Columns; j++) {
                 this.objective[i][j] = other.objective[i][j];
             }
         }
+    }
+    public int getIdentificator(){
+        return identificator;
     }
 
 
