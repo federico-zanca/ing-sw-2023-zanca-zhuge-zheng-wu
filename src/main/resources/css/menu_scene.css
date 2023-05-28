@@ -20,3 +20,7 @@
     -fx-effect: dropshadow(gaussian, #f2e0d6, 20, 0.3, 0, 0);
     -fx-cursor: hand;
 }
+.button{
+        -fx-font-family: 'Curlz MT';
+        -fx-font-size: 17;
+}

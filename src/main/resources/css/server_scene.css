@@ -2,3 +2,7 @@
     -fx-background-image: url("../images/Publisher_material/Display_1.jpg");
     -fx-background-size: stretch;
 }
+.mainButton{
+        -fx-font-family: 'Curlz MT';
+        -fx-font-size: 36;
+}

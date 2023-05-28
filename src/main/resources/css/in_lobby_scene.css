@@ -1,3 +1,15 @@
 .startGameButton{
     -fx-background-color: #5b3f0e;
 }
+.mainButton{
+        -fx-font-family: 'Curlz MT';
+        -fx-font-size: 36;
+}
+.labelLobbyName{
+        -fx-font-family: 'Curlz MT';
+        -fx-font-size: 36;
+}
+.labelNumPlayer{
+        -fx-font-family: 'Curlz MT';
+        -fx-font-size: 18;
+}

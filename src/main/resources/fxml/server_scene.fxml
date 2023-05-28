@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -8,10 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" stylesheets="@../css/server_scene.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ServerSceneController">
+<AnchorPane prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ServerSceneController">
   <children>
-     <Button fx:id="Unisciti" alignment="CENTER" contentDisplay="CENTER" layoutX="517.0" layoutY="265.0" maxHeight="-Infinity" mnemonicParsing="false" onAction="#joinLobby" prefHeight="70.0" prefWidth="266.0" style="-fx-background-color: #8B4513;" text="Unisciti" textAlignment="CENTER" textFill="WHITE">
+     <Button fx:id="Unisciti" alignment="CENTER" contentDisplay="CENTER" layoutX="517.0" layoutY="265.0" maxHeight="-Infinity" mnemonicParsing="false" onAction="#joinLobby" prefHeight="70.0" prefWidth="266.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Unisciti" textAlignment="CENTER" textFill="WHITE">
         <font>
            <Font name="Curlz MT" size="36.0" />
         </font>
@@ -29,7 +29,7 @@
             <Font name="Arial Black" size="14.0" />
          </font>
       </Button>
-     <Button fx:id="CreateGame" layoutX="517.0" layoutY="439.0" mnemonicParsing="false" onAction="#createLobby" prefHeight="70.0" prefWidth="266.0" style="-fx-background-color: #8B4513;" text="Crea Partita" textFill="WHITE">
+     <Button fx:id="CreateGame" layoutX="517.0" layoutY="439.0" mnemonicParsing="false" onAction="#createLobby" prefHeight="70.0" prefWidth="266.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Crea Partita" textFill="WHITE">
          <font>
             <Font name="Curlz MT" size="36.0" />
          </font>
@@ -46,4 +46,8 @@
       <TextField fx:id="newLobbyName" layoutX="517.0" layoutY="382.0" onKeyPressed="#enterCreateLobby" prefHeight="50.0" prefWidth="265.0" promptText="Enter New Lobby Name" />
 
                     </children>
+   <stylesheets>
+      <URL value="@../css/server_scene.css" />
+      <URL value="@../css/fontstyle.css" />
+   </stylesheets>
 </AnchorPane>
