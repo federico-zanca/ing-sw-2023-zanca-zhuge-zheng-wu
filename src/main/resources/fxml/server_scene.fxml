@@ -8,7 +8,7 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
+<?import javafx.scene.text.Text?>
 <AnchorPane prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ServerSceneController">
   <children>
      <Button fx:id="Unisciti" alignment="CENTER" contentDisplay="CENTER" layoutX="517.0" layoutY="265.0" maxHeight="-Infinity" mnemonicParsing="false" onAction="#joinLobby" prefHeight="70.0" prefWidth="266.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Unisciti" textAlignment="CENTER" textFill="WHITE">
@@ -44,8 +44,13 @@
       </Label>
       <ComboBox fx:id="lobbySelectBox" layoutX="517.5" layoutY="206.0" onMouseClicked="#lobbyList" prefHeight="50.0" prefWidth="265.0" promptText="Select Lobby" />
       <TextField fx:id="newLobbyName" layoutX="517.0" layoutY="382.0" onKeyPressed="#enterCreateLobby" prefHeight="50.0" prefWidth="265.0" promptText="Enter New Lobby Name" />
-
-                    </children>
+      <Text fx:id="error" fill="RED" layoutX="803.0" layoutY="315.0" visible="false" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="250.93670654296875">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Text>
+    
+  </children>
    <stylesheets>
       <URL value="@../css/server_scene.css" />
       <URL value="@../css/fontstyle.css" />

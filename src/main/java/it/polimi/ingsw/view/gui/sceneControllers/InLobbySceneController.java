@@ -16,6 +16,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -33,6 +34,8 @@ public class InLobbySceneController implements Controller{
     private Button startGameButton;
     @FXML
     private Button exitLobbyButton;
+    @FXML
+    private Text error;
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
@@ -73,63 +76,46 @@ public class InLobbySceneController implements Controller{
 
     private void handleNumPlayersChange(Integer newValue) {
         messageHandler.notifyObservers(new ChangeNumOfPlayersRequest(newValue));
-        Platform.runLater(() -> {
-            String error = gui.getError();
-            if (!error.isEmpty()) {
-                new Alert(Alert.AlertType.ERROR, error).showAndWait();
-                gui.setError("");
-            } else {
-                numPlayersSpinner.getValueFactory().setValue(newValue);
-            }
-        });
+    }
+    public void setSpinnerValue(Integer value){
+        System.out.println("im being called "+ value);
+        numPlayersSpinner.getValueFactory().setValue(value);
+        error.setVisible(false);
+    }
+    public void setSpinner(){
+        numPlayersSpinner.setDisable(true);
     }
 
     public void startGame(){
         messageHandler.notifyObservers(new StartGameRequest());
-        checkForErrors();
     }
 
-    private void checkForErrors() {
-        Platform.runLater(()->{
-            if(Objects.equals(gui.getError(), "Non sei l'admin di questa lobby! Solo l'admin può usare questo comando.")){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText(gui.getError());
-                alert.showAndWait();
-            }else if(Objects.equals(gui.getError(),"Non ci sono le condizioni per iniziare la partita!")){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText(gui.getError());
-                alert.showAndWait();
-            }
-            gui.setError("");
-        });
+    public void setError(String error) {
+        this.error.setText(error);
+        this.error.setVisible(true);
     }
 
     public void exitLobby(){
         messageHandler.notifyObservers(new ExitLobbyRequest());
     }
     public void setPlayerNames(ArrayList<String> allPlayerNames){
-        Platform.runLater(()->{
-            playerNames.getChildren().clear();
-            for (int i = 0; i < allPlayerNames.size(); i++) {
-                Label label = new Label(allPlayerNames.get(i));
-                if (i == 0) {
-                    label.setStyle("-fx-font-weight: bold; -fx-text-fill: red;");
-                }
-                else {
-                    label.setStyle("-fx-text-fill: yellow;");
-                }
-                label.setFont(Font.font("System", FontWeight.NORMAL, 18));
-                playerNames.getChildren().add(label);
+        playerNames.getChildren().clear();
+        for (int i = 0; i < allPlayerNames.size(); i++) {
+            Label label = new Label(allPlayerNames.get(i));
+            if (i == 0) {
+                label.setStyle("-fx-font-weight: bold; -fx-text-fill: red;");
             }
-
-        });
+            else {
+                label.setStyle("-fx-text-fill: yellow;");
+            }
+            label.setFont(Font.font("System", FontWeight.NORMAL, 18));
+            playerNames.getChildren().add(label);
+        }
     }
     public void setAdminName(String username){
-        Platform.runLater(()->{
-            playerNames.getChildren().clear();
-            Label label = new Label(username);
-            label.setStyle("-fx-font-weight: regular;-fx-font-style: italic; -fx-text-fill: #000000; -fx-font-size: 18; -fx-text-alignment: left; -fx-pref-width: 600;-fx-pref-height: 40;");
-            playerNames.getChildren().add(label);
-        });
+        playerNames.getChildren().clear();
+        Label label = new Label(username);
+        label.setStyle("-fx-font-weight: regular;-fx-font-style: italic; -fx-text-fill: #000000; -fx-font-size: 18; -fx-text-alignment: left; -fx-pref-width: 600;-fx-pref-height: 40;");
+        playerNames.getChildren().add(label);
     }
 }

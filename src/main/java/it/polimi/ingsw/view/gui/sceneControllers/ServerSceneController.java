@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -32,6 +33,14 @@ public class ServerSceneController implements Controller{
     private Button Esci;
     @FXML
     private Button CreateGame;
+    @FXML
+    private Text error;
+    @FXML
+    void enterCreateLobby(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            createLobby();
+        }
+    }
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
@@ -54,7 +63,6 @@ public class ServerSceneController implements Controller{
     public void lobbyList(){
         messageHandler.notifyObservers(new LobbyListRequest());
     }
-
     public void showLobbies(ArrayList<LobbyDisplayInfo> lobbies){
         ArrayList<String> lobbyNames = new ArrayList<>();
         for (LobbyDisplayInfo lobby : lobbies) {
@@ -62,21 +70,18 @@ public class ServerSceneController implements Controller{
         }
         lobbySelectBox.setItems(FXCollections.observableList(lobbyNames));
     }
-
     public void joinLobby(){
         messageHandler.setMyLobby(lobbySelectBox.getValue());
         messageHandler.notifyObservers(new JoinLobbyRequest(lobbySelectBox.getValue()));
     }
     public void createLobby(){
+        if(newLobbyName.getText() == null){
+            setError("La lobby non può avere nome vuoto!");
+            return;
+        }
         if(inputValidator.isValidUsername(newLobbyName.getText())){
             messageHandler.setMyLobby(newLobbyName.getText());
             messageHandler.notifyObservers(new CreateLobbyRequest(newLobbyName.getText()));
-        }
-    }
-    @FXML
-    void enterCreateLobby(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-            createLobby();
         }
     }
     public void changeName(){
@@ -103,5 +108,9 @@ public class ServerSceneController implements Controller{
                 alert.showAndWait();
             }
         });
+    }
+    public void setError(String error){
+        this.error.setText(error);
+        this.error.setVisible(true);
     }
 }

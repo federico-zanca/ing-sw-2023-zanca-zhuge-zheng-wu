@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.Double?>
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.effect.Bloom?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Polygon?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <content>
       <AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0">
          <children>
@@ -144,11 +131,7 @@
                         <InnerShadow />
                      </effect>
                   </Rectangle>
-                  <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/personal_goal_cards/front_EMPTY.jpg" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
                   <Label fx:id="namePlayerOnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
                      <font>
                         <Font name="Arial" size="12.0" />
@@ -260,7 +243,7 @@
                         <Font name="Arial Black" size="12.0" />
                      </font>
                   </Label>
-                  <HBox fx:id="chatBox" layoutX="343.0" layoutY="676.0" prefHeight="100.0" prefWidth="200.0" />
+                  <VBox fx:id="chatBox" layoutX="343.0" layoutY="676.0" prefHeight="100.0" prefWidth="200.0" />
                </children>
             </Pane>
             <Pane layoutX="320.0" layoutY="760.0" prefHeight="540.0" prefWidth="500.0">

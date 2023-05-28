@@ -2,10 +2,12 @@ package it.polimi.ingsw.view.gui.sceneControllers;
 
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.gamemessage.DrawTilesMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertInfoMessage;
@@ -51,13 +53,14 @@ public class GameScene2PlayersController implements Controller {
     private Bookshelf bookshelf;
     private final List<String> messageHistory = new LinkedList<>();
     private boolean isExpanded = false;
-    private final int collapsedHeight = 40;
+    private final int collapsedHeight = 20;
     private final int expandedHeight = 200;
-    private TextField inputField = new TextField();;
-    private final FlowPane chatMessages = new FlowPane();
-    private VBox chatContainer = new VBox();
+    private final TextField inputField = new TextField();
+    private final ScrollPane chatScrollPane = new ScrollPane();
+    private final VBox chatMessages = new VBox();
+    private double chatMessagesHeight = 0;
     @FXML
-    private HBox chatBox;
+    private VBox chatBox;
     @FXML
     private AnchorPane root;
     @FXML
@@ -125,32 +128,38 @@ public class GameScene2PlayersController implements Controller {
         addMessage(prefix + messageContent);
         Label label = new Label(prefix + messageContent);
         label.setTextFill(textColor);
-        label.setMaxWidth(chatMessages.getPrefWrapLength());
+        label.setMaxWidth(chatMessages.getPrefWidth());
         label.setWrapText(true);
         chatMessages.getChildren().add(label);
+        chatMessagesHeight += label.getHeight();
         if (isExpanded) {
             setChatTexts();
         }
     }
     private void startChatting(){
         isExpanded = true;
-        chatBox.setPrefHeight(expandedHeight);
-        inputField.setAlignment(Pos.BOTTOM_LEFT);
         setChatTexts();
+        chatBox.setPrefHeight(expandedHeight);
+        chatBox.getChildren().add(chatScrollPane);
+        chatBox.getChildren().add(inputField);
+        setInputField();
     }
     private void setChatTexts(){
-        chatContainer.getChildren().remove(chatMessages);
-        chatBox.getChildren().remove(chatContainer);
-        setInputField();
-        chatMessages.setOrientation(Orientation.VERTICAL); // stack messages vertically
-        //chatMessages.setPrefWrapLength(0); // allow flowpane to wrap content horizontally
-        //chatMessages.setVgap(10); // set vertical spacing between messages
-        chatContainer.getChildren().add(chatMessages);
-        chatBox.getChildren().add(chatContainer);
+        if(chatBox.getChildren().size() == 1){
+            chatBox.getChildren().remove(inputField);
+            chatScrollPane.vvalueProperty().bind(chatMessages.heightProperty());
+            chatScrollPane.setStyle("-fx-background-color: rgba(128,128,128,0.5);");
+            chatMessages.setStyle("-fx-background-color: rgba(128,128,128,0.5);");
+            chatScrollPane.setContent(chatMessages);
+            chatScrollPane.prefHeightProperty().bind(chatMessages.heightProperty().add(20));
+            chatScrollPane.setFitToHeight(true);
+            chatScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            chatScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        }
     }
 
     private void setInputField() {
-        inputField.setPrefWidth(chatBox.getWidth());
+        inputField.setAlignment(Pos.BOTTOM_LEFT);
         inputField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 String message = inputField.getText();
@@ -174,16 +183,29 @@ public class GameScene2PlayersController implements Controller {
     }
     private void collapse() {
         isExpanded = false;
-        chatBox.setPrefHeight(collapsedHeight);
-        chatBox.getChildren().remove(chatContainer);
+        chatBox.setPrefHeight(expandedHeight);
+        //chatContainer.getChildren().remove(chatMessages);
+        chatBox.getChildren().removeAll(chatScrollPane);
     }
     public void addMessage(String message) {
         messageHistory.add(message);
-
     }
     public void sendMessage(String message, String recipientusername){
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
+    }
+    private void setChatBox() {
+        chatBox.setPrefSize(400,expandedHeight);
+        chatBox.setAlignment(Pos.BOTTOM_CENTER);
+        inputField.setOnMouseClicked(event -> {
+            if (!isExpanded) {
+                startChatting();
+            } else {
+                collapse();
+            }
+        });
+        chatBox.getChildren().add(inputField);
+        inputField.setPrefWidth(400);
     }
     @FXML
     void clickedHand(MouseEvent event){
@@ -193,6 +215,7 @@ public class GameScene2PlayersController implements Controller {
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
+
     @Override
     public void setGui(GUI gui) {
         this.gui = gui;
@@ -216,25 +239,9 @@ public class GameScene2PlayersController implements Controller {
         initSelectCol();
     }
 
-    private void setChatBox() {
-        chatBox.setStyle("-fx-background-color: rgba(128,128,128,0.5);");
-        chatBox.setPrefSize(400,collapsedHeight);
-        chatBox.setPrefHeight(collapsedHeight);
-        chatBox.setAlignment(Pos.BOTTOM_CENTER);
-        chatBox.setOnMouseClicked(event -> {
-            if (!isExpanded) {
-                startChatting();
-            } else {
-                collapse();
-            }
-        });
-        chatContainer.getChildren().add(inputField);
-    }
-
     @FXML
     void clickedCol(MouseEvent event) {
         if(state.equals(PlayerState.ACTIVE)) {
-            translateTriangle(selectCol1);
             int colNum = (int) ((Polygon) event.getSource()).getUserData();
             System.out.println("Clicked column: " + colNum);
             if (inputValidator.columnHasLessSpace(colNum, ((InsertInfoMessage) messageHandler.getLastMessage()).getEnabledColumns())) {
@@ -418,5 +425,28 @@ public class GameScene2PlayersController implements Controller {
     public void clearTiles(){
         tilesToInsert.clear();
         tilesToDraw.clear();
+    }
+    public void setPersonalGoalCardImage(){
+        URL url;
+        Image image;
+        int num = gui.getPersonalGoalCard().getIdentificator();
+        url = getClass().getResource("/images/personal_goal_cards/Personal_Goals"+num+".png");
+        assert url != null;
+        image = new Image(url.toString());
+        myPersonalGoal.setImage(image);
+        myPersonalGoal.setVisible(true);
+    }
+    public void setCommonGoals(ArrayList<CommonGoalCard> commonGoals){
+        URL url;
+        Image image;
+        int num = 1;
+        url = getClass().getResource("/images/common_goal_cards/"+num+".jpg");
+        assert url != null;
+        image = new Image(url.toString());
+        firstCommonGoal.setImage(image);
+        url = getClass().getResource("/images/common_goal_cards/"+num+".jpg");
+        assert url != null;
+        image = new Image(url.toString());
+        secondCommonGoal.setImage(image);
     }
 }

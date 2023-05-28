@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.view.gui.sceneControllers.*;
 import it.polimi.ingsw.view.tui.ActionType;
@@ -38,13 +39,14 @@ public class GUI extends Application{
     private final HashMap<String,Scene> scenes;
     private final MessageHandler messageHandler;
     private GuiPhase phase;
-    private String error;
+    private PersonalGoalCard personalGoalCard;
     public GUI() throws RemoteException, NotBoundException {
         controllers = new HashMap<>();
         fxml = new HashMap<>();
         scenes = new HashMap<>();
         phase = GuiPhase.LOGIN;
         messageHandler = new MessageHandler(this);
+        personalGoalCard = null;
     }
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
@@ -93,7 +95,7 @@ public class GUI extends Application{
         currentStage.setScene(currentScene);
         currentStage.setWidth(1280d);
         currentStage.setHeight(720d);
-        currentStage.setResizable(false);
+        currentStage.setResizable(true);
         currentStage.show();
     }
 
@@ -120,23 +122,38 @@ public class GUI extends Application{
         return scenes.get(s);
     }
 
-    public String getError() {
-        return error;
-    }
-
     public void setError(String error) {
-        this.error = error;
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof MenuSceneController){
+            Platform.runLater(()->{
+                ((MenuSceneController)currentController).setError(error);
+            });
+        }
+        if(currentController instanceof ServerSceneController){
+            Platform.runLater(()->{
+                ((ServerSceneController)currentController).setError(error);
+            });
+        }
+        if(currentController instanceof InLobbySceneController){
+            Platform.runLater(()->{
+                ((InLobbySceneController)currentController).setError(error);
+            });
+        }
     }
     public void setAllPlayersNames(ArrayList<String> allPlayersNames){
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof InLobbySceneController){
-            ((InLobbySceneController)currentController).setPlayerNames(allPlayersNames);
+            Platform.runLater(()->{
+                ((InLobbySceneController)currentController).setPlayerNames(allPlayersNames);
+            });
         }
     }
     public void setAdminName(String username){
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof InLobbySceneController){
-            ((InLobbySceneController)currentController).setAdminName(username);
+            Platform.runLater(()-> {
+                ((InLobbySceneController) currentController).setAdminName(username);
+            });
         }
     }
 
@@ -156,7 +173,9 @@ public class GUI extends Application{
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setCommonGoals(model.getCommonGoals());
                 ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard());
+                ((GameScene2PlayersController)currentController).setPersonalGoalCardImage();
             });
         }
     }
@@ -228,6 +247,30 @@ public class GUI extends Application{
                 ((GameScene2PlayersController)currentController).setChatMessage(message);
             });
         }
+    }
+    public void setSpinnerValue(Integer value) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof InLobbySceneController){
+            Platform.runLater(()-> {
+                ((InLobbySceneController) currentController).setSpinnerValue(value);
+            });
+        }
+    }
+    public void setSpinnerDisable() {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof InLobbySceneController){
+            Platform.runLater(()-> {
+                ((InLobbySceneController) currentController).setSpinner();
+            });
+        }
+    }
+
+    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
+        this.personalGoalCard = personalGoalCard;
+    }
+
+    public PersonalGoalCard getPersonalGoalCard() {
+        return personalGoalCard;
     }
 }
 

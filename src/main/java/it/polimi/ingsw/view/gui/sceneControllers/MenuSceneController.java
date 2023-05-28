@@ -14,6 +14,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
+import java.util.Objects;
+
 public class MenuSceneController implements Controller{
     private MessageHandler messageHandler;
     private GUI gui;
@@ -47,14 +49,16 @@ public class MenuSceneController implements Controller{
         }
     }
     public void checkUsername(){
+        if(usernameField.getText() == null){
+            setError("Il tuo username non può avere nome vuoto!");
+            return;
+        }
         if(!inputValidator.isValidUsername(usernameField.getText())){
             error.setVisible(true);
             return;
         }else{
             messageHandler.setMyUsername(usernameField.getText());
             messageHandler.notifyObservers(new LoginRequest(usernameField.getText()));
-            Platform.runLater(this::checkForError);
-            //TODO spostare le due righe nella messageHandler
         }
     }
     @FXML
@@ -63,10 +67,9 @@ public class MenuSceneController implements Controller{
             checkUsername();
         }
     }
-    public void checkForError(){
-        error.setText(gui.getError());
-        gui.setError("");
-        error.setVisible(true);
+    public void setError(String error){
+        this.error.setText(error);
+        this.error.setVisible(true);
     }
     public void quitGame(){
         System.exit(0);

@@ -22,11 +22,8 @@ public class MessageHandler extends VirtualView implements View {
     private final GUI gui;
     ArrayList<LobbyDisplayInfo> lobbies;
     private String myLobby = "";
-
     private String myUsername = "";
-
     private GameMessage lastMessage;
-
     private PersonalGoalCard personalGoalCard;
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
@@ -42,7 +39,6 @@ public class MessageHandler extends VirtualView implements View {
             gui.changeScene();
             gui.setAdminName(myUsername);
         }
-        //TODO settare error in caso di fallimento
     }
 
     @Override
@@ -173,7 +169,7 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onPersonalGoalCardMessage(PersonalGoalCardMessage personalGoalCardMessage) {
         lastMessage = personalGoalCardMessage;
-        setPersonalGoalCard(personalGoalCardMessage.getPersonalGoalCard());
+        gui.setPersonalGoalCard(personalGoalCardMessage.getPersonalGoalCard());
     }
 
     @Override
@@ -194,7 +190,7 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onChangeNumOfPlayerResponse(ChangeNumOfPlayerResponse changeNumOfPlayerResponse) {
         if(changeNumOfPlayerResponse.isSuccessful()){
-            gui.setError("");
+            gui.setSpinnerValue(changeNumOfPlayerResponse.getChosenNum());
         }else{
             gui.setError(changeNumOfPlayerResponse.getContent());
         }
@@ -226,6 +222,7 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onNotAdminMessage(NotAdminMessage notAdminMessage) {
+        gui.setSpinnerDisable();
         gui.setError("Non sei l'admin di questa lobby! Solo l'admin può usare questo comando.");
     }
 
