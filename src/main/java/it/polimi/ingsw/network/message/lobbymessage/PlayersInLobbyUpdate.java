@@ -1,11 +1,11 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
 
-public class PlayersInLobbyUpdate extends LobbyMessage implements MessageToClient {
+public class PlayersInLobbyUpdate extends LobbyMessage implements MsgToClient {
     private final ArrayList<String> allPlayersUsernames;
     private final String content;
 

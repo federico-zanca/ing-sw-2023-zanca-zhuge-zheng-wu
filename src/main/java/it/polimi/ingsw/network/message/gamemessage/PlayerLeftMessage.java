@@ -1,9 +1,9 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class PlayerLeftMessage extends GameMessage implements MessageToClient {
+public class PlayerLeftMessage extends GameMessage implements MsgToClient {
     private final String content;
 
     public PlayerLeftMessage(String username, String content) {

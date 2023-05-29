@@ -2,13 +2,13 @@ package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.Arrays;
 
 
-public class BoardMessage extends GameMessage implements MessageToClient {
+public class BoardMessage extends GameMessage implements MsgToClient {
     private final Square[][] board;
 
     /**

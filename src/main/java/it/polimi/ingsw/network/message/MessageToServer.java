@@ -1,8 +1,13 @@
 package it.polimi.ingsw.network.message;
 
-import it.polimi.ingsw.controller.PreGameController;
-import it.polimi.ingsw.distributed.Client;
+public abstract class MessageToServer implements MsgToServer{
+    MessageType type;
 
-public interface MessageToServer {
-    void execute(Client client, PreGameController preGameController);
+    public MessageToServer(MessageType type){
+        super();
+        this.type = type;
+    }
+    public MessageType getType(){
+        return type;
+    }
 }

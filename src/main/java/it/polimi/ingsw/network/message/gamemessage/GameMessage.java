@@ -1,10 +1,10 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
 import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public abstract class GameMessage extends Message implements MessageToClient {
+public abstract class GameMessage extends Message implements MsgToClient {
 
     private final String username;
 

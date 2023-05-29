@@ -1,12 +1,11 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.LinkedHashMap;
 
-public class EndGameMessage extends GameMessage implements MessageToClient {
+public class EndGameMessage extends GameMessage implements MsgToClient {
     private final LinkedHashMap<String, Integer> ranking;
 
     public EndGameMessage(String username, LinkedHashMap<String, Integer> ranking) {

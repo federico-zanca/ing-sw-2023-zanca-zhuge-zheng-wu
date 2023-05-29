@@ -1,12 +1,11 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
-import it.polimi.ingsw.distributed.Client;
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
 
-public class PlayerListResponse extends LobbyMessage implements MessageToClient {
+public class PlayerListResponse extends LobbyMessage implements MsgToClient {
     private final ArrayList<String> clients;
 
     public PlayerListResponse(ArrayList<String> clients) {

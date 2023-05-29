@@ -1,12 +1,9 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
-import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
-import it.polimi.ingsw.network.message.lobbymessage.LobbyMessageType;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class NewAdminMessage extends LobbyMessage implements MessageToClient {
+public class NewAdminMessage extends LobbyMessage implements MsgToClient {
     private final String old_admin;
     private final String new_admin;
 

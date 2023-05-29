@@ -1,7 +1,13 @@
 package it.polimi.ingsw.network.message;
 
-import it.polimi.ingsw.view.View;
+public abstract class MessageToClient extends Message implements MsgToClient{
+    MessageType type;
 
-public interface MessageToClient {
-    void execute(View view);
+    public MessageToClient(MessageType type){
+        super();
+        this.type = type;
+    }
+    public MessageType getType(){
+        return type;
+    }
 }

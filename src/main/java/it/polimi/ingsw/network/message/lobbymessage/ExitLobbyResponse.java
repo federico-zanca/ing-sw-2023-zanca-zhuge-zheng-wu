@@ -1,10 +1,9 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class ExitLobbyResponse extends LobbyMessage implements MessageToClient {
+public class ExitLobbyResponse extends LobbyMessage implements MsgToClient {
     private final boolean successful;
     private final String content;
 

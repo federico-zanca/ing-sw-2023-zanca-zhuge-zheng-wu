@@ -1,11 +1,9 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class LastTurnMessage extends GameMessage implements MessageToClient {
+public class LastTurnMessage extends GameMessage implements MsgToClient {
     private final String currentPlayer;
 
     public LastTurnMessage(String username, String currentPlayer) {

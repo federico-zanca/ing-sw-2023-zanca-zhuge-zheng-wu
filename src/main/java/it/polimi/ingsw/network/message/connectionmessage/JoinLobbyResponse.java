@@ -1,12 +1,12 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.model.enumerations.JoinType;
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
 
-public class JoinLobbyResponse extends ConnectionMessage implements MessageToClient {
+public class JoinLobbyResponse extends ConnectionMessage implements MsgToClient {
     private final String content;
     private final ArrayList<String> usernames;
     private final JoinType joinType;

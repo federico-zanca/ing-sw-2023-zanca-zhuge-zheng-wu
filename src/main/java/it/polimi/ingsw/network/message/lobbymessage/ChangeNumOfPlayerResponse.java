@@ -1,9 +1,9 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
-import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class ChangeNumOfPlayerResponse extends LobbyMessage implements MessageToClient {
+public class ChangeNumOfPlayerResponse extends LobbyMessage implements MsgToClient {
 
     private final boolean successful;
     private final String content;
