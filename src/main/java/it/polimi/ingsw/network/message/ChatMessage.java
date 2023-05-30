@@ -8,6 +8,7 @@ public class ChatMessage extends Message{
     private String sender;
 
     public ChatMessage(String content, String recipient){
+        super(MessageType.CHAT_MSG);
         this.content = content;
         this.receiver = recipient;
     }

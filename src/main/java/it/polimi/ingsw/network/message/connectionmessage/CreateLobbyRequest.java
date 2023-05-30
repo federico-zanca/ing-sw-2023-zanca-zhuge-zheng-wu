@@ -2,12 +2,14 @@ package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
+import it.polimi.ingsw.network.message.MessageToServer;
+import it.polimi.ingsw.network.message.MessageType;
 
-public class CreateLobbyRequest extends ConnectionMessage{
+public class CreateLobbyRequest extends MessageToServer {
     private final String lobbyName;
 
     public CreateLobbyRequest(String lobbyName) {
-        super(ConnectionMessageType.CREATE_LOBBY_REQUEST);
+        super(MessageType.CONNECTION_MSG);
         this.lobbyName = lobbyName;
     }
 

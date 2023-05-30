@@ -1,19 +1,27 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class ExitGameResponse extends GameMessage implements MsgToClient {
+public class ExitGameResponse extends MessageToClient {
 
     private final String content;
+    private final String username;
 
     public ExitGameResponse(String username, String content) {
-        super(username, GameMessageType.EXIT_GAME_RESPONSE );
+        super(MessageType.GAME_MSG );
+        this.username = username;
         this.content = content;
     }
 
     public String getContent() {
         return content;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

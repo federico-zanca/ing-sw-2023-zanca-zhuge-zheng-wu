@@ -1,16 +1,18 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
 
-public class PlayersInLobbyUpdate extends LobbyMessage implements MsgToClient {
+public class PlayersInLobbyUpdate extends MessageToClient {
     private final ArrayList<String> allPlayersUsernames;
     private final String content;
 
     public PlayersInLobbyUpdate(ArrayList<String> clientsUsernames, String content) {
-        super(LobbyMessageType.NEW_PLAYER_IN_LOBBY);
+        super(MessageType.LOBBY_MSG);
         this.allPlayersUsernames = clientsUsernames;
         this.content = content ;
     }

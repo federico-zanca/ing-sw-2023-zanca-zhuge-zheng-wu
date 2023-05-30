@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.network.message.MsgToServer;
 import it.polimi.ingsw.view.View;
-
+/*
 public abstract class LobbyMessage extends Message implements MsgToClient, MsgToServer {
     private final LobbyMessageType type;
 
@@ -27,3 +27,5 @@ public abstract class LobbyMessage extends Message implements MsgToClient, MsgTo
         System.err.println("Operation on server not allowed!");
     }
 }
+
+ */

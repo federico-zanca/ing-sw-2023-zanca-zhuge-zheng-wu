@@ -1,11 +1,13 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
-public class NotAdminMessage extends LobbyMessage implements MsgToClient {
+public class NotAdminMessage extends MessageToClient {
     public NotAdminMessage() {
-        super(LobbyMessageType.NOT_ADMIN);
+        super(MessageType.LOBBY_MSG);
     }
 
     @Override

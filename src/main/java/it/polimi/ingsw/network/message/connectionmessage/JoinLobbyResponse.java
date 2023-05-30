@@ -1,12 +1,14 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.model.enumerations.JoinType;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;
 
-public class JoinLobbyResponse extends ConnectionMessage implements MsgToClient {
+public class JoinLobbyResponse extends MessageToClient {
     private final String content;
     private final ArrayList<String> usernames;
     private final JoinType joinType;
@@ -14,7 +16,7 @@ public class JoinLobbyResponse extends ConnectionMessage implements MsgToClient 
     //private final int maxNumClients;
 
     public JoinLobbyResponse(JoinType joinType, String content, ArrayList<String> usernames) {
-        super(ConnectionMessageType.JOIN_LOBBY_RESPONSE);
+        super(MessageType.CONNECTION_MSG);
         this.joinType = joinType;
         this.content = content;
         this.usernames = usernames;

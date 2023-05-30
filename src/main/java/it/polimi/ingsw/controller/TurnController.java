@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.gamemessage.*;
 
 import java.util.*;
@@ -51,18 +53,19 @@ public class TurnController {
         return usernames;
     }
 
-    public void drawPhase(GameMessage message) {
-        if(message.getType()== GameMessageType.DRAW_TILES){
-            DrawTilesMessage m = (DrawTilesMessage) message;
-            if(isDrawHandValid(m.getSquares())){
-                model.drawFromBoard(m.getSquares());
-            }
-            else{
-                System.err.println("Tessere non valide");
-            }
+    public void drawPhase(String senderUsername, MessageToServer message) {
+        DrawTilesMessage m;
+        try{
+             m = (DrawTilesMessage) message;
+        } catch (ClassCastException e) {
+            model.notifyObservers(new ErrorMessage(senderUsername, "Messaggio non valido"));
+            return;
+        }
+        if(isDrawHandValid(m.getSquares())) {
+            model.drawFromBoard(m.getSquares());
         }
         else{
-            model.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
+            System.err.println("Tessere non valide"); //TODO rimpiazza con DrawInfoMessage
         }
         model.prepareForInsertPhase();
     }
@@ -151,20 +154,24 @@ public class TurnController {
      * Inserts the tiles in the hand in the bookshelf
      * @param message Message containing the tiles to insert and where to insert them (column)
      */
-    public void insertPhase(GameMessage message) {
-        if(message.getType()== GameMessageType.INSERT_TILES){
-            InsertTilesMessage m = (InsertTilesMessage) message;
-            if(isInsertHandValid(m.getItems(), m.getColumn())){
-                model.insertTiles(m.getItems(), m.getColumn());
-                lastTurnCondition();
-            }
-            else{
-                System.err.println("Tessere non valide");
-            }
+    public void insertPhase(String senderUsername, MessageToServer message) {
+        InsertTilesMessage m;
+        try{
+            m = (InsertTilesMessage) message;
+        } catch (ClassCastException e) {
+            model.notifyObservers(new ErrorMessage(senderUsername, "Messaggio non valido"));
+            return;
+        }
+        if(isInsertHandValid(m.getItems(), m.getColumn())){
+            model.insertTiles(m.getItems(), m.getColumn());
+            lastTurnCondition();
         }
         else{
-            model.notifyObservers(new ErrorMessage(message.getUsername(), "Messaggio non valido"));
+            System.err.println("Tessere non valide");
+            model.notifyObservers(new ErrorMessage(senderUsername, "Messaggio non valido")); //TODO change error message con un insertInfoMessage
+            return;
         }
+
         model.prepareForRefillPhase();
         calculateCommonGoal();
     }

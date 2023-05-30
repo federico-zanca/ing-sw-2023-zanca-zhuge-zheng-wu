@@ -15,7 +15,7 @@ import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyResponse;
-import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
+//import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.View;
@@ -29,7 +29,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
     private final Printer printer = new Printer();
     private ClientState clientState;
     private ActionType actionType = ActionType.LOGIN;
-    private GameMessage lastMessage;
+    private MessageToClient lastMessage;
     private final Scanner s;
     private String myUsername;
     private PersonalGoalCard personalGoalCard;
@@ -572,8 +572,9 @@ public class TextualUI extends VirtualView implements View, Runnable {
      * Handles a game message.
      * @param message The game message.
      */
-    private void onGameMessage(GameMessage message) {
-        setIsActive(message.getUsername().equals(myUsername));
+    private void onGameMessage(MessageToClient message) {
+        //TODO abilita il comando qui sotto somehow
+        //setIsActive(message.getUsername().equals(myUsername));
         message.execute(this);
         /*
         switch (message.getType()) {
@@ -647,7 +648,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
      * Handles a ConnectionMessage
      * @param message
      */
-    private void onConnectionMessage(ConnectionMessage message) {
+    private void onConnectionMessage(MessageToClient message) {
         message.execute(this);
         /*
         switch (message.getType()){
@@ -681,7 +682,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
      * Handles a LobbyMessage
      * @param message the message to handle
      */
-    private void onLobbyMessage(LobbyMessage message) {
+    private void onLobbyMessage(MessageToClient message) {
         message.execute(this);
         /*
         switch(message.getType()){
@@ -1039,12 +1040,12 @@ public class TextualUI extends VirtualView implements View, Runnable {
 
     @Override
     public void update(Message message) {
-        if (message instanceof GameMessage) {
-            onGameMessage((GameMessage) message);
-        }else if(message instanceof ConnectionMessage){
-            onConnectionMessage((ConnectionMessage) message);
-        } else if (message instanceof LobbyMessage) {
-            onLobbyMessage((LobbyMessage) message);
+        if (message.getType()==MessageType.GAME_MSG) {
+            onGameMessage((MessageToClient) message);
+        }else if(message.getType()==MessageType.CONNECTION_MSG){
+            onConnectionMessage((MessageToClient) message);
+        } else if (message.getType()==MessageType.LOBBY_MSG) {
+            onLobbyMessage((MessageToClient) message);
         } else if (message instanceof ChatMessage) {
             onChatMessage((ChatMessage) message);
         } else
@@ -1053,7 +1054,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
             System.err.println("Ignoring message from server");
         }
     }
-
+    /*
     public GameMessage getLastMessage() {
         return lastMessage;
     }
@@ -1061,6 +1062,8 @@ public class TextualUI extends VirtualView implements View, Runnable {
     public void setLastMessage(GameMessage lastMessage) {
         this.lastMessage = lastMessage;
     }
+
+     */
 
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
@@ -1080,7 +1083,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
             return;
         }
         if(messageText.startsWith("@")) {
-            if (messageText.indexOf(" ") == -1) {
+            if (!messageText.contains(" ")) {
                 System.out.println(TextColor.BRIGHT_RED_TEXT + "Invalid message format!" + TextColor.NO_COLOR);
                 return;
             }

@@ -3,7 +3,7 @@ package it.polimi.ingsw.network.message.gamemessage;
 import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
-
+/*
 public abstract class GameMessage extends Message implements MsgToClient {
 
     private final String username;
@@ -29,3 +29,5 @@ public abstract class GameMessage extends Message implements MsgToClient {
         System.err.println("Operation not allowed!");
     }
 }
+
+ */
