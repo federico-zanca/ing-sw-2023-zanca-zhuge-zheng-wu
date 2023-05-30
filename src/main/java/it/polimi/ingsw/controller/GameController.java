@@ -8,11 +8,8 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.GameNotReadyException;
 import it.polimi.ingsw.model.exceptions.InvalidCommandException;
 import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
-import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
-//import it.polimi.ingsw.network.message.gamemessage.GameMessage;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 
 import java.util.ArrayList;
 import java.util.Random;

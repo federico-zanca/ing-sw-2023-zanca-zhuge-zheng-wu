@@ -7,19 +7,19 @@ import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessage;
-//import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 import it.polimi.ingsw.network.message.gamemessage.PlayerLeftMessage;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerResponse;
-//import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
     private static final int HEARTBEAT_TIMEOUT = 10000;
@@ -131,8 +131,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      */
     public boolean isUsernameAvailable(String username) {
         Client client = getClientByUsername(username);
-        if(client != null)
-            return false;
+        return client == null;
         /*
         for(Lobby l : lobbies){
             if(l.containsAPlayerWithThisUsername(username))
@@ -140,7 +139,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
 
          */
-        return true;
 /*
         for(ClientInfo c : connectedClients.values())
             if(c.getClientID().equals(username))

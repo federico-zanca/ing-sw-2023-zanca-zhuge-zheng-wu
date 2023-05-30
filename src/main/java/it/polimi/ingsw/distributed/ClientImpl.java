@@ -1,10 +1,10 @@
 package it.polimi.ingsw.distributed;
 
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.HeartBeatMessage;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.TextualUI;
-import it.polimi.ingsw.view.VirtualView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;

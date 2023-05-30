@@ -3,7 +3,6 @@ package it.polimi.ingsw.network.message.gamemessage;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.MessageType;
-import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 public class PersonalGoalPointsMessage extends MessageToClient {

@@ -3,10 +3,8 @@ package it.polimi.ingsw.network.message.gamemessage;
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.MessageType;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
 
 import java.util.ArrayList;
 public class InsertTilesMessage extends MessageToServer {

@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.MessageType;
-import it.polimi.ingsw.network.message.MsgToClient;
 import it.polimi.ingsw.view.View;
 
 import java.util.ArrayList;

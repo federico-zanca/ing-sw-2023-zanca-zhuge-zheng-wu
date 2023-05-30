@@ -9,7 +9,10 @@ import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
-import it.polimi.ingsw.network.message.gamemessage.*;
+import it.polimi.ingsw.network.message.gamemessage.AchievedCommonGoalMessage;
+import it.polimi.ingsw.network.message.gamemessage.AdjacentItemsPointsMessage;
+import it.polimi.ingsw.network.message.gamemessage.LastTurnMessage;
+import it.polimi.ingsw.network.message.gamemessage.PersonalGoalPointsMessage;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

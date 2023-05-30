@@ -3,9 +3,8 @@ package it.polimi.ingsw.view.gui.sceneControllers;
 
 import it.polimi.ingsw.network.message.connectionmessage.LoginRequest;
 import it.polimi.ingsw.view.InputValidator;
-import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.gui.GUI;
-import javafx.application.Platform;
+import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -13,8 +12,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
-import java.util.Objects;
 
 public class MenuSceneController implements Controller{
     private MessageHandler messageHandler;

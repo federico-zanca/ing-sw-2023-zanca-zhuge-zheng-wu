@@ -2,26 +2,27 @@ package it.polimi.ingsw.view.tui;
 
 import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.distributed.ClientState;
-import it.polimi.ingsw.model.enumerations.JoinType;
-import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
-import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.*;
+import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
+import it.polimi.ingsw.network.message.ChatMessage;
+import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
-import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
-import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyResponse;
-//import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
-import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
+import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
 
 public class TextualUI extends VirtualView implements View, Runnable {
 

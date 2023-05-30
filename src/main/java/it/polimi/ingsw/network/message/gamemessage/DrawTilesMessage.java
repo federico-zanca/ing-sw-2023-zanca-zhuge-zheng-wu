@@ -1,11 +1,8 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.model.gameboard.Square;
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.MessageType;
 

@@ -9,14 +9,12 @@ import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
-import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.tui.PlayerState;
-import javafx.application.Platform;
-
 
 import java.util.ArrayList;
 

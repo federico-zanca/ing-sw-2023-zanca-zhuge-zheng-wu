@@ -1,5 +1,5 @@
 package it.polimi.ingsw.network.message.gamemessage;
-
+/*
 public enum GameMessageType {
     ERROR,
     LOGINREQUEST,
@@ -27,3 +27,4 @@ public enum GameMessageType {
     PLAYER_LEFT,
     EXIT_GAME_REQUEST
 }
+*/
