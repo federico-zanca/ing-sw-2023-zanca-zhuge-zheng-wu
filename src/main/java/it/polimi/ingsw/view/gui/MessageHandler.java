@@ -4,17 +4,16 @@ import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.MessageToClient;
-import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
-import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.sceneControllers.GuiPhase;
 import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.tui.PlayerState;
+
 
 import java.util.ArrayList;
 
@@ -23,7 +22,7 @@ public class MessageHandler extends VirtualView implements View {
     ArrayList<LobbyDisplayInfo> lobbies;
     private String myLobby = "";
     private String myUsername = "";
-    private MessageToClient lastMessage;
+    private GameMessage lastMessage;
     private PersonalGoalCard personalGoalCard;
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
@@ -92,7 +91,7 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onBoardMessage(BoardMessage boardMessage) {
-        gui.setGameBoard(boardMessage.getBoard());
+        gui.setGameBoard(boardMessage.getBoard(), 0);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setPlayerState(PlayerState.ACTIVE);
         gui.setActionType(ActionType.DRAW_TILES);
         gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
-        gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard());
+        gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard(),drawInfoMessage.getMaxNumItems());
     }
 
     @Override
@@ -237,12 +236,12 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void update(Message message) {
-        if (message.getType()== MessageType.GAME_MSG) {
-            onGameMessage((MessageToClient) message);
-        }else if(message.getType()==MessageType.CONNECTION_MSG){
-            onConnectionMessage((MessageToClient) message);
-        } else if (message.getType()==MessageType.LOBBY_MSG) {
-            onLobbyMessage((MessageToClient) message);
+        if (message instanceof GameMessage) {
+            onGameMessage((GameMessage) message);
+        }else if(message instanceof ConnectionMessage){
+            onConnectionMessage((ConnectionMessage) message);
+        } else if (message instanceof LobbyMessage) {
+            onLobbyMessage((LobbyMessage) message);
         } else if (message instanceof ChatMessage) {
             onChatMessage((ChatMessage) message);
         } else
@@ -256,15 +255,14 @@ public class MessageHandler extends VirtualView implements View {
         gui.setChatMessage(message);
     }
 
-    //TODO fix here
-    private void onConnectionMessage(MessageToClient message) {
+    private void onLobbyMessage(LobbyMessage message) {
         message.execute(this);
     }
 
-    private void onLobbyMessage(MessageToClient message) {
+    private void onConnectionMessage(ConnectionMessage message) {
         message.execute(this);
     }
-    private void onGameMessage(MessageToClient message) {
+    private void onGameMessage(GameMessage message) {
         message.execute(this);
     }
     @Override
@@ -290,7 +288,7 @@ public class MessageHandler extends VirtualView implements View {
     public void setMyUsername(String myUsername) {
         this.myUsername = myUsername;
     }
-    public MessageToClient getLastMessage() {
+    public GameMessage getLastMessage() {
         return lastMessage;
     }
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {

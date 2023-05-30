@@ -53,6 +53,5 @@
   </children>
    <stylesheets>
       <URL value="@../css/server_scene.css" />
-      <URL value="@../css/fontstyle.css" />
    </stylesheets>
 </AnchorPane>
