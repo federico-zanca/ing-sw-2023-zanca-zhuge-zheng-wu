@@ -68,6 +68,5 @@
     </children>
    <stylesheets>
       <URL value="@../css/menu_scene.css" />
-      <URL value="@../css/fontstyle.css" />
    </stylesheets>
 </StackPane>

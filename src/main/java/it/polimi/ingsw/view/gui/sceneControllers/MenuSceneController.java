@@ -5,7 +5,6 @@ import it.polimi.ingsw.network.message.connectionmessage.LoginRequest;
 import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.gui.GUI;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;

@@ -13,7 +13,6 @@ import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.tui.PlayerState;
-import javafx.application.Platform;
 
 
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onBoardMessage(BoardMessage boardMessage) {
-        gui.setGameBoard(boardMessage.getBoard());
+        gui.setGameBoard(boardMessage.getBoard(), 0);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setPlayerState(PlayerState.ACTIVE);
         gui.setActionType(ActionType.DRAW_TILES);
         gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
-        gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard());
+        gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard(),drawInfoMessage.getMaxNumItems());
     }
 
     @Override

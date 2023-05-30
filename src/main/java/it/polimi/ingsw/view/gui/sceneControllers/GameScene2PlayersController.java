@@ -49,6 +49,9 @@ public class GameScene2PlayersController implements Controller {
     private double cellHeight = 46.5;
     private ImageView[][] itemLivRoomCells = new ImageView[Board.DIMENSIONS][Board.DIMENSIONS];
     private Square[][] board;
+    private DropShadow dropShadow = new DropShadow();
+
+    private int maxNumItems;
     private ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
     private Bookshelf bookshelf;
     private final List<String> messageHistory = new LinkedList<>();
@@ -59,6 +62,7 @@ public class GameScene2PlayersController implements Controller {
     private final ScrollPane chatScrollPane = new ScrollPane();
     private final VBox chatMessages = new VBox();
     private double chatMessagesHeight = 0;
+    private TranslateTransition tr = new TranslateTransition();
     @FXML
     private VBox chatBox;
     @FXML
@@ -108,12 +112,33 @@ public class GameScene2PlayersController implements Controller {
     @FXML
     private Button okButton;
     @FXML
-    void translateTriangle (Polygon polyg){
-        TranslateTransition tr = new TranslateTransition();
-        tr.setNode(polyg);
-        tr.setToY(polyg.getLayoutY()+20);
-    }
+    void translateTriangle (MouseEvent event){
+        Polygon polygon = (Polygon) event.getSource();
+        tr.setNode(polygon);
+        tr.setToY(20);
+        tr.play();
 
+    }
+    @FXML
+    void returnTriangle (MouseEvent event){
+        tr.setToY(0);
+        tr.play();
+    }
+    @FXML
+    void clickedCol(MouseEvent event) {
+        if(state.equals(PlayerState.ACTIVE)) {
+            int colNum = (int) ((Polygon) event.getSource()).getUserData();
+            System.out.println("Clicked column: " + colNum);
+            if (inputValidator.columnHasLessSpace(colNum, ((InsertInfoMessage) messageHandler.getLastMessage()).getEnabledColumns())) {
+                return;
+            } else {
+                setActionType(ActionType.NONE);
+                setPlayerState(PlayerState.WATCHING);
+                messageHandler.notifyObservers(new InsertTilesMessage(messageHandler.getMyUsername(), tilesToInsert, colNum));
+            }
+            clearHand();
+        }
+    }
     public void setChatMessage(ChatMessage message) {
         String prefix = "";
         String messageContent = message.getContent();
@@ -157,7 +182,6 @@ public class GameScene2PlayersController implements Controller {
             chatScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         }
     }
-
     private void setInputField() {
         inputField.setAlignment(Pos.BOTTOM_LEFT);
         inputField.setOnKeyPressed(event -> {
@@ -215,12 +239,10 @@ public class GameScene2PlayersController implements Controller {
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
-
     @Override
     public void setGui(GUI gui) {
         this.gui = gui;
     }
-
     @Override
     public void initialize() {
         if(gui == null){
@@ -238,37 +260,43 @@ public class GameScene2PlayersController implements Controller {
         initBookshelfGrid();
         initSelectCol();
     }
-
     @FXML
-    void clickedCol(MouseEvent event) {
-        if(state.equals(PlayerState.ACTIVE)) {
-            int colNum = (int) ((Polygon) event.getSource()).getUserData();
-            System.out.println("Clicked column: " + colNum);
-            if (inputValidator.columnHasLessSpace(colNum, ((InsertInfoMessage) messageHandler.getLastMessage()).getEnabledColumns())) {
+    void clickedItemLivRoom(MouseEvent event,int row,int col){
+        Glow glow = new Glow();
+        if(state.equals(PlayerState.ACTIVE)){
+            if(board[row][col].isPickable()){
+                System.out.println("tessere in pos :"+row+col);
+                if(inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
+                    int tileIndex = getTileIndex(col, row, tilesToDraw);
+                    tilesToDraw.remove(tileIndex);
+                    itemLivRoomCells[row][col].setEffect(null);
+                    setPickableEffect(itemLivRoomCells[row][col]);
+                    System.out.println("null");
+                    return;
+                }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
+                    return;
+                }
+                tilesToDraw.add(new Square(new Coordinates(row, col), board[row][col].getItem().getType()));
+                glow.setLevel(0.5);
+                itemLivRoomCells[row][col].setEffect(glow);
+                if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems)){
+                    return;
+                }
+                System.out.println(tilesToDraw);
+            }else{
                 return;
-            } else {
-                setActionType(ActionType.NONE);
-                setPlayerState(PlayerState.WATCHING);
-                messageHandler.notifyObservers(new InsertTilesMessage(messageHandler.getMyUsername(), tilesToInsert, colNum));
             }
-            clearHand();
         }
     }
 
-    @FXML
-    void clickedItemLivRoom(int row,int col){
-        System.out.println("tessere in pos :"+row+col);
-        if(state.equals(PlayerState.ACTIVE)){
-            if(inputValidator.isTileAlreadyOnHand(col,row,tilesToDraw)){
-                return;
-            }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
-                return;
-            }//else if(!inputValidator.isPossibleToDrawMore(tilesToDraw,board) || tilesToDraw.size()==3){
-            //   return;
-            //}
-            tilesToDraw.add(new Square(new Coordinates(row, col), board[row][col].getItem().getType()));
-            System.out.println(tilesToDraw);
+    private int getTileIndex(int col, int row, ArrayList<Square> tilesToDraw) {
+        for (int i = 0; i < tilesToDraw.size(); i++) {
+            Square tile = tilesToDraw.get(i);
+            if (tile.getColumn() == col && tile.getRow() == row) {
+                return i;
+            }
         }
+        return -1;
     }
 
     @FXML
@@ -314,7 +342,6 @@ public class GameScene2PlayersController implements Controller {
     public void setPlayerState(PlayerState state){
         this.state = state;
     }
-
     private void initSelectCol() {
         selectCol1.setUserData(0);
         selectCol2.setUserData(1);
@@ -322,7 +349,6 @@ public class GameScene2PlayersController implements Controller {
         selectCol4.setUserData(3);
         selectCol5.setUserData(4);
     }
-
     private void initBookshelfGrid() {
         for (int i = 0; i < Bookshelf.Rows; i++) {
             for (int j = 0; j < Bookshelf.Columns; j++) {
@@ -373,18 +399,16 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-    public void setBoard(Square[][] board){
+    public void setBoard(Square[][] board,int maxNumItems){
+        this.board = board;
+        this.maxNumItems = maxNumItems;
         ItemType type;
         Random random = new Random();
         Image image;
         URL url;
         int num;
         ImageView item;
-        this.board = board;
 
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setRadius(25);
-        dropShadow.setColor(Color.web("#006400"));
         for(int i=0;i<Board.DIMENSIONS;i++){
             for(int j=0;j<Board.DIMENSIONS;j++){
                 item = itemLivRoomCells[i][j];
@@ -403,15 +427,20 @@ public class GameScene2PlayersController implements Controller {
                         item.setOnMouseClicked(mouseEvent -> {
                             int rowIndex = GridPane.getRowIndex(finalItem);
                             int colIndex = GridPane.getColumnIndex(finalItem);
-                            clickedItemLivRoom(rowIndex,colIndex);
+                            clickedItemLivRoom(mouseEvent,rowIndex,colIndex);
                         });
-                        item.setEffect(dropShadow);
+                        setPickableEffect(item);
                     }
                 }else{
                     item.setImage(null);
                 }
             }
         }
+    }
+    private void setPickableEffect(ImageView image){
+        dropShadow.setRadius(25);
+        dropShadow.setColor(Color.web("#006400"));
+        image.setEffect(dropShadow);
     }
     public void clearEffects() {
         ImageView item;

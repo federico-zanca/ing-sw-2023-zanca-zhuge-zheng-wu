@@ -47,6 +47,5 @@
    </children>
    <stylesheets>
       <URL value="@../css/connection.css" />
-      <URL value="@../css/fontstyle.css" />
    </stylesheets>
 </AnchorPane>

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.view.gui;
-import it.polimi.ingsw.AppServer;
-import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
-import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
@@ -16,7 +13,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Dialog;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
@@ -24,12 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class GUI extends Application{
     private Scene currentScene;
@@ -68,6 +60,7 @@ public class GUI extends Application{
         Scene scene = null;
         Controller controller = null;
         try {
+            Font.loadFont(Objects.requireNonNull(this.getClass().getResource("/font/CurlzMT.ttf")).toExternalForm(),10);
             for (GameFxml path : fxmlFiles) {
                 url = getClass().getClassLoader().getResource("fxml/" + path.s);
                 if(url != null){
@@ -174,16 +167,16 @@ public class GUI extends Application{
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
                 ((GameScene2PlayersController)currentController).setCommonGoals(model.getCommonGoals());
-                ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard());
+                ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard(),0);
                 ((GameScene2PlayersController)currentController).setPersonalGoalCardImage();
             });
         }
     }
-    public void setGameBoard(Square[][] board){
+    public void setGameBoard(Square[][] board, int maxNumItems){
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
-                ((GameScene2PlayersController)currentController).setBoard(board);
+                ((GameScene2PlayersController)currentController).setBoard(board,maxNumItems);
             });
         }
     }

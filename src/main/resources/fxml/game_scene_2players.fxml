@@ -154,7 +154,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                   </GridPane>
-                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                     <points>
                       <Double fx:value="-50.0" />
                       <Double fx:value="40.0" />
@@ -167,7 +167,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -180,7 +180,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -193,7 +193,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />
@@ -206,7 +206,7 @@
                         <DropShadow />
                      </effect>
                   </Polygon>
-                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                      <points>
                         <Double fx:value="-50.0" />
                         <Double fx:value="40.0" />

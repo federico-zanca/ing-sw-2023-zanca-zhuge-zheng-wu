@@ -77,6 +77,5 @@
     </children>
    <stylesheets>
       <URL value="@../css/in_lobby_scene.css" />
-      <URL value="@../css/fontstyle.css" />
    </stylesheets>
 </AnchorPane>
