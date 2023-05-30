@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.gamemessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
@@ -22,7 +24,7 @@ public class MessageHandler extends VirtualView implements View {
     ArrayList<LobbyDisplayInfo> lobbies;
     private String myLobby = "";
     private String myUsername = "";
-    private GameMessage lastMessage;
+    private MessageToClient lastMessage;
     private PersonalGoalCard personalGoalCard;
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
@@ -236,12 +238,12 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void update(Message message) {
-        if (message instanceof GameMessage) {
-            onGameMessage((GameMessage) message);
-        }else if(message instanceof ConnectionMessage){
-            onConnectionMessage((ConnectionMessage) message);
-        } else if (message instanceof LobbyMessage) {
-            onLobbyMessage((LobbyMessage) message);
+        if (message.getType()== MessageType.GAME_MSG) {
+            onGameMessage((MessageToClient) message);
+        }else if(message.getType()==MessageType.CONNECTION_MSG){
+            onConnectionMessage((MessageToClient) message);
+        } else if (message.getType()==MessageType.LOBBY_MSG) {
+            onLobbyMessage((MessageToClient) message);
         } else if (message instanceof ChatMessage) {
             onChatMessage((ChatMessage) message);
         } else
@@ -255,14 +257,14 @@ public class MessageHandler extends VirtualView implements View {
         gui.setChatMessage(message);
     }
 
-    private void onLobbyMessage(LobbyMessage message) {
+    private void onLobbyMessage(MessageToClient message) {
         message.execute(this);
     }
 
-    private void onConnectionMessage(ConnectionMessage message) {
+    private void onConnectionMessage(MessageToClient message) {
         message.execute(this);
     }
-    private void onGameMessage(GameMessage message) {
+    private void onGameMessage(MessageToClient message) {
         message.execute(this);
     }
     @Override
@@ -288,7 +290,7 @@ public class MessageHandler extends VirtualView implements View {
     public void setMyUsername(String myUsername) {
         this.myUsername = myUsername;
     }
-    public GameMessage getLastMessage() {
+    public MessageToClient getLastMessage() {
         return lastMessage;
     }
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
