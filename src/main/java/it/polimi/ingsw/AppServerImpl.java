@@ -33,6 +33,8 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
     }
 
     public static void main(String[] args) {
+        //System.setProperty("java.rmi.server.hostname", "192.168.25.174");
+
         Thread rmiThread = new Thread(){
             @Override
             public void run() {
@@ -67,10 +69,9 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServer{
     }
 
     private static void startRMI() throws RemoteException {
-        AppServerImpl instance = getInstance();
-
+        AppServerImpl server = getInstance();
         Registry registry = LocateRegistry.createRegistry(1099);
-        registry.rebind("server", instance);
+        registry.rebind("server", server);
     }
 
     public static void startSocket() throws RemoteException {

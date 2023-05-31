@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.commongoals.*;
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.gameboard.Board;
-import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class GameView implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -1,19 +1,24 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
-public class AchievedCommonGoalMessage extends GameMessage implements MessageToClient {
+public class AchievedCommonGoalMessage extends MessageToClient {
     private final String content;
-
+    private final String username;
     public AchievedCommonGoalMessage(String username, String content) {
-        super(username, GameMessageType.ACHIEVED_COMMON_GOAL);
+        super(MessageType.GAME_MSG);
+        this.username = username;
         this.content = content;
     }
 
     public String getContent() {
         return content;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

@@ -1,11 +1,12 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
 import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
-public class InvalidCommandMessage extends LobbyMessage implements MessageToClient {
+public class InvalidCommandMessage extends MessageToClient {
     public InvalidCommandMessage(){
-        super(LobbyMessageType.INVALID_COMMAND);
+        super(MessageType.LOBBY_MSG);
     }
 
     @Override

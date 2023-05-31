@@ -2,12 +2,14 @@ package it.polimi.ingsw.network.message.connectionmessage;
 
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
+import it.polimi.ingsw.network.message.MessageToServer;
+import it.polimi.ingsw.network.message.MessageType;
 
-public class UsernameRequest extends ConnectionMessage {
+public class UsernameRequest extends MessageToServer {
     private final String username;
 
     public UsernameRequest(String username) {
-        super(ConnectionMessageType.USERNAME_REQUEST);
+        super(MessageType.CONNECTION_MSG);
         this.username = username;
     }
 

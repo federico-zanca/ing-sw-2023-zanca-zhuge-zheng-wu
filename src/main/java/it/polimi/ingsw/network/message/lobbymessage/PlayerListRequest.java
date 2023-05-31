@@ -2,9 +2,11 @@ package it.polimi.ingsw.network.message.lobbymessage;
 
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
+import it.polimi.ingsw.network.message.MessageToServer;
+import it.polimi.ingsw.network.message.MessageType;
 
-public class PlayerListRequest extends LobbyMessage{
-    public PlayerListRequest() {super(LobbyMessageType.PLAYER_LIST_REQUEST);}
+public class PlayerListRequest extends MessageToServer {
+    public PlayerListRequest() {super(MessageType.LOBBY_MSG);}
 
     /**
      * @param client

@@ -1,14 +1,16 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
-public class NewTurnMessage extends GameMessage implements MessageToClient {
+public class NewTurnMessage extends MessageToClient {
     private final String currentPlayer;
+    private final String username;
+
     public NewTurnMessage(String username, String currentPlayer) {
-        super(username, GameMessageType.NEW_TURN);
+        super(MessageType.GAME_MSG);
+        this.username = username;
         this.currentPlayer = currentPlayer;
     }
 
@@ -18,6 +20,10 @@ public class NewTurnMessage extends GameMessage implements MessageToClient {
 
     public String getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

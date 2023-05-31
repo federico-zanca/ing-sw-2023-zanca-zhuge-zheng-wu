@@ -1,7 +1,11 @@
 package it.polimi.ingsw.network.message;
 
-import it.polimi.ingsw.view.View;
+public abstract class MessageToClient extends Message implements MsgToClient{
+    public MessageToClient(MessageType type){
+        super(type);
+    }
 
-public interface MessageToClient {
-    void execute(View view);
+    public String getUsername(){
+        return ""; //TODO dangerous practice
+    }
 }

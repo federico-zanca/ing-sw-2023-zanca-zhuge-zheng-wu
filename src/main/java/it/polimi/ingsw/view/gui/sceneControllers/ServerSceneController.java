@@ -1,12 +1,13 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
-import it.polimi.ingsw.distributed.Lobby;
-import it.polimi.ingsw.network.message.connectionmessage.*;
+import it.polimi.ingsw.network.message.connectionmessage.CreateLobbyRequest;
+import it.polimi.ingsw.network.message.connectionmessage.JoinLobbyRequest;
+import it.polimi.ingsw.network.message.connectionmessage.LobbyListRequest;
+import it.polimi.ingsw.network.message.connectionmessage.UsernameRequest;
 import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

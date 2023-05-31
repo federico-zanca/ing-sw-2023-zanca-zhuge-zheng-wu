@@ -1,20 +1,21 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
 //TODO accorpa con CommonGoalAchieved
-public class NoCommonGoalMessage extends GameMessage implements MessageToClient {
+public class NoCommonGoalMessage extends MessageToClient {
 
-    private final String content = "No common goal achieved this round :(";
+    private final String username;
+
     public NoCommonGoalMessage(String username) {
-        super(username, GameMessageType.NO_COMMON_GOAL);
+        super(MessageType.GAME_MSG);
+        this.username = username;
     }
 
     public String getContent() {
-        return content;
+        return "No common goal achieved this round :(";
     }
 
     @Override
@@ -27,5 +28,9 @@ public class NoCommonGoalMessage extends GameMessage implements MessageToClient 
     @Override
     public void execute(View view) {
         view.onNoCommonGoalMessage(this);
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

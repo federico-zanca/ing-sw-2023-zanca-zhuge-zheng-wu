@@ -3,7 +3,6 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.FullColumnException;
 
-import java.awt.print.Book;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;

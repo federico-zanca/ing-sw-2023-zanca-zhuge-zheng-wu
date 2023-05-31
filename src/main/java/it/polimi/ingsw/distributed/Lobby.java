@@ -4,16 +4,19 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.enumerations.GamePhase;
-import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.Message;
+import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.network.message.connectionmessage.ReconnectionMessage;
 import it.polimi.ingsw.network.message.gamemessage.ExitGameResponse;
-import it.polimi.ingsw.network.message.gamemessage.GameMessage;
 import it.polimi.ingsw.network.message.gamemessage.PlayerLeftMessage;
-import it.polimi.ingsw.network.message.lobbymessage.*;
+import it.polimi.ingsw.network.message.lobbymessage.GameNotReadyMessage;
+import it.polimi.ingsw.network.message.lobbymessage.InvalidCommandMessage;
+import it.polimi.ingsw.network.message.lobbymessage.NewAdminMessage;
+import it.polimi.ingsw.network.message.lobbymessage.PlayersInLobbyUpdate;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -73,10 +76,13 @@ public class Lobby {
 
             this.model.addObserver((arg) -> {
                 try {
-                    if(arg == null) System.err.println("arg is null");
+                    if(arg == null) {
+                        System.err.println("arg is null --- Lobby line 77");
+                        return;
+                    }
                     System.err.println("Questo è il client --> " + client);
-                    if (arg instanceof GameMessage) {
-                        GameMessage gameMessage = (GameMessage) arg; // cast once
+                    if (arg.getType()== MessageType.GAME_MSG) {
+                        MessageToClient gameMessage = (MessageToClient) arg; // cast once
                         String username = gameMessage.getUsername();
                         if (username.equals("")) {
                             server.sendMessage(client, arg);

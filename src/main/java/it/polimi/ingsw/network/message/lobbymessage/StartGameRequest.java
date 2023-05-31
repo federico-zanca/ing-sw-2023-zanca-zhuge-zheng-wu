@@ -2,10 +2,12 @@ package it.polimi.ingsw.network.message.lobbymessage;
 
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
+import it.polimi.ingsw.network.message.MessageToServer;
+import it.polimi.ingsw.network.message.MessageType;
 
-public class StartGameRequest extends LobbyMessage {
+public class StartGameRequest extends MessageToServer {
     public StartGameRequest() {
-        super(LobbyMessageType.START_GAME_REQUEST);
+        super(MessageType.LOBBY_MSG);
     }
 
     /**

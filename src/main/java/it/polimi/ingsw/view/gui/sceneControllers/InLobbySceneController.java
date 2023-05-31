@@ -5,10 +5,8 @@ import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
 import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -19,7 +17,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class InLobbySceneController implements Controller{
     private MessageHandler messageHandler;

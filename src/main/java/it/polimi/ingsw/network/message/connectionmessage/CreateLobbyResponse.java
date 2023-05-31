@@ -1,13 +1,13 @@
 package it.polimi.ingsw.network.message.connectionmessage;
 
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
-public class CreateLobbyResponse extends ConnectionMessage implements MessageToClient {
-    private boolean success;
+public class CreateLobbyResponse extends MessageToClient {
+    private final boolean success;
     public CreateLobbyResponse(boolean success) {
-        super(ConnectionMessageType.CREATE_LOBBY_RESPONSE);
+        super(MessageType.CONNECTION_MSG);
         this.success = success;
     }
 

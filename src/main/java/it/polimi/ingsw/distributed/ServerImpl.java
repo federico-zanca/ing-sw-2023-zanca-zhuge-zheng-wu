@@ -5,23 +5,21 @@ import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
-import it.polimi.ingsw.network.message.ChatMessage;
-import it.polimi.ingsw.network.message.HeartBeatMessage;
+import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessage;
-import it.polimi.ingsw.network.message.Message;
-import it.polimi.ingsw.network.message.connectionmessage.ConnectionMessage;
-import it.polimi.ingsw.network.message.gamemessage.GameMessage;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.gamemessage.PlayerLeftMessage;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayerResponse;
-import it.polimi.ingsw.network.message.lobbymessage.LobbyMessage;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
     private static final int HEARTBEAT_TIMEOUT = 10000;
@@ -52,8 +50,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      */
     @Override
     public void register(Client client) {
+        System.out.println("1");
         connectedClients.put(client, new ClientInfo(client));
-
+        System.out.println("fnisngrs");
         try {
             sendMessage(client, new ConnectedToServerMessage(client));
             //client.update(new ConnectedToServerMessage(client));
@@ -132,8 +131,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      */
     public boolean isUsernameAvailable(String username) {
         Client client = getClientByUsername(username);
-        if(client != null)
-            return false;
+        return client == null;
         /*
         for(Lobby l : lobbies){
             if(l.containsAPlayerWithThisUsername(username))
@@ -141,7 +139,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
 
          */
-        return true;
 /*
         for(ClientInfo c : connectedClients.values())
             if(c.getClientID().equals(username))
@@ -265,21 +262,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     @Override
     public void update(Client client, Message message){
-        if(message instanceof GameMessage) {
+        if(message.getType()== MessageType.GAME_MSG) {
             System.out.println("Received message: " + message);
             Lobby lobby = getLobbyOfClient(client);
-            if(((GameMessage) message ).getType()== GameMessageType.EXIT_GAME_REQUEST){
+            if(message instanceof ExitGameRequest){
                 clientExitsFromItsLobby(client);
             }
-            lobby.getController().update(getUsernameOfClient(client), (GameMessage) message);
+            lobby.getController().update(getUsernameOfClient(client), (MessageToServer) message);
         }
-        else if(message instanceof ConnectionMessage) {
+        else if(message.getType()==MessageType.CONNECTION_MSG) {
             System.out.println("Received message: " + message);
-            this.preGameController.onConnectionMessage(client, (ConnectionMessage) message);
+            this.preGameController.onConnectionMessage(client, (MessageToServer) message);
         }
-        else if(message instanceof LobbyMessage){
+        else if(message.getType()==MessageType.LOBBY_MSG){
             System.out.println("Received message: " + message);
-            this.preGameController.onLobbyMessage(client, (LobbyMessage) message);
+            this.preGameController.onLobbyMessage(client, (MessageToServer) message);
         }
         else if(message instanceof HeartBeatMessage){
             receiveHeartBeat(client);

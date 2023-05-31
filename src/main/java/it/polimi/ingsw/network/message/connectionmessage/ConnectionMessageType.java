@@ -1,5 +1,5 @@
 package it.polimi.ingsw.network.message.connectionmessage;
-
+//TODO delete this class
 public enum ConnectionMessageType {
     CREATE_GAME_REQUEST,
     JOIN_GAME_REQUEST,

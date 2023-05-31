@@ -1,14 +1,16 @@
 package it.polimi.ingsw.network.message.gamemessage;
 
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
-public class PlayerRejoinedMessage extends GameMessage implements MessageToClient {
+public class PlayerRejoinedMessage extends MessageToClient {
     private final String player;
+    private final String username;
 
-    public PlayerRejoinedMessage(String s, String player) {
-        super(s, GameMessageType.PLAYER_REJOINED);
+    public PlayerRejoinedMessage(String username, String player) {
+        super(MessageType.GAME_MSG);
+        this.username = username;
         this.player = player;
     }
 
@@ -19,5 +21,9 @@ public class PlayerRejoinedMessage extends GameMessage implements MessageToClien
     @Override
     public void execute(View view) {
         view.onPlayerRejoinedMessage(this);
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

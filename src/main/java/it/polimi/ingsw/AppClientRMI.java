@@ -1,9 +1,9 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.distributed.ClientImpl;
+import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.tui.TextualUI;
-import it.polimi.ingsw.view.VirtualView;
 import javafx.application.Application;
 
 import java.rmi.NotBoundException;
@@ -20,7 +20,7 @@ public class AppClientRMI {
         Scanner scanner = new Scanner(System.in);
         String s = scanner.nextLine();
         if (s.equals("0")) {
-            Registry registry = LocateRegistry.getRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             AppServer server = (AppServer) registry.lookup("server");
             view = new TextualUI();
             ClientImpl client = new ClientImpl(server.connect());

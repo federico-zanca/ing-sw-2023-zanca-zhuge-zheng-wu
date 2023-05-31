@@ -8,8 +8,8 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.exceptions.GameNotReadyException;
 import it.polimi.ingsw.model.exceptions.InvalidCommandException;
 import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
-import it.polimi.ingsw.network.message.gamemessage.GameMessage;
-import it.polimi.ingsw.network.message.gamemessage.GameMessageType;
+import it.polimi.ingsw.network.message.MessageToServer;
+import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -97,13 +97,13 @@ public class GameController {
      * Handles the PlayPhase related messages received from the view
      * @param message
      */
-    private void playPhase(GameMessage message) {
+    private void playPhase(String senderUsername, MessageToServer message) {
         switch(model.getTurnPhase()){
             case DRAW:
-                turnController.drawPhase(message);
+                turnController.drawPhase(senderUsername, message);
                 break;
             case INSERT:
-                turnController.insertPhase(message);
+                turnController.insertPhase(senderUsername, message);
                 break;
                 /*
             case CALCULATE:
@@ -161,13 +161,13 @@ public class GameController {
      * Switch on Game State.
      * @param receivedMessage Message from Active Player.
      */
-    public void onMessageReceived(GameMessage receivedMessage) {
+    public void onMessageReceived(String senderUsername, MessageToServer receivedMessage) {
         switch (model.getGamePhase()) {
             case INIT:
                 System.err.println("Should not receive messages during this phase");
                 break;
             case PLAY:
-                playPhase(receivedMessage);
+                playPhase(senderUsername, receivedMessage);
                 break;
             case AWARDS:
                 System.err.println("AWARDS phase not handled yet");
@@ -178,12 +178,12 @@ public class GameController {
         }
     }
 
-    public void update(String senderUsername, GameMessage message) {
-        if(message.getType() == GameMessageType.EXIT_GAME_REQUEST){
+    public void update(String senderUsername, MessageToServer message) {
+        if(message instanceof ExitGameRequest){
             turnController.addPlayerToSkip(model.getPlayerByUsername(senderUsername));
         }
         else if(model.getGamePhase()==GamePhase.PLAY && senderUsername.equals(model.getCurrentPlayer().getUsername())) {
-                onMessageReceived(message);
+                onMessageReceived(senderUsername, message);
         } else {
             System.err.println("Discarding game message: wrong GamePhase or not CurrentPlayer ");
         }

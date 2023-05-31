@@ -1,15 +1,15 @@
 package it.polimi.ingsw.network.message.lobbymessage;
 
-import it.polimi.ingsw.network.message.Message;
 import it.polimi.ingsw.network.message.MessageToClient;
+import it.polimi.ingsw.network.message.MessageType;
 import it.polimi.ingsw.view.View;
 
-public class ExitLobbyResponse extends LobbyMessage implements MessageToClient {
+public class ExitLobbyResponse extends MessageToClient {
     private final boolean successful;
     private final String content;
 
     public ExitLobbyResponse(boolean successful, String content) {
-        super(LobbyMessageType.EXIT_LOBBY_RESPONSE);
+        super(MessageType.LOBBY_MSG);
         this.successful = successful;
         this.content = content;
     }

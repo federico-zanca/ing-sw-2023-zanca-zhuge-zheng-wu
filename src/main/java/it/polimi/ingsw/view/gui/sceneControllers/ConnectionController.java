@@ -38,7 +38,7 @@ public class ConnectionController implements Controller{
     @FXML
     void connectRMI(ActionEvent event) {
         try{
-            Registry registry = LocateRegistry.getRegistry(1236);
+            Registry registry = LocateRegistry.getRegistry(1099);
             AppServer server = (AppServer) registry.lookup("server");
             ClientImpl client = new ClientImpl(server.connect(), messageHandler);
         }catch(RemoteException | NotBoundException e){

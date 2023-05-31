@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.ChatMessage;
+import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.connectionmessage.*;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import it.polimi.ingsw.view.tui.TextColor;
@@ -27,7 +28,7 @@ public class PreGameController {
      * @param client the client that sent the message
      * @param message the message received
      */
-    public void onConnectionMessage(Client client, ConnectionMessage message) {
+    public void onConnectionMessage(Client client, MessageToServer message) {
         message.execute(client, this);
         /*
         switch(message.getType()) {
@@ -71,7 +72,7 @@ public class PreGameController {
      * @param client the client that sent the message
      * @param message the message
      */
-    public void onLobbyMessage(Client client, LobbyMessage message) {
+    public void onLobbyMessage(Client client, MessageToServer message) {
         message.execute(client, this);
         /*
         switch (message.getType()){
