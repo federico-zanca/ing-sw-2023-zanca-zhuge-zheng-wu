@@ -1,26 +1,12 @@
 .rootPane {
     -fx-background-image: url("../images/Publisher_material/Display_3.jpg");
-    -fx-background-size: stretch;
+    -fx-background-size: 1300px 760px;
 }
-.play {
-    -fx-border-width: 0;
-    -fx-background-radius: 0;
-}
-.play:hover {
-    -fx-effect: dropshadow(gaussian, #f2e0d6, 20, 0.3, 0, 0);
-    -fx-cursor: hand;
-}
-.quit {
-
-    -fx-border-width: 0;
-    -fx-background-radius: 0;
-}
-
-.quit:hover {
-    -fx-effect: dropshadow(gaussian, #f2e0d6, 20, 0.3, 0, 0);
-    -fx-cursor: hand;
-}
-.button{
+.Avvia{
         -fx-font-family: 'Curlz MT';
-        -fx-font-size: 17;
+        -fx-font-size: 36;
+}
+.Esci{
+        -fx-font-family: 'Curlz MT';
+        -fx-font-size: 30;
 }
