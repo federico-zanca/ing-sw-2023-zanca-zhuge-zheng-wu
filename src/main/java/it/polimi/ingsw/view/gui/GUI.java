@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
@@ -169,6 +170,8 @@ public class GUI extends Application{
                 ((GameScene2PlayersController)currentController).setCommonGoals(model.getCommonGoals());
                 ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard(),0);
                 ((GameScene2PlayersController)currentController).setPersonalGoalCardImage();
+                ((GameScene2PlayersController)currentController).initPlayerList(model.getPlayers());
+
             });
         }
     }
@@ -219,6 +222,7 @@ public class GUI extends Application{
     public void setBookshelf(Bookshelf bookshelf) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
+            ((GameScene2PlayersController)currentController).setBookshelfAttribute(bookshelf);
             Platform.runLater(()->{
                 ((GameScene2PlayersController)currentController).setBookshelf(bookshelf);
             });
@@ -257,7 +261,14 @@ public class GUI extends Application{
             });
         }
     }
-
+    public void setPlayers(ArrayList<Player> players) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setPlayers(players);
+            });
+        }
+    }
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
     }
