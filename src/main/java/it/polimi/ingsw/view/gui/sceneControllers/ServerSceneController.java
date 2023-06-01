@@ -76,13 +76,16 @@ public class ServerSceneController implements Controller{
         messageHandler.notifyObservers(new JoinLobbyRequest(lobbySelectBox.getValue()));
     }
     public void createLobby(){
-        if(newLobbyName.getText() == null){
+        String name = newLobbyName.getText();
+        if(name.equals("")){
             setError("La lobby non può avere nome vuoto!");
             return;
         }
-        if(inputValidator.isValidUsername(newLobbyName.getText())){
-            messageHandler.setMyLobby(newLobbyName.getText());
-            messageHandler.notifyObservers(new CreateLobbyRequest(newLobbyName.getText()));
+        if(inputValidator.isValidUsername(name)){
+            messageHandler.setMyLobby(name);
+            messageHandler.notifyObservers(new CreateLobbyRequest(name));
+        }else{
+            setError("La lobby non può avere nome vuoto!");
         }
     }
     public void changeName(){

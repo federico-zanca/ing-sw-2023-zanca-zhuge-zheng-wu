@@ -207,10 +207,16 @@ public class GameScene2PlayersController implements Controller {
         String messageContent = message.getContent();
         Color textColor = Color.BLACK;
         if (message.getReceiver() != null) {
-            prefix = "PRIVATE MESSAGE FROM ";
-            messageContent = message.getSender() + ": " + messageContent;
+            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
+                prefix = "PRIVATE MESSAGE FROM ";
+                messageContent = message.getSender() + ": " + messageContent;
+
+            }else{
+                prefix = "PRIVATE MESSAGE TO ";
+                messageContent = message.getReceiver() + ": " + messageContent;
+            }
             textColor = Color.RED;
-        } else {
+        } else{
             messageContent = message.getSender() + ": " + messageContent;
         }
         addMessage(prefix + messageContent);
@@ -227,18 +233,14 @@ public class GameScene2PlayersController implements Controller {
     private void startChatting(){
         isExpanded = true;
         setChatTexts();
-        chatBox.setPrefHeight(expandedHeight);
         chatBox.getChildren().add(chatScrollPane);
         chatBox.getChildren().add(inputField);
-        chatBox.setStyle("-fx-background-color: rgba(128,128,128,0.5);");
         setInputField();
     }
     private void setChatTexts(){
         if(chatBox.getChildren().size() == 1){
             chatBox.getChildren().remove(inputField);
             chatScrollPane.vvalueProperty().bind(chatMessages.heightProperty());
-            chatScrollPane.setStyle("-fx-background-color: rgba(128,128,128,0.5);");
-            chatMessages.setStyle("-fx-background-color: rgba(128,128,128,0.5);");
             chatScrollPane.setContent(chatMessages);
             chatScrollPane.prefHeightProperty().bind(chatMessages.heightProperty().add(20));
             chatScrollPane.setFitToHeight(true);
@@ -257,7 +259,7 @@ public class GameScene2PlayersController implements Controller {
                     return;
                 }
                 if(message.startsWith("@")) {
-                    if (message.indexOf(" ") == -1) {
+                    if (!message.contains(" ")) {
                         return;
                     }
                     recipientusername = message.substring(1, message.indexOf(" "));
@@ -271,8 +273,8 @@ public class GameScene2PlayersController implements Controller {
     }
     private void collapse() {
         isExpanded = false;
-        chatBox.setPrefHeight(expandedHeight);
         //chatContainer.getChildren().remove(chatMessages);
+        inputField.setOnKeyPressed(null);
         chatBox.getChildren().removeAll(chatScrollPane);
     }
     public void addMessage(String message) {
@@ -283,7 +285,7 @@ public class GameScene2PlayersController implements Controller {
         messageHandler.notifyObservers(chatMessage);
     }
     private void setChatBox() {
-        chatBox.setPrefSize(400,expandedHeight);
+        chatBox.setPrefSize(300,expandedHeight);
         chatBox.setAlignment(Pos.BOTTOM_CENTER);
         inputField.setOnMouseClicked(event -> {
             if (!isExpanded) {
