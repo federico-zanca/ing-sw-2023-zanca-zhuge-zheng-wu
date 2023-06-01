@@ -140,17 +140,19 @@ public class GameScene2PlayersController implements Controller {
         if(state.equals(PlayerState.ACTIVE)){
             if(actionType == ActionType.INSERT_HAND){
                 ImageView hand = (ImageView) event.getSource();
-                if (hand.equals(hand1)) {
-                    order.add(1);
-                } else if (hand.equals(hand2)) {
-                    order.add(2);
-                } else if (hand.equals(hand3)) {
-                    order.add(3);
+                if(!(hand.getEffect() instanceof Glow)){
+                    if (hand.equals(hand1)) {
+                        order.add(1);
+                    } else if (hand.equals(hand2)) {
+                        order.add(2);
+                    } else if (hand.equals(hand3)) {
+                        order.add(3);
+                    }
+                    Glow glow = new Glow();
+                    glow.setLevel(0.5);
+                    hand.setEffect(glow);
+                    newHandOrder.add(hand);
                 }
-                Glow glow = new Glow();
-                glow.setLevel(0.5);
-                hand.setEffect(glow);
-                newHandOrder.add(hand);
             }
         }
         if(tilesToInsert.size() == 2){
