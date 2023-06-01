@@ -10,464 +10,232 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minViewportHeight="760.0" minWidth="-Infinity" pannable="true" prefHeight="1300.0" prefViewportHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
-   <content>
-      <AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0">
+<AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
+   <children>
+      <ImageView fitWidth="1300.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/misc/sfondo_parquet.jpg" />
+         </image>
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+      </ImageView>
+      <Label fx:id="notification" layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
+         <font>
+            <Font name="Century" size="16.0" />
+         </font>
+         <effect>
+            <Bloom threshold="0.2" />
+         </effect>
+      </Label>
+      <Pane prefHeight="760.0" prefWidth="500.0">
          <children>
-            <ImageView fitWidth="1300.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/misc/sfondo_parquet.jpg" />
+                  <Image url="@../images/common_goal_cards/1.jpg" />
                </image>
-               <viewport>
-                  <Rectangle2D />
-               </viewport>
-            </ImageView>
-            <Label fx:id="notification" layoutX="315.0" layoutY="15.0" prefHeight="30.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE">
-               <font>
-                  <Font name="Century" size="16.0" />
-               </font>
                <effect>
-                  <Bloom threshold="0.2" />
+                  <DropShadow radius="11.0" width="25.0" />
                </effect>
-            </Label>
-            <Pane prefHeight="760.0" prefWidth="500.0">
-               <children>
-                  <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/common_goal_cards/1.jpg" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="11.0" width="25.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/common_goal_cards/7.jpg" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="11.0" width="25.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="bag" fitHeight="116.0" fitWidth="135.8" layoutX="363.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/misc/Sacchetto_Chiuso.png" />
-                     </image>
-                     <effect>
-                        <DropShadow blurType="TWO_PASS_BOX" radius="23.4525" width="74.81" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/boards/livingroom.png" />
-                     </image>
-                     <effect>
-                        <DropShadow radius="12.25" width="30.0" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="endGameTokenBox" fitHeight="50.0" fitWidth="50.0" layoutX="394.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/end_game.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="firstCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="100.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="secondCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="282.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
-                     <image>
-                        <Image url="@../images/scoring_tokens/scoring_8.jpg" />
-                     </image>
-                  </ImageView>
-                  <GridPane fx:id="livingRoomGrid" layoutX="39.0" layoutY="213.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.5" minWidth="46.5" prefWidth="46.5" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="46.5" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="46.0" minHeight="46.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
-                  <Button fx:id="okButton" layoutX="326.0" layoutY="676.0" mnemonicParsing="false" onAction="#clickedOk" text="Ok" />
-               </children>
-            </Pane>
-            <Pane fx:id="bookshelfPane" layoutX="500.0" prefHeight="760.0" prefWidth="500.0">
-               <children>
-                  <ImageView fx:id="myBookshelf" fitHeight="381.0" fitWidth="377.0" layoutX="22.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/boards/bookshelf.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitWidth="120.0" layoutX="149.0" layoutY="532.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/misc/retang.png" />
-                     </image>
-                     <effect>
-                        <InnerShadow choke="0.3">
-                           <color>
-                              <Color red="0.2800000011920929" green="0.13518883287906647" blue="0.05040000006556511" />
-                           </color>
-                        </InnerShadow>
-                     </effect>
-                  </ImageView>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="34.0" layoutX="149.0" layoutY="534.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
-                     <effect>
-                        <InnerShadow />
-                     </effect>
-                  </Rectangle>
-                  <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label fx:id="namePlayerOnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
-                     <font>
-                        <Font name="Arial" size="12.0" />
-                     </font>
-                  </Label>
-                  <GridPane fx:id="myBookShelfGrid" layoutX="63.0" layoutY="217.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="57.0" prefWidth="57.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="60.0" prefWidth="0.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="60.0" prefWidth="60.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="59.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="59.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
-                  <Polygon fx:id="selectCol1" fill="#c66025" layoutX="88.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
-                    <points>
-                      <Double fx:value="-50.0" />
-                      <Double fx:value="40.0" />
-                      <Double fx:value="50.0" />
-                      <Double fx:value="40.0" />
-                      <Double fx:value="0.0" />
-                      <Double fx:value="-60.0" />
-                    </points>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </Polygon>
-                  <Polygon fx:id="selectCol2" fill="#c66025" layoutX="149.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
-                     <points>
-                        <Double fx:value="-50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="-60.0" />
-                     </points>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </Polygon>
-                  <Polygon fx:id="selectCol3" fill="#c66025" layoutX="210.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
-                     <points>
-                        <Double fx:value="-50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="-60.0" />
-                     </points>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </Polygon>
-                  <Polygon fx:id="selectCol4" fill="#c66025" layoutX="269.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
-                     <points>
-                        <Double fx:value="-50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="-60.0" />
-                     </points>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </Polygon>
-                  <Polygon fx:id="selectCol5" fill="#c66025" layoutX="333.0" layoutY="159.0" onMouseEntered="#translateTriangle" onMouseExited="#returnTriangle" onMouseClicked="#clickedCol" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
-                     <points>
-                        <Double fx:value="-50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="50.0" />
-                        <Double fx:value="40.0" />
-                        <Double fx:value="0.0" />
-                        <Double fx:value="-60.0" />
-                     </points>
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </Polygon>
-                  <Rectangle fx:id="handRegion" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
-                  <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="13.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="hand1" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true">
-                     <effect>
-                        <DropShadow />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
-                  <Label fx:id="orderHand1" layoutX="100.0" layoutY="65.0" text="L1" textFill="#fff30f">
-                     <font>
-                        <Font name="Arial Black" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="orderHand2" layoutX="185.0" layoutY="65.0" text="L2" textFill="#fff30f">
-                     <font>
-                        <Font name="Arial Black" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="orderHand3" layoutX="270.0" layoutY="65.0" text="L3" textFill="#fff30f">
-                     <font>
-                        <Font name="Arial Black" size="12.0" />
-                     </font>
-                  </Label>
-                  <VBox fx:id="chatBox" layoutX="343.0" layoutY="676.0" prefHeight="100.0" prefWidth="200.0" />
-               </children>
-            </Pane>
-            <Pane layoutX="320.0" layoutY="760.0" prefHeight="540.0" prefWidth="500.0">
-               <children>
-                  <ImageView fx:id="oth1BookShelf" fitWidth="380.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/boards/bookshelf_orth.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitWidth="120.0" layoutX="130.0" layoutY="342.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/misc/retang.png" />
-                     </image>
-                     <effect>
-                        <InnerShadow choke="0.3">
-                           <color>
-                              <Color red="0.2800000011920929" green="0.13518883287906647" blue="0.05040000006556511" />
-                           </color>
-                        </InnerShadow>
-                     </effect>
-                  </ImageView>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="34.0" layoutX="130.0" layoutY="345.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
-                     <effect>
-                        <InnerShadow />
-                     </effect>
-                  </Rectangle>
-                  <Label fx:id="nameOrth1OnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="130.0" layoutY="353.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#68d127">
-                     <font>
-                        <Font name="Arial" size="12.0" />
-                     </font>
-                  </Label>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="380.0" layoutY="151.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/personal_goal_cards/back.jpg" />
-                     </image>
-                  </ImageView>
-                  <GridPane fx:id="myBookShelfGrid1" layoutX="37.0" layoutY="22.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="61.0" prefWidth="61.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="61.0" prefWidth="61.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="61.0" prefWidth="61.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="61.0" prefWidth="61.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="61.0" prefWidth="61.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="52.3" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <ImageView fx:id="oth1BS00" fitHeight="44.0" fitWidth="44.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS01" fitHeight="44.0" fitWidth="44.0" layoutX="17.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS02" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS03" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS04" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS10" fitHeight="44.0" fitWidth="44.0" layoutX="19.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS11" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS12" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS13" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS14" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS20" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS21" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS22" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS23" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS24" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS30" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS31" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS32" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS33" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS34" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS40" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS41" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS42" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS43" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS44" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS50" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS51" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS52" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS53" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                        <ImageView fx:id="oth1BS54" fitHeight="44.0" fitWidth="44.0" layoutX="10.0" layoutY="14.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-                           <viewport>
-                              <Rectangle2D />
-                           </viewport>
-                        </ImageView>
-                     </children>
-                  </GridPane>
-               </children>
-            </Pane>
-            <VBox fx:id="players" layoutX="1050.0" layoutY="61.0" prefHeight="200.0" prefWidth="200.0" />
+            </ImageView>
+            <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/common_goal_cards/7.jpg" />
+               </image>
+               <effect>
+                  <DropShadow radius="11.0" width="25.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="livingRoomBoard" fitHeight="465.0" fitWidth="470.0" layoutX="19.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/boards/livingroom.png" />
+               </image>
+               <effect>
+                  <DropShadow radius="12.25" width="30.0" />
+               </effect>
+            </ImageView>
+            <ImageView fx:id="endGameTokenBox" fitHeight="50.0" fitWidth="50.0" layoutX="394.0" layoutY="514.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
+               <image>
+                  <Image url="@../images/scoring_tokens/end_game.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="firstCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="100.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
+               <image>
+                  <Image url="@../images/scoring_tokens/scoring_8.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="secondCommonGoalScoreBox" fitHeight="40.0" fitWidth="40.0" layoutX="282.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" rotate="-10.0">
+               <image>
+                  <Image url="@../images/scoring_tokens/scoring_8.jpg" />
+               </image>
+            </ImageView>
+            <GridPane fx:id="livingRoomGrid" layoutX="39.0" layoutY="213.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.5" minWidth="46.5" prefWidth="46.5" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="46.5" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.0" minWidth="46.5" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="46.0" minHeight="46.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+            <Button fx:id="okButton" layoutX="374.0" layoutY="139.0" mnemonicParsing="false" onAction="#clickedOk" prefHeight="35.0" prefWidth="109.0" text="Draw" textFill="#610f0f">
+               <font>
+                  <Font size="18.0" />
+               </font></Button>
          </children>
-      </AnchorPane>
-   </content>
-</ScrollPane>
+      </Pane>
+      <Pane fx:id="bookshelfPane" layoutX="492.0" layoutY="89.0" prefHeight="760.0" prefWidth="500.0">
+         <children>
+            <GridPane fx:id="myBookShelfGrid" layoutX="70.0" layoutY="217.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="57.0" prefWidth="57.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="60.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="60.0" prefWidth="60.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="59.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="57.0" minWidth="59.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+            <ImageView fx:id="myBookshelf" fitHeight="381.0" fitWidth="377.0" layoutX="22.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/boards/bookshelf.png" />
+               </image>
+            </ImageView>
+            <ImageView fitWidth="120.0" layoutX="149.0" layoutY="532.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/misc/retang.png" />
+               </image>
+               <effect>
+                  <InnerShadow choke="0.3">
+                     <color>
+                        <Color red="0.2800000011920929" green="0.13518883287906647" blue="0.05040000006556511" />
+                     </color>
+                  </InnerShadow>
+               </effect>
+            </ImageView>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="34.0" layoutX="149.0" layoutY="534.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Rectangle>
+            <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="namePlayerOnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font>
+            </Label>
+            <Polygon fx:id="selectCol1" fill="#c66025" layoutX="89.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+              <points>
+                <Double fx:value="-50.0" />
+                <Double fx:value="40.0" />
+                <Double fx:value="50.0" />
+                <Double fx:value="40.0" />
+                <Double fx:value="0.0" />
+                <Double fx:value="-60.0" />
+              </points>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Polygon>
+            <Polygon fx:id="selectCol2" fill="#c66025" layoutX="150.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+               <points>
+                  <Double fx:value="-50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="0.0" />
+                  <Double fx:value="-60.0" />
+               </points>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Polygon>
+            <Polygon fx:id="selectCol3" fill="#c66025" layoutX="211.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+               <points>
+                  <Double fx:value="-50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="0.0" />
+                  <Double fx:value="-60.0" />
+               </points>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Polygon>
+            <Polygon fx:id="selectCol4" fill="#c66025" layoutX="270.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+               <points>
+                  <Double fx:value="-50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="0.0" />
+                  <Double fx:value="-60.0" />
+               </points>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Polygon>
+            <Polygon fx:id="selectCol5" fill="#c66025" layoutX="334.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
+               <points>
+                  <Double fx:value="-50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="50.0" />
+                  <Double fx:value="40.0" />
+                  <Double fx:value="0.0" />
+                  <Double fx:value="-60.0" />
+               </points>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Polygon>
+            <Rectangle fx:id="handRegion" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="13.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="hand1" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="orderHand1" layoutX="100.0" layoutY="65.0" text="L1" textFill="#fff30f">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="orderHand2" layoutX="185.0" layoutY="65.0" text="L2" textFill="#fff30f">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="orderHand3" layoutX="270.0" layoutY="65.0" text="L3" textFill="#fff30f">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <VBox fx:id="players" layoutX="892.0" layoutY="143.0" prefHeight="200.0" prefWidth="200.0" />
+      <VBox fx:id="chatBox" layoutX="915.0" layoutY="469.0" prefHeight="100.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>

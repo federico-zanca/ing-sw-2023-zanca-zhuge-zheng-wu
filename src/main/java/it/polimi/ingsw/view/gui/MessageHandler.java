@@ -108,6 +108,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setActionType(ActionType.DRAW_TILES);
         gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
         gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard(),drawInfoMessage.getMaxNumItems());
+        gui.setPlayers(drawInfoMessage.getModel().getPlayers());
     }
 
     @Override
@@ -131,12 +132,8 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onInsertInfoMessage(InsertInfoMessage insertInfoMessage) {
         lastMessage = insertInfoMessage;
-        //if(insertInfoMessage.getHand().size() == 1){
         gui.setPlayerState(PlayerState.ACTIVE);
         gui.setActionType(ActionType.INSERT_HAND);
-        //}//else{
-            //gui.setActionType(ActionType.ORDER_HAND);
-       // }
         gui.setHand(insertInfoMessage.getHand());
     }
 

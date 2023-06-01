@@ -429,6 +429,7 @@ public class Lobby {
             if(receiver!=null){
                 server.getConnectedClientInfo(client).addChatMessage(message);
                 try {
+                    server.sendMessage(getClientByUsername(message.getSender()), message);
                     server.sendMessage(receiver, message);
                 } catch (RemoteException e) {
                     System.err.println("Unable to send ChatMessage " + e);
