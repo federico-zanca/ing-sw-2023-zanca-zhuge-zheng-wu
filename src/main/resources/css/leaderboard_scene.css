@@ -1,0 +1,21 @@
+.rootPane{
+    -fx-background-image: url("../images/misc/sfondo_parquet.jpg");
+    -fx-background-size: 450px 500px;
+    -fx-background-effect: DropShadow;
+}
+.Title{
+    -fx-font-family: 'Curlz MT';
+    -fx-font-size: 48;
+}
+.rankingNumber{
+    -fx-font-family: 'Curlz MT';
+    -fx-font-size: 36;
+}
+.labelInBoard{
+    -fx-font-family: 'Curlz MT';
+    -fx-font-size: 32;
+}
+.exit{
+    -fx-font-family: 'Curlz MT';
+    -fx-font-size: 20;
+}
