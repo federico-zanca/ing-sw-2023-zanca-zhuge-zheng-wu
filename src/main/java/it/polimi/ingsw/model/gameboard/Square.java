@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.gameboard;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
@@ -9,9 +10,14 @@ public class Square implements Serializable {
     private static final long serialVersionUID = -5718430460179695362L;
     private ItemTile item;
 
-    private final Coordinates coords;
+    @JsonProperty("coords")
+    private Coordinates coords;
 
     private boolean pickable = false;
+
+    public Square(){
+
+    };
     public Square(int row, int column){
         this.coords = new Coordinates(row, column);
         this.item = new ItemTile(ItemType.EMPTY);

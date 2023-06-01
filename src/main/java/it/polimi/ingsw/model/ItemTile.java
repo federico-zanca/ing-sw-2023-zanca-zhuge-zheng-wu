@@ -10,6 +10,8 @@ public class ItemTile implements Serializable {
 
     private int GroupId;
 
+    public ItemTile(){}
+
     public ItemTile(ItemType type){
         this.type = type;
         this.GroupId = 0;

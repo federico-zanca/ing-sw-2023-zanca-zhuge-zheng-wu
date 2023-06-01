@@ -1,9 +1,13 @@
 package it.polimi.ingsw.model.gameboard;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -27,11 +31,33 @@ public class Board implements Serializable {
      * @param numPlayers
      */
     public void initBoard(int numPlayers){
+        String jsonpath = "src/main/resources/gameboardJSON/";
         if(numPlayers<2 ||numPlayers>4){
-            //TODO implementare meglio.
+            //TODO errore numero giocatori non valido -- lancia eccezione e gestisci
             System.err.println("Illegal number of players.");
             return;
         }
+        switch(numPlayers){
+            case 2:
+                jsonpath += "board2.json";
+                break;
+            case 3:
+                jsonpath += "board3.json";
+                break;
+            case 4:
+                jsonpath += "board4.json";
+                break;
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            gameboard = objectMapper.readValue(
+                    new File(jsonpath),
+                    new TypeReference<Square[][]>(){});
+        } catch (IOException e) {
+            // TODO non va bene runtime exception
+            throw new RuntimeException(e);
+        }
+        /*
         for(int i=0; i<DIMENSIONS; i++){
             for(int j=0; j<DIMENSIONS; j++) {
                 if(i==0)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
@@ -66,6 +92,8 @@ public class Board implements Serializable {
             gameboard[7][3].getItem().setType(ItemType.EMPTY);
             gameboard[8][4].getItem().setType(ItemType.EMPTY);
         }
+        */
+
         /*
         for(int i=0; i< DIMENSIONS; i++){
             for(int j=0; j<DIMENSIONS; j++){

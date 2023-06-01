@@ -22,7 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
-    private static final int HEARTBEAT_TIMEOUT = 10000;
+    private static final int HEARTBEAT_TIMEOUT = 1000000000;
     private HashMap<Client, ClientInfo> connectedClients;
 
     private final Object clientsLock = new Object();
