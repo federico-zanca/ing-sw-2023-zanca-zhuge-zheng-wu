@@ -32,7 +32,6 @@ public class ConnectionController implements Controller{
 
     @Override
     public void initialize() {
-
     }
 
     @FXML

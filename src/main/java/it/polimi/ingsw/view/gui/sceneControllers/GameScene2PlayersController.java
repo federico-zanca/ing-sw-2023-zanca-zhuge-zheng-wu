@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.gamemessage.DrawTilesMessage;
+import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.gamemessage.InsertInfoMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertTilesMessage;
 import it.polimi.ingsw.view.InputValidator;
@@ -57,7 +58,7 @@ public class GameScene2PlayersController implements Controller {
     private int maxNumItems;
     private ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
     private Bookshelf bookshelf;
-    private final List<String> messageHistory = new LinkedList<>();
+    private ArrayList<ChatMessage> messageHistory = new ArrayList<>();
     private boolean isExpanded = false;
     private final int expandedHeight = 200;
     private final TextField inputField = new TextField();
@@ -221,7 +222,6 @@ public class GameScene2PlayersController implements Controller {
         } else{
             messageContent = message.getSender() + ": " + messageContent;
         }
-        addMessage(prefix + messageContent);
         Label label = new Label(prefix + messageContent);
         label.setTextFill(textColor);
         label.setMaxWidth(chatMessages.getPrefWidth());
@@ -232,10 +232,17 @@ public class GameScene2PlayersController implements Controller {
             setChatTexts();
         }
     }
+    public void setChatMessages(ArrayList<ChatMessage> chat){
+        this.messageHistory = chat;
+        for(ChatMessage msg : messageHistory){
+            setChatMessage(msg);
+        }
+    }
     private void startChatting(){
         isExpanded = true;
         setChatTexts();
         chatBox.getChildren().add(chatScrollPane);
+        chatScrollPane.setStyle("-fx-background-color: rgba(128, 128, 128, 0.5);");
         chatBox.getChildren().add(inputField);
         setInputField();
     }
@@ -279,9 +286,6 @@ public class GameScene2PlayersController implements Controller {
         inputField.setOnKeyPressed(null);
         chatBox.getChildren().removeAll(chatScrollPane);
     }
-    public void addMessage(String message) {
-        messageHistory.add(message);
-    }
     public void sendMessage(String message, String recipientusername){
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
@@ -312,9 +316,9 @@ public class GameScene2PlayersController implements Controller {
         if(gui == null){
             return;
         }else{
-            gui.getCurrentStage().setOnCloseRequest(e->{
-                System.exit(0);
-            });
+            //TODO AGGIUNGERE BUTTON FOR EXIT
+            //setPlayerState(PlayerState.WATCHING);
+            //messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
             notification.setVisible(false);
         }
         setChatBox();
@@ -365,13 +369,11 @@ public class GameScene2PlayersController implements Controller {
         if(state.equals(PlayerState.ACTIVE)){
             if(actionType == ActionType.DRAW_TILES){
                 if(board[row][col].isPickable()){
-                    System.out.println("tessere in pos :"+row+col);
                     if(inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
                         int tileIndex = getTileIndex(col, row, tilesToDraw);
                         tilesToDraw.remove(tileIndex);
                         itemLivRoomCells[row][col].setEffect(null);
                         setPickableEffect(itemLivRoomCells[row][col]);
-                        System.out.println("null");
                         return;
                     }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
                         return;
@@ -381,9 +383,20 @@ public class GameScene2PlayersController implements Controller {
                     itemLivRoomCells[row][col].setEffect(glow);
                     if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems)){
                         return;
+                    }else{
+                        setActionType(ActionType.ORDER_HAND);
                     }
                     System.out.println(tilesToDraw);
                 }else{
+                    return;
+                }
+            }else if(actionType == ActionType.ORDER_HAND && hand1.getImage() == null){
+                if(board[row][col].isPickable() && inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
+                    int tileIndex = getTileIndex(col, row, tilesToDraw);
+                    tilesToDraw.remove(tileIndex);
+                    itemLivRoomCells[row][col].setEffect(null);
+                    setPickableEffect(itemLivRoomCells[row][col]);
+                    setActionType(ActionType.DRAW_TILES);
                     return;
                 }
             }
@@ -407,6 +420,8 @@ public class GameScene2PlayersController implements Controller {
                 System.out.println(tilesToDraw);
                 clearEffects();
             }
+        }else{
+            messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
         }
     }
     private void clearHand() {

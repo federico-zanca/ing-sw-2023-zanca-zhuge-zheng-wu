@@ -104,9 +104,6 @@ public class GUI extends Application{
         this.currentScene = currentScene;
     }
 
-    public GuiPhase getPhase() {
-        return phase;
-    }
 
     public void setPhase(GuiPhase phase) {
         this.phase = phase;
@@ -245,6 +242,14 @@ public class GUI extends Application{
             });
         }
     }
+    public void setChatMessages(ArrayList<ChatMessage> chat) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setChatMessages(chat);
+            });
+        }
+    }
     public void setSpinnerValue(Integer value) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof InLobbySceneController){
@@ -269,12 +274,22 @@ public class GUI extends Application{
             });
         }
     }
+
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
     }
 
     public PersonalGoalCard getPersonalGoalCard() {
         return personalGoalCard;
+    }
+
+    public void setLeaderBoard(LinkedHashMap<String,Integer> ranking) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof EndGameController){
+            Platform.runLater(()->{
+                ((EndGameController)currentController).setRanking(ranking);
+            });
+        }
     }
 }
 

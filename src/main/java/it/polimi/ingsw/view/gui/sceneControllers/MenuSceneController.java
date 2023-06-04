@@ -42,6 +42,8 @@ public class MenuSceneController implements Controller{
         if(gui == null){
             return;
         }else{
+            setError(null);
+            usernameField.clear();
             gui.getCurrentStage().setOnCloseRequest(e->{
                 System.exit(0);
             });

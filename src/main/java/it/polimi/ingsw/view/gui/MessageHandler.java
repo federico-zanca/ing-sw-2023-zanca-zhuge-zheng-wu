@@ -25,7 +25,6 @@ public class MessageHandler extends VirtualView implements View {
     private String myLobby = "";
     private String myUsername = "";
     private MessageToClient lastMessage;
-    private PersonalGoalCard personalGoalCard;
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
         gui.setPhase(GuiPhase.LOGIN);
@@ -51,6 +50,11 @@ public class MessageHandler extends VirtualView implements View {
             gui.setCurrentScene(gui.getScene(GameFxml.IN_LOBBY_SCENE.s));
             gui.changeScene();
             gui.setAllPlayersNames(joinLobbyResponse.getUsernames());
+            gui.setSpinnerDisable();
+        }else{
+            gui.setPhase(GuiPhase.GAME);
+            gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
+            gui.changeScene();
         }
     }
     @Override
@@ -73,7 +77,12 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onReconnectionMessage(ReconnectionMessage reconnectionMessage) {
-
+        gui.setPhase(GuiPhase.GAME);
+        gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
+        gui.changeScene();
+        gui.setGameScene(reconnectionMessage.getModel());
+        gui.setPersonalGoalCard(reconnectionMessage.getPersonalGoal());
+        gui.setChatMessages(reconnectionMessage.getChat());
     }
 
     @Override
@@ -113,11 +122,19 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onEndGameMessage(EndGameMessage endGameMessage) {
-
+        lastMessage = endGameMessage;
+        gui.setPhase(GuiPhase.END_GAME);
+        gui.setCurrentScene(gui.getScene(GameFxml.END_SCENE.s));
+        gui.changeScene();
+        gui.setLeaderBoard(endGameMessage.getRanking());
     }
 
     @Override
     public void onExitGameResponse(ExitGameResponse exitGameResponse) {
+        //TODO ALERT FOR CONTENT OF EXITGAMERESPONSE
+        gui.setPhase(GuiPhase.SERVER);
+        gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
+        gui.changeScene();
     }
 
     @Override
@@ -139,7 +156,8 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onLastTurnMessage(LastTurnMessage lastTurnMessage) {
-
+        lastMessage = lastTurnMessage;
+        gui.setGameNotification("It's the last turn!");
     }
 
     @Override
@@ -177,12 +195,12 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onPlayerLeftMessage(PlayerLeftMessage playerLeftMessage) {
-
+        gui.setGameNotification(playerLeftMessage.getContent());
     }
 
     @Override
     public void onPlayerRejoinedMessage(PlayerRejoinedMessage playerRejoinedMessage) {
-
+        gui.setGameNotification("Il giocatore"+playerRejoinedMessage.getUsername()+"si è riconnesso alla partita!");
     }
 
     @Override
@@ -220,7 +238,6 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onNotAdminMessage(NotAdminMessage notAdminMessage) {
-        gui.setSpinnerDisable();
         gui.setError("Non sei l'admin di questa lobby! Solo l'admin può usare questo comando.");
     }
 
@@ -289,8 +306,5 @@ public class MessageHandler extends VirtualView implements View {
     }
     public MessageToClient getLastMessage() {
         return lastMessage;
-    }
-    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
-        this.personalGoalCard = personalGoalCard;
     }
 }
