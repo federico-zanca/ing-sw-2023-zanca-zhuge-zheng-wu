@@ -53,13 +53,15 @@ public class ServerSceneController implements Controller{
         if(gui == null){
             return;
         }else{
+            setError(null);
+            newLobbyName.clear();
             gui.getCurrentStage().setOnCloseRequest(e->{
                 System.exit(0);
             });
         }
     }
     public void exitButton(){
-        System.exit(0);
+
     }
     public void lobbyList(){
         messageHandler.notifyObservers(new LobbyListRequest());

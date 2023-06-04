@@ -6,7 +6,8 @@ public enum GameFxml {
     MENU_SCENE("menu_scene.fxml"),
     SERVER_SCENE("server_scene.fxml"),
     IN_LOBBY_SCENE("in_lobby_scene.fxml"),
-    GAME_SCENE("game_scene_2players.fxml");
+    GAME_SCENE("game_scene_2players.fxml"),
+    END_SCENE("leaderboard_scene.fxml");
 
     private GuiPhase phase;
 
@@ -18,6 +19,7 @@ public enum GameFxml {
         SERVER_SCENE.phase = GuiPhase.SERVER;
         IN_LOBBY_SCENE.phase = GuiPhase.IN_LOBBY;
         GAME_SCENE.phase = GuiPhase.GAME;
+        END_SCENE.phase = GuiPhase.END_GAME;
     }
     GameFxml(String s) {
         this.s=s;

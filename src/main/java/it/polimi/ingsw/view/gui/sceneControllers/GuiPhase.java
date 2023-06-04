@@ -6,5 +6,6 @@ public enum GuiPhase {
     IN_LOBBY,
 
     GAME,
+    END_GAME,
     CONNECTION
 }
