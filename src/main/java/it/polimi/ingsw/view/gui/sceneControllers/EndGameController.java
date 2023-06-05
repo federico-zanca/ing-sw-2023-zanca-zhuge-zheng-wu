@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
 import java.util.LinkedHashMap;
 
 public class EndGameController implements Controller{
@@ -42,6 +44,9 @@ public class EndGameController implements Controller{
             System.out.println("do nothing");
         }else{
             System.out.println("do nothing for now");
+            Stage stage = (Stage) exit.getScene().getWindow();
+            stage.sizeToScene();
+            stage.centerOnScreen();
             clear();
             gui.getCurrentStage().setOnCloseRequest(e->{
                 gui.setPhase(GuiPhase.SERVER);
