@@ -5,8 +5,8 @@ import it.polimi.ingsw.view.gui.GameFxml;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.text.Text;
-
 import java.util.LinkedHashMap;
 
 public class EndGameController implements Controller{
@@ -28,6 +28,8 @@ public class EndGameController implements Controller{
     private Text thirdScores;
     @FXML
     private Text fourthScores;
+    @FXML
+    private Button exit;
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {this.messageHandler = messageHandler;}
 
