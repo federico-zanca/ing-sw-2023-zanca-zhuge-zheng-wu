@@ -14,6 +14,9 @@ import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Game controller that manages the flow of a game by calling the macro-methods of the model.
+ */
 public class GameController {
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 4;
@@ -31,7 +34,7 @@ public class GameController {
         setupGameController(model);
     }
     /**
-     * Initializes the Game Controller getting a in instance of the new game
+     * Initializes the Game Controller getting an instance of the new game
      */
     public void setupGameController(Game model){
         this.model = model;
@@ -40,7 +43,7 @@ public class GameController {
     }
     /**
      * Set the Phase of the current
-     * @param phase
+     * @param phase the game phase to set
      */
     private void setGamePhase(GamePhase phase) {
         model.setGamePhase(phase);
@@ -95,7 +98,7 @@ public class GameController {
 
     /**
      * Handles the PlayPhase related messages received from the view
-     * @param message
+     * @param message the message received
      */
     private void playPhase(String senderUsername, MessageToServer message) {
         switch(model.getTurnPhase()){
@@ -127,8 +130,7 @@ public class GameController {
      * Checks whether the given username is valid according to certain criteria.
      *
      * @param username the string representing the username to be validated.
-     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
-     *
+     * @return true if the username meets all the validation criteria outlined below, false otherwise.
      * Criteria for a valid username:
      * 1. Does not contain any spaces.
      * 2. Does not start with a special character (-, _, or .).
@@ -178,6 +180,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Updates the game state based on the message received from a player.
+     *
+     * @param senderUsername the username of the player who sent the message
+     * @param message the message received from the player
+     */
     public void update(String senderUsername, MessageToServer message) {
         if(message instanceof ExitGameRequest){
             turnController.addPlayerToSkip(model.getPlayerByUsername(senderUsername));
@@ -189,6 +197,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Starts the game if it is ready to start.
+     *
+     * @throws GameNotReadyException if the game is not ready to start
+     */
     public void startGame() throws GameNotReadyException {
         if(model.isGameReadyToStart()){
             System.err.println("IL GIOCO INIZIA");
@@ -203,6 +216,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Scrambles the order of players in the given list.
+     *
+     * @param modelPlayers the list of players to be scrambled
+     * @return the scrambled list of players
+     */
     private ArrayList<Player> scramble(ArrayList<Player> modelPlayers) {
         ArrayList<Player> players = new ArrayList<>(modelPlayers);
         ArrayList<Player> scrambled = new ArrayList<>();
@@ -257,14 +276,28 @@ public class GameController {
         return model.getCurrentPlayer().getUsername();
     }
 
+    /**
+     * Reconnects a previously exited player to the game.
+     *
+     * @param username the username of the player to reconnect
+     */
     public void reconnectPlayer(String username) {
         turnController.reconnectExitedPlayer(model.getPlayerByUsername(username));
     }
 
+    /**
+     * Disconnects a player from the game.
+     *
+     * @param username the username of the player to disconnect
+     */
     public void disconnectPlayer(String username) {
         Player player = model.getPlayerByUsername(username);
         turnController.addPlayerToSkip(player);
     }
+
+    /**
+     * Resets the list of players in the game.
+     */
 
     public void resetPlayers() {
         model.resetPlayers();
