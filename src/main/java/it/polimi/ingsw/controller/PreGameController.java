@@ -16,9 +16,16 @@ import it.polimi.ingsw.view.tui.TextColor;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-
+/**
+ * Represents a controller for the pre-game phase (connection and in lobby phase).
+ * It provides methods to interact with a server.
+ */
 public class PreGameController {
     private final ServerImpl server;
+    /**
+     * Constructs a new instance of PreGameController.
+     * @param server the server implementation to be used
+     */
     public PreGameController(ServerImpl server) {
         this.server = server;
     }
@@ -53,6 +60,12 @@ public class PreGameController {
          */
     }
 
+    /**
+     * Replaces an old client with a new client in the server and updates associated objects.
+     * This method migrates the chat, updates the client's username and lobby, and removes the old client from the server.
+     * @param oldClient the old client to be replaced
+     * @param client the new client to replace the old client with
+     */
     private void replaceClient(Client oldClient, Client client) {
         migrateChat(oldClient, client);
         String username = server.getUsernameOfClient(oldClient);
@@ -62,6 +75,11 @@ public class PreGameController {
         server.removeClient(oldClient);
     }
 
+    /**
+     * Migrates the chat messages from an old client to a new client.
+     * @param oldClient the old client whose chat messages will be migrated
+     * @param client the new client to migrate the chat messages to
+     */
     private void migrateChat(Client oldClient, Client client) {
         ArrayList<ChatMessage> chat = server.getConnectedClientInfo(oldClient).getChat();
         server.getConnectedClientInfo(client).setChat(chat);
@@ -92,6 +110,13 @@ public class PreGameController {
         */
     }
 
+    /**
+     * Handles a request from a client to create a new lobby.
+     * This method creates a new lobby with the specified name and associates it with the client.
+     * It sends a response to the client indicating whether the lobby creation was successful.
+     * @param client the client making the lobby creation request
+     * @param createLobbyRequest the request object containing the lobby name
+     */
     public void onCreateLobbyRequest(Client client, CreateLobbyRequest createLobbyRequest) {
         try {
             Lobby newLobby = new Lobby(server, client,createLobbyRequest.getLobbyName());
@@ -106,6 +131,13 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to join a lobby.
+     * This method processes the join request and updates the lobby and client state accordingly.
+     * It sends a response to the client indicating whether the join request was successful.
+     * @param client  the client making the join request
+     * @param joinLobbyRequest  the request object containing the lobby name
+     */
     public void onJoinLobbyRequest(Client client, JoinLobbyRequest joinLobbyRequest) {
         String content;
         JoinType joinSuccess;
@@ -159,6 +191,13 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to get the list of available lobbies.
+     * This method retrieves the information about the lobbies from the server and sends a response to the client
+     * containing the lobby list information.
+     * @param client the client making the lobby list request
+     * @param lobbyListRequest  the request object
+     */
     public void onLobbyListRequest(Client client, LobbyListRequest lobbyListRequest) {
         try {
             server.sendMessage(client, new LobbyListResponse(server.getLobbiesInfo()));
@@ -168,6 +207,16 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to log in with a username.
+     * This method checks if the requested username is available.
+     * If available, it assigns the username to the client and sends a successful login response.
+     * If the username is not available, it checks if the previous client with the same username
+     * is disconnected from an ongoing game. If so, it replaces the old client with the new client
+     * and sends a successful login response. Otherwise, it sends a failed login response.
+     * @param client  the client making the login request
+     * @param loginRequest   the request object containing the requested username
+     */
     public void onLoginRequest(Client client, LoginRequest loginRequest) {
         String playername = (loginRequest.getUsername());
         if(server.isUsernameAvailable(playername)) {
@@ -200,6 +249,14 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to change username.
+     * This method checks if the new username is available.
+     * If available, it assigns the username to the client and sends a successful username response.
+     * If the username is not available, it sends a failed username response with the client's current username.
+     * @param client  the client making the username request
+     * @param usernameRequest the request object containing the requested username
+     */
     public void onUsernameRequest(Client client, UsernameRequest usernameRequest) {
         String username = usernameRequest.getUsername();
         if(server.isUsernameAvailable(username)) {
@@ -220,6 +277,15 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to change the number of players in the lobby.
+     * If the client making the request is the lobby's admin, the method changes the number of players
+     * in the lobby to the chosen number specified in the request.
+     * If the client is not the admin, it sends a "NotAdminMessage" response indicating that only the admin
+     * can change the number of players.
+     * @param client  the client making the request
+     * @param changeNumOfPlayersRequest the request object containing the chosen number of players
+     */
     public void onChangeNumOfPlayersRequest(Client client, ChangeNumOfPlayersRequest changeNumOfPlayersRequest) {
         Client admin = server.getLobbyOfClient(client).getAdmin();
         int chosenNum = changeNumOfPlayersRequest.getChosenNum();
@@ -235,6 +301,13 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to exit the lobby.
+     * This method removes the client from the lobby, sends a successful exit lobby response to the client,
+     * and notifies the remaining players in the lobby about the client's departure.
+     * @param client   the client making the exit lobby request
+     * @param exitLobbyRequest    the request object
+     */
     public void onExitLobbyRequest(Client client, ExitLobbyRequest exitLobbyRequest) {
         try {
             String lobbyName = server.getLobbyNameOfClient(client);
@@ -254,6 +327,13 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from a client to get the list of players in the lobby.
+     * This method retrieves the usernames of all clients in the lobby of the requesting client
+     * and sends a player list response containing the usernames back to the client.
+     * @param client   the client making the player list request
+     * @param playerListRequest   the request object
+     */
     public void onPlayerListRequest(Client client, PlayerListRequest playerListRequest) {
         ArrayList<String> inLobbyClientsUsernames = server.getLobbyOfClient(client).getClientsUsernames();
         try {
@@ -264,6 +344,16 @@ public class PreGameController {
         }
     }
 
+    /**
+     * Handles a request from the lobby admin to start the game.
+     * If the client making the request is not the admin, it sends a "NotAdminMessage" response
+     * indicating that only the admin can start the game.
+     * If the number of players in the lobby is not equal to the chosen number of players,
+     * it sends a "GameNotReadyMessage" response indicating that the game is not ready to start.
+     * If both conditions are satisfied, the method starts the game.
+     * @param client  the client making the start game request
+     * @param startGameRequest   the request object
+     */
     public void onStartGameRequest(Client client, StartGameRequest startGameRequest) {
         Client admin = server.getLobbyOfClient(client).getAdmin();
         int numPlayers = server.getLobbyOfClient(client).getNumClients();
