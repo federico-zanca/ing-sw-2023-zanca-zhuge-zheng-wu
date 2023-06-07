@@ -21,6 +21,9 @@ import it.polimi.ingsw.network.message.lobbymessage.PlayersInLobbyUpdate;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+/**
+ Represents a lobby in the server.
+ */
 public class Lobby {
     private final ServerImpl server;
     private final String lobbyName;
@@ -31,6 +34,14 @@ public class Lobby {
 
     private ArrayList<ChatMessage> chat;
 
+    /**
+     Constructs a new Lobby object with the given server, admin client, and lobby name.
+     @param server the server implementation
+     @param admin the admin client
+     @param lobbyName the name of the lobby
+     @throws FullLobbyException if the lobby is already full
+     @throws ClientAlreadyInLobbyException if the admin client is already in a lobby
+     */
     public Lobby(ServerImpl server, Client admin, String lobbyName) throws FullLobbyException, ClientAlreadyInLobbyException {
         this.server = server;
         this.model = new Game();
@@ -102,6 +113,10 @@ public class Lobby {
     }
 }
 
+    /**
+     Returns the number of actually connected clients in this lobby.
+     @return the number of connected clients in the lobby
+     */
     private int numOfActuallyConnectedClientsInThisLobby() {
         int count = 0;
         for(Client client : inLobbyClients) {
@@ -234,10 +249,17 @@ public class Lobby {
         }
     }
 
+    /**
+     Unloads the players from the game by resetting the player state in the game controller.
+     */
     private void unloadPlayersFromGame() {
         controller.resetPlayers();
     }
 
+    /**
+     Loads the players into the game by adding them to the game controller.
+     @throws RuntimeException if an invalid username is encountered while adding a player
+     */
     private void loadPlayersIntoGame() {
         for(Client c : inLobbyClients){
             try {
@@ -370,6 +392,10 @@ public class Lobby {
         server.getLobbies().remove(this);
     }
 
+    /**
+     Disconnects a client from the lobby.
+     @param client the client to disconnect
+     */
     public void disconnectClient(Client client) {
         controller.disconnectPlayer(server.getConnectedClientInfo(client).getClientID());
         for(Client c : inLobbyClients) {
@@ -389,6 +415,13 @@ public class Lobby {
         //rimuovi observer
     }
 
+    /**
+     Reconnects a client to the lobby.
+     @param oldClient the old client instance to be replaced
+     @param client the new client instance
+     @param username the new username for the client
+     @throws RuntimeException if an error occurs during the reconnection process
+     */
     public void reconnectClient(Client oldClient, Client client, String username) {
         removeClient(oldClient);
 
@@ -412,10 +445,20 @@ public class Lobby {
         }
     }
 
+    /**
+     Checks if the lobby contains a player with the given username.
+     @param username the username to check
+     @return true if the lobby contains a player with the given username, false otherwise
+     */
     public boolean containsAPlayerWithThisUsername(String username) {
         return model.getPlayersUsernames().contains(username);
     }
 
+    /**
+     Handles a chat message sent by a client.
+     @param client the client sending the chat message
+     @param message the chat message to handle
+     */
     public void onChatMessage(Client client, ChatMessage message) {
         message.setSender(getClientUsername(client));
         if(message.getReceiver()==null){
@@ -438,6 +481,12 @@ public class Lobby {
         }
 }
 
+
+    /**
+     Retrieves a client from the lobby based on their username.
+     @param username the username of the client to retrieve
+     @return the client with the specified username, or null if not found
+     */
     private Client getClientByUsername(String username) {
         for(Client c : inLobbyClients){
             if(getClientUsername(c).equals(username)){

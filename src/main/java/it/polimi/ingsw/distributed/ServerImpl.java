@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-
+/**
+ * Represents a server implementation for a game server.
+ */
 public class ServerImpl extends UnicastRemoteObject implements Server {
     private static final int HEARTBEAT_TIMEOUT = 10000;
     private HashMap<Client, ClientInfo> connectedClients;
@@ -30,6 +32,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     private PreGameController preGameController;
 
+    /**
+     * Constructs a new ServerImpl instance.
+     * @throws RemoteException if a remote error occurs during object initialization.
+     */
     public ServerImpl() throws RemoteException {
         super();
         this.connectedClients = new HashMap<>();
@@ -37,10 +43,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         this.lobbies = new ArrayList<>();
     }
 
+    /**
+     * Constructs a new ServerImpl instance with a specific port number.
+     * @param port the port number to use for the server.
+     * @throws RemoteException if a remote error occurs during object initialization.
+     */
     public ServerImpl(int port) throws RemoteException {
         super(port);
     }
 
+    /**
+     * Constructs a new ServerImpl instance with a specific port number and custom socket factories.
+     * @param port the port number to use for the server.
+     * @param csf  the client socket factory to use for creating client sockets.
+     * @param ssf  the server socket factory to use for creating server sockets.
+     * @throws RemoteException if a remote error occurs during object initialization.
+     */
     public ServerImpl(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(port, csf, ssf);
     }
@@ -63,7 +81,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
 
     /**
-     * @return the list of lobbies in this server
+     * Gets the list of lobbies in this server
+     * @return the list of lobbies
      */
     public ArrayList<Lobby> getLobbies() {
         return lobbies;
@@ -248,14 +267,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         return connectedClients.get(client);
     }
 
-
+    /**
+     * Handles the event when a client exits from its current lobby.
+     * @param client the client that is exiting the lobby.
+     */
     private void clientExitsFromItsLobby(Client client) {
         connectedClients.get(client).getLobby().exitClient(client);
         connectedClients.get(client).setLobby(null);
         connectedClients.get(client).setClientState(ClientState.IN_SERVER);
     }
 
-
+    /**
+     * Gets the username of a specific client.
+     * @param client the client whose username is to be retrieved.
+     * @return the username of the client.
+     */
     public String getUsernameOfClient(Client client) {
         return getConnectedClientInfo(client).getClientID();
     }
@@ -323,7 +349,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     }
     */
 
-
+    /**
+     * Starts the heartbeat mechanism for a specific client.
+     * A timer is scheduled to disconnect the client if a heartbeat is not received within a specified timeout.
+     * @param client the client for which to start the heartbeat mechanism.
+     */
     public void startHeartBeat(Client client){
         Timer timer = new Timer();
         getConnectedClientInfo(client).setHeartbeatTimer(timer);
@@ -336,6 +366,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }, HEARTBEAT_TIMEOUT);
     }
 
+    /**
+     * Receives a heartbeat from a specific client.
+     * If a heartbeat timer exists for the client, it cancels the timer and starts a new heartbeat timer.
+     * @param client the client from which a heartbeat is received.
+     */
     public void receiveHeartBeat(Client client){
         Timer timer = getConnectedClientInfo(client).getHeartbeatTimer();
         if(timer != null){
@@ -344,6 +379,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
     }
 
+    /**
+     * Stops the heartbeat mechanism for a specific client.
+     * If a heartbeat timer exists for the client, it cancels and purges the timer.
+     * @param client the client for which to stop the heartbeat mechanism.
+     */
     public void stopHeartBeat(Client client){
         Timer timer = getConnectedClientInfo(client).getHeartbeatTimer();
         if(timer != null){
@@ -352,6 +392,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
     }
 
+    /**
+     * Disconnects a client from the server.
+     * @param client the client to disconnect.
+     */
     private void disconnect(Client client){
         if(getConnectedClientInfo(client).isConnected()) {
             stopHeartBeat(client);
@@ -374,6 +418,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
     }
 
+    /**
+     * Gets the client object associated with a given player username.
+     * @param playername the username of the player.
+     * @return the client object associated with the player username, or null if not found.
+     */
     public Client getClientByUsername(String playername) {
         for(Client client : connectedClients.keySet()){
             if(getUsernameOfClient(client).equals(playername))
@@ -382,11 +431,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         return null;
     }
 
+    /**
+     * Removes a client from the server's connected clients.
+     * @param client the client to remove.
+     */
     public void removeClient(Client client) {
         //WARNING : removes the client from the hashmap, but doesn't touch the lobby: use carefully
         connectedClients.remove(client);
     }
 
+    /**
+     * Sends a message to a specific client.
+     * @param client the client to send the message to.
+     * @param message the message to send.
+     * @throws RemoteException if a remote error occurs during the method call.
+     */
     public void sendMessage(Client client, Message message) throws RemoteException {
         System.err.println("Sending message to " + getUsernameOfClient(client) + " : " + message);
         client.update(message);

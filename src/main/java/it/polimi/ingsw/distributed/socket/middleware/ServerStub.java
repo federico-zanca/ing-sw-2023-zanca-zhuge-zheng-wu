@@ -20,6 +20,11 @@ public class ServerStub implements Server {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
 
+    /**
+     * Constructs a ServerStub object with the specified IP address and port.
+     * @param ip   the IP address of the server.
+     * @param port the port number of the server.
+     */
     public ServerStub(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -56,6 +61,11 @@ public class ServerStub implements Server {
         }
     }
 
+    /**
+     * Receives a message from the client.
+     * @param client the client to listen.
+     * @throws RemoteException if a remote error occurs during the method call.
+     */
     public void receive(Client client) throws RemoteException {
         Message m;
         try {
@@ -69,6 +79,10 @@ public class ServerStub implements Server {
         client.update(m);
     }
 
+    /**
+     * Closes the socket connection with the server.
+     * @throws RemoteException if a remote error occurs during the method call.
+     */
     public void close() throws RemoteException {
         try{
             socket.close();
