@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ Represents a Bag that contains items and personal goal cards.
+ */
 public class Bag implements Serializable {
     private static final long serialVersionUID = -4755443721464701726L;
     public static final int INIT_ITEMS_NUM = 22;
@@ -16,6 +18,12 @@ public class Bag implements Serializable {
     //private ArrayList<ItemTile> itemTiles;
     private HashMap<ItemType, Integer> itemTiles;
     private ArrayList<ItemType> availableItems;
+
+    /**
+     Constructs a new Bag.
+     Initializes the itemTiles HashMap with each ItemType and a count of INIT_ITEMS_NUM.
+     Initializes the availableItems ArrayList with all ItemType values.
+     */
     public Bag(){
         itemTiles = new HashMap<>();
         availableItems = ItemType.getValues();
@@ -24,6 +32,11 @@ public class Bag implements Serializable {
         }
         //TODO inserisci personal goal cards (non si sa come generarle)
     }
+
+    /**
+     Checks if the Bag is empty.
+     @return true if all item types in the Bag have a count of 0, false otherwise.
+     */
     public boolean emptyBag(){
         ItemType[] types = {ItemType.CAT, ItemType.BOOK, ItemType.GAME, ItemType.TROPHY, ItemType.FRAME, ItemType.PLANT};
         for (ItemType type : types){
@@ -33,9 +46,19 @@ public class Bag implements Serializable {
         }
         return true;
     }
+
+    /**
+     Gets the itemTiles left in the bag.
+     @return the HashMap containing the ItemType as keys and the corresponding count as values.
+     */
     public HashMap<ItemType, Integer> getItemTiles() {
         return itemTiles;
     }
+
+    /**
+     Gets the availableItems ArrayList.
+     @return the ArrayList containing all available ItemTypes.
+     */
     public ArrayList<ItemType> getAvailableItems() {
         return availableItems;
     }

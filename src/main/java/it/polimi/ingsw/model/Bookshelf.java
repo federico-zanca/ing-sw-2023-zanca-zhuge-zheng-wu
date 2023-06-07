@@ -7,7 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
+/**
+ * Represents a bookshelf with 6 rows and 5 columns to store item tiles.
+ * Each tile represents a position on the bookshelf that can hold an item.
+ */
 public class Bookshelf implements Serializable {
     private static final long serialVersionUID = -4668097451983716980L;
     public static final int Rows=6;
@@ -15,10 +18,19 @@ public class Bookshelf implements Serializable {
 
     private ItemTile[][] shelfie;
 
+    /**
+     * Initializes a new instance of the Bookshelf class.
+     * The bookshelf is initially empty, with all item tiles set to EMPTY.
+     */
     public Bookshelf(){
         shelfie = new ItemTile[Rows][Columns];
         emptyBookshelf();
     }
+
+    /**
+     * Initializes a new instance of the Bookshelf class with the same contents as another bookshelf.
+     * @param other The Bookshelf object from which to copy the contents.
+     */
     public Bookshelf(Bookshelf other){
         this.shelfie = other.getShelfie();
     }
@@ -36,7 +48,6 @@ public class Bookshelf implements Serializable {
      *
      * @return the maximum number of slots available in any column of the bookshelf
      */
-
     public int maxSlotsAvailable(){
         int max=0;
         int[] availableSlots=this.availableSlotsForEachColumn();
@@ -64,6 +75,12 @@ public class Bookshelf implements Serializable {
         return availableSlots;
     }
 
+    /**
+     * Calculates the number of available slots (empty item tiles) in a specific column of the bookshelf.
+     * @param column The column index for which to count the available slots.
+     * @return The number of available slots in the specified column.
+     * @throws IndexOutOfBoundsException If the specified column is out of range.
+     */
     public int availableSlotsForColumn(int column){
         int availableSlots=0;
         for(int i=0; i<Rows; i++){
@@ -274,6 +291,9 @@ public class Bookshelf implements Serializable {
         System.out.println();
     }
 
+    /**
+     * Prints the group IDs of the item tiles on the bookshelf.
+     */
     public void printGroupID(){
         for(int i=0;i<Rows;i++){
             for(int j=0;j<Columns;j++){
@@ -283,6 +303,13 @@ public class Bookshelf implements Serializable {
         }
     }
 
+    /**
+     * Inserts a list of item tiles into a specific column of the bookshelf.
+     * The items are inserted one by one using the insertItem() method.
+     * @param items  The list of item tiles to be inserted.
+     * @param column The column index where the items should be inserted.
+     * @throws IndexOutOfBoundsException If the specified column is out of range.
+     */
     public void insertItems(ArrayList<ItemTile> items, int column) {
         for(ItemTile item : items){
             insertItem(item, column);
