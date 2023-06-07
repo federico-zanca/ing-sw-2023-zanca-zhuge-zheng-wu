@@ -29,14 +29,18 @@ public class Game extends Observable {
     private Bag bag;
     private boolean gameStarted;
 
+    /**
+     * Constructs a new Game instance and initializes its properties.
+     */
     public Game(){
         init();
     }
 
 
     //METHODS FOR GAME INITIALIZATION
-    /** Game initialization
-     *
+    /**
+     * Initializes the game by setting up the initial state.
+     * This method is called during construction of a Game object.
      */
     public void init(){
         board = null;
@@ -196,13 +200,16 @@ public class Game extends Observable {
         //fai vedere commongoals
     }
 
+    /**
+     * Sets the game started status.
+     * @param b The new game started status to set.
+     */
     private void setGameStarted(boolean b) {
         this.gameStarted = b;
     }
 
 
     //  METHODS FOR DRAW
-
     /**
      * Prepares the info used by current player to draw items from the board
      */
@@ -492,6 +499,11 @@ public class Game extends Observable {
         notifyObservers(new BoardMessage("", board.getGameboard()));
     }
 
+    /**
+     * Ends the game and notifies the observers with the winner and leaderboard information.
+     * @param winner  The player who won the game.
+     * @param playersQueue  The list of players in the game.
+     */
     public void endGame(Player winner, ArrayList<String> playersQueue) {
         sortLeaderBoard(playersQueue);
         notifyObservers(new EndGameMessage("", leaderboard));
@@ -524,16 +536,29 @@ public class Game extends Observable {
         }
     }
 
+    /**
+     * Adds points to a player and updates the leaderboard accordingly.
+     * @param p      The player to whom points are being added.
+     * @param points The number of points to add.
+     **/
     public void addPointsToPlayer(Player p, int points){
         p.addPoints(points);
         leaderboard.put(p.getUsername(), leaderboard.get(p.getUsername()) + points);
     }
 
+    /**
+     * Updates the leaderboard.
+     * @param usernamesQueue The list of usernames representing the order of players in the game.
+     */
     public void updateLeaderBoard(ArrayList<String> usernamesQueue){
         sortLeaderBoard(usernamesQueue);
        // notifyObservers(new LeaderBoardMessage(currentPlayer.getUsername(), leaderboard));
     }
 
+    /**
+     * Sorts the leaderboard based on the players' scores in descending order and their positions in the usernames queue.
+     * @param usernamesQueue The list of usernames representing the order of players in the game.
+     */
     public void sortLeaderBoard(ArrayList<String> usernamesQueue){
         leaderboard = leaderboard.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
@@ -542,44 +567,86 @@ public class Game extends Observable {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
+    /**
+     * Initializes the leaderboard with default scores for all players.
+     * Each player's initial score is set to 0.
+     */
     private void initLeaderBoard(){
         for(Player p : players){
             leaderboard.put(p.getUsername(), 0);
         }
     }
+
+    /**
+     * Checks if it is the last turn of the game.
+     * @return True if it is the last turn, false otherwise.
+     */
     public boolean isLastTurn() {
         return lastTurn;
     }
 
+    /**
+     * Sets the last turn status and notifies the observers.
+     * @param b The new last turn status to set.
+     */
     public void setLastTurn(boolean b) {
         lastTurn = b;
         notifyObservers(new LastTurnMessage("", currentPlayer.getUsername()));
     }
 
+    /**
+     * Adds an observer to the list of observers for this object.
+     * @param o The observer to be added.
+     */
     public synchronized void addObserver(it.polimi.ingsw.utils.Observer o) {
         super.addObserver(o);
     }
 
+    /**
+     * Gets the leaderboard containing the scores of all players.
+     * @return The leaderboard as a LinkedHashMap, where the keys are usernames and the values are scores.
+     */
     public LinkedHashMap<String, Integer> getLeaderboard() {
         return leaderboard;
     }
 
+    /**
+     * Removes a player from the game.
+     * @param player The player to be removed.
+     */
     public void removePlayer(Player player) {
         players.remove(player);
     }
 
+    /**
+     * Notifies the observers that a player has rejoined the game.
+     * @param player The player who has rejoined the game.
+     */
     public void playerRejoined(Player player) {
         notifyObservers(new PlayerRejoinedMessage("", player.getUsername()));
     }
 
+    /**
+     * Checks if the game has started.
+     * @return True if the game has started, false otherwise.
+     */
     public boolean isGameStarted() {
         return gameStarted;
     }
 
+    /**
+     * Retrieves the personal goal card of the player by username.
+     * @param username The username of the player.
+     * @return The personal goal card associated with the player, or null if the player does not have a personal goal card.
+     */
     public PersonalGoalCard getPersonalGoalOfPlayer(String username) {
         return personalGoals.get(username);
     }
 
+    /**
+     * Resets the list of players in the game.
+     * This method clears the existing list of players and creates a new empty list.
+     */
     public void resetPlayers() {
         players = new ArrayList<>();
     }
