@@ -49,6 +49,10 @@ public class TurnController {
         //game.setGamePhase(TurnPhase.DRAW);
     }
 
+    /**
+     * Returns a list of player usernames in the playerQueue.
+     * @return List of player usernames
+     */
     protected ArrayList<String> getPlayerQueueUsernames() {
         ArrayList<String> usernames = new ArrayList<>();
         for (Player p : playerQueue) {
@@ -57,6 +61,13 @@ public class TurnController {
         return usernames;
     }
 
+    /**
+     * Handles the draw phase based on the received message.
+     * If the message is not a valid DrawTilesMessage, an error message is sent.
+     * Otherwise, if the drawn tiles are valid, it draws them from the board and prepares for the insert phase.
+     * @param senderUsername Username of the message sender
+     * @param message Message containing the drawn tiles
+     */
     public void drawPhase(String senderUsername, MessageToServer message) {
         DrawTilesMessage m;
         try{
@@ -75,7 +86,11 @@ public class TurnController {
     }
 
 
-
+    /**
+     * Checks if all the coordinates in the given list are equal.
+     * @param x List of integers representing the coordinates
+     * @return True if all coordinates are equal, false otherwise
+     */
     private boolean allCoordsAreEqual( ArrayList<Integer> x){
         for(int i=0; i<x.size()-1; i++){
             if (x.get(i)!=x.get(i + 1)) {
@@ -84,6 +99,12 @@ public class TurnController {
         }
         return true;
     }
+
+    /**
+     * Checks if all the coordinates in the given list are adjacent.
+     * @param x List of integers representing the coordinates
+     * @return True if all coordinates are adjacent, false otherwise
+     */
     private boolean allCoordsAreAdjacent(ArrayList<Integer> x){
         Collections.sort(x);
         for(int i=0; i<x.size()-1; i++){
@@ -91,6 +112,12 @@ public class TurnController {
         }
         return true;
     }
+
+    /**
+     * Checks if the tiles in the hand are in a line (either rows or columns).
+     * @param hand List of squares representing the hand
+     * @return True if the tiles are in a line, false otherwise
+     */
     private boolean inLineTile(ArrayList<Square> hand) {
         ArrayList<Integer> rows = new ArrayList<>();
         ArrayList<Integer> columns = new ArrayList<>();
@@ -100,6 +127,13 @@ public class TurnController {
         }
         return (allCoordsAreAdjacent(rows) && allCoordsAreEqual(columns)) || (allCoordsAreAdjacent(columns) && allCoordsAreEqual(rows));
     }
+
+    /**
+     * Checks if the drawn hand is valid.
+     * It verifies if each square in the hand is pickable from the board and if they are in a line.
+     * @param items List of squares representing the drawn hand
+     * @return True if the drawn hand is valid, false otherwise
+     */
     public boolean isDrawHandValid(ArrayList<Square> items){
         for(Square sq : items){
             if(!model.getBoard().getSquare(sq.getCoordinates()).isPickable()) return false;
@@ -107,13 +141,18 @@ public class TurnController {
         return inLineTile(items);
     }
 
-
     /**
      * @return List of players in queue
      */
     public ArrayList<Player> getPlayerQueue() {
         return playerQueue;
     }
+
+    /**
+     * Loads the next player in the playerQueue.
+     * If it is the last turn and the current player is the last player in the queue, it advances the game phase to AWARDS.
+     * Otherwise, it sets the next player as the current player and starts a new turn.
+     */
     public void loadNextPlayer(){
         int nowCurrent = playerQueue.indexOf(model.getCurrentPlayer());
         if(nowCurrent == playerQueue.size()-1 && isLastTurn()){
@@ -126,10 +165,17 @@ public class TurnController {
         }
     }
 
+    /**
+     * Checks if it is the last turn in the game.
+     * @return True if it is the last turn, false otherwise
+     */
     public boolean isLastTurn() {
         return model.isLastTurn();
     }
 
+    /**
+     * Triggers the last turn in the game.
+     */
     public void triggerLastTurn() {
         model.setLastTurn(true);
     }
@@ -144,11 +190,17 @@ public class TurnController {
         }
     }
 
+    /**
+     * Handles the refill phase and loads the next player.
+     */
     public void refillPhase(){
         model.handleRefillPhase();
         loadNextPlayer();
     }
 
+    /**
+     * Calculates the common goal and prepares for the refill phase.
+     */
     public void calculateCommonGoal(){
         model.handleCalculatePhase();
         refillPhase();
@@ -192,6 +244,12 @@ public class TurnController {
         return model.getCurrentPlayer().getBookshelf().availableSlotsForColumn(column)>=items.size(); //return false if the column has less available slots than the number of tiles in the message
     }
 
+    /**
+     * Checks if the items list contains the same tiles as the hand list, regardless of their order.
+     * @param items List of tiles to compare
+     * @param hand List of tiles representing the hand
+     * @return True if the items list contains the same tiles as the hand list, false otherwise
+     */
     private boolean areTheSameHand(ArrayList<ItemTile> items, ArrayList<ItemTile> hand) {
         ArrayList<ItemTile> handCopy = new ArrayList<>(hand);
         Collections.sort(handCopy, Comparator.comparing(ItemTile::getType));
@@ -203,10 +261,20 @@ public class TurnController {
         return true;
     }
 
+    /**
+     * Sets the player queue to the specified list of players.
+     * @param players List of players in the player queue
+     */
     public void setPlayersQueue(ArrayList<Player> players) {
         this.playerQueue = players;
     }
 
+    /**
+     * Adds the specified player to the playersToSkip list.
+     * If all players have been added to the list, the game phase is advanced to AWARDS.
+     * If the player is the current player, the next player is loaded.
+     * @param player Player to skip
+     */
     public void addPlayerToSkip(Player player) {
         playersToSkip.add(player);
         if(playersToSkip.size()==playerQueue.size())
@@ -217,10 +285,19 @@ public class TurnController {
     }
 
 
+    /**
+     * Returns the playersToSkip list.
+     * @return List of players to skip
+     */
     public List<String> getPlayersToSkipUsernames(){
         return playersToSkip.stream().map(Player::getUsername).collect(Collectors.toList());
     }
 
+    /**
+     * Reconnects a player who has previously exited the game.
+     * Removes the player from the playersToSkip list and notifies the model that the player has rejoined.
+     * @param player The player to reconnect
+     */
     public void reconnectExitedPlayer(Player player) {
         playersToSkip.remove(player);
         model.playerRejoined(player);
