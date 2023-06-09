@@ -5,6 +5,9 @@ import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents a player in a game.
+ */
 public class Player implements Serializable {
     private static final long serialVersionUID = 5681952653692686369L;
     private String username;
@@ -113,14 +116,27 @@ public class Player implements Serializable {
 
     }
 
+    /**
+     Sets the hand of the player.
+     @param hand the new hand for the player
+     */
     public void setHand(ArrayList<ItemTile> hand){
         this.hand = hand;
     }
 
+
+    /**
+     Returns a string representation of the Player object.
+     @return a string representation of the Player, including the username
+     */
     public String toString(){
         return "Player : " + username;
     }
 
+    /**
+     Retrieves the hand of the player.
+     @return the hand of the player as an ArrayList of ItemTile objects
+     */
     public ArrayList<ItemTile> getHand() {
         return hand;
     }
