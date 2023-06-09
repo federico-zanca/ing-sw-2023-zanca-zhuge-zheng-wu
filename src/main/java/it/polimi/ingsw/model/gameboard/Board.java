@@ -11,12 +11,17 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Stack;
-
+/**
+ Represents the game board.
+ */
 public class Board implements Serializable {
     private static final long serialVersionUID = 90503760638457723L;
     private Square[][] gameboard;
     public static final int DIMENSIONS = 9;
 
+    /**
+     * Constructs a new Board object with a 9x9 game board.
+     */
     public Board(){
         gameboard = new Square[DIMENSIONS][DIMENSIONS];
         for(int i=0; i<DIMENSIONS; i++){
@@ -28,7 +33,7 @@ public class Board implements Serializable {
 
     /**
      * Initializes the board depending on the number of players in the game
-     * @param numPlayers
+     * @param numPlayers number of players
      */
     public void initBoard(int numPlayers){
         String jsonpath = "src/main/resources/gameboardJSON/";
@@ -104,11 +109,17 @@ public class Board implements Serializable {
 
     }
 // ITEMS è passato da turn e sono le tessere pescate da Bag
+
+    /**
+     * Retrieves the current game board.
+     * @return The matrix representing the current state of the game board.
+     */
     public Square[][] getGameboard() {
         return gameboard;
     }
+
     /**
-     *
+     * Refills the game board with items available in bag.
      * @param items available in bag
      */
     public void refillBoardWithItems(ArrayList<ItemTile> items){
@@ -188,6 +199,11 @@ public class Board implements Serializable {
         return tmp;
     }
 
+    /**
+     Picks up items from the specified squares on the game board and returns them as an ArrayList.
+     @param squares An ArrayList of Square objects representing the squares from which to pick up items.
+     @return An ArrayList of ItemTile objects representing the items picked up from the squares.
+     */
     public ArrayList<ItemTile> pickItems(ArrayList<Square> squares){
         ArrayList<ItemTile> hand = new ArrayList<>();
         for(Square sq : squares){
@@ -197,7 +213,6 @@ public class Board implements Serializable {
     }
 
     /**
-     *
      * Set ItemTiles pickable as First ItemTiles
      */
     public void enableSquaresWithFreeSide(){
@@ -208,6 +223,10 @@ public class Board implements Serializable {
         }
     }
 
+    /**
+     Retrieves a list of coordinates representing the pickable first items on the game board.
+     @return An ArrayList of integers representing the coordinates (row, column) of the pickable first items.
+     */
     public ArrayList<Integer> pickableFirstItems(){
         ArrayList<Integer> pickable=new ArrayList<>();
             for(int i=1; i<DIMENSIONS-1; i++){
@@ -282,10 +301,20 @@ public class Board implements Serializable {
         }
     }
 
+    /**
+     Retrieves the square at the specified coordinates on the game board.
+     @param coords The coordinates (row, column) of the desired square.
+     @return The Square object at the specified coordinates on the game board.
+     */
     public Square getSquare(Coordinates coords) {
         return gameboard[coords.getRow()][coords.getColumn()];
     }
 
+
+    /**
+     Disables all squares on the game board.
+     This resets the 'pickable' property of each square to false, indicating that they cannot be picked.
+     */
     public void disableAllSquares() {
         for(int i=0; i<DIMENSIONS; i++){
             for(int j=0; j<DIMENSIONS; j++){
