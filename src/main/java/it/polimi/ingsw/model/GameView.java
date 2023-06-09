@@ -6,7 +6,9 @@ import it.polimi.ingsw.model.gameboard.Board;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
+/**
+ * Represents the view of a game.
+ */
 public class GameView implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +24,10 @@ public class GameView implements Serializable {
 
     //attributes for each single player, initialized thanks to the username passed to the constructor
 
-
+    /**
+     * Constructs a GameView object based on the provided Game model.
+     * @param model the Game model used to initialize the GameView object
+     */
     public GameView(Game model) {
         if (model.getPlayers() != null) {
             this.players = new ArrayList<>(model.getPlayers());
@@ -74,22 +79,42 @@ public class GameView implements Serializable {
         return this.commonGoals;
     }
 
+    /**
+     * Retrieves the list of players participating in the game.
+     * @return the list of players participating in the game
+     */
     public ArrayList<Player> getPlayers() {
         return this.players;
     }
 
+    /**
+     * Gets the leaderboard, which contains player names and their scores.
+     * @return the leaderboard with player names and scores
+     */
     public LinkedHashMap<String, Integer> getLeaderboard() {
         return this.leaderboard;
     }
 
+    /**
+     * Checks if it is the last turn of the game.
+     * @return true if it is the last turn, false otherwise
+     */
     public boolean isLastTurn() {
         return this.lastTurn;
     }
 
+    /**
+     * Retrieves the current player in the game.
+     * @return the current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Retrieves the list of bookshelves belonging to each player.
+     * @return the list of bookshelves belonging to each player
+     */
     public ArrayList<Bookshelf> getBookshelves() {
         ArrayList<Bookshelf> bookshelves = new ArrayList<>();
         for (Player p : players) {
