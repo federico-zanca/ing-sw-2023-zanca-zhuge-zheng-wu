@@ -3,6 +3,9 @@ package it.polimi.ingsw.model.enumerations;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This enum contains all possible Types/Colors of an Item tile.
+ */
 public enum ItemType {
         CAT("C"),
         BOOK("B"),
