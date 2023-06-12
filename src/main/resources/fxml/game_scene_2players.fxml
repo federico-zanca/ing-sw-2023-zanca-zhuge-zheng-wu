@@ -248,7 +248,7 @@
             </Label>
          </children>
       </Pane>
-      <VBox fx:id="players" layoutX="915.0" layoutY="143.0" prefHeight="200.0" prefWidth="200.0" />
+      <VBox fx:id="players" layoutX="990.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
       <VBox fx:id="chatBox" layoutX="915.0" layoutY="469.0" prefHeight="100.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

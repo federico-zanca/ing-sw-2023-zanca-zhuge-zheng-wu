@@ -19,6 +19,7 @@ import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.tui.PlayerState;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,10 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -330,21 +328,44 @@ public class GameScene2PlayersController implements Controller {
         initSelectCol();
     }
     public void initPlayerList(ArrayList<Player> players) {
-        this.players.setSpacing(10);
+        this.players.setSpacing(3);
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
+            HBox hbox = new HBox();
+            hbox.setSpacing(3);
+            hbox.setPadding(new Insets(3));
+            hbox.setPrefSize(200,45);
+            hbox.setStyle("-fx-background-color: #D08C4D;");
+            hbox.setEffect(new DropShadow());
+            hbox.setAlignment(Pos.CENTER_LEFT);
+
             Label label = new Label(p.getUsername());
+            label.setPrefWidth(130);
+            label.setPrefHeight(40);
+            label.setStyle("-fx-font-family: system;");
             label.setStyle("-fx-font-weight: bold;");
             if (i == 0) {
+                label.setStyle("-fx-font-weight: bold;");
                 label.setStyle("-fx-text-fill: red");
             }
-            else if (i % 2 == 0) {
+            /*else if (i % 2 == 0) {
                 label.setStyle("-fx-background-color: white;");
             }
             else {
                 label.setStyle("-fx-background-color: #f2f2f2;");
+            }*/
+            hbox.getChildren().add(label);
+
+            for (int j = 0; j < 3; j++) {
+                ImageView imageView = new ImageView();
+                imageView.setFitHeight(40);
+                imageView.setFitWidth(40);
+                /*imageView.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));*/
+                hbox.getChildren().add(imageView);
             }
-            this.players.getChildren().add(label);
+
+            this.players.getChildren().add(hbox);
+
             label.setOnMousePressed(event ->{
                     String username = label.getText();
                     showOtherBookshelf(username);
