@@ -23,7 +23,10 @@ import it.polimi.ingsw.view.VirtualView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
-
+/**
+ * This class represents a textual user interface for the game.
+ * It extends the VirtualView class and implements the View and Runnable interfaces.
+ */
 public class TextualUI extends VirtualView implements View, Runnable {
 
     private final InputValidator inputValidator = new InputValidator();
@@ -41,20 +44,31 @@ public class TextualUI extends VirtualView implements View, Runnable {
     ArrayList<ItemTile> tilesToInsert;
     private ArrayList<ChatMessage> chat;
     private boolean isChatting=false;
-
+    /**
+     * Gets the player state of the current user.
+     *
+     * @return the player state of the current user
+     */
     private PlayerState getPlayerState() {
         synchronized (lock) {
             return playerState;
         }
     }
-
+    /**
+     * Sets the player state of the current user.
+     *
+     * @param playerState the player state to set
+     */
     private void setPlayerState(PlayerState playerState) {
         synchronized (lock) {
             this.playerState = playerState;
             lock.notifyAll();
         }
     }
-
+    /**
+     Constructs a new instance of the TextualUI class.
+     Initializes the scanner for user input, chat message list, and tile lists.
+     */
     public TextualUI() {
         s = new Scanner(System.in);
         chat = new ArrayList<>();
@@ -132,6 +146,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
         }
     }
 
+    /**
+     Elaborates on the input provided in the chat.
+     @param input the input text in the chat
+     */
     private void elaborateChatInput(String input) {
         if(input.equalsIgnoreCase("/quit")){
             isChatting=false;
@@ -374,13 +392,20 @@ public class TextualUI extends VirtualView implements View, Runnable {
                 break;
         }
     }
-
+    /**
+     Starts the chat functionality.
+     Sets the "isChatting" flag to true, prints the chat messages using the printer,
+     and reduces the size of the chat if necessary.
+     */
     private void startChatting() {
         isChatting = true;
         printer.printChat(chat);
         reduceChat();
     }
-
+    /**
+     Reduces the size of the chat by removing older chat messages.
+     Keeps only the last 10 chat messages in the chat list.
+     */
     private void reduceChat() {
         chat = new ArrayList<>(chat.subList(Math.max(chat.size() - 10, 0), chat.size()));
     }
@@ -445,7 +470,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
                 break;
         }
     }
-
+    /**
+     Elaborates on the login command provided in the input.
+     @param input the input containing the login command
+     */
     private void elaborateLoginCommand(String input) {
         String[] parts = input.split(" ");
         if (parts.length != 1) {
@@ -508,6 +536,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
 
     }
 
+    /**
+     Gets the client state.
+     @return the client state
+     */
     public ClientState getClientState() {
         return clientState;
     }
@@ -1038,7 +1070,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     public void onPlayersInLobbyUpdate(PlayersInLobbyUpdate playersInLobbyUpdate) {
         printer.showNewPlayerInLobby(playersInLobbyUpdate.getAllPlayersUsernames(), playersInLobbyUpdate.getContent());
     }
-
+    /**
+     Updates the view based on the received message.
+     @param message the message received
+     */
     @Override
     public void update(Message message) {
         if (message.getType()==MessageType.GAME_MSG) {
@@ -1066,17 +1101,27 @@ public class TextualUI extends VirtualView implements View, Runnable {
 
      */
 
+    /**
+     Sets the personal goal card for the current player.
+     @param personalGoalCard the personal goal card to set
+     */
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
     }
-
+    /**
+     Handles a received chat message.
+     @param message the chat message to handle
+     */
     private void onChatMessage(ChatMessage message) {
         chat.add(message);
         if(isChatting){
             printer.printChatMessage(message);
         }
     }
-
+    /**
+     Sends a chat message.
+     @param messageText the text of the chat message to send
+     */
     public void sendChatMessage(String messageText) {
         String recipientusername = null;
         messageText = messageText.trim();

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view.tui;
-
+/**
+ * Represents different commands that can be used in a connection.
+ */
 public enum ConnectionCommand {
     HELP("mostra la lista dei comandi"),
     EXIT("termina la connessione"),

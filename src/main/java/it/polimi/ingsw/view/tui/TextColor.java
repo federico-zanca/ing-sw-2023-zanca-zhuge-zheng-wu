@@ -1,5 +1,8 @@
 package it.polimi.ingsw.view.tui;
-
+/**
+ * Represents different text colors and formatting options for console output.
+ * Each enum value contains the corresponding ANSI escape sequence for the color or formatting style.
+ */
 public enum TextColor {
     //pickable colors
     RED("\033[51;38;5;255;48;5;160m"),      // RED

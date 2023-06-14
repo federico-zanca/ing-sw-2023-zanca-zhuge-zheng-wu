@@ -14,7 +14,7 @@ public class InputValidator {
      * Checks whether the given username is valid according to certain criteria.
      *
      * @param username the string representing the username to be validated.
-     * @return true if the username meets all of the validation criteria outlined below, false otherwise.
+     * @return true if the username meets all the validation criteria outlined below, false otherwise.
      * <p>
      * Criteria for a valid username:
      * 1. Does not contain any spaces.
@@ -247,8 +247,8 @@ public class InputValidator {
      * Same as invalidCoordsFormat but is generic
      *
      * @param input cli input
-     * @param n     number of numbers separated by the coma that you have in the input string
-     * @return
+     * @param n number of numbers separated by the coma that you have in the input string
+     * @return true if the input represents an invalid order format, false otherwise.
      */
     public static boolean invalidOrderFormat(String input, int n) {
         String[] parts = input.split(",");
