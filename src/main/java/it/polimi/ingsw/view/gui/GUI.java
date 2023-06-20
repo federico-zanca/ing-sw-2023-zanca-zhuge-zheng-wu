@@ -151,13 +151,26 @@ public class GUI extends Application{
     }
     public void setGameScene(GameView model) {
         Controller currentController = controllers.get(fxml.get(phase));
+        if (currentController instanceof GameScene2PlayersController) {
+            Platform.runLater(() -> {
+                ((GameScene2PlayersController) currentController).setCommonGoals(model.getCommonGoals());
+                ((GameScene2PlayersController) currentController).setBoard(model.getBoard().getGameboard(), 0);
+                ((GameScene2PlayersController) currentController).setPersonalGoalCardImage();
+                ((GameScene2PlayersController) currentController).initPlayerList(model.getPlayers());
+            });
+        }
+    }
+
+        public void setReconnectedGameScene(GameView model, Player reconnectedPlayer) {
+        Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
                 ((GameScene2PlayersController)currentController).setCommonGoals(model.getCommonGoals());
                 ((GameScene2PlayersController)currentController).setBoard(model.getBoard().getGameboard(),0);
+                ((GameScene2PlayersController)currentController).setBookshelfAttribute(reconnectedPlayer.getBookshelf());
+                ((GameScene2PlayersController)currentController).setBookshelf(reconnectedPlayer.getBookshelf());
                 ((GameScene2PlayersController)currentController).setPersonalGoalCardImage();
                 ((GameScene2PlayersController)currentController).initPlayerList(model.getPlayers());
-
             });
         }
     }
@@ -222,18 +235,25 @@ public class GUI extends Application{
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
-                ((GameScene2PlayersController)currentController).setChatMessage(message);
+                ((GameScene2PlayersController)currentController).setChat(message);
+            });
+        }
+        if(currentController instanceof InLobbySceneController){
+            Platform.runLater(()->{
+                ((InLobbySceneController)currentController).setChat(message);
             });
         }
     }
-    public void setChatMessages(ArrayList<ChatMessage> chat) {
+    /*public void setChatMessages(ArrayList<ChatMessage> chat) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()->{
-                ((GameScene2PlayersController)currentController).setChatMessages(chat);
+                ((GameScene2PlayersController)currentController).setChatMes(chat);
             });
         }
     }
+
+     */
     public void setSpinnerValue(Integer value) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof InLobbySceneController){
@@ -257,12 +277,6 @@ public class GUI extends Application{
                 ((GameScene2PlayersController)currentController).setPlayers(players);
             });
         }
-    }
-    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
-        this.personalGoalCard = personalGoalCard;
-    }
-    public PersonalGoalCard getPersonalGoalCard() {
-        return personalGoalCard;
     }
     public void setLeaderBoard(LinkedHashMap<String,Integer> ranking) {
         Controller currentController = controllers.get(fxml.get(phase));

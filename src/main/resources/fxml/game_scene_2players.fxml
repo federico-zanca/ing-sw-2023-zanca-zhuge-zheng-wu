@@ -4,6 +4,8 @@
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -155,7 +157,7 @@
                </effect>
             </Rectangle>
             <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="namePlayerOnBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
+            <Label fx:id="nameOfBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
@@ -169,9 +171,6 @@
                 <Double fx:value="0.0" />
                 <Double fx:value="-60.0" />
               </points>
-               <effect>
-                  <DropShadow />
-               </effect>
             </Polygon>
             <Polygon fx:id="selectCol2" fill="#c66025" layoutX="150.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                <points>
@@ -182,9 +181,6 @@
                   <Double fx:value="0.0" />
                   <Double fx:value="-60.0" />
                </points>
-               <effect>
-                  <DropShadow />
-               </effect>
             </Polygon>
             <Polygon fx:id="selectCol3" fill="#c66025" layoutX="211.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                <points>
@@ -195,9 +191,6 @@
                   <Double fx:value="0.0" />
                   <Double fx:value="-60.0" />
                </points>
-               <effect>
-                  <DropShadow />
-               </effect>
             </Polygon>
             <Polygon fx:id="selectCol4" fill="#c66025" layoutX="270.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                <points>
@@ -208,9 +201,6 @@
                   <Double fx:value="0.0" />
                   <Double fx:value="-60.0" />
                </points>
-               <effect>
-                  <DropShadow />
-               </effect>
             </Polygon>
             <Polygon fx:id="selectCol5" fill="#c66025" layoutX="334.0" layoutY="178.0" onMouseClicked="#clickedCol" onMouseEntered="#translateTriangle" onMouseExited="#clearGlow" rotate="180.0" scaleX="0.5" scaleY="0.3" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0">
                <points>
@@ -221,9 +211,6 @@
                   <Double fx:value="0.0" />
                   <Double fx:value="-60.0" />
                </points>
-               <effect>
-                  <DropShadow />
-               </effect>
             </Polygon>
             <Rectangle fx:id="handRegion" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
             <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="13.0" pickOnBounds="true" preserveRatio="true" />
@@ -249,11 +236,12 @@
          </children>
       </Pane>
       <VBox fx:id="players" layoutX="990.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
-      <VBox fx:id="chatBox" layoutX="915.0" layoutY="469.0" prefHeight="100.0" prefWidth="200.0" />
-      <Button fx:id="exitButton" layoutX="1015.0" layoutY="15.0" onAction="#clickedExit" mnemonicParsing="false" prefHeight="30.0" prefWidth="57.0" text="Exit">
+      <Button fx:id="exitButton" layoutX="1015.0" layoutY="15.0" mnemonicParsing="false" onAction="#clickedExit" prefHeight="30.0" prefWidth="57.0" text="Exit">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
+      <TextField fx:id="inputField" layoutX="917.0" layoutY="624.0" prefHeight="26.0" prefWidth="296.0" promptText="\\@name to send private message" />
+      <TextArea fx:id="chat" editable="false" layoutX="917.0" layoutY="440.0" opacity="0.89" prefHeight="184.0" prefWidth="296.0" />
    </children>
 </AnchorPane>

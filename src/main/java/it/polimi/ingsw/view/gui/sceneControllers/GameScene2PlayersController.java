@@ -22,10 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -58,15 +55,12 @@ public class GameScene2PlayersController implements Controller {
     private int maxNumItems;
     private ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
     private Bookshelf bookshelf;
-    private ArrayList<ChatMessage> messageHistory = new ArrayList<>();
-    private boolean isExpanded = false;
-    private final int expandedHeight = 200;
-    private final TextField inputField = new TextField();
-    private final ScrollPane chatScrollPane = new ScrollPane();
-    private final VBox chatMessages = new VBox();
-    private double chatMessagesHeight = 0;
     private ArrayList<ImageView> newHandOrder = new ArrayList<>();
     private ArrayList<Integer> order = new ArrayList<>();
+    @FXML
+    private TextArea chat;
+    @FXML
+    private TextField inputField;
     @FXML
     private VBox chatBox;
     @FXML
@@ -90,7 +84,7 @@ public class GameScene2PlayersController implements Controller {
     @FXML
     private ImageView myPersonalGoal;
     @FXML
-    private Label namePlayerOnBookshelf;
+    private Label nameOfBookshelf;
     @FXML
     private VBox players;
     @FXML
@@ -221,11 +215,19 @@ public class GameScene2PlayersController implements Controller {
                 setPlayerState(PlayerState.WATCHING);
                 messageHandler.notifyObservers(new DrawTilesMessage(messageHandler.getMyUsername(),tilesToDraw));
                 clearEffects();
+                drawTiles();
             }
         }else{
             messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
         }
     }
+
+    private void drawTiles() {
+        for(Square tile : tilesToDraw){
+            itemLivRoomCells[tile.getRow()][tile.getColumn()].setImage(null);
+        }
+    }
+
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
@@ -240,10 +242,11 @@ public class GameScene2PlayersController implements Controller {
             return;
         }else if(initialized == false){
             initialized = true;
-            setChatBox();
+            setChatBox(messageHandler.getChatLog());
             tilesToDraw = new ArrayList<>();
             tilesToInsert = new ArrayList<>();
             playersList = new ArrayList<>();
+            nameOfBookshelf.setText(messageHandler.getMyUsername());
             initLivingRoomGrid();
             initBookshelfGrid();
             initSelectCol();
@@ -253,6 +256,7 @@ public class GameScene2PlayersController implements Controller {
         }
     }
     public void initPlayerList(ArrayList<Player> players) {
+        playersList = players;
         this.players.setSpacing(3);
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
@@ -281,22 +285,25 @@ public class GameScene2PlayersController implements Controller {
             }*/
             hbox.getChildren().add(label);
 
-            for (int j = 0; j < 3; j++) {
+            /*for (int j = 0; j < 3; j++) {
                 ImageView imageView = new ImageView();
                 imageView.setFitHeight(40);
                 imageView.setFitWidth(40);
-                /*imageView.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));*/
+                //imageView.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));
                 hbox.getChildren().add(imageView);
             }
+             */
 
             this.players.getChildren().add(hbox);
 
             label.setOnMousePressed(event ->{
                     String username = label.getText();
                     showOtherBookshelf(username);
+                    nameOfBookshelf.setText(username);
             });
             label.setOnMouseReleased(event -> {
                 setBookshelf(bookshelf);
+                nameOfBookshelf.setText(messageHandler.getMyUsername());
             });
         }
 
@@ -448,14 +455,16 @@ public class GameScene2PlayersController implements Controller {
                     item.setFitWidth(cellWidth); //cellWidth is the width of each cell
                     item.setFitHeight(cellHeight); //cellHeight is the height of each cell
                     item.setPreserveRatio(true); //cellHeight is the height of each cell
-                    if(board[i][j].isPickable()){
-                        ImageView finalItem = item;
-                        item.setOnMouseClicked(mouseEvent -> {
-                            int rowIndex = GridPane.getRowIndex(finalItem);
-                            int colIndex = GridPane.getColumnIndex(finalItem);
-                            clickedItemLivRoom(mouseEvent,rowIndex,colIndex);
-                        });
-                        setPickableEffect(item);
+                    if(state == PlayerState.ACTIVE){
+                        if(board[i][j].isPickable()){
+                            ImageView finalItem = item;
+                            item.setOnMouseClicked(mouseEvent -> {
+                                int rowIndex = GridPane.getRowIndex(finalItem);
+                                int colIndex = GridPane.getColumnIndex(finalItem);
+                                clickedItemLivRoom(mouseEvent,rowIndex,colIndex);
+                            });
+                            setPickableEffect(item);
+                        }
                     }
                 }else{
                     item.setImage(null);
@@ -484,7 +493,7 @@ public class GameScene2PlayersController implements Controller {
     public void setPersonalGoalCardImage(){
         URL url;
         Image image;
-        int num = gui.getPersonalGoalCard().getIdentificator();
+        int num = messageHandler.getPersonalGoalCard().getIdentificator();
         url = getClass().getResource("/images/personal_goal_cards/Personal_Goals"+num+".png");
         assert url != null;
         image = new Image(url.toString());
@@ -538,60 +547,12 @@ public class GameScene2PlayersController implements Controller {
             hand2.setEffect(null);
         }
     }
-    public void setChatMessage(ChatMessage message) {
-        String prefix = "";
-        String messageContent = message.getContent();
-        Color textColor = Color.BLACK;
-        if (message.getReceiver() != null) {
-            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
-                prefix = "PRIVATE MESSAGE FROM ";
-                messageContent = message.getSender() + ": " + messageContent;
-
-            }else{
-                prefix = "PRIVATE MESSAGE TO ";
-                messageContent = message.getReceiver() + ": " + messageContent;
-            }
-            textColor = Color.RED;
-        } else{
-            messageContent = message.getSender() + ": " + messageContent;
+    private void setChatBox(ArrayList<ChatMessage> chatLog) {
+        inputField.clear();
+        chat.clear();
+        for(ChatMessage message:chatLog) {
+            setChat(message);
         }
-        Label label = new Label(prefix + messageContent);
-        label.setTextFill(textColor);
-        label.setMaxWidth(chatMessages.getPrefWidth());
-        label.setWrapText(true);
-        chatMessages.getChildren().add(label);
-        chatMessagesHeight += label.getHeight();
-        if (isExpanded) {
-            setChatTexts();
-        }
-    }
-    public void setChatMessages(ArrayList<ChatMessage> chat){
-        this.messageHistory = chat;
-        for(ChatMessage msg : messageHistory){
-            setChatMessage(msg);
-        }
-    }
-    private void startChatting(){
-        isExpanded = true;
-        setChatTexts();
-        chatBox.getChildren().add(chatScrollPane);
-        chatScrollPane.setStyle("-fx-background-color: rgba(128, 128, 128, 0.5);");
-        chatBox.getChildren().add(inputField);
-        setInputField();
-    }
-    private void setChatTexts(){
-        if(chatBox.getChildren().size() == 1){
-            chatBox.getChildren().remove(inputField);
-            chatScrollPane.vvalueProperty().bind(chatMessages.heightProperty());
-            chatScrollPane.setContent(chatMessages);
-            chatScrollPane.prefHeightProperty().bind(chatMessages.heightProperty().add(20));
-            chatScrollPane.setFitToHeight(true);
-            chatScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            chatScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        }
-    }
-    private void setInputField() {
-        inputField.setAlignment(Pos.BOTTOM_LEFT);
         inputField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 String message = inputField.getText();
@@ -611,29 +572,26 @@ public class GameScene2PlayersController implements Controller {
                 inputField.clear();
             }
         });
-        inputField.requestFocus();
     }
-    private void collapse() {
-        isExpanded = false;
-        //chatContainer.getChildren().remove(chatMessages);
-        inputField.setOnKeyPressed(null);
-        chatBox.getChildren().removeAll(chatScrollPane);
+    public void setChat(ChatMessage message){
+        String prefix = "";
+        String messageContent = message.getContent();
+        if (message.getReceiver() != null) {
+            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
+                prefix = "PRIVATE MESSAGE FROM ";
+                messageContent = message.getSender() + ": " + messageContent;
+
+            }else{
+                prefix = "PRIVATE MESSAGE TO ";
+                messageContent = message.getReceiver() + ": " + messageContent;
+            }
+        } else{
+            messageContent = message.getSender() + ": " + messageContent;
+        }
+        chat.appendText(prefix+messageContent+"\n");
     }
     public void sendMessage(String message, String recipientusername){
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
-    }
-    private void setChatBox() {
-        chatBox.setPrefSize(300,expandedHeight);
-        chatBox.setAlignment(Pos.BOTTOM_CENTER);
-        inputField.setOnMouseClicked(event -> {
-            if (!isExpanded) {
-                startChatting();
-            } else {
-                collapse();
-            }
-        });
-        chatBox.getChildren().add(inputField);
-        inputField.setPrefWidth(400);
     }
 }

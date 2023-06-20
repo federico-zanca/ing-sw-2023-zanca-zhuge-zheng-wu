@@ -68,9 +68,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      */
     @Override
     public void register(Client client) {
-        System.out.println("1");
         connectedClients.put(client, new ClientInfo(client));
-        System.out.println("fnisngrs");
         try {
             sendMessage(client, new ConnectedToServerMessage(client));
             //client.update(new ConnectedToServerMessage(client));

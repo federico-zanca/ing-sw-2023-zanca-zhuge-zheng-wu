@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+import com.sun.javafx.scene.control.InputField;
+import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayersRequest;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
 import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
@@ -7,20 +9,24 @@ import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InLobbySceneController implements Controller{
     private MessageHandler messageHandler;
     private GUI gui;
+    @FXML
+    private TextArea chat;
+    @FXML
+    private TextField inputField;
     @FXML
     private Label lobbyName;
     @FXML
@@ -66,7 +72,56 @@ public class InLobbySceneController implements Controller{
             numPlayersSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
                 handleNumPlayersChange(newValue);
             });
+            setChatBox(messageHandler.getChatLog());
         }
+    }
+
+    private void setChatBox(ArrayList<ChatMessage> chatLog) {
+        inputField.clear();
+        chat.clear();
+        for(ChatMessage message:chatLog) {
+            chat.appendText(message.getContent());
+        }
+        inputField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String message = inputField.getText();
+                message = message.trim();
+                String recipientusername = null;
+                if(message.isEmpty()) {
+                    return;
+                }
+                if(message.startsWith("@")) {
+                    if (!message.contains(" ")) {
+                        return;
+                    }
+                    recipientusername = message.substring(1, message.indexOf(" "));
+                    message = message.substring(message.indexOf(" ") + 1);
+                }
+                sendMessage(message,recipientusername);
+                inputField.clear();
+            }
+        });
+    }
+    public void setChat(ChatMessage message){
+        String prefix = "";
+        String messageContent = message.getContent();
+        if (message.getReceiver() != null) {
+            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
+                prefix = "PRIVATE MESSAGE FROM ";
+                messageContent = message.getSender() + ": " + messageContent;
+
+            }else{
+                prefix = "PRIVATE MESSAGE TO ";
+                messageContent = message.getReceiver() + ": " + messageContent;
+            }
+        } else{
+            messageContent = message.getSender() + ": " + messageContent;
+        }
+        chat.appendText(prefix+messageContent+"\n");
+    }
+    public void sendMessage(String message, String recipientusername){
+        ChatMessage chatMessage = new ChatMessage(message, recipientusername);
+        messageHandler.notifyObservers(chatMessage);
     }
 
     private void handleNumPlayersChange(Integer newValue) {
