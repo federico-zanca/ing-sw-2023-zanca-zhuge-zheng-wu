@@ -18,6 +18,7 @@ import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.tui.PlayerState;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -44,6 +45,7 @@ import java.util.*;
 public class GameScene2PlayersController implements Controller {
     private MessageHandler messageHandler;
     private GUI gui;
+    private boolean initialized = false;
     private PlayerState state = PlayerState.WATCHING;
     private ArrayList<Player> playersList;
     private ArrayList<ItemTile> tilesToInsert;
@@ -104,6 +106,8 @@ public class GameScene2PlayersController implements Controller {
     @FXML
     private Button okButton;
     @FXML
+    private Button exitButton;
+    @FXML
     void translateTriangle (MouseEvent event){
         if(state.equals(PlayerState.ACTIVE)){
             if(actionType.equals(ActionType.INSERT_HAND)){
@@ -124,7 +128,6 @@ public class GameScene2PlayersController implements Controller {
         if(state.equals(PlayerState.ACTIVE)) {
             if(actionType.equals(ActionType.INSERT_HAND)){
                 int colNum = (int) ((Polygon) event.getSource()).getUserData();
-                System.out.println("Clicked column: " + colNum);
                 if (inputValidator.columnHasLessSpace(colNum, ((InsertInfoMessage) messageHandler.getLastMessage()).getEnabledColumns())) {
                     return;
                 } else {
@@ -170,138 +173,60 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
-    private void changeOrder() {
-        int first = order.get(0);
-        Image one = newHandOrder.get(0).getImage();
-        int second = order.get(1);
-        Image two = newHandOrder.get(1).getImage();
-        int third = order.get(2);
-        Image three = newHandOrder.get(2).getImage();
-        clearHand();
-        hand1.setImage(one);
-        hand2.setImage(two);
-        hand3.setImage(three);
-        Collections.swap(tilesToInsert, first - 1, 0);
-        if (second != 1) {
-            Collections.swap(tilesToInsert, second - 1, 1);
-        } else {
-            Collections.swap(tilesToInsert, third - 1, 2);
-        }
-        hand1.setEffect(null);
-        hand2.setEffect(null);
-        hand3.setEffect(null);
+    @FXML
+    void clickedExit(ActionEvent event){
+        setPlayerState(PlayerState.WATCHING);
+        messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
     }
-
-    private void swapOrder() {
-        if(tilesToInsert.size() == 2){
-            System.out.println("imhere");
-            Collections.swap(tilesToInsert, 1, 0);
-            Image temp = hand1.getImage();
-            hand1.setImage(hand2.getImage());
-            hand2.setImage(temp);
-            hand1.setEffect(null);
-            hand2.setEffect(null);
-        }
-    }
-
-    public void setChatMessage(ChatMessage message) {
-        String prefix = "";
-        String messageContent = message.getContent();
-        Color textColor = Color.BLACK;
-        if (message.getReceiver() != null) {
-            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
-                prefix = "PRIVATE MESSAGE FROM ";
-                messageContent = message.getSender() + ": " + messageContent;
-
-            }else{
-                prefix = "PRIVATE MESSAGE TO ";
-                messageContent = message.getReceiver() + ": " + messageContent;
-            }
-            textColor = Color.RED;
-        } else{
-            messageContent = message.getSender() + ": " + messageContent;
-        }
-        Label label = new Label(prefix + messageContent);
-        label.setTextFill(textColor);
-        label.setMaxWidth(chatMessages.getPrefWidth());
-        label.setWrapText(true);
-        chatMessages.getChildren().add(label);
-        chatMessagesHeight += label.getHeight();
-        if (isExpanded) {
-            setChatTexts();
-        }
-    }
-    public void setChatMessages(ArrayList<ChatMessage> chat){
-        this.messageHistory = chat;
-        for(ChatMessage msg : messageHistory){
-            setChatMessage(msg);
-        }
-    }
-    private void startChatting(){
-        isExpanded = true;
-        setChatTexts();
-        chatBox.getChildren().add(chatScrollPane);
-        chatScrollPane.setStyle("-fx-background-color: rgba(128, 128, 128, 0.5);");
-        chatBox.getChildren().add(inputField);
-        setInputField();
-    }
-    private void setChatTexts(){
-        if(chatBox.getChildren().size() == 1){
-            chatBox.getChildren().remove(inputField);
-            chatScrollPane.vvalueProperty().bind(chatMessages.heightProperty());
-            chatScrollPane.setContent(chatMessages);
-            chatScrollPane.prefHeightProperty().bind(chatMessages.heightProperty().add(20));
-            chatScrollPane.setFitToHeight(true);
-            chatScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            chatScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        }
-    }
-    private void setInputField() {
-        inputField.setAlignment(Pos.BOTTOM_LEFT);
-        inputField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                String message = inputField.getText();
-                message = message.trim();
-                String recipientusername = null;
-                if(message.isEmpty()) {
-                    return;
-                }
-                if(message.startsWith("@")) {
-                    if (!message.contains(" ")) {
+    @FXML
+    void clickedItemLivRoom(MouseEvent event,int row,int col){
+        Glow glow = new Glow();
+        if(state.equals(PlayerState.ACTIVE)){
+            if(actionType == ActionType.DRAW_TILES){
+                if(board[row][col].isPickable()){
+                    if(inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
+                        int tileIndex = getTileIndex(col, row, tilesToDraw);
+                        tilesToDraw.remove(tileIndex);
+                        itemLivRoomCells[row][col].setEffect(null);
+                        setPickableEffect(itemLivRoomCells[row][col]);
+                        return;
+                    }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
                         return;
                     }
-                    recipientusername = message.substring(1, message.indexOf(" "));
-                    message = message.substring(message.indexOf(" ") + 1);
+                    tilesToDraw.add(new Square(new Coordinates(row, col), board[row][col].getItem().getType()));
+                    glow.setLevel(0.5);
+                    itemLivRoomCells[row][col].setEffect(glow);
+                    if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems)){
+                        return;
+                    }else{
+                        setActionType(ActionType.ORDER_HAND);
+                    }
+                }else{
+                    return;
                 }
-                sendMessage(message,recipientusername);
-                inputField.clear();
+            }else if(actionType == ActionType.ORDER_HAND && hand1.getImage() == null){
+                if(board[row][col].isPickable() && inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
+                    int tileIndex = getTileIndex(col, row, tilesToDraw);
+                    tilesToDraw.remove(tileIndex);
+                    itemLivRoomCells[row][col].setEffect(null);
+                    setPickableEffect(itemLivRoomCells[row][col]);
+                    setActionType(ActionType.DRAW_TILES);
+                    return;
+                }
             }
-        });
-        inputField.requestFocus();
+        }
     }
-    private void collapse() {
-        isExpanded = false;
-        //chatContainer.getChildren().remove(chatMessages);
-        inputField.setOnKeyPressed(null);
-        chatBox.getChildren().removeAll(chatScrollPane);
-    }
-    public void sendMessage(String message, String recipientusername){
-        ChatMessage chatMessage = new ChatMessage(message, recipientusername);
-        messageHandler.notifyObservers(chatMessage);
-    }
-    private void setChatBox() {
-        chatBox.setPrefSize(300,expandedHeight);
-        chatBox.setAlignment(Pos.BOTTOM_CENTER);
-        inputField.setOnMouseClicked(event -> {
-            if (!isExpanded) {
-                startChatting();
-            } else {
-                collapse();
+    @FXML
+    void clickedOk(){
+        if(state.equals(PlayerState.ACTIVE)){
+            if(tilesToDraw.size() != 0){
+                setPlayerState(PlayerState.WATCHING);
+                messageHandler.notifyObservers(new DrawTilesMessage(messageHandler.getMyUsername(),tilesToDraw));
+                clearEffects();
             }
-        });
-        chatBox.getChildren().add(inputField);
-        inputField.setPrefWidth(400);
+        }else{
+            messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
+        }
     }
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
@@ -315,19 +240,19 @@ public class GameScene2PlayersController implements Controller {
     public void initialize() {
         if(gui == null){
             return;
+        }else if(initialized == false){
+            initialized = true;
+            setChatBox();
+            tilesToDraw = new ArrayList<>();
+            tilesToInsert = new ArrayList<>();
+            playersList = new ArrayList<>();
+            initLivingRoomGrid();
+            initBookshelfGrid();
+            initSelectCol();
         }else{
-            //TODO AGGIUNGERE BUTTON FOR EXIT
-            //setPlayerState(PlayerState.WATCHING);
-            //messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
-            notification.setVisible(false);
+            tilesToDraw.clear();
+            tilesToInsert.clear();
         }
-        setChatBox();
-        tilesToDraw = new ArrayList<>();
-        tilesToInsert = new ArrayList<>();
-        playersList = new ArrayList<>();
-        initLivingRoomGrid();
-        initBookshelfGrid();
-        initSelectCol();
     }
     public void initPlayerList(ArrayList<Player> players) {
         this.players.setSpacing(10);
@@ -363,45 +288,6 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-    @FXML
-    void clickedItemLivRoom(MouseEvent event,int row,int col){
-        Glow glow = new Glow();
-        if(state.equals(PlayerState.ACTIVE)){
-            if(actionType == ActionType.DRAW_TILES){
-                if(board[row][col].isPickable()){
-                    if(inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
-                        int tileIndex = getTileIndex(col, row, tilesToDraw);
-                        tilesToDraw.remove(tileIndex);
-                        itemLivRoomCells[row][col].setEffect(null);
-                        setPickableEffect(itemLivRoomCells[row][col]);
-                        return;
-                    }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
-                        return;
-                    }
-                    tilesToDraw.add(new Square(new Coordinates(row, col), board[row][col].getItem().getType()));
-                    glow.setLevel(0.5);
-                    itemLivRoomCells[row][col].setEffect(glow);
-                    if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems)){
-                        return;
-                    }else{
-                        setActionType(ActionType.ORDER_HAND);
-                    }
-                    System.out.println(tilesToDraw);
-                }else{
-                    return;
-                }
-            }else if(actionType == ActionType.ORDER_HAND && hand1.getImage() == null){
-                if(board[row][col].isPickable() && inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
-                    int tileIndex = getTileIndex(col, row, tilesToDraw);
-                    tilesToDraw.remove(tileIndex);
-                    itemLivRoomCells[row][col].setEffect(null);
-                    setPickableEffect(itemLivRoomCells[row][col]);
-                    setActionType(ActionType.DRAW_TILES);
-                    return;
-                }
-            }
-        }
-    }
     private int getTileIndex(int col, int row, ArrayList<Square> tilesToDraw) {
         for (int i = 0; i < tilesToDraw.size(); i++) {
             Square tile = tilesToDraw.get(i);
@@ -410,19 +296,6 @@ public class GameScene2PlayersController implements Controller {
             }
         }
         return -1;
-    }
-    @FXML
-    void clickedOk(){
-        if(state.equals(PlayerState.ACTIVE)){
-            if(tilesToDraw.size() != 0){
-                setPlayerState(PlayerState.WATCHING);
-                messageHandler.notifyObservers(new DrawTilesMessage(messageHandler.getMyUsername(),tilesToDraw));
-                System.out.println(tilesToDraw);
-                clearEffects();
-            }
-        }else{
-            messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
-        }
     }
     private void clearHand() {
         hand1.setImage(null);
@@ -612,5 +485,134 @@ public class GameScene2PlayersController implements Controller {
     }
     public void setPlayers(ArrayList<Player> players){
         this.playersList = players;
+    }
+    private void changeOrder() {
+        int first = order.get(0);
+        Image one = newHandOrder.get(0).getImage();
+        int second = order.get(1);
+        Image two = newHandOrder.get(1).getImage();
+        int third = order.get(2);
+        Image three = newHandOrder.get(2).getImage();
+        clearHand();
+        hand1.setImage(one);
+        hand2.setImage(two);
+        hand3.setImage(three);
+        Collections.swap(tilesToInsert, first - 1, 0);
+        if (second != 1) {
+            Collections.swap(tilesToInsert, second - 1, 1);
+        } else {
+            Collections.swap(tilesToInsert, third - 1, 2);
+        }
+        hand1.setEffect(null);
+        hand2.setEffect(null);
+        hand3.setEffect(null);
+    }
+    private void swapOrder() {
+        if(tilesToInsert.size() == 2){
+            Collections.swap(tilesToInsert, 1, 0);
+            Image temp = hand1.getImage();
+            hand1.setImage(hand2.getImage());
+            hand2.setImage(temp);
+            hand1.setEffect(null);
+            hand2.setEffect(null);
+        }
+    }
+    public void setChatMessage(ChatMessage message) {
+        String prefix = "";
+        String messageContent = message.getContent();
+        Color textColor = Color.BLACK;
+        if (message.getReceiver() != null) {
+            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
+                prefix = "PRIVATE MESSAGE FROM ";
+                messageContent = message.getSender() + ": " + messageContent;
+
+            }else{
+                prefix = "PRIVATE MESSAGE TO ";
+                messageContent = message.getReceiver() + ": " + messageContent;
+            }
+            textColor = Color.RED;
+        } else{
+            messageContent = message.getSender() + ": " + messageContent;
+        }
+        Label label = new Label(prefix + messageContent);
+        label.setTextFill(textColor);
+        label.setMaxWidth(chatMessages.getPrefWidth());
+        label.setWrapText(true);
+        chatMessages.getChildren().add(label);
+        chatMessagesHeight += label.getHeight();
+        if (isExpanded) {
+            setChatTexts();
+        }
+    }
+    public void setChatMessages(ArrayList<ChatMessage> chat){
+        this.messageHistory = chat;
+        for(ChatMessage msg : messageHistory){
+            setChatMessage(msg);
+        }
+    }
+    private void startChatting(){
+        isExpanded = true;
+        setChatTexts();
+        chatBox.getChildren().add(chatScrollPane);
+        chatScrollPane.setStyle("-fx-background-color: rgba(128, 128, 128, 0.5);");
+        chatBox.getChildren().add(inputField);
+        setInputField();
+    }
+    private void setChatTexts(){
+        if(chatBox.getChildren().size() == 1){
+            chatBox.getChildren().remove(inputField);
+            chatScrollPane.vvalueProperty().bind(chatMessages.heightProperty());
+            chatScrollPane.setContent(chatMessages);
+            chatScrollPane.prefHeightProperty().bind(chatMessages.heightProperty().add(20));
+            chatScrollPane.setFitToHeight(true);
+            chatScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            chatScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        }
+    }
+    private void setInputField() {
+        inputField.setAlignment(Pos.BOTTOM_LEFT);
+        inputField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String message = inputField.getText();
+                message = message.trim();
+                String recipientusername = null;
+                if(message.isEmpty()) {
+                    return;
+                }
+                if(message.startsWith("@")) {
+                    if (!message.contains(" ")) {
+                        return;
+                    }
+                    recipientusername = message.substring(1, message.indexOf(" "));
+                    message = message.substring(message.indexOf(" ") + 1);
+                }
+                sendMessage(message,recipientusername);
+                inputField.clear();
+            }
+        });
+        inputField.requestFocus();
+    }
+    private void collapse() {
+        isExpanded = false;
+        //chatContainer.getChildren().remove(chatMessages);
+        inputField.setOnKeyPressed(null);
+        chatBox.getChildren().removeAll(chatScrollPane);
+    }
+    public void sendMessage(String message, String recipientusername){
+        ChatMessage chatMessage = new ChatMessage(message, recipientusername);
+        messageHandler.notifyObservers(chatMessage);
+    }
+    private void setChatBox() {
+        chatBox.setPrefSize(300,expandedHeight);
+        chatBox.setAlignment(Pos.BOTTOM_CENTER);
+        inputField.setOnMouseClicked(event -> {
+            if (!isExpanded) {
+                startChatting();
+            } else {
+                collapse();
+            }
+        });
+        chatBox.getChildren().add(inputField);
+        inputField.setPrefWidth(400);
     }
 }

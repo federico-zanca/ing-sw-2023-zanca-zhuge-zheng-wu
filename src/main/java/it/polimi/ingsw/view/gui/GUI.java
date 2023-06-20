@@ -41,19 +41,16 @@ public class GUI extends Application{
         messageHandler = new MessageHandler(this);
         personalGoalCard = null;
     }
-
     public static void main(String[] args) throws NotBoundException, RemoteException {
         new GUI();
         launch(args);
     }
-
     @Override
     public void start(Stage stage) throws Exception {
         this.currentStage = stage;
         initializationFXMLParameter();
         initMenuStage();
     }
-
     public void initializationFXMLParameter() {
         List<GameFxml> fxmlFiles = new ArrayList<>(Arrays.asList(GameFxml.values()));
         URL url = null;
@@ -83,7 +80,6 @@ public class GUI extends Application{
         }
         currentScene = scenes.get(GameFxml.CONNECTION_SCENE.s);
     }
-
     public void initMenuStage(){
         currentStage.setTitle("My shelfie Board Game");
         currentStage.setScene(currentScene);
@@ -92,7 +88,6 @@ public class GUI extends Application{
         currentStage.setResizable(true);
         currentStage.show();
     }
-
     public void changeScene() {
         Platform.runLater(()->{
             currentStage.setScene(currentScene);
@@ -103,16 +98,12 @@ public class GUI extends Application{
     public void setCurrentScene(Scene currentScene) {
         this.currentScene = currentScene;
     }
-
-
     public void setPhase(GuiPhase phase) {
         this.phase = phase;
     }
-
     public Scene getScene(String s) {
         return scenes.get(s);
     }
-
     public void setError(String error) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof MenuSceneController){
@@ -147,7 +138,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public Stage getCurrentStage() {
         return currentStage;
     }
@@ -159,7 +149,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setGameScene(GameView model) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -188,7 +177,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setGameNotification(String notification) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -197,7 +185,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setHand(ArrayList<ItemTile> hand) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -206,7 +193,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setActionType(ActionType actionType) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -215,7 +201,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setBookshelf(Bookshelf bookshelf) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -233,7 +218,6 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setChatMessage(ChatMessage message) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -274,15 +258,12 @@ public class GUI extends Application{
             });
         }
     }
-
     public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
         this.personalGoalCard = personalGoalCard;
     }
-
     public PersonalGoalCard getPersonalGoalCard() {
         return personalGoalCard;
     }
-
     public void setLeaderBoard(LinkedHashMap<String,Integer> ranking) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof EndGameController){

@@ -41,14 +41,12 @@ public class EndGameController implements Controller{
     @Override
     public void initialize() {
         if (gui == null) {
-            System.out.println("do nothing");
         }else{
-            System.out.println("do nothing for now");
             Stage stage = (Stage) exit.getScene().getWindow();
             stage.sizeToScene();
             stage.centerOnScreen();
             clear();
-            gui.getCurrentStage().setOnCloseRequest(e->{
+            exit.setOnAction(e->{
                 gui.setPhase(GuiPhase.SERVER);
                 gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
                 gui.changeScene();

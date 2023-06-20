@@ -20,7 +20,8 @@ public class AppClientRMI {
         Scanner scanner = new Scanner(System.in);
         String s = scanner.nextLine();
         if (s.equals("0")) {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            //Registry registry = LocateRegistry.getRegistry("192.168.1.87", 1099);
+            Registry registry = LocateRegistry.getRegistry("172.20.10.6", 1099);
             AppServer server = (AppServer) registry.lookup("server");
             view = new TextualUI();
             ClientImpl client = new ClientImpl(server.connect());

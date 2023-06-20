@@ -73,7 +73,6 @@ public class InLobbySceneController implements Controller{
         messageHandler.notifyObservers(new ChangeNumOfPlayersRequest(newValue));
     }
     public void setSpinnerValue(Integer value){
-        System.out.println("im being called "+ value);
         numPlayersSpinner.getValueFactory().setValue(value);
         error.setVisible(false);
     }
