@@ -1,5 +1,7 @@
 package it.polimi.ingsw.view.tui;
-
+/**
+ * Represents different commands that can be used in a lobby.
+ */
 public enum LobbyCommand {
     HELP("mostra la lista dei comandi"),
     EXIT("termina la connessione"),

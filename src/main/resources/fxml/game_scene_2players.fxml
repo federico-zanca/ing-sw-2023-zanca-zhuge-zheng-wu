@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.Double?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
+<AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <children>
       <ImageView fitWidth="1300.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -94,10 +104,13 @@
                   <RowConstraints maxHeight="46.5" minHeight="46.5" prefHeight="46.5" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Button fx:id="okButton" layoutX="374.0" layoutY="139.0" mnemonicParsing="false" onAction="#clickedOk" prefHeight="35.0" prefWidth="109.0" text="Draw" textFill="#610f0f">
+            <Button fx:id="okButton" layoutX="374.0" layoutY="120.0" mnemonicParsing="false" onAction="#clickedOk" prefHeight="35.0" prefWidth="109.0" style="-fx-background-color: #6b3014;" text="Draw" textFill="WHITE">
                <font>
-                  <Font size="18.0" />
-               </font></Button>
+                  <Font name="System Italic" size="18.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect></Button>
          </children>
       </Pane>
       <Pane fx:id="bookshelfPane" layoutX="492.0" layoutY="89.0" prefHeight="760.0" prefWidth="500.0">
@@ -218,24 +231,24 @@
             </ImageView>
             <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="orderHand1" layoutX="100.0" layoutY="65.0" text="L1" textFill="#fff30f">
+            <Label fx:id="orderHand1" layoutX="100.0" layoutY="65.0" text="1" textFill="#fff30f">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="orderHand2" layoutX="185.0" layoutY="65.0" text="L2" textFill="#fff30f">
+            <Label fx:id="orderHand2" layoutX="185.0" layoutY="65.0" text="2" textFill="#fff30f">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="orderHand3" layoutX="270.0" layoutY="65.0" text="L3" textFill="#fff30f">
+            <Label fx:id="orderHand3" layoutX="270.0" layoutY="65.0" text="3" textFill="#fff30f">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <VBox fx:id="players" layoutX="892.0" layoutY="143.0" prefHeight="200.0" prefWidth="200.0" />
+      <VBox fx:id="players" layoutX="990.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
       <VBox fx:id="chatBox" layoutX="915.0" layoutY="469.0" prefHeight="100.0" prefWidth="200.0" />
       <Button fx:id="exitButton" layoutX="1015.0" layoutY="15.0" onAction="#clickedExit" mnemonicParsing="false" prefHeight="30.0" prefWidth="57.0" text="Exit">
          <font>

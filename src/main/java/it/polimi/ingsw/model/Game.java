@@ -12,7 +12,10 @@ import it.polimi.ingsw.utils.Observable;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * This Class represents the whole Game.
+ * It manages the players and their turns.
+ */
 public class Game extends Observable {
     private int chosenNumOfPlayers;
     private ArrayList<Player> players;

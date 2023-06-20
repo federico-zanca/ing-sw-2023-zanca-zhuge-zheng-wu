@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represents a personal goal card with a grid of objectives.
+ * Each objective is represented by an ItemType value.
+ */
 public class PersonalGoalCard implements Serializable {
     private static final long serialVersionUID = -4793133503754805698L;
     public static final int Rows=6;
@@ -57,10 +61,14 @@ public class PersonalGoalCard implements Serializable {
             }
         }
     }
+
+    /**
+     Retrieves the identifier of the personal goal card.
+     @return the identifier of the personal goal card
+     */
     public int getIdentificator(){
         return identificator;
     }
-
 
     /**
      * Calculate number of matches between personalGoalCard and shelfie
@@ -86,6 +94,11 @@ public class PersonalGoalCard implements Serializable {
     public ItemType getSingleObjective(int row, int col) {
         return objective[row][col];
     }
+
+    /**
+     Retrieves the grid of objectives for the personal goal card.
+     @return the grid of objectives represented by a two-dimensional array of ItemType values
+     */
     public ItemType[][] getObjective() {
         return this.objective;
     }

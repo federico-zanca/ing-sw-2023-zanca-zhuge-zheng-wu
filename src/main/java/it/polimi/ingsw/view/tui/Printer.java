@@ -18,8 +18,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * The Printer class provides functionality for printing messages and game display.
+ */
 public class Printer {
+    /**
+     * default constructor of Printer class.
+     */
     public Printer() {
     }
 
@@ -485,32 +490,56 @@ public class Printer {
         }
         System.out.println();
     }
-
+    /**
+     * Displays a prompt for user input.
+     * The prompt is represented by ">>>".
+     */
     public void displayPrompt() {
         System.out.print(">>> ");
     }
-
+    /**
+     * Displays a message indicating a new player has joined the lobby, along with the updated list of all players' usernames.
+     *
+     * @param allPlayersUsernames the list of all players' usernames in the lobby.
+     * @param content  the content of the message indicating a new player has joined.
+     */
     public void showNewPlayerInLobby(ArrayList<String> allPlayersUsernames, String content) {
         System.out.println();
         System.out.println(content);
         showLobbyPlayersList(allPlayersUsernames);
     }
-
+    /**
+     * Displays a message indicating that a player has reconnected to the game.
+     *
+     * @param username the username of the player who has reconnected.
+     */
     public void showPlayerRejoined(String username) {
         System.out.println();
         System.out.println(username + " si è riconnesso alla partita!");
     }
-
+    /**
+     * Displays the response message after a player exits the game.
+     *
+     * @param content the content of the response message.
+     */
     public void showExitGameResponse(String content) {
         System.out.println();
         System.out.println(content);
     }
-
+    /**
+     * Displays a message indicating that a player has left the game.
+     *
+     * @param content the content of the message indicating a player has left.
+     */
     public void showPlayerLeft(String content) {
         System.out.println();
         System.out.println(content);
     }
-
+    /**
+     * Displays the personal goal card of the player.
+     *
+     * @param personalObjective the 2D array representing the personal goal card.
+     */
     public void showPersonalGoalCard(ItemType[][] personalObjective){
         System.out.println();
         System.out.println("Your personal goal:");
@@ -534,6 +563,13 @@ public class Printer {
         System.out.println();
     }
 
+    /**
+     * Displays the reconnection summary after a player has reconnected to the game.
+     *
+     * @param model the GameView object representing the current state of the game.
+     * @param content  the content of the reconnection message.
+     * @param personalGoal  the PersonalGoalCard object representing the personal goal of the reconnected player.
+     */
     public void showReconnection(GameView model, String content, PersonalGoalCard personalGoal) {
         System.out.println();
         System.out.println(content);
@@ -545,6 +581,11 @@ public class Printer {
         showPersonalGoalCard(personalGoal.getObjective());
     }
 
+    /**
+     * Prints a chat message to the console.
+     *
+     * @param message the ChatMessage object representing the chat message to be printed.
+     */
     public void printChatMessage(ChatMessage message) {
         String prefix = "";
         if(message.getReceiver() != null){
@@ -553,6 +594,11 @@ public class Printer {
         System.out.println(prefix + TextColor.GOLD_TEXT + message.getSender() + TextColor.NO_COLOR + "\t" + message.getContent());
     }
 
+    /**
+     * Prints the game chat messages to the console.
+     *
+     * @param chat the list of ChatMessage objects representing the chat messages to be printed.
+     */
     public void printChat(ArrayList<ChatMessage> chat) {
         System.out.println();
         System.out.println(TextColor.BRIGHT_RED_TEXT + "CHAT DI GIOCO - SCRIVI UN MESSAGGIO E PREMI INVIO PER INVIARLO - /quit PER USCIRE" + TextColor.NO_COLOR);
