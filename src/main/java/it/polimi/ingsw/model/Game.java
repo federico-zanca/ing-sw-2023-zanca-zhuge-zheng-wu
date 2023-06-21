@@ -117,7 +117,7 @@ public class Game extends Observable {
      */
     private void pickCommonGoalsForThisGame() {
         //TODO update with design pattern for CommonGoal
-        int firstGoalType = (int) (Math.random() * 12 + 1) +1;
+        int firstGoalType = (int) (Math.random() * 12 ) +1;
         int secondGoalType = firstGoalType;
         while(firstGoalType == secondGoalType)
             secondGoalType = (int) (Math.random() * 12 + 1) +1;
