@@ -19,6 +19,8 @@ private static final long serialVersionUID = 2348200362905242941L;
     final int NROW = Bookshelf.Rows;
     final int NCOL = Bookshelf.Columns;
 
+    private int imageId;
+
     private ArrayList<Player> thoseWhoAchieved;
 
     /**
@@ -45,6 +47,14 @@ private static final long serialVersionUID = 2348200362905242941L;
                 points.push(6);
                 points.push(8);
         }
+    }
+
+    public int getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
     }
 
     //deprecated

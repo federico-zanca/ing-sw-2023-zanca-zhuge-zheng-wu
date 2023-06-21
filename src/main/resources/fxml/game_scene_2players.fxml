@@ -44,7 +44,7 @@
          <children>
             <ImageView fx:id="firstCommonGoal" fitWidth="138.5" layoutX="19.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/common_goal_cards/1.jpg" />
+                  <Image url="@../images/common_goal_cards/4.jpg" />
                </image>
                <effect>
                   <DropShadow radius="11.0" width="25.0" />
@@ -52,7 +52,7 @@
             </ImageView>
             <ImageView fx:id="secondCommonGoal" fitWidth="138.5" layoutX="200.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/common_goal_cards/7.jpg" />
+                  <Image url="@../images/common_goal_cards/8.jpg" />
                </image>
                <effect>
                   <DropShadow radius="11.0" width="25.0" />

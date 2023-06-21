@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class ItemTile implements Serializable {
     private static final long serialVersionUID = 4467821091195695300L;
     private ItemType type;
-
+    private int imageId;
     private int GroupId;
 
     public ItemTile(){}
@@ -21,6 +21,13 @@ public class ItemTile implements Serializable {
     public ItemTile(ItemType type){
         this.type = type;
         this.GroupId = 0;
+    }
+
+    public void setImageId(int id){
+        this.imageId = id;
+    }
+    public int getImageId(){
+        return this.imageId;
     }
 
     /**

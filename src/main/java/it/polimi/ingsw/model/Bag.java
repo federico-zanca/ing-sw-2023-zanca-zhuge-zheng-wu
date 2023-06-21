@@ -89,7 +89,10 @@ public class Bag implements Serializable {
             if (itemTiles.get(k) == 0) {
                 availableItems.remove(k);
             }
-            return new ItemTile(k);
+            index = (int) (Math.random() * 3) + 1;
+            ItemTile tile = new ItemTile(k);
+            tile.setImageId(index);
+            return tile;
         }
     }
 

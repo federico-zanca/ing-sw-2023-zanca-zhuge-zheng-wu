@@ -335,17 +335,17 @@ public class GameScene2PlayersController implements Controller {
         URL url;
         for(int i=0;i<hand.size();i++){
             if(i == 0){
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + "1.png");
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(i).getImageId() + ".png");
                 assert url != null;
                 hand1.setImage(new Image(url.toString()));
                 //handOrder.add(hand1);
             }else if(i == 1){
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + "1.png");
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(i).getImageId() + ".png");
                 assert url != null;
                 hand2.setImage(new Image(url.toString()));
                // handOrder.add(hand2);
             }else{
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + "1.png");
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(i).getImageId() +".png");
                 assert url != null;
                 hand3.setImage(new Image(url.toString()));
               //  handOrder.add(hand3);
@@ -436,10 +436,8 @@ public class GameScene2PlayersController implements Controller {
         this.board = board;
         this.maxNumItems = maxNumItems;
         ItemType type;
-        Random random = new Random();
         Image image;
         URL url;
-        int num;
         ImageView item;
 
         for(int i=0;i<Board.DIMENSIONS;i++){
@@ -447,8 +445,7 @@ public class GameScene2PlayersController implements Controller {
                 item = itemLivRoomCells[i][j];
                 if(board[i][j].getItem().hasSomething()){
                     type = board[i][j].getItem().getType();
-                    num = random.nextInt(3) + 1;
-                    url = getClass().getResource("/images/item_tiles/" + type.name() + num + ".png");
+                    url = getClass().getResource("/images/item_tiles/" + type.name() + board[i][j].getItem().getImageId() + ".png");
                     assert url != null;
                     image = new Image(url.toString());
                     item.setImage(image);
