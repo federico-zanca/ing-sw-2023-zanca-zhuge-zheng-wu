@@ -35,6 +35,8 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class GameScene2PlayersController implements Controller {
@@ -500,12 +502,13 @@ public class GameScene2PlayersController implements Controller {
     public void setCommonGoals(ArrayList<CommonGoalCard> commonGoals){
         URL url;
         Image image;
-        int num = 1;
-        url = getClass().getResource("/images/common_goal_cards/"+num+".jpg");
+        url = getClass().getResource("/images/common_goal_cards/"+commonGoals.get(0).getImageId()+".jpg");
+        System.out.println(commonGoals.get(0).getImageId());
+        System.out.println(commonGoals.get(1).getImageId());
         assert url != null;
         image = new Image(url.toString());
         firstCommonGoal.setImage(image);
-        url = getClass().getResource("/images/common_goal_cards/"+num+".jpg");
+        url = getClass().getResource("/images/common_goal_cards/"+commonGoals.get(1).getImageId()+".jpg");
         assert url != null;
         image = new Image(url.toString());
         secondCommonGoal.setImage(image);
@@ -573,17 +576,20 @@ public class GameScene2PlayersController implements Controller {
     public void setChat(ChatMessage message){
         String prefix = "";
         String messageContent = message.getContent();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
         if (message.getReceiver() != null) {
             if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
-                prefix = "PRIVATE MESSAGE FROM ";
+                prefix = "["+formattedDateTime + "] " + "PRIVATE MESSAGE FROM ";
                 messageContent = message.getSender() + ": " + messageContent;
 
             }else{
-                prefix = "PRIVATE MESSAGE TO ";
+                prefix = "["+formattedDateTime + "] " + "PRIVATE MESSAGE TO ";
                 messageContent = message.getReceiver() + ": " + messageContent;
             }
         } else{
-            messageContent = message.getSender() + ": " + messageContent;
+            messageContent = "["+formattedDateTime + "] " + message.getSender() + ": " + messageContent;
         }
         chat.appendText(prefix+messageContent+"\n");
     }

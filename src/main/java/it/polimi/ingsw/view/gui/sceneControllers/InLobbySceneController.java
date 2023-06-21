@@ -17,6 +17,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -105,17 +107,20 @@ public class InLobbySceneController implements Controller{
     public void setChat(ChatMessage message){
         String prefix = "";
         String messageContent = message.getContent();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
         if (message.getReceiver() != null) {
             if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
-                prefix = "PRIVATE MESSAGE FROM ";
+                prefix = "["+formattedDateTime + "] " + "PRIVATE MESSAGE FROM ";
                 messageContent = message.getSender() + ": " + messageContent;
 
             }else{
-                prefix = "PRIVATE MESSAGE TO ";
+                prefix = "["+formattedDateTime + "] " + "PRIVATE MESSAGE TO ";
                 messageContent = message.getReceiver() + ": " + messageContent;
             }
         } else{
-            messageContent = message.getSender() + ": " + messageContent;
+            messageContent = "["+formattedDateTime + "] " + message.getSender() + ": " + messageContent;
         }
         chat.appendText(prefix+messageContent+"\n");
     }

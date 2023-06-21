@@ -118,12 +118,16 @@ public class Game extends Observable {
     private void pickCommonGoalsForThisGame() {
         //TODO update with design pattern for CommonGoal
         int firstGoalType = (int) (Math.random() * 12 ) +1;
-        int secondGoalType = firstGoalType;
-        while(firstGoalType == secondGoalType)
-            secondGoalType = (int) (Math.random() * 12 + 1) +1;
-        commonGoals.add(intToCommonGoal(firstGoalType));
-        commonGoals.add(intToCommonGoal(secondGoalType));
-
+        int secondGoalType = (int) (Math.random() * 12) + 1;
+        while(firstGoalType == secondGoalType) {
+            secondGoalType = (int) (Math.random() * 12) + 1;
+        }
+        CommonGoalCard first = intToCommonGoal(firstGoalType);
+        first.setImageId(firstGoalType);
+        CommonGoalCard second = intToCommonGoal(secondGoalType);
+        first.setImageId(secondGoalType);
+        commonGoals.add(first);
+        commonGoals.add(second);
     }
 
     /**
@@ -191,7 +195,11 @@ public class Game extends Observable {
         pickCommonGoalsForThisGame();
 
         for(Player player : players){
-            personalGoals.put(player.getUsername(), randomPersonalGoal()); //TODO due player non dovrebbero avere lo stesso commongoal
+            PersonalGoalCard personal = randomPersonalGoal();
+            while(personalGoals.containsValue(personal)){
+                personal = randomPersonalGoal();
+            }
+            personalGoals.put(player.getUsername(),personal);
             notifyObservers(new PersonalGoalCardMessage(player.getUsername(),personalGoals.get(player.getUsername())));
         }
 
