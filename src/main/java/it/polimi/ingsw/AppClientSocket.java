@@ -17,7 +17,8 @@ public class AppClientSocket {
                 "╚═╝     ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝\n" +
                 "                                                                       \n" +
                 "\n");
-        ServerStub serverStub = new ServerStub("localhost", 1234);
+        //ServerStub serverStub = new ServerStub("192.168.1.87", 1234);
+        ServerStub serverStub = new ServerStub("172.20.10.10", 1234);
 
         ClientImpl client = new ClientImpl(serverStub);
 

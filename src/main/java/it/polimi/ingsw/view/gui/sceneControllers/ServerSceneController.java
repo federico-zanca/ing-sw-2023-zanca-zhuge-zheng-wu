@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -61,7 +62,7 @@ public class ServerSceneController implements Controller{
         }
     }
     public void exitButton(){
-
+        System.exit(0);
     }
     public void lobbyList(){
         messageHandler.notifyObservers(new LobbyListRequest());

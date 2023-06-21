@@ -520,7 +520,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
         this.clientState = clientState;
     }
 
-
     //DRAW PHASE stuff
 
     /**

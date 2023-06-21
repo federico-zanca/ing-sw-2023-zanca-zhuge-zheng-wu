@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
@@ -16,15 +17,17 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.tui.PlayerState;
 
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MessageHandler extends VirtualView implements View {
     private final GUI gui;
     ArrayList<LobbyDisplayInfo> lobbies;
     private String myLobby = "";
     private String myUsername = "";
+    private PersonalGoalCard personalGoalCard;
     private MessageToClient lastMessage;
+    private ChatBox chatBox = new ChatBox();
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
         gui.setPhase(GuiPhase.LOGIN);
@@ -38,6 +41,7 @@ public class MessageHandler extends VirtualView implements View {
             gui.setCurrentScene(gui.getScene(GameFxml.IN_LOBBY_SCENE.s));
             gui.changeScene();
             gui.setAdminName(myUsername);
+            this.chatBox = new ChatBox();
         }
     }
 
@@ -51,7 +55,8 @@ public class MessageHandler extends VirtualView implements View {
             gui.changeScene();
             gui.setAllPlayersNames(joinLobbyResponse.getUsernames());
             gui.setSpinnerDisable();
-        }else{
+            this.chatBox = new ChatBox();
+        }else if(joinLobbyResponse.getJoinType() == JoinType.REJOINED){
             gui.setPhase(GuiPhase.GAME);
             gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
             gui.changeScene();
@@ -66,7 +71,7 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onLoginResponse(LoginResponse loginResponse) {
         if(loginResponse.isSuccessful()) {
-            //this.myUsername = loginResponse.getUsername();
+            this.myUsername = loginResponse.getUsername();
             gui.setPhase(GuiPhase.SERVER);
             gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
             gui.changeScene();
@@ -77,12 +82,22 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onReconnectionMessage(ReconnectionMessage reconnectionMessage) {
-        gui.setPhase(GuiPhase.GAME);
-        gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
-        gui.changeScene();
-        gui.setGameScene(reconnectionMessage.getModel());
-        gui.setPersonalGoalCard(reconnectionMessage.getPersonalGoal());
-        gui.setChatMessages(reconnectionMessage.getChat());
+        Player reconnectedPlayer = null;
+        setPersonalGoalCard(reconnectionMessage.getPersonalGoal());
+        for(Player p : reconnectionMessage.getModel().getPlayers()){
+            if(Objects.equals(p.getUsername(), myUsername)){
+                reconnectedPlayer = p;
+                break;
+            }
+        }
+        if(reconnectedPlayer != null){
+            gui.setPhase(GuiPhase.GAME);
+            gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
+            gui.changeScene();
+            gui.setPlayerState(PlayerState.WATCHING);
+            gui.setReconnectedGameScene(reconnectionMessage.getModel(),reconnectedPlayer);
+            //gui.setChatMessages(reconnectionMessage.getChat());
+        }
     }
 
     @Override
@@ -185,7 +200,7 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onPersonalGoalCardMessage(PersonalGoalCardMessage personalGoalCardMessage) {
         lastMessage = personalGoalCardMessage;
-        gui.setPersonalGoalCard(personalGoalCardMessage.getPersonalGoalCard());
+        setPersonalGoalCard(personalGoalCardMessage.getPersonalGoalCard());
     }
 
     @Override
@@ -218,6 +233,7 @@ public class MessageHandler extends VirtualView implements View {
             gui.setPhase(GuiPhase.SERVER);
             gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
             gui.changeScene();
+            this.chatBox = null;
         }
     }
 
@@ -268,6 +284,7 @@ public class MessageHandler extends VirtualView implements View {
     }
 
     private void onChatMessage(ChatMessage message) {
+        chatBox.addMessage(message);
         gui.setChatMessage(message);
     }
 
@@ -306,5 +323,14 @@ public class MessageHandler extends VirtualView implements View {
     }
     public MessageToClient getLastMessage() {
         return lastMessage;
+    }
+    public void setPersonalGoalCard(PersonalGoalCard personalGoalCard) {
+        this.personalGoalCard = personalGoalCard;
+    }
+    public PersonalGoalCard getPersonalGoalCard() {
+        return personalGoalCard;
+    }
+    public ArrayList<ChatMessage> getChatLog(){
+        return chatBox.getChatLog();
     }
 }
