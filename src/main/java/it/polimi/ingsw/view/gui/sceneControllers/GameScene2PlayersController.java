@@ -187,7 +187,9 @@ public class GameScene2PlayersController implements Controller {
                     }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
                         return;
                     }
-                    tilesToDraw.add(new Square(new Coordinates(row, col), board[row][col].getItem().getType()));
+                    Square square = new Square(new Coordinates(row, col), board[row][col].getItem().getType());
+                    square.getItem().setImageId(board[row][col].getItem().getImageId());
+                    tilesToDraw.add(square);
                     glow.setLevel(0.5);
                     itemLivRoomCells[row][col].setEffect(glow);
                     if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems)){
@@ -242,7 +244,7 @@ public class GameScene2PlayersController implements Controller {
     public void initialize() {
         if(gui == null){
             return;
-        }else if(initialized == false){
+        }else if(!initialized){
             initialized = true;
             setChatBox(messageHandler.getChatLog());
             tilesToDraw = new ArrayList<>();
@@ -337,17 +339,17 @@ public class GameScene2PlayersController implements Controller {
         URL url;
         for(int i=0;i<hand.size();i++){
             if(i == 0){
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(i).getImageId() + ".png");
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(0).getImageId() + ".png");
                 assert url != null;
                 hand1.setImage(new Image(url.toString()));
                 //handOrder.add(hand1);
             }else if(i == 1){
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(i).getImageId() + ".png");
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(1).getImageId() + ".png");
                 assert url != null;
                 hand2.setImage(new Image(url.toString()));
                // handOrder.add(hand2);
             }else{
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(i).getImageId() +".png");
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(2).getImageId() +".png");
                 assert url != null;
                 hand3.setImage(new Image(url.toString()));
               //  handOrder.add(hand3);
@@ -412,7 +414,7 @@ public class GameScene2PlayersController implements Controller {
                     item = bookshelfCells[i][j];
                     if(shelfie[i][j].hasSomething()){
                         type = shelfie[i][j].getType();
-                        url = getClass().getResource("/images/item_tiles/" + type.name() +"1.png");
+                        url = getClass().getResource("/images/item_tiles/" + type.name() + shelfie[i][j].getImageId() + ".png");
                         assert url != null;
                         image = new Image(url.toString());
                         item.setImage(image);

@@ -190,6 +190,7 @@ public class Board implements Serializable {
      */
     public ItemTile pickItem(int row, int column){
         ItemTile tmp = new ItemTile(gameboard[row][column].getItem().getType());
+        tmp.setImageId(gameboard[row][column].getItem().getImageId());
         if(tmp.getType() == ItemType.FORBIDDEN){
             //TODO implementare meglio.
             System.err.println("Forbidden square, this square is not part of the board.");
