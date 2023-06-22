@@ -125,7 +125,7 @@ public class Game extends Observable {
         CommonGoalCard first = intToCommonGoal(firstGoalType);
         first.setImageId(firstGoalType);
         CommonGoalCard second = intToCommonGoal(secondGoalType);
-        first.setImageId(secondGoalType);
+        second.setImageId(secondGoalType);
         commonGoals.add(first);
         commonGoals.add(second);
     }

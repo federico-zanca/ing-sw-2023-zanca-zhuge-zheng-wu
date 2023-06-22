@@ -503,8 +503,6 @@ public class GameScene2PlayersController implements Controller {
         URL url;
         Image image;
         url = getClass().getResource("/images/common_goal_cards/"+commonGoals.get(0).getImageId()+".jpg");
-        System.out.println(commonGoals.get(0).getImageId());
-        System.out.println(commonGoals.get(1).getImageId());
         assert url != null;
         image = new Image(url.toString());
         firstCommonGoal.setImage(image);
