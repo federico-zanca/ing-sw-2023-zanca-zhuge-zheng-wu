@@ -18,7 +18,6 @@ import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.ActionType;
 import it.polimi.ingsw.view.tui.PlayerState;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,7 +31,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -48,41 +46,31 @@ public class GameScene2PlayersController implements Controller {
     private ArrayList<ItemTile> tilesToInsert;
     private ArrayList<Square> tilesToDraw;
     private ActionType actionType = ActionType.NONE;
-    private InputValidator inputValidator = new InputValidator();
+    private final InputValidator inputValidator = new InputValidator();
     private final double cellWidth = 46.5;
-    private double cellHeight = 46.5;
-    private ImageView[][] itemLivRoomCells = new ImageView[Board.DIMENSIONS][Board.DIMENSIONS];
+    private final double cellHeight = 46.5;
+    private final ImageView[][] itemLivRoomCells = new ImageView[Board.DIMENSIONS][Board.DIMENSIONS];
     private Square[][] board;
-    private DropShadow dropShadow = new DropShadow();
+    private final DropShadow dropShadow = new DropShadow();
     private int maxNumItems;
-    private ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
+    private final ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
     private Bookshelf bookshelf;
-    private ArrayList<ImageView> newHandOrder = new ArrayList<>();
-    private ArrayList<Integer> order = new ArrayList<>();
+    private final ArrayList<ImageView> newHandOrder = new ArrayList<>();
+    private final ArrayList<Integer> order = new ArrayList<>();
     @FXML
     private TextArea chat;
     @FXML
     private TextField inputField;
     @FXML
-    private VBox chatBox;
-    @FXML
-    private AnchorPane root;
-    @FXML
-    private Pane bookshelfPane;
-    @FXML
     private ImageView firstCommonGoal, secondCommonGoal;
     @FXML
     private ImageView firstCommonGoalScoreBox, secondCommonGoalScoreBox;
-    @FXML
-    private ImageView livingRoomBoard;
     @FXML
     private ImageView endGameTokenBox;
     @FXML
     private GridPane livingRoomGrid;
     @FXML
     private GridPane myBookShelfGrid;
-    @FXML
-    private ImageView myBookshelf;
     @FXML
     private ImageView myPersonalGoal;
     @FXML
@@ -94,13 +82,8 @@ public class GameScene2PlayersController implements Controller {
     @FXML
     private ImageView hand1, hand2, hand3;
     @FXML
-    private Rectangle handRegion;
-    @FXML
     private Label notification;
-    @FXML
-    private Button okButton;
-    @FXML
-    private Button exitButton;
+
     @FXML
     void translateTriangle (MouseEvent event){
         if(state.equals(PlayerState.ACTIVE)){
@@ -168,12 +151,12 @@ public class GameScene2PlayersController implements Controller {
         }
     }
     @FXML
-    void clickedExit(ActionEvent event){
+    void clickedExit(){
         setPlayerState(PlayerState.WATCHING);
         messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
     }
     @FXML
-    void clickedItemLivRoom(MouseEvent event,int row,int col){
+    void clickedItemLivRoom(int row, int col){
         Glow glow = new Glow();
         if(state.equals(PlayerState.ACTIVE)){
             if(actionType == ActionType.DRAW_TILES){
@@ -374,9 +357,10 @@ public class GameScene2PlayersController implements Controller {
         selectCol5.setUserData(4);
     }
     private void initBookshelfGrid() {
+        ImageView cell;
         for (int i = 0; i < Bookshelf.Rows; i++) {
             for (int j = 0; j < Bookshelf.Columns; j++) {
-                ImageView cell = new ImageView();
+                cell = new ImageView();
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
                 myBookShelfGrid.getChildren().add(cell);
@@ -387,9 +371,10 @@ public class GameScene2PlayersController implements Controller {
         }
     }
     private void initLivingRoomGrid() {
+        ImageView cell;
         for (int i = 0; i < Board.DIMENSIONS; i++) {
             for (int j = 0; j < Board.DIMENSIONS; j++) {
-                ImageView cell = new ImageView();
+                cell = new ImageView();
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
                 livingRoomGrid.getChildren().add(cell);
@@ -462,7 +447,7 @@ public class GameScene2PlayersController implements Controller {
                             item.setOnMouseClicked(mouseEvent -> {
                                 int rowIndex = GridPane.getRowIndex(finalItem);
                                 int colIndex = GridPane.getColumnIndex(finalItem);
-                                clickedItemLivRoom(mouseEvent,rowIndex,colIndex);
+                                clickedItemLivRoom(rowIndex,colIndex);
                             });
                             setPickableEffect(item);
                         }
