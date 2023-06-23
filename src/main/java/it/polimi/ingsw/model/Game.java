@@ -166,7 +166,6 @@ public class Game extends Observable {
      * @return random personalgoal
      */
     public PersonalGoalCard randomPersonalGoal(){
-        //TODO fai in modo che
         Random rand = new Random();
         int n = rand.nextInt(12) + 1;
         return new PersonalGoalCard(n);
