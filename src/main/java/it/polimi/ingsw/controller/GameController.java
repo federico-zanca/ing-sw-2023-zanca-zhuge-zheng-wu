@@ -69,8 +69,7 @@ public class GameController {
      * @return winner of the game
      */
     private Player declareWinner() {
-        //TODO improve with playersqueue from turncontroller
-        ArrayList<Player> players = model.getPlayers();
+        ArrayList<Player> players = turnController.getPlayerQueue();
         Player winner = players.get(0);
         for(Player p : players){
             if(p.getScore()>=winner.getScore())
