@@ -521,7 +521,9 @@ public class Game extends Observable {
         if(!leaderboard.keySet().iterator().next().equals(winner.getUsername())) {
             leaderboard.clear();
             leaderboard.put(winner.getUsername(), winner.getScore());
-            for(Player p : players){
+            ArrayList<Player> players_ranked = new ArrayList<>(players);
+            players_ranked.sort((p1, p2) -> p2.getScore() - p1.getScore());
+            for(Player p : players_ranked){
                 if(!p.getUsername().equals(winner.getUsername())){
                     leaderboard.put(p.getUsername(), p.getScore());
                 }
