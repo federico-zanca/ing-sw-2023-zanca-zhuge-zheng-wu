@@ -436,7 +436,7 @@ public class TextualUI extends VirtualView implements View, Runnable {
                 elaborateUsernameCommand(parts);
                 break;
             case EXIT:
-                //TODO disconnettiti dal server
+                System.exit(1);
                 break;
             case GAMES:
                 setPlayerState(PlayerState.WATCHING);
