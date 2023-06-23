@@ -72,7 +72,6 @@ public class Bag implements Serializable {
      */
     public ItemTile drawItem () {
         ItemType k;
-        //TODO define constants class
 
         if (availableItems.isEmpty()) {
             return null;

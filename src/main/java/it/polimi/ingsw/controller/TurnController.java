@@ -287,7 +287,6 @@ public class TurnController {
     public void addPlayerToSkip(Player player) {
         playersToSkip.add(player);
         if(playersToSkip.size()==playerQueue.size())
-            //TODO leggi bene
             model.nextGamePhase(); //se esce l'ultimo giocatore, passa alla fase AWARDS (che non vedrà nessuno, si può cambiare)
         else if(player.equals(model.getCurrentPlayer()))
             loadNextPlayer();

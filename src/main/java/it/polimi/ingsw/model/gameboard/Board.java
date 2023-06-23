@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.IllegalDrawException;
+import it.polimi.ingsw.model.exceptions.IllegalNumOfPlayersException;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class Board implements Serializable {
     public void initBoard(int numPlayers){
         String jsonpath = "src/main/resources/gameboardJSON/";
         if(numPlayers<2 ||numPlayers>4){
-            //TODO errore numero giocatori non valido -- lancia eccezione e gestisci
+            //should never happen because this check is already performed when a player tries to start the game
             System.err.println("Illegal number of players.");
             return;
         }
@@ -60,7 +61,7 @@ public class Board implements Serializable {
                     new File(jsonpath),
                     new TypeReference<Square[][]>(){});
         } catch (IOException e) {
-            // TODO non va bene runtime exception
+            System.err.println("Error reading " + jsonpath + "file");
             throw new RuntimeException(e);
         }
         /*
