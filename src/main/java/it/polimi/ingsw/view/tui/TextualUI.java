@@ -670,10 +670,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
         setPlayerState(PlayerState.ACTIVE);
     }
 
-    /**
-     * Handles a ConnectionMessage
-     * @param message
-     */
     private void onConnectionMessage(MessageToClient message) {
         message.execute(this);
         /*
@@ -745,7 +741,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param connectedToServerMessage
+
+     This method is invoked when the client successfully connects to the server and receives a ConnectedToServerMessage.
+     It updates the client state and player state accordingly.
+     @param connectedToServerMessage The message received indicating a successful connection to the server.
      */
     @Override
     public void onConnectedServerMessage(ConnectedToServerMessage connectedToServerMessage) {
@@ -755,7 +754,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param createLobbyResponse
+
+     This method is invoked when the client receives a response to a lobby creation request.
+     It handles the response by printing the result and updating the client state if the lobby creation was successful.
+     @param createLobbyResponse The response received for the lobby creation request.
      */
     @Override
     public void onCreateLobbyResponse(CreateLobbyResponse createLobbyResponse) {
@@ -765,7 +767,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param joinLobbyResponse
+     This method is invoked when the client receives a response to a lobby join request.
+     It handles the response by printing the join lobby response content and updating the client state and action type based on the join type.
+     Additionally, it displays the list of lobby players if the join type is "JOINED" or "REJOINED".
+     @param joinLobbyResponse The response received for the lobby join request.
      */
     @Override
     public void onJoinLobbyResponse(JoinLobbyResponse joinLobbyResponse) {
@@ -781,7 +786,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param lobbyListResponse
+
+     This method is invoked when the client receives a response containing a list of available lobbies.
+     It handles the response by displaying the list of lobbies using the printer.
+     @param lobbyListResponse The response containing the list of available lobbies.
      */
     @Override
     public void onLobbyListResponse(LobbyListResponse lobbyListResponse) {
@@ -790,7 +798,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param loginResponse
+
+     This method is invoked when the client receives a response to a login request.
+     It handles the response by setting the client's username, displaying the username response,
+     and updating the client's action type if the login was successful.
+     @param loginResponse The response received for the login request.
      */
     @Override
     public void onLoginResponse(LoginResponse loginResponse) {
@@ -801,7 +813,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param reconnectionMessage
+
+     This method is invoked when the client receives a reconnection message after reconnecting to a game.
+     It handles the message by updating the client state and action type, setting the personal goal card and chat,
+     and displaying the reconnection details using the printer.
+     @param reconnectionMessage The reconnection message received after reconnecting to a game.
      */
     @Override
     public void onReconnectionMessage(ReconnectionMessage reconnectionMessage) {
@@ -814,7 +830,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param usernameResponse
+
+     This method is invoked when the client receives a response to a username request.
+     It handles the response by setting the client's username and displaying the username response.
+     @param usernameResponse The response received for the username request.
      */
     @Override
     public void onUsernameResponse(UsernameResponse usernameResponse) {
@@ -824,7 +843,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param achievedCommonGoalMessage
+
+     This method is invoked when the client receives a message indicating that a common goal has been achieved.
+     It handles the message by updating the last received message with the achieved common goal message
+     and displaying the achieved common goal using the printer.
+     @param achievedCommonGoalMessage The message indicating the achievement of a common goal.
      */
     @Override
     public void onAchievedCommonGoalMessage(AchievedCommonGoalMessage achievedCommonGoalMessage) {
@@ -833,7 +856,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param adjacentItemsPointsMessage
+     * This method is invoked when the client receives an onAdjacentItemsPointsMessage
+     * (which contains the points earned by a player for groups of similar adjacent items in the bookshelf).
+     * It handles the message by updating the last received message with the AdjacentItemsPointsMessage
+     * and displaying the points earned using the printer.
+     * @param adjacentItemsPointsMessage The message containing the points earned by a player for groups of similar adjacent items in the bookshelf.
      */
     @Override
     public void onAdjacentItemsPointsMessage(AdjacentItemsPointsMessage adjacentItemsPointsMessage) {
@@ -842,7 +869,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param boardMessage
+
+     This method is invoked when the client receives a board message containing the updated game board.
+     It handles the message by updating the last received message with the board message
+     and displaying the game board using the printer.
+     @param boardMessage The message containing the updated game board.
      */
     @Override
     public void onBoardMessage(BoardMessage boardMessage) {
@@ -851,16 +882,24 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param bookshelfMessage
-     */
-    @Override
+
+     This method is invoked when the client receives a bookshelf message containing the bookshelf of a specific user.
+     It handles the message by updating the last received message with the bookshelf message
+     and displaying the bookshelf information using the printer.
+        @param bookshelfMessage The message containing the bookshelf of a specific user.
+        */
+     @Override
     public void onBookshelfMessage(BookshelfMessage bookshelfMessage) {
         lastMessage = bookshelfMessage;
         printer.showBookshelf(bookshelfMessage.getUsername(), bookshelfMessage.getBookshelf());
     }
 
     /**
-     * @param drawInfoMessage
+
+     This method is invoked when the client receives a draw information message.
+     It handles the message by updating the last received message with the draw information message,
+     displaying the draw information, and setting the action type to "DRAW_TILES".
+     @param drawInfoMessage The message containing the draw information.
      */
     @Override
     public void onDrawInfoMessage(DrawInfoMessage drawInfoMessage) {
@@ -873,7 +912,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param endGameMessage
+
+     This method is invoked when the client receives an end game message indicating the end of the game.
+     It handles the message by updating the last received message with the end game message,
+     displaying the end game ranking using the printer, and setting the client state to "IN_SERVER".
+     @param endGameMessage The message indicating the end of the game.
      */
     @Override
     public void onEndGameMessage(EndGameMessage endGameMessage) {
@@ -883,7 +926,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param exitGameResponse
+
+     This method is invoked when the client receives a response to an exit game request.
+     It handles the response by displaying the exit game response using the printer,
+     setting the client state to "IN_SERVER", and resetting the chat to an empty list.
+     @param exitGameResponse The response received for the exit game request.
      */
     @Override
     public void onExitGameResponse(ExitGameResponse exitGameResponse) {
@@ -893,7 +940,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param gameStartedMessage
+
+     This method is invoked when the client receives a GameStartedMessage indicating the start of a game.
+     It handles the message by updating the last received message with the game started message,
+     setting the client state to "IN_GAME", and displaying the game started details using the printer.
+     @param gameStartedMessage The message indicating the start of the game.
      */
     @Override
     public void onGameStartedMessage(GameStartedMessage gameStartedMessage) {
@@ -904,7 +955,16 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param insertInfoMessage
+
+     This method is invoked when the client receives an InsertInfoMessage.
+
+     It handles the message by updating the last received message with the insert information message,
+
+     setting the tiles to insert based on the message's hand,
+
+     displaying the insert information, and determining the appropriate action type for the client.
+
+     @param insertInfoMessage The message containing the insert information.
      */
     @Override
     public void onInsertInfoMessage(InsertInfoMessage insertInfoMessage) {
@@ -923,7 +983,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param lastTurnMessage
+
+     This method is invoked when the client receives a LastTurnMessage indicating that it is the last turn of the game.
+     It handles the message by updating the last received message with the last turn message,
+     and displaying the last turn details using the printer.
+     @param lastTurnMessage The message indicating the last turn of the game.
      */
     @Override
     public void onLastTurnMessage(LastTurnMessage lastTurnMessage) {
@@ -932,7 +996,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param leaderBoardMessage
+
+     This method is invoked when the client receives a LeaderBoardMessage containing the current rankings of players.
+     It handles the message by updating the last received message with the leader board message,
+     and displaying the leader board using the printer.
+     @param leaderBoardMessage The message containing the leader board information.
      */
     @Override
     public void onLeaderBoardMessage(LeaderBoardMessage leaderBoardMessage) {
@@ -941,7 +1009,13 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param newTurnMessage
+
+     This method is invoked when the client receives a NewTurnMessage indicating the start of a new turn.
+     It handles the message by updating the last received message with the new turn message,
+     clearing the tiles to insert and tiles to draw lists,
+     displaying the new turn details using the printer,
+     and setting the action type to "NONE" to indicate no specific action is required from the client.
+     @param newTurnMessage The message indicating the start of a new turn.
      */
     @Override
     public void onNewTurnMessage(NewTurnMessage newTurnMessage) {
@@ -953,7 +1027,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param noCommonGoalMessage
+
+     This method is invoked when the client receives a NoCommonGoalMessage indicating that there is no common goal for the current round.
+     It handles the message by updating the last received message with the no common goal message,
+     and printing the message content to the console.
+     @param noCommonGoalMessage The message indicating the absence of a common goal.
      */
     @Override
     public void onNoCommonGoalMessage(NoCommonGoalMessage noCommonGoalMessage) {
@@ -962,8 +1040,12 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param personalGoalCardMessage
-     */
+
+    This method is invoked when the client receives a {@link PersonalGoalCardMessage} containing the personal goal card for the player.
+    It handles the message by updating the last received message with the {@link PersonalGoalCardMessage},
+    and setting the personal goal card for the player.
+    @param personalGoalCardMessage The {@link PersonalGoalCardMessage} containing the personal goal card.
+    */
     @Override
     public void onPersonalGoalCardMessage(PersonalGoalCardMessage personalGoalCardMessage) {
         lastMessage = personalGoalCardMessage;
@@ -971,7 +1053,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param personalGoalPointsMessage
+
+     This method is invoked when the client receives a {@link PersonalGoalPointsMessage} containing the personal goal points earned by the player.
+     It handles the message by updating the last received message with the {@link PersonalGoalPointsMessage},
+     and displaying the personal goal points using the printer.
+     @param personalGoalPointsMessage The {@link PersonalGoalPointsMessage} containing the personal goal points.
      */
     @Override
     public void onPersonalGoalPointsMessage(PersonalGoalPointsMessage personalGoalPointsMessage) {
@@ -980,7 +1066,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param playerLeftMessage
+
+     This method is invoked when the client receives a {@link PlayerLeftMessage} indicating that a player has left the game.
+     It handles the message by displaying the player left message using the printer.
+     @param playerLeftMessage The {@link PlayerLeftMessage} indicating the player who left the game.
      */
     @Override
     public void onPlayerLeftMessage(PlayerLeftMessage playerLeftMessage) {
@@ -988,7 +1077,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param playerRejoinedMessage
+
+     This method is invoked when the client receives a {@link PlayerRejoinedMessage} indicating that a player has rejoined the game.
+     It handles the message by displaying the player rejoined message using the printer.
+     @param playerRejoinedMessage The {@link PlayerRejoinedMessage} indicating the player who rejoined the game.
      */
     @Override
     public void onPlayerRejoinedMessage(PlayerRejoinedMessage playerRejoinedMessage) {
@@ -996,7 +1088,9 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param changeNumOfPlayerResponse
+     This method is invoked when the client receives a {@link ChangeNumOfPlayerResponse} indicating the response to a request to change the number of players in the game.
+     It handles the message by printing the response content to the console.
+     @param changeNumOfPlayerResponse The {@link ChangeNumOfPlayerResponse} containing the response to the change number of players request.
      */
     @Override
     public void onChangeNumOfPlayerResponse(ChangeNumOfPlayerResponse changeNumOfPlayerResponse) {
@@ -1004,7 +1098,11 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param exitLobbyResponse
+
+     This method is invoked when the client receives an {@link ExitLobbyResponse} indicating the response to a request to exit the lobby.
+     It handles the message by displaying the exit lobby response using the printer.
+     If the exit is successful, it clears the chat and sets the client state to {@link ClientState#IN_SERVER}.
+     @param exitLobbyResponse The {@link ExitLobbyResponse} containing the response to the exit lobby request.
      */
     @Override
     public void onExitLobbyResponse(ExitLobbyResponse exitLobbyResponse) {
@@ -1016,7 +1114,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param gameNotReadyMessage
+
+     This method is invoked when the client receives a {@link GameNotReadyMessage} indicating that the game is not ready to start.
+     It handles the message by displaying the game not ready message using the printer.
+     @param gameNotReadyMessage The {@link GameNotReadyMessage} indicating that the game is not ready.
      */
     @Override
     public void onGameNotReadyMessage(GameNotReadyMessage gameNotReadyMessage) {
@@ -1024,15 +1125,22 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param invalidCommandMessage
-     */
+
+    This method is invoked when the client receives an {@link InvalidCommandMessage} indicating that the command sent by the client is invalid.
+    It handles the message by displaying the invalid command message using the printer.
+    @param invalidCommandMessage The {@link InvalidCommandMessage} indicating that the command is invalid.
+            */
+
+
     @Override
     public void onInvalidCommandMessage(InvalidCommandMessage invalidCommandMessage) {
         printer.showInvalidCommand();
     }
 
     /**
-     * @param newAdminMessage
+     This method is invoked when the client receives a {@link NewAdminMessage} indicating a change in the game administrator.
+     It handles the message by displaying the new administrator message using the printer.
+     @param newAdminMessage The {@link NewAdminMessage} indicating the old and new administrators.
      */
     @Override
     public void onNewAdminMessage(NewAdminMessage newAdminMessage) {
@@ -1040,7 +1148,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param notAdminMessage
+
+     This method is invoked when the client receives a {@link NotAdminMessage} indicating that the client is not the game administrator.
+     It handles the message by displaying the not admin message using the printer.
+     @param notAdminMessage The {@link NotAdminMessage} indicating that the client is not the game administrator.
      */
     @Override
     public void onNotAdminMessage(NotAdminMessage notAdminMessage) {
@@ -1048,7 +1159,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param playerListResponse
+
+     This method is invoked when the client receives a {@link PlayerListResponse} containing the list of players in the lobby.
+     It handles the message by displaying the lobby players list using the printer.
+     @param playerListResponse The {@link PlayerListResponse} containing the list of players in the lobby.
      */
     @Override
     public void onPlayerListResponse(PlayerListResponse playerListResponse) {
@@ -1057,7 +1171,10 @@ public class TextualUI extends VirtualView implements View, Runnable {
     }
 
     /**
-     * @param playersInLobbyUpdate
+
+     This method is invoked when the client receives a {@link PlayersInLobbyUpdate} indicating an update on the players in the lobby.
+     It handles the message by displaying the new player in lobby message using the printer.
+     @param playersInLobbyUpdate The {@link PlayersInLobbyUpdate} containing the updated information of players in the lobby.
      */
     @Override
     public void onPlayersInLobbyUpdate(PlayersInLobbyUpdate playersInLobbyUpdate) {
