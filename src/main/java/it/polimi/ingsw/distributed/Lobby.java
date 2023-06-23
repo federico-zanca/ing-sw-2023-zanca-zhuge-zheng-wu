@@ -388,6 +388,7 @@ public class Lobby {
      * Destroys the lobby by removing it from the server's list of lobbies.
      */
     private void destroyLobby() {
+        inLobbyClients.clear();
         server.getLobbies().remove(this);
     }
 
