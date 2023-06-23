@@ -1,11 +1,13 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.MessageToServer;
+import it.polimi.ingsw.network.message.gamemessage.DrawInfoMessage;
 import it.polimi.ingsw.network.message.gamemessage.DrawTilesMessage;
 import it.polimi.ingsw.network.message.gamemessage.ErrorMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertTilesMessage;
@@ -83,7 +85,8 @@ public class TurnController {
             model.drawFromBoard(m.getSquares());
         }
         else{
-            System.err.println("Tessere non valide"); //TODO rimpiazza con DrawInfoMessage
+            model.notifyObservers(new ErrorMessage(senderUsername, "Tessere non valide"));
+            model.notifyObservers(new DrawInfoMessage(model.getCurrentPlayer().getUsername(), new GameView(model), model.getCurrentPlayer().getBookshelf().maxSlotsAvailable()));
         }
         model.prepareForInsertPhase();
     }

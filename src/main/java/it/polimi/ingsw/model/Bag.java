@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 
 import it.polimi.ingsw.model.enumerations.ItemType;
-import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,8 +13,6 @@ import java.util.HashMap;
 public class Bag implements Serializable {
     private static final long serialVersionUID = -4755443721464701726L;
     public static final int INIT_ITEMS_NUM = 22;
-    private ArrayList<PersonalGoalCard> personalGoals;
-    //private ArrayList<ItemTile> itemTiles;
     private HashMap<ItemType, Integer> itemTiles;
     private ArrayList<ItemType> availableItems;
 
@@ -81,7 +78,6 @@ public class Bag implements Serializable {
             return null;
         }
         else{
-            //TODO replace with Random()
             int index = (int) (Math.random() * (availableItems.size()));
             k = availableItems.get(index);
             itemTiles.put(k, itemTiles.get(k) - 1);

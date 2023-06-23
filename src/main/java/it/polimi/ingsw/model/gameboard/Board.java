@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
+import it.polimi.ingsw.model.exceptions.IllegalDrawException;
 
 import java.io.File;
 import java.io.IOException;
@@ -123,9 +124,6 @@ public class Board implements Serializable {
      * @param items available in bag
      */
     public void refillBoardWithItems(ArrayList<ItemTile> items){
-        //TODO implement here
-
-
             for(int i=0; i<DIMENSIONS; i++) {
                 for (int j = 0; j < DIMENSIONS; j++) {
                     if (items.isEmpty()) {
@@ -188,15 +186,12 @@ public class Board implements Serializable {
      * @param column the column number of the target cell
      * @return the ItemTile corresponding to the cell specified through row and column parameters
      */
-    public ItemTile pickItem(int row, int column){
+    public ItemTile pickItem(int row, int column) throws IllegalDrawException {
         ItemTile tmp = new ItemTile(gameboard[row][column].getItem().getType());
         tmp.setImageId(gameboard[row][column].getItem().getImageId());
         if(tmp.getType() == ItemType.FORBIDDEN){
-            //TODO implementare meglio.
-            System.err.println("Forbidden square, this square is not part of the board.");
-            return tmp;
+            throw new IllegalDrawException();
         }
-        gameboard[row][column].getItem().setType(ItemType.EMPTY);
         return tmp;
     }
 
@@ -205,10 +200,13 @@ public class Board implements Serializable {
      @param squares An ArrayList of Square objects representing the squares from which to pick up items.
      @return An ArrayList of ItemTile objects representing the items picked up from the squares.
      */
-    public ArrayList<ItemTile> pickItems(ArrayList<Square> squares){
+    public ArrayList<ItemTile> pickItems(ArrayList<Square> squares) throws IllegalDrawException{
         ArrayList<ItemTile> hand = new ArrayList<>();
         for(Square sq : squares){
             hand.add(pickItem(sq.getRow(), sq.getColumn()));
+        }
+        for(Square sq : squares){
+            gameboard[sq.getRow()][sq.getColumn()].getItem().setType(ItemType.EMPTY);
         }
         return hand;
     }

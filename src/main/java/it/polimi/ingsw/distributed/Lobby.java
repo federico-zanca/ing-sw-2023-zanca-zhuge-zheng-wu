@@ -59,7 +59,6 @@ public class Lobby {
      * @throws FullLobbyException if the lobby is full
      */
     public void addClient(Client client) throws ClientAlreadyInLobbyException, FullLobbyException{
-        //TODO ottimizzato, da testare
         if (inLobbyClients.contains(client)) {
             throw new ClientAlreadyInLobbyException();
         } else if (numOfActuallyConnectedClientsInThisLobby() == model.getChosenPlayersNumber()) {

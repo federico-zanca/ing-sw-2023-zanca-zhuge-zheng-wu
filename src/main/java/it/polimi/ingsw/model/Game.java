@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.model.commongoals.*;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.enumerations.TurnPhase;
+import it.polimi.ingsw.model.exceptions.IllegalDrawException;
 import it.polimi.ingsw.model.gameboard.Board;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
@@ -237,9 +238,13 @@ public class Game extends Observable {
      * @param squares containing the items to remove from the board
      */
     public void drawFromBoard(ArrayList<Square> squares) {
-        setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
+        try {
+            setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
+        } catch (IllegalDrawException e) {
+            notifyObservers(new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this), currentPlayer.getBookshelf().maxSlotsAvailable()));
+            notifyObservers(new ErrorMessage(currentPlayer.getUsername(), e.getMessage()));
+        }
         board.disableAllSquares();
-        //TODO da tenere solo quando ho una view separata per ogni giocatore
         //notifyObservers(new BoardMessage("", getBoard().getGameboard()));
     }
 
@@ -463,7 +468,6 @@ public class Game extends Observable {
      */
     public void prepareForCalculatePhase() {
         nextTurnPhase();
-        //TODO eventuali messaggi
         handleCalculatePhase();
     }
 
@@ -478,7 +482,6 @@ public class Game extends Observable {
                 addPointsToPlayer(currentPlayer, points);
                 cg.addAchiever(currentPlayer);
                 //cg.takePoints(currentPlayer);
-                //TODO replace cg with a description of it
                 notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername() + " ha completato l'Obiettivo Comune:\n\"" + cg + "\"\n e ha ottenuto " + points + "punti!")); //send a message containing the info of the achieved common goal
                 count++;
             }
@@ -495,7 +498,6 @@ public class Game extends Observable {
      */
     public void prepareForRefillPhase() {
         nextTurnPhase();
-        //TODO eventuali messaggi
         handleRefillPhase();
     }
 

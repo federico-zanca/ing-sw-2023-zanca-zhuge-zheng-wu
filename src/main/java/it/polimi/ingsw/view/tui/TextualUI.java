@@ -172,11 +172,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
             notifyObservers(new ExitGameRequest(myUsername));
             return;
         }
-
-        if(input.equals("autoplay")){
-            //TODO implement here, for debugging reasons: lo usiamo per avere un bot che giochi da solo al posto nostro e poter fare delle partite in fretta
-            return;
-        }
         switch(actionType){
             case DRAW_TILES:
                 DrawInfoMessage message = (DrawInfoMessage) lastMessage;
