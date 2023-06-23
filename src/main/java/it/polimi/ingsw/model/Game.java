@@ -518,6 +518,15 @@ public class Game extends Observable {
      */
     public void endGame(Player winner, ArrayList<String> playersQueue) {
         sortLeaderBoard(playersQueue);
+        if(!leaderboard.keySet().iterator().next().equals(winner.getUsername())) {
+            leaderboard.clear();
+            leaderboard.put(winner.getUsername(), winner.getScore());
+            for(Player p : players){
+                if(!p.getUsername().equals(winner.getUsername())){
+                    leaderboard.put(p.getUsername(), p.getScore());
+                }
+            }
+        }
         notifyObservers(new EndGameMessage("", leaderboard));
     }
 

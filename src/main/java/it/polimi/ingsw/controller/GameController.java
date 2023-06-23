@@ -79,11 +79,14 @@ public class GameController {
     }
     /** Method called to calculate points to add to each player and declare the winner
      */
-    public void awardPhase(){
+    public void awardPhase(Player champion){
         Player winner;
         model.assignPersonalGoalPoints();
         model.assignAdjacentItemsPoints();
-        winner = declareWinner();
+        if(champion!=null)
+            winner = champion;
+        else
+            winner = declareWinner();
         setGamePhase(GamePhase.ENDED);
         model.endGame(winner, turnController.getPlayerQueueUsernames());
         lobby.endGame();
@@ -119,7 +122,7 @@ public class GameController {
                 System.err.println("Invalid Turn Phase: should never reach this state");
         }
         if(model.getGamePhase()==GamePhase.AWARDS) {
-            awardPhase();
+            awardPhase(null);
         }
     }
 

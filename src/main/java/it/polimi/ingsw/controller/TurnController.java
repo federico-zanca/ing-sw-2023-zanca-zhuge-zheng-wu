@@ -9,17 +9,16 @@ import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.gamemessage.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Represents a controller for the in-game-phase (manages turns).
  */
 public class TurnController {
+    private static final int TIMEOUT_LASTPLAYER = 30000;
     private final Game model;
+    private Timer timer;
     private final GameController gameController;
     private ArrayList<Player> playerQueue;
     private ArrayList<Player> playersToSkip;
@@ -30,6 +29,7 @@ public class TurnController {
      */
     public TurnController(GameController gameController) {
         this.model = gameController.getModel();
+        this.timer = null;
         this.gameController = gameController;
         this.playersToSkip = new ArrayList<>();
     }
@@ -160,7 +160,7 @@ public class TurnController {
         int nowCurrent = playerQueue.indexOf(model.getCurrentPlayer());
         if(nowCurrent == playerQueue.size()-1 && isLastTurn()){
             model.nextGamePhase();
-            gameController.awardPhase();
+            gameController.awardPhase(null);
         }
         else{
             model.setCurrentPlayer(playerQueue.get((nowCurrent+1) % playerQueue.size()));
@@ -286,6 +286,23 @@ public class TurnController {
      */
     public void addPlayerToSkip(Player player) {
         playersToSkip.add(player);
+        if(playersToSkip.size()==playerQueue.size()-1){
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    Player champion=null;
+                    for(Player p : playerQueue){
+                        if(!playersToSkip.contains(p)){
+                            champion = p;
+                            break;
+                        }
+                    }
+                    model.nextGamePhase();
+                    gameController.awardPhase(champion);
+                }
+            }, TIMEOUT_LASTPLAYER);
+        }
         if(playersToSkip.size()==playerQueue.size())
             model.nextGamePhase(); //se esce l'ultimo giocatore, passa alla fase AWARDS (che non vedrà nessuno, si può cambiare)
         else if(player.equals(model.getCurrentPlayer()))
@@ -307,6 +324,9 @@ public class TurnController {
      * @param player The player to reconnect
      */
     public void reconnectExitedPlayer(Player player) {
+        if(timer!=null) {
+            timer.cancel();
+        }
         playersToSkip.remove(player);
         model.playerRejoined(player);
     }
