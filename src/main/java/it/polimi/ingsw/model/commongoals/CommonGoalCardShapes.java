@@ -31,7 +31,7 @@ public class CommonGoalCardShapes extends CommonGoalCard {
                     new File(file_name),
                     new TypeReference<ArrayList<ArrayList<ShapeCoordinates>>>(){});
         } catch (IOException e) {
-            // TODO non va bene runtime exception
+            System.err.println("Error reading " + shape + "file");
             throw new RuntimeException(e);
         }
         dimRow = shapecells.get(0).get(0).getRow();

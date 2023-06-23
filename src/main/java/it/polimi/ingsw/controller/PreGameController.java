@@ -126,7 +126,6 @@ public class PreGameController {
         } catch (RemoteException e) {
             System.err.println("Unable to send lobby list response: " + e);
         } catch (FullLobbyException | ClientAlreadyInLobbyException e) {
-            //TODO: handle exception
             System.err.println("Unable to create lobby (should never happen): " + e);
         }
     }

@@ -242,7 +242,6 @@ public interface View {
 
 
     void showLoginResult(boolean valiUsername, String username);
-    //TODO gestisci anche Login Failed se la connessione salta
 
 
     void showLobby();

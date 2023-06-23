@@ -7,10 +7,7 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.enumerations.GamePhase;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.MessageToServer;
-import it.polimi.ingsw.network.message.gamemessage.DrawInfoMessage;
-import it.polimi.ingsw.network.message.gamemessage.DrawTilesMessage;
-import it.polimi.ingsw.network.message.gamemessage.ErrorMessage;
-import it.polimi.ingsw.network.message.gamemessage.InsertTilesMessage;
+import it.polimi.ingsw.network.message.gamemessage.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -230,7 +227,13 @@ public class TurnController {
         }
         else{
             System.err.println("Tessere non valide");
-            model.notifyObservers(new ErrorMessage(senderUsername, "Messaggio non valido")); //TODO change error message con un insertInfoMessage
+            Player currentPlayer = model.getCurrentPlayer();
+            ArrayList<Integer> insertableColumns = currentPlayer.getBookshelf().enableColumns(currentPlayer.getHand().size());
+            model.notifyObservers(new InsertInfoMessage(currentPlayer.getUsername(),
+                            currentPlayer.getHand(),
+                            currentPlayer.getBookshelf(),
+                            insertableColumns));
+            model.notifyObservers(new ErrorMessage(senderUsername, "Inserimento non valido: riprova"));
             return;
         }
 

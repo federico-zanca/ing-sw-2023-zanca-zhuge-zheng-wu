@@ -336,7 +336,6 @@ public class Lobby {
      * @param client the client to remove from the lobby
      */
     public void exitClient(Client client) {
-        //TODO handle bug when last client exits
         this.model.removeObserver(inLobbyClients.indexOf(client));
         inLobbyClients.remove(client);
         server.getConnectedClientInfo(client).setClientState(ClientState.IN_SERVER);

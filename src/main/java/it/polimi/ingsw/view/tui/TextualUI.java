@@ -600,7 +600,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
      * @param message The game message.
      */
     private void onGameMessage(MessageToClient message) {
-        //TODO abilita il comando qui sotto somehow
         //setIsActive(message.getUsername().equals(myUsername));
         message.execute(this);
         /*

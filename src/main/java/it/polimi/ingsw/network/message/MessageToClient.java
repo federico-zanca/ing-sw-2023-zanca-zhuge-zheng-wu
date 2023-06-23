@@ -18,6 +18,6 @@ public abstract class MessageToClient extends Message implements MsgToClient{
      * @return the username of player
      */
     public String getUsername(){
-        return ""; //TODO dangerous practice
+        return "MessageToClient default username";
     }
 }
