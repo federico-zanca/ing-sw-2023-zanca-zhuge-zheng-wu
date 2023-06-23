@@ -30,7 +30,6 @@ public class Bag implements Serializable {
         for(ItemType t: availableItems){
             itemTiles.put(t,INIT_ITEMS_NUM);
         }
-        //TODO inserisci personal goal cards (non si sa come generarle)
     }
 
     /**
