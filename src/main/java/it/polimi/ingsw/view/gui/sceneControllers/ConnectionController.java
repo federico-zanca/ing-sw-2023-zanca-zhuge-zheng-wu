@@ -47,7 +47,8 @@ public class ConnectionController implements Controller{
 
     @FXML
     void connectSocket(ActionEvent event) throws RemoteException {
-        ServerStub serverStub = new ServerStub("localhost", 1234);
+    ServerStub serverStub = new ServerStub("localhost", 1234);
+    //ServerStub serverStub = new ServerStub("172.20.10.6", 1234);
         ClientImpl client = new ClientImpl(serverStub,messageHandler);
         new Thread(){
             @Override

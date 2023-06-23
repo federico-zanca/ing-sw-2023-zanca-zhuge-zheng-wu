@@ -91,7 +91,7 @@ public class Lobby {
                         System.err.println("arg is null --- Lobby line 77");
                         return;
                     }
-                    System.err.println("Questo è il client --> " + client);
+                    //System.err.println("Questo è il client --> " + client);
                     if (arg.getType()== MessageType.GAME_MSG) {
                         MessageToClient gameMessage = (MessageToClient) arg; // cast once
                         String username = gameMessage.getUsername();
