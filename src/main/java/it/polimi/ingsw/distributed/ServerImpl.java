@@ -132,8 +132,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
                 throw new ClientAlreadyInLobbyException();
             }
             if (l.getName().equals(lobbyName)) {
-                connectedClients.get(client).setClientState(ClientState.IN_A_LOBBY);
                 l.addClient(client);
+                connectedClients.get(client).setClientState(ClientState.IN_A_LOBBY);
                 connectedClients.get(client).setLobby(l);
                 return;
             }
@@ -436,6 +436,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     public void removeClient(Client client) {
         //WARNING : removes the client from the hashmap, but doesn't touch the lobby: use carefully
         connectedClients.remove(client);
+    }
+
+    /**
+     * Gets the hashmap containing the connected clients and the associated {@link ClientInfo} objects.
+     * @return the hashmap containing the connected clients and the associated {@link ClientInfo} objects.
+     */
+    public HashMap<Client, ClientInfo> getConnectedClients() {
+        return connectedClients;
     }
 
     /**
