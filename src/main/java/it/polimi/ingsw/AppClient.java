@@ -13,7 +13,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
-public class AppClientRMI {
+public class AppClient {
 
     public static void main(String[] args) throws RemoteException, NotBoundException {
         VirtualView view;
