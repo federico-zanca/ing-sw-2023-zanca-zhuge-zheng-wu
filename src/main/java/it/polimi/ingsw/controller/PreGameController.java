@@ -7,6 +7,7 @@ import it.polimi.ingsw.distributed.ServerImpl;
 import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
+import it.polimi.ingsw.model.exceptions.InvalidLobbyNameException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.MessageToServer;
@@ -118,11 +119,18 @@ public class PreGameController {
      * @param createLobbyRequest the request object containing the lobby name
      */
     public void onCreateLobbyRequest(Client client, CreateLobbyRequest createLobbyRequest) {
-        try {
-            Lobby newLobby = new Lobby(server, client,createLobbyRequest.getLobbyName());
-            boolean success = server.addLobby(newLobby);
-            server.sendMessage(client, new CreateLobbyResponse(success));
-            //client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
+        try{
+            try {
+                if(createLobbyRequest.getLobbyName().trim().equals("") || createLobbyRequest.getLobbyName()==null){
+                    throw new InvalidLobbyNameException();
+                }
+                Lobby newLobby = new Lobby(server, client,createLobbyRequest.getLobbyName());
+                boolean success = server.addLobby(newLobby);
+                server.sendMessage(client, new CreateLobbyResponse(success));
+                //client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
+            }catch (InvalidLobbyNameException | NullPointerException e) {
+                server.sendMessage(client, new CreateLobbyResponse(false));
+            }
         } catch (RemoteException e) {
             System.err.println("Unable to send lobby list response: " + e);
         } catch (FullLobbyException | ClientAlreadyInLobbyException e) {
@@ -150,7 +158,8 @@ public class PreGameController {
                 content = "Rejoined lobby";
                 usernames = server.getLobbyByName(lobbyName).getClientsUsernames();
                 server.getConnectedClientInfo(client).setClientState(ClientState.IN_GAME);
-            } else{
+            }
+            else{
                 if(!server.getLobbyByName(lobbyName).isGameStarted()){
                     server.addClientToLobby(client, lobbyName);
                     joinSuccess = JoinType.JOINED;

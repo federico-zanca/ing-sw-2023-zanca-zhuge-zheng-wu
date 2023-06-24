@@ -394,7 +394,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * Disconnects a client from the server.
      * @param client the client to disconnect.
      */
-    private void disconnect(Client client){
+    public void disconnect(Client client){
         if(getConnectedClientInfo(client).isConnected()) {
             stopHeartBeat(client);
             System.err.println("Client " + getConnectedClientInfo(client).getClientID() + " disconnected");
