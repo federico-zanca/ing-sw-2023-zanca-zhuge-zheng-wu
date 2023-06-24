@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.gameboard;
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
+import it.polimi.ingsw.model.exceptions.IllegalDrawException;
 import org.junit.Before;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -114,7 +115,7 @@ class BoardTest {
     }
 
     @Test
-    void pickItem() {
+    void pickItem() throws IllegalDrawException {
         board = new Board();
         board.initBoard(2);
         //Placing items on a square and on adjacent squares.
@@ -135,7 +136,7 @@ class BoardTest {
     void pickItems() {
     }
     @Test
-    void testDoesSquareHaveFreeSide() {
+    void testDoesSquareHaveFreeSide() throws IllegalDrawException {
         board = new Board();
         bag = new Bag();
         board.initBoard(4);
@@ -164,7 +165,7 @@ class BoardTest {
     }
 
     @Test
-    void testPickItems() {
+    void testPickItems() throws IllegalDrawException {
         Board board = new Board();
         board.initBoard(2);
         ArrayList<Square> items = new ArrayList<>();

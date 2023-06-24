@@ -57,6 +57,7 @@ public class GameScene2PlayersController implements Controller {
     private Bookshelf bookshelf;
     private final ArrayList<ImageView> newHandOrder = new ArrayList<>();
     private final ArrayList<Integer> order = new ArrayList<>();
+    private ArrayList<Label> pList = new ArrayList<>();
     @FXML
     private TextArea chat;
     @FXML
@@ -83,11 +84,13 @@ public class GameScene2PlayersController implements Controller {
     private ImageView hand1, hand2, hand3;
     @FXML
     private Label notification;
+    @FXML
+    private Polygon turnIndicator;
 
     @FXML
-    void translateTriangle (MouseEvent event){
-        if(state.equals(PlayerState.ACTIVE)){
-            if(actionType.equals(ActionType.INSERT_HAND)){
+    void translateTriangle(MouseEvent event) {
+        if (state.equals(PlayerState.ACTIVE)) {
+            if (actionType.equals(ActionType.INSERT_HAND)) {
                 Polygon polygon = (Polygon) event.getSource();
                 Glow glow = new Glow();
                 glow.setLevel(0.5);
@@ -95,15 +98,17 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
     @FXML
-    void clearGlow(MouseEvent event){
+    void clearGlow(MouseEvent event) {
         Polygon polygon = (Polygon) event.getSource();
         polygon.setEffect(null);
     }
+
     @FXML
     void clickedCol(MouseEvent event) {
-        if(state.equals(PlayerState.ACTIVE)) {
-            if(actionType.equals(ActionType.INSERT_HAND)){
+        if (state.equals(PlayerState.ACTIVE)) {
+            if (actionType.equals(ActionType.INSERT_HAND)) {
                 int colNum = (int) ((Polygon) event.getSource()).getUserData();
                 if (inputValidator.columnHasLessSpace(colNum, ((InsertInfoMessage) messageHandler.getLastMessage()).getEnabledColumns())) {
                     return;
@@ -116,12 +121,13 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
     @FXML
-    void clickedHand(MouseEvent event){
-        if(state.equals(PlayerState.ACTIVE)){
-            if(actionType == ActionType.INSERT_HAND){
+    void clickedHand(MouseEvent event) {
+        if (state.equals(PlayerState.ACTIVE)) {
+            if (actionType == ActionType.INSERT_HAND) {
                 ImageView hand = (ImageView) event.getSource();
-                if(!(hand.getEffect() instanceof Glow)){
+                if (!(hand.getEffect() instanceof Glow)) {
                     if (hand.equals(hand1)) {
                         order.add(1);
                     } else if (hand.equals(hand2)) {
@@ -136,13 +142,13 @@ public class GameScene2PlayersController implements Controller {
                 }
             }
         }
-        if(tilesToInsert.size() == 2){
-            if(newHandOrder.size() == 2){
+        if (tilesToInsert.size() == 2) {
+            if (newHandOrder.size() == 2) {
                 swapOrder();
                 order.clear();
                 newHandOrder.clear();
             }
-        }else if(tilesToInsert.size() == 3) {
+        } else if (tilesToInsert.size() == 3) {
             if (newHandOrder.size() == 3) {
                 changeOrder();
                 order.clear();
@@ -150,24 +156,26 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
     @FXML
-    void clickedExit(){
+    void clickedExit() {
         setPlayerState(PlayerState.WATCHING);
         messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
     }
+
     @FXML
-    void clickedItemLivRoom(int row, int col){
+    void clickedItemLivRoom(int row, int col) {
         Glow glow = new Glow();
-        if(state.equals(PlayerState.ACTIVE)){
-            if(actionType == ActionType.DRAW_TILES){
-                if(board[row][col].isPickable()){
-                    if(inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
+        if (state.equals(PlayerState.ACTIVE)) {
+            if (actionType == ActionType.DRAW_TILES) {
+                if (board[row][col].isPickable()) {
+                    if (inputValidator.isTileAlreadyOnHand(row, col, tilesToDraw)) {
                         int tileIndex = getTileIndex(col, row, tilesToDraw);
                         tilesToDraw.remove(tileIndex);
                         itemLivRoomCells[row][col].setEffect(null);
                         setPickableEffect(itemLivRoomCells[row][col]);
                         return;
-                    }else if(tilesToDraw.size()>0 && !inputValidator.inLineTile(row,col,tilesToDraw)){
+                    } else if (tilesToDraw.size() > 0 && !inputValidator.inLineTile(row, col, tilesToDraw)) {
                         return;
                     }
                     Square square = new Square(new Coordinates(row, col), board[row][col].getItem().getType());
@@ -175,16 +183,16 @@ public class GameScene2PlayersController implements Controller {
                     tilesToDraw.add(square);
                     glow.setLevel(0.5);
                     itemLivRoomCells[row][col].setEffect(glow);
-                    if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size()<Math.min(3,maxNumItems)){
+                    if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size() < Math.min(3, maxNumItems)) {
                         return;
-                    }else{
+                    } else {
                         setActionType(ActionType.ORDER_HAND);
                     }
-                }else{
+                } else {
                     return;
                 }
-            }else if(actionType == ActionType.ORDER_HAND && hand1.getImage() == null){
-                if(board[row][col].isPickable() && inputValidator.isTileAlreadyOnHand(row,col,tilesToDraw)){
+            } else if (actionType == ActionType.ORDER_HAND && hand1.getImage() == null) {
+                if (board[row][col].isPickable() && inputValidator.isTileAlreadyOnHand(row, col, tilesToDraw)) {
                     int tileIndex = getTileIndex(col, row, tilesToDraw);
                     tilesToDraw.remove(tileIndex);
                     itemLivRoomCells[row][col].setEffect(null);
@@ -195,22 +203,23 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
     @FXML
-    void clickedOk(){
-        if(state.equals(PlayerState.ACTIVE)){
-            if(tilesToDraw.size() != 0){
+    void clickedOk() {
+        if (state.equals(PlayerState.ACTIVE)) {
+            if (tilesToDraw.size() != 0) {
                 setPlayerState(PlayerState.WATCHING);
-                messageHandler.notifyObservers(new DrawTilesMessage(messageHandler.getMyUsername(),tilesToDraw));
+                messageHandler.notifyObservers(new DrawTilesMessage(messageHandler.getMyUsername(), tilesToDraw));
                 clearEffects();
                 drawTiles();
             }
-        }else{
+        } else {
             messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
         }
     }
 
     private void drawTiles() {
-        for(Square tile : tilesToDraw){
+        for (Square tile : tilesToDraw) {
             itemLivRoomCells[tile.getRow()][tile.getColumn()].setImage(null);
         }
     }
@@ -219,15 +228,17 @@ public class GameScene2PlayersController implements Controller {
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
+
     @Override
     public void setGui(GUI gui) {
         this.gui = gui;
     }
+
     @Override
     public void initialize() {
-        if(gui == null){
+        if (gui == null) {
             return;
-        }else if(!initialized){
+        } else if (!initialized) {
             initialized = true;
             setChatBox(messageHandler.getChatLog());
             tilesToDraw = new ArrayList<>();
@@ -237,11 +248,12 @@ public class GameScene2PlayersController implements Controller {
             initLivingRoomGrid();
             initBookshelfGrid();
             initSelectCol();
-        }else{
+        } else {
             tilesToDraw.clear();
             tilesToInsert.clear();
         }
     }
+
     public void initPlayerList(ArrayList<Player> players) {
         playersList = players;
         this.players.setSpacing(3);
@@ -250,7 +262,7 @@ public class GameScene2PlayersController implements Controller {
             HBox hbox = new HBox();
             hbox.setSpacing(3);
             hbox.setPadding(new Insets(3));
-            hbox.setPrefSize(200,45);
+            hbox.setPrefSize(200, 45);
             hbox.setStyle("-fx-background-color: #D08C4D;");
             hbox.setEffect(new DropShadow());
             hbox.setAlignment(Pos.CENTER_LEFT);
@@ -283,26 +295,28 @@ public class GameScene2PlayersController implements Controller {
 
             this.players.getChildren().add(hbox);
 
-            label.setOnMousePressed(event ->{
-                    String username = label.getText();
-                    showOtherBookshelf(username);
-                    nameOfBookshelf.setText(username);
+            label.setOnMousePressed(event -> {
+                String username = label.getText();
+                showOtherBookshelf(username);
+                nameOfBookshelf.setText(username);
             });
             label.setOnMouseReleased(event -> {
                 setBookshelf(bookshelf);
                 nameOfBookshelf.setText(messageHandler.getMyUsername());
             });
+            pList.add(label);
         }
-
     }
+
     private void showOtherBookshelf(String username) {
-        for(Player p : playersList){
-            if(p.getUsername().equals(username) && p.getBookshelf() != null && p.getBookshelf()!=bookshelf){
+        for (Player p : playersList) {
+            if (p.getUsername().equals(username) && p.getBookshelf() != null && p.getBookshelf() != bookshelf) {
                 setBookshelf(p.getBookshelf());
                 break;
             }
         }
     }
+
     private int getTileIndex(int col, int row, ArrayList<Square> tilesToDraw) {
         for (int i = 0; i < tilesToDraw.size(); i++) {
             Square tile = tilesToDraw.get(i);
@@ -312,43 +326,49 @@ public class GameScene2PlayersController implements Controller {
         }
         return -1;
     }
+
     private void clearHand() {
         hand1.setImage(null);
         hand2.setImage(null);
         hand3.setImage(null);
     }
-    public void setHand(ArrayList<ItemTile> hand){
+
+    public void setHand(ArrayList<ItemTile> hand) {
         tilesToInsert = hand;
         URL url;
-        for(int i=0;i<hand.size();i++){
-            if(i == 0){
+        for (int i = 0; i < hand.size(); i++) {
+            if (i == 0) {
                 url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(0).getImageId() + ".png");
                 assert url != null;
                 hand1.setImage(new Image(url.toString()));
                 //handOrder.add(hand1);
-            }else if(i == 1){
+            } else if (i == 1) {
                 url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(1).getImageId() + ".png");
                 assert url != null;
                 hand2.setImage(new Image(url.toString()));
-               // handOrder.add(hand2);
-            }else{
-                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(2).getImageId() +".png");
+                // handOrder.add(hand2);
+            } else {
+                url = getClass().getResource("/images/item_tiles/" + hand.get(i).getType().name() + hand.get(2).getImageId() + ".png");
                 assert url != null;
                 hand3.setImage(new Image(url.toString()));
-              //  handOrder.add(hand3);
+                //  handOrder.add(hand3);
             }
         }
     }
-    public void setActionType(ActionType actionType){
+
+    public void setActionType(ActionType actionType) {
         this.actionType = actionType;
     }
-    public void setNotification(String notification){
+
+    public void setNotification(String notification) {
         this.notification.setText(notification);
         this.notification.setVisible(true);
     }
-    public void setPlayerState(PlayerState state){
+
+    public void setPlayerState(PlayerState state) {
         this.state = state;
     }
+
     private void initSelectCol() {
         selectCol1.setUserData(0);
         selectCol2.setUserData(1);
@@ -356,6 +376,7 @@ public class GameScene2PlayersController implements Controller {
         selectCol4.setUserData(3);
         selectCol5.setUserData(4);
     }
+
     private void initBookshelfGrid() {
         ImageView cell;
         for (int i = 0; i < Bookshelf.Rows; i++) {
@@ -370,6 +391,7 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
     private void initLivingRoomGrid() {
         ImageView cell;
         for (int i = 0; i < Board.DIMENSIONS; i++) {
@@ -384,20 +406,22 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-    public void setBookshelfAttribute(Bookshelf bookshelf){
+
+    public void setBookshelfAttribute(Bookshelf bookshelf) {
         this.bookshelf = bookshelf;
     }
-    public void setBookshelf(Bookshelf bookshelf){
-        if(bookshelf != null){
+
+    public void setBookshelf(Bookshelf bookshelf) {
+        if (bookshelf != null) {
             ItemTile[][] shelfie = bookshelf.getShelfie();
             ItemType type;
             Image image;
             URL url;
             ImageView item;
-            for(int i=0;i<Bookshelf.Rows;i++){
-                for(int j=0;j<Bookshelf.Columns;j++){
+            for (int i = 0; i < Bookshelf.Rows; i++) {
+                for (int j = 0; j < Bookshelf.Columns; j++) {
                     item = bookshelfCells[i][j];
-                    if(shelfie[i][j].hasSomething()){
+                    if (shelfie[i][j].hasSomething()) {
                         type = shelfie[i][j].getType();
                         url = getClass().getResource("/images/item_tiles/" + type.name() + shelfie[i][j].getImageId() + ".png");
                         assert url != null;
@@ -406,22 +430,23 @@ public class GameScene2PlayersController implements Controller {
                         item.setFitWidth(cellWidth);
                         item.setFitHeight(cellHeight);
                         item.setPreserveRatio(true);
-                    }else{
+                    } else {
                         item.setImage(null);
                     }
                 }
             }
-        }else{
+        } else {
             ImageView item;
-            for(int i=0;i<Bookshelf.Rows;i++){
-                for(int j=0;j<Bookshelf.Columns;j++){
-                        item = bookshelfCells[i][j];
-                        item.setImage(null);
+            for (int i = 0; i < Bookshelf.Rows; i++) {
+                for (int j = 0; j < Bookshelf.Columns; j++) {
+                    item = bookshelfCells[i][j];
+                    item.setImage(null);
                 }
             }
         }
     }
-    public void setBoard(Square[][] board,int maxNumItems){
+
+    public void setBoard(Square[][] board, int maxNumItems) {
         this.board = board;
         this.maxNumItems = maxNumItems;
         ItemType type;
@@ -429,10 +454,10 @@ public class GameScene2PlayersController implements Controller {
         URL url;
         ImageView item;
 
-        for(int i=0;i<Board.DIMENSIONS;i++){
-            for(int j=0;j<Board.DIMENSIONS;j++){
+        for (int i = 0; i < Board.DIMENSIONS; i++) {
+            for (int j = 0; j < Board.DIMENSIONS; j++) {
                 item = itemLivRoomCells[i][j];
-                if(board[i][j].getItem().hasSomething()){
+                if (board[i][j].getItem().hasSomething()) {
                     type = board[i][j].getItem().getType();
                     url = getClass().getResource("/images/item_tiles/" + type.name() + board[i][j].getItem().getImageId() + ".png");
                     assert url != null;
@@ -441,28 +466,30 @@ public class GameScene2PlayersController implements Controller {
                     item.setFitWidth(cellWidth); //cellWidth is the width of each cell
                     item.setFitHeight(cellHeight); //cellHeight is the height of each cell
                     item.setPreserveRatio(true); //cellHeight is the height of each cell
-                    if(state == PlayerState.ACTIVE){
-                        if(board[i][j].isPickable()){
+                    if (state == PlayerState.ACTIVE) {
+                        if (board[i][j].isPickable()) {
                             ImageView finalItem = item;
                             item.setOnMouseClicked(mouseEvent -> {
                                 int rowIndex = GridPane.getRowIndex(finalItem);
                                 int colIndex = GridPane.getColumnIndex(finalItem);
-                                clickedItemLivRoom(rowIndex,colIndex);
+                                clickedItemLivRoom(rowIndex, colIndex);
                             });
                             setPickableEffect(item);
                         }
                     }
-                }else{
+                } else {
                     item.setImage(null);
                 }
             }
         }
     }
-    private void setPickableEffect(ImageView image){
+
+    private void setPickableEffect(ImageView image) {
         dropShadow.setRadius(25);
         dropShadow.setColor(Color.web("#006400"));
         image.setEffect(dropShadow);
     }
+
     public void clearEffects() {
         ImageView item;
         for (int i = 0; i < Board.DIMENSIONS; i++) {
@@ -472,35 +499,40 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-    public void clearTiles(){
+
+    public void clearTiles() {
         tilesToInsert.clear();
         tilesToDraw.clear();
     }
-    public void setPersonalGoalCardImage(){
+
+    public void setPersonalGoalCardImage() {
         URL url;
         Image image;
         int num = messageHandler.getPersonalGoalCard().getIdentificator();
-        url = getClass().getResource("/images/personal_goal_cards/Personal_Goals"+num+".png");
+        url = getClass().getResource("/images/personal_goal_cards/Personal_Goals" + num + ".png");
         assert url != null;
         image = new Image(url.toString());
         myPersonalGoal.setImage(image);
         myPersonalGoal.setVisible(true);
     }
-    public void setCommonGoals(ArrayList<CommonGoalCard> commonGoals){
+
+    public void setCommonGoals(ArrayList<CommonGoalCard> commonGoals) {
         URL url;
         Image image;
-        url = getClass().getResource("/images/common_goal_cards/"+commonGoals.get(0).getImageId()+".jpg");
+        url = getClass().getResource("/images/common_goal_cards/" + commonGoals.get(0).getImageId() + ".jpg");
         assert url != null;
         image = new Image(url.toString());
         firstCommonGoal.setImage(image);
-        url = getClass().getResource("/images/common_goal_cards/"+commonGoals.get(1).getImageId()+".jpg");
+        url = getClass().getResource("/images/common_goal_cards/" + commonGoals.get(1).getImageId() + ".jpg");
         assert url != null;
         image = new Image(url.toString());
         secondCommonGoal.setImage(image);
     }
-    public void setPlayers(ArrayList<Player> players){
+
+    public void setPlayers(ArrayList<Player> players) {
         this.playersList = players;
     }
+
     private void changeOrder() {
         int first = order.get(0);
         Image one = newHandOrder.get(0).getImage();
@@ -522,8 +554,9 @@ public class GameScene2PlayersController implements Controller {
         hand2.setEffect(null);
         hand3.setEffect(null);
     }
+
     private void swapOrder() {
-        if(tilesToInsert.size() == 2){
+        if (tilesToInsert.size() == 2) {
             Collections.swap(tilesToInsert, 1, 0);
             Image temp = hand1.getImage();
             hand1.setImage(hand2.getImage());
@@ -532,10 +565,12 @@ public class GameScene2PlayersController implements Controller {
             hand2.setEffect(null);
         }
     }
+
     private void setChatBox(ArrayList<ChatMessage> chatLog) {
         inputField.clear();
         chat.clear();
-        for(ChatMessage message:chatLog) {
+        chat.setWrapText(true);
+        for (ChatMessage message : chatLog) {
             setChat(message);
         }
         inputField.setOnKeyPressed(event -> {
@@ -543,43 +578,58 @@ public class GameScene2PlayersController implements Controller {
                 String message = inputField.getText();
                 message = message.trim();
                 String recipientusername = null;
-                if(message.isEmpty()) {
+                if (message.isEmpty()) {
                     return;
                 }
-                if(message.startsWith("@")) {
+                if (message.startsWith("@")) {
                     if (!message.contains(" ")) {
                         return;
                     }
                     recipientusername = message.substring(1, message.indexOf(" "));
                     message = message.substring(message.indexOf(" ") + 1);
                 }
-                sendMessage(message,recipientusername);
+                sendMessage(message, recipientusername);
                 inputField.clear();
             }
         });
     }
-    public void setChat(ChatMessage message){
+
+    public void setChat(ChatMessage message) {
         String prefix = "";
         String messageContent = message.getContent();
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedDateTime = now.format(formatter);
         if (message.getReceiver() != null) {
-            if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
-                prefix = "["+formattedDateTime + "] " + "PRIVATE MESSAGE FROM ";
+            if (Objects.equals(message.getReceiver(), messageHandler.getMyUsername())) {
+                prefix = "[" + formattedDateTime + "] " + "PRIVATE MESSAGE FROM ";
                 messageContent = message.getSender() + ": " + messageContent;
 
-            }else{
-                prefix = "["+formattedDateTime + "] " + "PRIVATE MESSAGE TO ";
+            } else {
+                prefix = "[" + formattedDateTime + "] " + "PRIVATE MESSAGE TO ";
                 messageContent = message.getReceiver() + ": " + messageContent;
             }
-        } else{
-            messageContent = "["+formattedDateTime + "] " + message.getSender() + ": " + messageContent;
+        } else {
+            messageContent = "[" + formattedDateTime + "] " + message.getSender() + ": " + messageContent;
         }
-        chat.appendText(prefix+messageContent+"\n");
+        chat.appendText(prefix + messageContent + "\n");
     }
-    public void sendMessage(String message, String recipientusername){
+    public void sendMessage(String message, String recipientusername) {
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
+    }
+    public void moveTurnIndicator(String player) {
+        double x, y;
+        for (Label l : pList) {
+            if (Objects.equals(l.getText(), player)) {
+                x = l.localToScene(l.getBoundsInLocal()).getMinX();
+                y = l.localToScene(l.getBoundsInLocal()).getMinY();
+                turnIndicator.setLayoutX(x-20);
+                turnIndicator.setLayoutY(y+30);
+                turnIndicator.toFront();
+                turnIndicator.setVisible(true);
+                break;
+            }
+        }
     }
 }

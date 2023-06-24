@@ -96,6 +96,7 @@ public class MessageHandler extends VirtualView implements View {
             gui.changeScene();
             gui.setPlayerState(PlayerState.WATCHING);
             gui.setReconnectedGameScene(reconnectionMessage.getModel(),reconnectedPlayer);
+            gui.setGameNotification("Ben tornato!");
             //gui.setChatMessages(reconnectionMessage.getChat());
         }
     }
@@ -190,6 +191,7 @@ public class MessageHandler extends VirtualView implements View {
         }else{
             gui.setGameNotification(newTurnMessage.getContent());
         }
+        gui.setTurnIndicator(newTurnMessage.getCurrentPlayer());
     }
 
     @Override
@@ -215,7 +217,7 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onPlayerRejoinedMessage(PlayerRejoinedMessage playerRejoinedMessage) {
-        gui.setGameNotification("Il giocatore"+playerRejoinedMessage.getUsername()+"si è riconnesso alla partita!");
+        gui.setGameNotification("Il giocatore "+playerRejoinedMessage.getPlayer()+" si è riconnesso alla partita!");
     }
 
     @Override

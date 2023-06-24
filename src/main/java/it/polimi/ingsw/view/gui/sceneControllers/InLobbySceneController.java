@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
-import com.sun.javafx.scene.control.InputField;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.lobbymessage.ChangeNumOfPlayersRequest;
 import it.polimi.ingsw.network.message.lobbymessage.ExitLobbyRequest;
@@ -12,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -36,21 +34,15 @@ public class InLobbySceneController implements Controller{
     @FXML
     private Spinner<Integer> numPlayersSpinner;
     @FXML
-    private Button startGameButton;
-    @FXML
-    private Button exitLobbyButton;
-    @FXML
     private Text error;
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
-
     @Override
     public void setGui(GUI gui) {
         this.gui = gui;
     }
-
     @Override
     public void initialize() {
         if(gui == null){
@@ -77,10 +69,10 @@ public class InLobbySceneController implements Controller{
             setChatBox(messageHandler.getChatLog());
         }
     }
-
     private void setChatBox(ArrayList<ChatMessage> chatLog) {
         inputField.clear();
         chat.clear();
+        chat.setWrapText(true);
         for(ChatMessage message:chatLog) {
             chat.appendText(message.getContent());
         }
@@ -128,7 +120,6 @@ public class InLobbySceneController implements Controller{
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
     }
-
     private void handleNumPlayersChange(Integer newValue) {
         messageHandler.notifyObservers(new ChangeNumOfPlayersRequest(newValue));
     }
@@ -139,16 +130,13 @@ public class InLobbySceneController implements Controller{
     public void setSpinner(){
         numPlayersSpinner.setDisable(true);
     }
-
     public void startGame(){
         messageHandler.notifyObservers(new StartGameRequest());
     }
-
     public void setError(String error) {
         this.error.setText(error);
         this.error.setVisible(true);
     }
-
     public void exitLobby(){
         messageHandler.notifyObservers(new ExitLobbyRequest());
     }
