@@ -6,12 +6,17 @@ import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.LinkedHashMap;
 
 public class EndGameController implements Controller{
+    public ImageView fourthRow;
+    public ImageView bronze;
+    public ImageView thirdRow;
+    public Label quattro;
     private MessageHandler messageHandler;
     private GUI gui;
     @FXML
@@ -42,6 +47,10 @@ public class EndGameController implements Controller{
     public void initialize() {
         if (gui == null) {
         }else{
+            thirdRow.setVisible(false);
+            fourthRow.setVisible(false);
+            bronze.setVisible(false);
+            quattro.setVisible(false);
             Stage stage = (Stage) exit.getScene().getWindow();
             stage.sizeToScene();
             stage.centerOnScreen();
@@ -71,13 +80,25 @@ public class EndGameController implements Controller{
             if(count == 0){
                 firstPlace.setText(key);
                 firstScores.setText((ranking.get(key).toString()));
-            }else if(count ==1){
+            }else if(count == 1){
                 secondPlace.setText(key);
                 secondScores.setText((ranking.get(key).toString()));
             }else if(count == 2){
+                if(ranking.get(key) == null){
+                    break;
+                }else{
+                    thirdRow.setVisible(true);
+                    bronze.setVisible(true);
+                }
                 thirdPlace.setText(key);
                 thirdScores.setText((ranking.get(key).toString()));
             }else{
+                if(ranking.get(key) == null){
+                    break;
+                }else{
+                    fourthRow.setVisible(true);
+                    quattro.setVisible(true);
+                }
                 fourthPlace.setText(key);
                 fourthScores.setText((ranking.get(key).toString()));
             }

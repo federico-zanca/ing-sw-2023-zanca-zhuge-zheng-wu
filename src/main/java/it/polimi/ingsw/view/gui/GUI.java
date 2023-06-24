@@ -14,6 +14,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -26,6 +27,7 @@ import java.util.*;
 
 public class GUI extends Application{
     private Scene currentScene;
+
     private Stage currentStage;
     private final HashMap<String,Controller> controllers;
     private final HashMap<GuiPhase,String> fxml;
@@ -97,6 +99,9 @@ public class GUI extends Application{
     }
     public void setCurrentScene(Scene currentScene) {
         this.currentScene = currentScene;
+    }
+    public Scene getCurrentScene() {
+        return currentScene;
     }
     public void setPhase(GuiPhase phase) {
         this.phase = phase;
@@ -291,6 +296,14 @@ public class GUI extends Application{
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()-> {
                 ((GameScene2PlayersController) currentController).moveTurnIndicator(currentPlayer);
+            });
+        }
+    }
+    public void setAlert() {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof ServerSceneController){
+            Platform.runLater(()-> {
+                ((ServerSceneController) currentController).setAlert();
             });
         }
     }

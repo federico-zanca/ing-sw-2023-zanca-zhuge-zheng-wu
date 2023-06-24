@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="450.0" snapToPixel="false" styleClass="rootPane" stylesheets="@../css/leaderboard_scene.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.EndGameController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="450.0" snapToPixel="false" styleClass="rootPane" stylesheets="@../css/leaderboard_scene.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.EndGameController">
     <top>
       <Pane prefHeight="100.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -105,7 +98,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="300.0" pickOnBounds="true" GridPane.rowIndex="2">
+            <ImageView fx:id="thirdRow" fitHeight="50.0" fitWidth="300.0" pickOnBounds="true" GridPane.rowIndex="2">
                <image>
                   <Image url="@../images/misc/retang.png" />
                </image>
@@ -113,7 +106,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <ImageView fx:id="bronze" fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <image>
                   <Image url="@../images/award/bronze.png" />
                </image>
@@ -121,7 +114,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="300.0" pickOnBounds="true" GridPane.rowIndex="3">
+            <ImageView fx:id="fourthRow" fitHeight="50.0" fitWidth="300.0" pickOnBounds="true" GridPane.rowIndex="3">
                <image>
                   <Image url="@../images/misc/retang.png" />
                </image>
@@ -129,7 +122,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <Label styleClass="rankingNumber" text="4" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <Label fx:id="quattro" styleClass="rankingNumber" text="4" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                <effect>
                   <DropShadow />
                </effect>
