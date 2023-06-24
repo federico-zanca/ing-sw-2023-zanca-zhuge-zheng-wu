@@ -103,7 +103,12 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onUsernameResponse(UsernameResponse usernameResponse) {
-
+        if(usernameResponse.isSuccessful()){
+            setMyUsername(usernameResponse.getUsername());
+            gui.setAlert();
+        }else{
+            gui.setError("Name change unsuccessful");
+        }
     }
 
     @Override
