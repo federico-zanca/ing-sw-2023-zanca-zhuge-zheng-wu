@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Represents a controller for the in-game-phase (manages turns).
  */
 public class TurnController {
-    private static final int TIMEOUT_LASTPLAYER = 30000;
+    public static final int TIMEOUT_LASTPLAYER = 30000;
     private final Game model;
     private Timer timer;
     private final GameController gameController;

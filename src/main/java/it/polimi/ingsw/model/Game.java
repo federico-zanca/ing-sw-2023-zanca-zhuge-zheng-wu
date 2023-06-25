@@ -204,7 +204,6 @@ public class Game extends Observable {
         }
 
         initLeaderBoard();
-        setCurrentPlayer(getFirstPlayer());
         notifyObservers(new GameStartedMessage("", new GameView(this)));
         nextGamePhase();
         //fai vedere personal goal

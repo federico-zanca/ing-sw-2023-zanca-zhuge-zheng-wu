@@ -140,8 +140,9 @@ public class GameController {
      * 4. Does not contain any characters that are not letters or digits or one of the allowed special characters (-, _, or .).
      */
     private boolean validUsernameFormat(String username) {
+        if(username == null) return false;
         // Check for spaces in username
-        if (username.contains(" ")) {
+        if (username.trim().equals("") || username.contains(" ")) {
             return false;
         }
 
@@ -168,13 +169,11 @@ public class GameController {
     public void onMessageReceived(String senderUsername, MessageToServer receivedMessage) {
         switch (model.getGamePhase()) {
             case INIT:
+            case AWARDS:
                 System.err.println("Should not receive messages during this phase");
                 break;
             case PLAY:
                 playPhase(senderUsername, receivedMessage);
-                break;
-            case AWARDS:
-                System.err.println("AWARDS phase not handled yet");
                 break;
             default:
                 System.err.println("Invalid Game Phase: should never reach this state");
@@ -189,15 +188,13 @@ public class GameController {
      * @param message the message received from the player
      */
     public void update(String senderUsername, MessageToServer message) {
-        if(message instanceof ExitGameRequest){
+        if(message instanceof ExitGameRequest)
             turnController.addPlayerToSkip(model.getPlayerByUsername(senderUsername));
-        }
-        else if(model.getGamePhase()==GamePhase.PLAY && senderUsername.equals(model.getCurrentPlayer().getUsername())) {
+        else if(model.getGamePhase()==GamePhase.PLAY && senderUsername.equals(model.getCurrentPlayer().getUsername()))
                 onMessageReceived(senderUsername, message);
-        } else {
-            System.err.println("Discarding game message: wrong GamePhase or not CurrentPlayer ");
-        }
+        else System.err.println("Discarding game message: wrong GamePhase or not CurrentPlayer ");
     }
+
 
     /**
      * Starts the game if it is ready to start.
@@ -205,7 +202,7 @@ public class GameController {
      * @throws GameNotReadyException if the game is not ready to start
      */
     public void startGame() throws GameNotReadyException {
-        if(model.isGameReadyToStart()){
+        if(model.isGameReadyToStart()) {
             System.err.println("IL GIOCO INIZIA");
             turnController.setPlayersQueue(scramble(model.getPlayers()));
             model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
@@ -213,9 +210,8 @@ public class GameController {
 
             //nextGamePhase();
             turnController.newTurn();
-        } else{
+        }else
             throw new GameNotReadyException("Game not ready to start");
-        }
     }
 
     /**
@@ -243,8 +239,8 @@ public class GameController {
      * @throws InvalidCommandException if the chosen number is invalid
      */
     public void changeChosenNumOfPlayers(int chosenNum) throws InvalidCommandException {
-        model.setChosenNumOfPlayers(chosenNum);
-    }
+        model.setChosenNumOfPlayers(chosenNum);}
+
 
     /**
      * Adds a new player to the game with the specified username.
@@ -255,9 +251,8 @@ public class GameController {
     public void addPlayer(String username) throws InvalidUsernameException {
         if(validUsernameFormat(username)){
             model.addPlayer(new Player(username));
-        } else{
+        } else
             throw new InvalidUsernameException();
-        }
     }
 
     /**
@@ -266,8 +261,7 @@ public class GameController {
      * @param username the username of the player to be removed
      */
     public void removePlayer(String username) {
-        model.removePlayer(model.getPlayerByUsername(username));
-    }
+        model.removePlayer(model.getPlayerByUsername(username));}
 
     /**
      * Gets the username of the current player.
@@ -275,8 +269,8 @@ public class GameController {
      * @return the username of the current player
      */
     public String getCurrentPlayerUsername() {
-        return model.getCurrentPlayer().getUsername();
-    }
+        return model.getCurrentPlayer().getUsername();}
+
 
     /**
      * Reconnects a previously exited player to the game.
@@ -284,8 +278,8 @@ public class GameController {
      * @param username the username of the player to reconnect
      */
     public void reconnectPlayer(String username) {
-        turnController.reconnectExitedPlayer(model.getPlayerByUsername(username));
-    }
+        turnController.reconnectExitedPlayer(model.getPlayerByUsername(username));}
+
 
     /**
      * Disconnects a player from the game.
@@ -294,14 +288,14 @@ public class GameController {
      */
     public void disconnectPlayer(String username) {
         Player player = model.getPlayerByUsername(username);
-        turnController.addPlayerToSkip(player);
-    }
+        turnController.addPlayerToSkip(player);}
+
 
     /**
      * Resets the list of players in the game.
      */
 
     public void resetPlayers() {
-        model.resetPlayers();
-    }
+        model.resetPlayers();}
+
 }
