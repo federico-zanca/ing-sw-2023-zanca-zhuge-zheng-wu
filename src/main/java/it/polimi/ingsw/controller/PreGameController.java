@@ -33,8 +33,9 @@ public class PreGameController {
      * @param client the client that sent the message
      * @param message the message received
      */
-    public void onConnectionMessage(Client client, MessageToServer message) {
-        message.execute(client, this);
+    public void onConnectionMessage(Client client, MessageToServer message) throws RemoteException {
+            message.execute(client, this);
+
         /*
         switch(message.getType()) {
             case LOBBY_LIST_REQUEST:
@@ -88,8 +89,10 @@ public class PreGameController {
      * @param client the client that sent the message
      * @param message the message
      */
-    public void onLobbyMessage(Client client, MessageToServer message) {
-        message.execute(client, this);
+    public void onLobbyMessage(Client client, MessageToServer message) throws RemoteException{
+
+            message.execute(client, this);
+
         /*
         switch (message.getType()){
             case EXIT_LOBBY_REQUEST:
@@ -115,22 +118,19 @@ public class PreGameController {
      * @param client the client making the lobby creation request
      * @param createLobbyRequest the request object containing the lobby name
      */
-    public void onCreateLobbyRequest(Client client, CreateLobbyRequest createLobbyRequest) {
+    public void onCreateLobbyRequest(Client client, CreateLobbyRequest createLobbyRequest) throws RemoteException {
         try{
-            try {
-                if(createLobbyRequest.getLobbyName().trim().equals("") || createLobbyRequest.getLobbyName()==null){
-                    throw new InvalidLobbyNameException();
-                }
-                Lobby newLobby = new Lobby(server, client,createLobbyRequest.getLobbyName());
-                boolean success = server.addLobby(newLobby);
-                server.sendMessage(client, new CreateLobbyResponse(success));
-                //client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
-            }catch (InvalidLobbyNameException | NullPointerException e) {
-                server.sendMessage(client, new CreateLobbyResponse(false));
+            if(createLobbyRequest.getLobbyName().trim().equals("") || createLobbyRequest.getLobbyName()==null){
+                throw new InvalidLobbyNameException();
             }
-        } catch (RemoteException e) {
-            System.err.println("Unable to send lobby list response: " + e);
-        } catch (FullLobbyException | ClientAlreadyInLobbyException e) {
+            Lobby newLobby = new Lobby(server, client,createLobbyRequest.getLobbyName());
+            boolean success = server.addLobby(newLobby);
+            server.sendMessage(client, new CreateLobbyResponse(success));
+            //client.update(new CreateLobbyResponse(server.addLobby(new Lobby(server, client,((CreateLobbyRequest) message).getLobbyName()))));
+        }catch (InvalidLobbyNameException | NullPointerException e) {
+            server.sendMessage(client, new CreateLobbyResponse(false));
+        }
+         catch (FullLobbyException | ClientAlreadyInLobbyException e) {
             System.err.println("Unable to create lobby (should never happen): " + e);
         }
     }
@@ -142,7 +142,7 @@ public class PreGameController {
      * @param client  the client making the join request
      * @param joinLobbyRequest  the request object containing the lobby name
      */
-    public void onJoinLobbyRequest(Client client, JoinLobbyRequest joinLobbyRequest) {
+    public void onJoinLobbyRequest(Client client, JoinLobbyRequest joinLobbyRequest) throws RemoteException {
         String content;
         JoinType joinSuccess;
         ArrayList<String> usernames = new ArrayList<>();
@@ -181,12 +181,8 @@ public class PreGameController {
             joinSuccess = JoinType.REFUSED;
             usernames = new ArrayList<>();
         }
-        try {
             server.sendMessage(client, new JoinLobbyResponse(joinSuccess, content, usernames));
             //client.update(new JoinLobbyResponse(joinSuccess, content, usernames));
-        } catch (RemoteException e) {
-            System.err.println("Unable to send lobby list response: " + e);
-        }
         if(joinSuccess == JoinType.JOINED || joinSuccess == JoinType.REJOINED) {
             String username = server.getConnectedClientInfo(client).getClientID();
             Lobby lobbyOfClient = server.getLobbyOfClient(client);
@@ -203,13 +199,11 @@ public class PreGameController {
      * @param client the client making the lobby list request
      * @param lobbyListRequest  the request object
      */
-    public void onLobbyListRequest(Client client, LobbyListRequest lobbyListRequest) {
-        try {
+    public void onLobbyListRequest(Client client, LobbyListRequest lobbyListRequest) throws RemoteException{
+
             server.sendMessage(client, new LobbyListResponse(server.getLobbiesInfo()));
             //client.update(new LobbyListResponse(server.getLobbiesInfo()));
-        } catch (RemoteException e) {
-            System.err.println("Unable to send lobby list response: " + e);
-        }
+
     }
 
     /**
@@ -222,9 +216,9 @@ public class PreGameController {
      * @param client  the client making the login request
      * @param loginRequest   the request object containing the requested username
      */
-    public void onLoginRequest(Client client, LoginRequest loginRequest) {
+    public void onLoginRequest(Client client, LoginRequest loginRequest) throws RemoteException{
         String playername = (loginRequest.getUsername());
-        try {
+
             if (server.isUsernameAvailable(playername)) {
                 try {
                     server.setUsername(client, playername);
@@ -247,9 +241,6 @@ public class PreGameController {
                     //client.update(new LoginResponse(false, playername));
                 }
             }
-        } catch (RemoteException e) {
-            System.err.println("Unable to send login response: " + e);
-        }
     }
 
     /**
@@ -260,10 +251,10 @@ public class PreGameController {
      * @param client  the client making the username request
      * @param usernameRequest the request object containing the requested username
      */
-    public void onUsernameRequest(Client client, UsernameRequest usernameRequest) {
+    public void onUsernameRequest(Client client, UsernameRequest usernameRequest) throws RemoteException{
         String username = usernameRequest.getUsername();
         UsernameResponse usernameResponse;
-        try {
+
             if (server.isUsernameAvailable(username)) {
                 try {
                     server.setUsername(client, username);
@@ -274,13 +265,10 @@ public class PreGameController {
                 server.sendMessage(client, usernameResponse);
                 //client.update(new UsernameResponse(true, username));
             } else {
-
                 server.sendMessage(client, new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
                 //client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
             }
-        }catch (RemoteException e){
-            System.err.println("Unable to send username response: " + e);
-        }
+
     }
 
     /**
@@ -292,18 +280,14 @@ public class PreGameController {
      * @param client  the client making the request
      * @param changeNumOfPlayersRequest the request object containing the chosen number of players
      */
-    public void onChangeNumOfPlayersRequest(Client client, ChangeNumOfPlayersRequest changeNumOfPlayersRequest) {
+    public void onChangeNumOfPlayersRequest(Client client, ChangeNumOfPlayersRequest changeNumOfPlayersRequest) throws RemoteException {
         Client admin = server.getLobbyOfClient(client).getAdmin();
         int chosenNum = changeNumOfPlayersRequest.getChosenNum();
         if(client.equals(admin))
             server.changeLobbyNumOfPlayers(client, chosenNum);
         else{
-            try {
-                server.sendMessage(client, new NotAdminMessage());
-                //client.update(new NotAdminMessage());
-            } catch (RemoteException e) {
-                System.err.println("Unable to send not admin message: " + e);
-            }
+            server.sendMessage(client, new NotAdminMessage());
+            //client.update(new NotAdminMessage());
         }
     }
 
@@ -314,22 +298,18 @@ public class PreGameController {
      * @param client   the client making the exit lobby request
      * @param exitLobbyRequest    the request object
      */
-    public void onExitLobbyRequest(Client client, ExitLobbyRequest exitLobbyRequest) {
-        try {
-            String lobbyName = server.getLobbyNameOfClient(client);
-            server.removeClientFromLobby(client);
-            server.sendMessage(client, new ExitLobbyResponse(true, lobbyName));
-            //client.update(new ExitLobbyResponse(true, lobbyName));
-            String content = TextColor.CYANTEXT + server.getUsernameOfClient(client) + TextColor.NO_COLOR + " ha abbandonato la lobby";
+    public void onExitLobbyRequest(Client client, ExitLobbyRequest exitLobbyRequest) throws RemoteException{
+        String lobbyName = server.getLobbyNameOfClient(client);
+        server.removeClientFromLobby(client);
+        server.sendMessage(client, new ExitLobbyResponse(true, lobbyName));
+        //client.update(new ExitLobbyResponse(true, lobbyName));
+        String content = TextColor.CYANTEXT + server.getUsernameOfClient(client) + TextColor.NO_COLOR + " ha abbandonato la lobby";
 
-            try {
-                server.getLobbyByName(lobbyName).sendPlayersListToEveryoneBut(server.getUsernameOfClient(client), content);
-            } catch (LobbyNotFoundException e) {
-                System.err.println("Lobby not found: " + e); //not an error, the lobby was deleted. This is the expected behaviour
-                System.err.println("Probably the lobby was deleted because the last player in it left");
-            }
-        } catch (RemoteException e) {
-            System.err.println("Unable to send exit lobby response: " + e);
+        try {
+            server.getLobbyByName(lobbyName).sendPlayersListToEveryoneBut(server.getUsernameOfClient(client), content);
+        } catch (LobbyNotFoundException e) {
+            System.err.println("Lobby not found: " + e); //not an error, the lobby was deleted. This is the expected behaviour
+            System.err.println("Probably the lobby was deleted because the last player in it left");
         }
     }
 
@@ -340,14 +320,10 @@ public class PreGameController {
      * @param client   the client making the player list request
      * @param playerListRequest   the request object
      */
-    public void onPlayerListRequest(Client client, PlayerListRequest playerListRequest) {
+    public void onPlayerListRequest(Client client, PlayerListRequest playerListRequest) throws RemoteException{
         ArrayList<String> inLobbyClientsUsernames = server.getLobbyOfClient(client).getClientsUsernames();
-        try {
-            server.sendMessage(client, new PlayerListResponse(inLobbyClientsUsernames));
-            //client.update(new PlayerListResponse(inLobbyClientsUsernames));
-        } catch (RemoteException e) {
-            System.err.println("Unable to send player list response: " + e);
-        }
+        server.sendMessage(client, new PlayerListResponse(inLobbyClientsUsernames));
+        //client.update(new PlayerListResponse(inLobbyClientsUsernames));
     }
 
     /**
@@ -360,21 +336,17 @@ public class PreGameController {
      * @param client  the client making the start game request
      * @param startGameRequest   the request object
      */
-    public void onStartGameRequest(Client client, StartGameRequest startGameRequest) {
+    public void onStartGameRequest(Client client, StartGameRequest startGameRequest) throws RemoteException{
         Client admin = server.getLobbyOfClient(client).getAdmin();
         int numPlayers = server.getLobbyOfClient(client).getNumClients();
-        try{
-            if (!client.equals(admin)) {
-                server.sendMessage(client, new NotAdminMessage());
-                //client.update(new NotAdminMessage());
-            } else if (numPlayers != server.getLobbyOfClient(client).getChosenNumOfPlayers()) {
-                server.sendMessage(client, new GameNotReadyMessage("game not ready to start"));
-                //client.update(new GameNotReadyMessage("game not ready to start"));
-            } else {
-                server.startGame(client);
-            }
-        } catch(RemoteException e){
-            System.err.println("Unable to send not admin message: " + e);
+        if (!client.equals(admin)) {
+            server.sendMessage(client, new NotAdminMessage());
+            //client.update(new NotAdminMessage());
+        } else if (numPlayers != server.getLobbyOfClient(client).getChosenNumOfPlayers()) {
+            server.sendMessage(client, new GameNotReadyMessage("game not ready to start"));
+            //client.update(new GameNotReadyMessage("game not ready to start"));
+        } else {
+            server.startGame(client);
         }
     }
 

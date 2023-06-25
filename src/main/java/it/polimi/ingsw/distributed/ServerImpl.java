@@ -25,7 +25,7 @@ import java.util.TimerTask;
  * Represents a server implementation for a game server.
  */
 public class ServerImpl extends UnicastRemoteObject implements Server {
-    private static final int HEARTBEAT_TIMEOUT = 10000000;
+    private static final int HEARTBEAT_TIMEOUT = 10000;
     private HashMap<Client, ClientInfo> connectedClients;
 
     private final Object clientsLock = new Object();
@@ -313,11 +313,19 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
         else if(message.getType()==MessageType.CONNECTION_MSG) {
             System.out.println("Received message: " + message);
-            this.preGameController.onConnectionMessage(client, (MessageToServer) message);
+            try {
+                this.preGameController.onConnectionMessage(client, (MessageToServer) message);
+            } catch(RemoteException e) {
+                System.err.println("Unable to send ConnectionResponse message");
+            }
         }
         else if(message.getType()==MessageType.LOBBY_MSG){
             System.out.println("Received message: " + message);
-            this.preGameController.onLobbyMessage(client, (MessageToServer) message);
+            try {
+                this.preGameController.onLobbyMessage(client, (MessageToServer) message);
+            } catch (RemoteException e) {
+                System.err.println("Unable to send LobbyResponse message");
+            }
         }
         else if(message instanceof HeartBeatMessage){
             receiveHeartBeat(client);

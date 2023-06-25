@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.exceptions.InvalidLobbyNameException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.connectionmessage.*;
+import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.lobbymessage.*;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,35 +32,43 @@ class PreGameControllerTest {
     @Test
     public void onConnectionMessage() {
         MessageToServer message = new LoginRequest("test");
-        controller.onConnectionMessage(client, message);
+        try {
+            controller.onConnectionMessage(client, message);
+        } catch (RemoteException e) {
+            fail();
+        }
         assertNotNull(controller);
     }
 
     @Test
     void onLobbyMessage() {
         MessageToServer message = new LoginRequest("test");
-        controller.onConnectionMessage(client, message);
+        try {
+            controller.onConnectionMessage(client, message);
+        } catch (RemoteException e) {
+            fail();
+        }
         assertNotNull(controller);
     }
 
     @Nested
     public class onCreateLobbyRequest {
         @Test
-        void CreateLobbyRequestValid () {
+        void CreateLobbyRequestValid () throws RemoteException{
             CreateLobbyRequest message = new CreateLobbyRequest("test");
             controller.onCreateLobbyRequest(client, message);
             assertDoesNotThrow(() -> server.getLobbyByName("test"));
         }
 
         @Test
-        void CreateLobbyRequestInvalid () {
+        void CreateLobbyRequestInvalid () throws RemoteException{
             CreateLobbyRequest message = new CreateLobbyRequest("test");
             controller.onCreateLobbyRequest(client, message);
             assertThrows(LobbyNotFoundException.class, () -> server.getLobbyByName("test2"));
         }
 
         @Test
-        void CreateLobbyRequestNull () {
+        void CreateLobbyRequestNull () throws RemoteException{
             CreateLobbyRequest message = new CreateLobbyRequest(null);
             controller.onCreateLobbyRequest(client, message);
             assertTrue(server.getLobbies().isEmpty());
@@ -74,7 +83,7 @@ class PreGameControllerTest {
         }
 
         @Test
-        void CreateLobbyRequestEmpty () {
+        void CreateLobbyRequestEmpty () throws RemoteException{
             CreateLobbyRequest message = new CreateLobbyRequest("");
             controller.onCreateLobbyRequest(client, message);
             assertTrue(server.getLobbies().isEmpty());
@@ -89,7 +98,7 @@ class PreGameControllerTest {
         }
 
         @Test
-        void CreateLobbyRequestSpaces () {
+        void CreateLobbyRequestSpaces () throws RemoteException{
             CreateLobbyRequest message = new CreateLobbyRequest("   ");
             controller.onCreateLobbyRequest(client, message);
             assertTrue(server.getLobbies().isEmpty());
@@ -104,7 +113,7 @@ class PreGameControllerTest {
         }
     }
     @Nested
-    public class onJoinLobbyRequest {
+    public class onJoinLobbyRequest{
         @Test
         void onJoinLobbyRequestTest() throws RemoteException {
             JoinLobbyRequest message;
@@ -180,6 +189,18 @@ class PreGameControllerTest {
             assertFalse(server.getConnectedClients().containsKey(client2));
             assertTrue(lobby.getInLobbyClients().contains(client4));
             assertSame(server.getConnectedClientInfo(client4).getClientState(), ClientState.IN_GAME);
+
+            server.update(client4, new ExitGameRequest("c2"));
+            assertTrue(server.getConnectedClientInfo(client4).isConnected());
+            assertTrue(server.getConnectedClients().containsKey(client4));
+            assertFalse(lobby.getInLobbyClients().contains(client4));
+            assertTrue(lobby.getController().getTurnController().getPlayersToSkipUsernames().contains("c2"));
+            assertSame(server.getConnectedClientInfo(client4).getClientState(), ClientState.IN_SERVER);
+            server.update(client4, new JoinLobbyRequest("test"));
+            assertTrue(server.getConnectedClientInfo(client4).isConnected());
+            assertFalse(lobby.getController().getTurnController().getPlayersToSkipUsernames().contains("c2"));
+            assertSame(server.getConnectedClientInfo(client4).getClientState(), ClientState.IN_GAME);
+
         }
     }
 
@@ -194,7 +215,7 @@ class PreGameControllerTest {
     @Nested
     public class LoginRequestTests {
         @Test
-        void onLoginRequest() {
+        void onLoginRequest() throws RemoteException{
             LoginRequest message = new LoginRequest("test");
             controller.onLoginRequest(client, message);
             assertEquals("test", server.getConnectedClientInfo(client).getClientID());
@@ -205,7 +226,7 @@ class PreGameControllerTest {
         }
 
         @Test
-        void onLoginRequestEmpty() {
+        void onLoginRequestEmpty() throws RemoteException{
             LoginRequest message = new LoginRequest("");
             controller.onLoginRequest(client, message);
             assertEquals(server.getConnectedClientInfo(client).getClientID(), client.toString());
@@ -215,7 +236,7 @@ class PreGameControllerTest {
         }
 
         @Test
-        void onLoginRequestSpaces() {
+        void onLoginRequestSpaces() throws RemoteException {
             LoginRequest message = new LoginRequest("   ");
             controller.onLoginRequest(client, message);
             assertEquals(server.getConnectedClientInfo(client).getClientID(), client.toString());
@@ -225,7 +246,7 @@ class PreGameControllerTest {
         }
 
         @Test
-        void onLoginRequestNull() {
+        void onLoginRequestNull() throws RemoteException {
             LoginRequest message = new LoginRequest(null);
             controller.onLoginRequest(client, message);
             assertEquals(server.getConnectedClientInfo(client).getClientID(), client.toString());
@@ -261,7 +282,7 @@ class PreGameControllerTest {
     }
 
     @Test
-    void onUsernameRequest() {
+    void onUsernameRequest() throws RemoteException{
         server.update(client, new LoginRequest("test"));
         UsernameRequest message = new UsernameRequest("test1");
         controller.onUsernameRequest(client, message);
@@ -269,6 +290,14 @@ class PreGameControllerTest {
         assertEquals(ClientState.IN_SERVER, server.getConnectedClientInfo(client).getClientState());
         assertTrue(server.getConnectedClientInfo(client).isConnected());
         assertNull(server.getConnectedClientInfo(client).getLobby());
+
+        Client client2 = new ClientImpl(server);
+        server.update(client2, new LoginRequest("test2"));
+        controller.onUsernameRequest(client2, message);
+        assertEquals("test2", server.getConnectedClientInfo(client2).getClientID());
+
+        controller.onUsernameRequest(client2, new UsernameRequest(""));
+        assertEquals("test2", server.getConnectedClientInfo(client2).getClientID());
     }
 
     @Test
@@ -330,11 +359,26 @@ class PreGameControllerTest {
     }
 
     @Test
-    void onStartGameRequest() throws LobbyNotFoundException {
+    void onStartGameRequest() throws LobbyNotFoundException, RemoteException {
         server.update(client, new LoginRequest("test"));
         server.update(client, new CreateLobbyRequest("testLobby"));
         server.update(client, new StartGameRequest());
         assertEquals(ClientState.IN_A_LOBBY, server.getConnectedClientInfo(client).getClientState());
+        assertEquals(1, server.getLobbies().size());
+        assertFalse(server.getLobbyOfClient(client).isGameStarted());
+
+        Client client2 = new ClientImpl(server);
+        server.update(client2, new LoginRequest("client2"));
+        server.update(client2, new JoinLobbyRequest("testLobby"));
+        server.update(client2, new StartGameRequest());
+        assertTrue(()->{
+            for(Client client : server.getLobbyOfClient(client).getInLobbyClients()){
+                if(server.getConnectedClientInfo(client).getClientState() != ClientState.IN_A_LOBBY){
+                    return false;
+                }
+            }
+            return true;
+        });
         assertEquals(1, server.getLobbies().size());
         assertFalse(server.getLobbyOfClient(client).isGameStarted());
     }

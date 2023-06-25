@@ -4,6 +4,9 @@ import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.MessageType;
+
+import java.rmi.RemoteException;
+
 /**
  * Represents a request from the client to start the game.
  * Inherits from the {@link MessageToServer} class.
@@ -23,7 +26,7 @@ public class StartGameRequest extends MessageToServer {
      * @param preGameController The pre-game controller on which to execute the message.
      */
     @Override
-    public void execute(Client client, PreGameController preGameController) {
+    public void execute(Client client, PreGameController preGameController) throws RemoteException {
         preGameController.onStartGameRequest(client, this);
     }
 }

@@ -4,6 +4,9 @@ import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.distributed.Client;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.MessageType;
+
+import java.rmi.RemoteException;
+
 /**
  * Represents a request message sent to the server to exit the lobby.
  * Inherits from the {@link MessageToServer} class.
@@ -22,7 +25,7 @@ public class ExitLobbyRequest extends MessageToServer {
      * @param client  The client sending the request.
      * @param preGameController  The pre-game controller handling the request.
      */
-    public void execute(Client client, PreGameController preGameController){
+    public void execute(Client client, PreGameController preGameController) throws RemoteException {
         preGameController.onExitLobbyRequest(client, this);
     }
 }
