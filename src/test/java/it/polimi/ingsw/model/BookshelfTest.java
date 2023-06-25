@@ -139,6 +139,7 @@ public class BookshelfTest {
        @Test
         public void trickyGroups(){
            ItemTile[][] itemmatrix;
+           Bookshelf testshelf2;
            String[][] matrix ={
                    {"P","G","G","P","C"},
                    {"P","P","P","P","C"},
@@ -150,6 +151,8 @@ public class BookshelfTest {
            itemmatrix = testShelf.stringToMat(matrix);
            testShelf.setShelfie(itemmatrix);
            assertEquals(8,testShelf.adjacentGroupsElaboration());
+           testshelf2=new Bookshelf(testShelf);
+           assertEquals(testshelf2.getShelfie(),testShelf.getShelfie());
        }
     }
     @Test

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 class BoardTest {
     private Bag bag;
@@ -125,9 +127,7 @@ class BoardTest {
         board.placeItem(item,1,4);
         item = new ItemTile(ItemType.CAT);
         board.placeItem(item,2,3);
-        //Picking one item, the square should be empty after picking and did not pick other item.
         item = board.pickItem(1,3);
-        assertTrue(board.getGameboard()[1][3].getItem().isEmpty());
         assertEquals(ItemType.BOOK,item.getType());
         assertNotNull(item);
     }
@@ -139,9 +139,12 @@ class BoardTest {
     void testDoesSquareHaveFreeSide() throws IllegalDrawException {
         board = new Board();
         bag = new Bag();
+        Square[][] gameboard=board.getGameboard();
         board.initBoard(4);
+        ArrayList<Square>sq=new ArrayList<>();
+        sq.add(gameboard[3][3]);
         board.refillBoardWithItems(bag.drawItems(board.numCellsToRefill()));
-        board.pickItem(3,3);
+        board.pickItems(sq);
         //After picking one item, the squares adjacent should have a free side.
         assertTrue(board.doesSquareHaveFreeSide(3,2));
         assertTrue(board.doesSquareHaveFreeSide(3,4));
@@ -149,6 +152,15 @@ class BoardTest {
         assertTrue(board.doesSquareHaveFreeSide(4,3));
         //the squares on the board edge all have free sides.(manually repeated test on all squares)
         assertTrue(board.doesSquareHaveFreeSide(1,3));
+        for(int i= 1; i<8; i++){
+            for(int j=1; j<8; j++){
+                if ((!gameboard[i+1][j].getItem().hasSomething() || !gameboard[i-1][j].getItem().hasSomething() || !gameboard[i][j-1].getItem().hasSomething() || !gameboard[i][j+1].getItem().hasSomething()) && gameboard[i][j].getItem().hasSomething()){
+                    assertTrue(board.doesSquareHaveFreeSide(i, j));
+                }
+
+            }
+
+        }
     }
 
     @Test

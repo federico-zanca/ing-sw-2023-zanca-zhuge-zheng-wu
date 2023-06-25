@@ -292,18 +292,6 @@ public class Bookshelf implements Serializable {
     }
 
     /**
-     * Prints the group IDs of the item tiles on the bookshelf.
-     */
-    public void printGroupID(){
-        for(int i=0;i<Rows;i++){
-            for(int j=0;j<Columns;j++){
-                System.out.print(shelfie[i][j].getGroupId());
-            }
-            System.out.println();
-        }
-    }
-
-    /**
      * Inserts a list of item tiles into a specific column of the bookshelf.
      * The items are inserted one by one using the insertItem() method.
      * @param items  The list of item tiles to be inserted.

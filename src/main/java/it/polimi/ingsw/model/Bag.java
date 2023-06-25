@@ -52,14 +52,6 @@ public class Bag implements Serializable {
     }
 
     /**
-     Gets the availableItems ArrayList.
-     @return the ArrayList containing all available ItemTypes.
-     */
-    public ArrayList<ItemType> getAvailableItems() {
-        return availableItems;
-    }
-
-    /**
      * Returns a new ItemTile object of a randomly selected ItemType from those remaining in the bag
      * @return random ItemTile from those still present in the bag or null is the bag is empty
      * !!!!IMPORTANT!!! to add ItemTile to ArrayList of ItemTiles execute something like
@@ -127,12 +119,4 @@ public class Bag implements Serializable {
         return sum;
     }
 
-    /**
-     * Prints bag for testing.
-     */
-    public void printBag(){
-        for(ItemType t:availableItems){
-            System.out.println(t + ":" + itemTiles.get(t));
-        }
-    }
 }
