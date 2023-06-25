@@ -227,6 +227,8 @@ public class Board implements Serializable {
      Retrieves a list of coordinates representing the pickable first items on the game board.
      @return An ArrayList of integers representing the coordinates (row, column) of the pickable first items.
      */
+
+    /*
     public ArrayList<Integer> pickableFirstItems(){
         ArrayList<Integer> pickable=new ArrayList<>();
             for(int i=1; i<DIMENSIONS-1; i++){
@@ -247,6 +249,8 @@ public class Board implements Serializable {
      * @param firstItem_y coordinate of the first clicked ItemTile
      * @return ArrayList of pickable ItemTiles given the coordinate of the ItemTile picked as first
      */
+
+    /*
     public ArrayList<Integer> pickableItems(int firstItem_x, int firstItem_y) {
         ArrayList<Integer> pickable=new ArrayList<>();
 
@@ -277,6 +281,8 @@ public class Board implements Serializable {
         return  pickable;
     }
 
+    */
+
     /**
      *
      * @param row row number of the square to check
@@ -292,6 +298,8 @@ public class Board implements Serializable {
     /**
      * for testing purpose.
      */
+
+    /*
     public void printBoard(){
         for(int i=0;i<9;i++){
             for(int j=0;j<9;j++){
@@ -300,7 +308,7 @@ public class Board implements Serializable {
             System.out.println();
         }
     }
-
+    */
     /**
      Retrieves the square at the specified coordinates on the game board.
      @param coords The coordinates (row, column) of the desired square.

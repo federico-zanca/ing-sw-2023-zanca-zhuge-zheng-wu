@@ -115,5 +115,14 @@ public class ItemTileTest {
             ItemTile itemTile = new ItemTile(ItemType.TROPHY);
             assertEquals("T", itemTile.toString());
         }
+
+        @Test
+        @DisplayName("set and get Image Id")
+        public void setAndgetImageId_Test() {
+            ItemTile empty=new ItemTile();
+            ItemTile itemTile = new ItemTile(ItemType.TROPHY);
+            itemTile.setImageId(123);
+            assertEquals(123, itemTile.getImageId());
+        }
     }
 }
