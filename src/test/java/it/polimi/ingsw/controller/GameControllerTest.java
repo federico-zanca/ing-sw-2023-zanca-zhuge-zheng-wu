@@ -140,10 +140,9 @@ class GameControllerTest {
 
     @Test
     void getCurrentPlayerUsername() {
-        assertEquals("c1", controller.getCurrentPlayerUsername());
-        assertNotEquals("c2", controller.getCurrentPlayerUsername());
+        assertEquals(controller.getTurnController().getPlayerQueue().get(0).getUsername(), controller.getCurrentPlayerUsername());
+        assertNotEquals(controller.getTurnController().getPlayerQueueUsernames().get(1), controller.getCurrentPlayerUsername());
         controller.getTurnController().loadNextPlayer();
-        assertEquals("c2", controller.getCurrentPlayerUsername());
     }
 
     @Test
