@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.GameController;
 import it.polimi.ingsw.controller.PreGameController;
 import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
 import it.polimi.ingsw.model.exceptions.FullLobbyException;
+import it.polimi.ingsw.model.exceptions.InvalidUsernameException;
 import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
 import it.polimi.ingsw.network.message.*;
 import it.polimi.ingsw.network.message.connectionmessage.ConnectedToServerMessage;
@@ -24,7 +25,7 @@ import java.util.TimerTask;
  * Represents a server implementation for a game server.
  */
 public class ServerImpl extends UnicastRemoteObject implements Server {
-    private static final int HEARTBEAT_TIMEOUT = 10000;
+    private static final int HEARTBEAT_TIMEOUT = 10000000;
     private HashMap<Client, ClientInfo> connectedClients;
 
     private final Object clientsLock = new Object();
@@ -170,9 +171,33 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * @param client the client whose username we want to set
      * @param username the username to set
      */
-    public void setUsername(Client client, String username) {
-        connectedClients.get(client).setClientID(username);
+    public void setUsername(Client client, String username) throws InvalidUsernameException {
+        if(isValidUsername(username))
+            getConnectedClientInfo(client).setClientID(username);
+        else throw new InvalidUsernameException();
     }
+
+    public boolean isValidUsername(String username) {
+        if(username == null)
+            return false;
+        // Check for spaces in username
+        if (username.equals("") || username.contains(" "))
+            return false;
+
+
+        // Check if username starts or ends with a special character or if it is solely composed of numbers
+        char firstChar = username.charAt(0);
+        if (firstChar == '-' || firstChar == '_' || firstChar == '.' || username.endsWith("-") || username.endsWith(".") || username.matches("[0-9]+")) {
+            return false;
+        }
+
+        // Check for non-literal or non-numeric characters other than '-', '_' and '.'
+        String pattern = "[^a-zA-Z0-9\\-_\\.]";
+        return !username.matches(".*" + pattern + ".*");
+
+        // All checks passed, username is valid
+    }
+
 
     /**
      * This method returns the lobby having the given name
@@ -230,30 +255,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
      * @param chosenNum the number of players chosen by the client
      */
     public void changeLobbyNumOfPlayers(Client client, int chosenNum){
+        try{
         if( chosenNum > GameController.MAX_PLAYERS){
-            try {
-                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS, chosenNum));
-                //client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
-            }
+            sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS, chosenNum));
+            //client.update(new ChangeNumOfPlayerResponse(false, "Il numero massimo di giocatori è " + GameController.MAX_PLAYERS));
         } else if (chosenNum < GameController.MIN_PLAYERS){
-            try {
-                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS, chosenNum));
-                //client.update(new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
-            }
-        } else if (chosenNum < connectedClients.get(client).getLobby().getInLobbyClients().size()){
-            try {
-                sendMessage(client, new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa", chosenNum));
-                //client.update(new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send ChangeNumOfPlayerResponse message");
-            }
-        } else {
+            sendMessage(client, new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS, chosenNum));
+            //client.update(new ChangeNumOfPlayerResponse(false, "Il numero minimo di giocatori è " + GameController.MIN_PLAYERS));
+        } else if (chosenNum < connectedClients.get(client).getLobby().getInLobbyClients().size()) {
+            sendMessage(client, new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa", chosenNum));
+            //client.update(new ChangeNumOfPlayerResponse(false, "Non puoi diminuire il numero di giocatori se ci sono giocatori in attesa"));
+        } else{
             connectedClients.get(client).getLobby().changeChosenNumOfPlayers(chosenNum);
-            getLobbyOfClient(client).sendToAll(new ChangeNumOfPlayerResponse(true, "\nNumero di giocatori della partita cambiato a " + chosenNum,chosenNum));
+            getLobbyOfClient(client).sendToAll(new ChangeNumOfPlayerResponse(true, "\nNumero di giocatori della partita cambiato a " + chosenNum, chosenNum));
+        }
+        } catch (RemoteException e) {
+            System.err.println("Unable to send ChangeNumOfPlayerResponse message");
         }
     }
 

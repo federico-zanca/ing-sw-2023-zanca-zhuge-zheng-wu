@@ -5,10 +5,7 @@ import it.polimi.ingsw.distributed.ClientState;
 import it.polimi.ingsw.distributed.Lobby;
 import it.polimi.ingsw.distributed.ServerImpl;
 import it.polimi.ingsw.model.enumerations.JoinType;
-import it.polimi.ingsw.model.exceptions.ClientAlreadyInLobbyException;
-import it.polimi.ingsw.model.exceptions.FullLobbyException;
-import it.polimi.ingsw.model.exceptions.InvalidLobbyNameException;
-import it.polimi.ingsw.model.exceptions.LobbyNotFoundException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.MessageToServer;
 import it.polimi.ingsw.network.message.connectionmessage.*;
@@ -227,33 +224,31 @@ public class PreGameController {
      */
     public void onLoginRequest(Client client, LoginRequest loginRequest) {
         String playername = (loginRequest.getUsername());
-        if(server.isUsernameAvailable(playername)) {
-            server.setUsername(client, playername);
-            try {
+        try {
+            if (server.isUsernameAvailable(playername)) {
+                try {
+                    server.setUsername(client, playername);
+                } catch (InvalidUsernameException e) {
+                    server.sendMessage(client, new LoginResponse(false, playername));
+                    return;
+                }
                 server.sendMessage(client, new LoginResponse(true, playername));
                 //client.update(new LoginResponse(true, playername));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send username response: " + e);
-            }
-        } else {
-            Client oldClient = server.getClientByUsername(playername);
-            if (oldClient!= null && server.getConnectedClientInfo(oldClient).getClientState() == ClientState.IN_GAME &&
-                    !server.getConnectedClientInfo(oldClient).isConnected()){
-                try {
+
+            } else {
+                Client oldClient = server.getClientByUsername(playername);
+                if (oldClient != null && server.getConnectedClientInfo(oldClient).getClientState() == ClientState.IN_GAME &&
+                        !server.getConnectedClientInfo(oldClient).isConnected()) {
                     server.sendMessage(client, new LoginResponse(true, playername));
                     //client.update(new LoginResponse(true, playername));
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
-                replaceClient(oldClient, client);
-            } else {
-                try {
+                    replaceClient(oldClient, client);
+                } else {
                     server.sendMessage(client, new LoginResponse(false, playername));
                     //client.update(new LoginResponse(false, playername));
-                } catch (RemoteException e) {
-                    System.err.println("Unable to send username response: " + e);
                 }
             }
+        } catch (RemoteException e) {
+            System.err.println("Unable to send login response: " + e);
         }
     }
 
@@ -267,21 +262,24 @@ public class PreGameController {
      */
     public void onUsernameRequest(Client client, UsernameRequest usernameRequest) {
         String username = usernameRequest.getUsername();
-        if(server.isUsernameAvailable(username)) {
-            server.setUsername(client, username);
-            try {
-                server.sendMessage(client, new UsernameResponse(true, username));
+        UsernameResponse usernameResponse;
+        try {
+            if (server.isUsernameAvailable(username)) {
+                try {
+                    server.setUsername(client, username);
+                    usernameResponse = new UsernameResponse(true, username);
+                } catch (InvalidUsernameException e) {
+                    usernameResponse = new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID());
+                }
+                server.sendMessage(client, usernameResponse);
                 //client.update(new UsernameResponse(true, username));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send username response: " + e);
-            }
-        } else {
-            try {
+            } else {
+
                 server.sendMessage(client, new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
                 //client.update(new UsernameResponse(false, server.getConnectedClientInfo(client).getClientID()));
-            } catch (RemoteException e) {
-                System.err.println("Unable to send username response: " + e);
             }
+        }catch (RemoteException e){
+            System.err.println("Unable to send username response: " + e);
         }
     }
 
@@ -304,7 +302,7 @@ public class PreGameController {
                 server.sendMessage(client, new NotAdminMessage());
                 //client.update(new NotAdminMessage());
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("Unable to send not admin message: " + e);
             }
         }
     }
@@ -365,22 +363,19 @@ public class PreGameController {
     public void onStartGameRequest(Client client, StartGameRequest startGameRequest) {
         Client admin = server.getLobbyOfClient(client).getAdmin();
         int numPlayers = server.getLobbyOfClient(client).getNumClients();
-        if(!client.equals(admin) ){
-            try {
+        try{
+            if (!client.equals(admin)) {
                 server.sendMessage(client, new NotAdminMessage());
                 //client.update(new NotAdminMessage());
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        }else if(numPlayers != server.getLobbyOfClient(client).getChosenNumOfPlayers()){
-            try {
+            } else if (numPlayers != server.getLobbyOfClient(client).getChosenNumOfPlayers()) {
                 server.sendMessage(client, new GameNotReadyMessage("game not ready to start"));
                 //client.update(new GameNotReadyMessage("game not ready to start"));
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            } else {
+                server.startGame(client);
             }
-        }else{
-            server.startGame(client);
+        } catch(RemoteException e){
+            System.err.println("Unable to send not admin message: " + e);
         }
     }
+
 }

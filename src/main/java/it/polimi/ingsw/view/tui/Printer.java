@@ -391,7 +391,7 @@ public class Printer {
         if (successful) {
             System.out.println("Username cambiato in " + TextColor.CYANTEXT + username + TextColor.NO_COLOR + "!");
         } else {
-            System.out.println("Username " + TextColor.CYANTEXT + username + TextColor.NO_COLOR + " già in uso! Riprova con un altro username!");
+            System.out.println("Username " + TextColor.CYANTEXT + username + TextColor.NO_COLOR + " già in uso o non valido! Riprova con un altro username!");
         }
     }
 
