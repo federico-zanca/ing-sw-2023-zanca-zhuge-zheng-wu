@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class InLobbySceneController implements Controller{
+    public Button startGameButton;
+    public Button exitLobbyButton;
     private MessageHandler messageHandler;
     private GUI gui;
     @FXML
@@ -148,7 +150,7 @@ public class InLobbySceneController implements Controller{
                 label.setStyle("-fx-font-weight: bold; -fx-text-fill: red;");
             }
             else {
-                label.setStyle("-fx-text-fill: yellow;");
+                label.setStyle("-fx-text-fill: black;");
             }
             label.setFont(Font.font("System", FontWeight.NORMAL, 18));
             playerNames.getChildren().add(label);

@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.util.Objects;
@@ -55,8 +56,7 @@ public class MenuSceneController implements Controller{
             return;
         }
         if(!inputValidator.isValidUsername(usernameField.getText())){
-            error.setVisible(true);
-            return;
+            setError("Username not valid!");
         }else{
             messageHandler.setMyUsername(usernameField.getText());
             messageHandler.notifyObservers(new LoginRequest(usernameField.getText()));

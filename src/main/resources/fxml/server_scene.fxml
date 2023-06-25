@@ -36,7 +36,7 @@
       </Button>
       <ComboBox fx:id="lobbySelectBox" layoutX="517.5" layoutY="206.0" onMouseClicked="#lobbyList" prefHeight="50.0" prefWidth="265.0" promptText="Select Lobby" />
       <TextField fx:id="newLobbyName" layoutX="517.0" layoutY="382.0" onKeyPressed="#enterCreateLobby" prefHeight="50.0" prefWidth="265.0" promptText="Enter New Lobby Name" />
-      <Text fx:id="error" fill="RED" layoutX="803.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" wrappingWidth="250.93670654296875">
+      <Text fx:id="error" fill="RED" style="-fx-font-weight: bold" layoutX="803.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" wrappingWidth="250.93670654296875">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>

@@ -64,7 +64,7 @@
                 <DropShadow height="25.0" offsetX="-0.7" offsetY="-0.7" radius="12.0" width="25.0" />
             </effect>
         </Button>
-        <Text fx:id="error" fill="RED" layoutX="339.0" layoutY="580.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="640.0000305175781">
+        <Text fx:id="error" fill="RED" layoutX="240.0" layoutY="580.0" style="-fx-font-weight: bold" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="640.0000305175781">
             <font>
                 <Font name="System Bold" size="28.0" />
             </font>

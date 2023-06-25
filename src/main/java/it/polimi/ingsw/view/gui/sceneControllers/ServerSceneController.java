@@ -77,13 +77,15 @@ public class ServerSceneController implements Controller{
         lobbySelectBox.setItems(FXCollections.observableList(lobbyNames));
     }
     public void joinLobby(){
-        String myLobby = lobbySelectBox.getValue().trim();
-        int index = myLobby.indexOf(" ");
-        if (index >= 0) {
-            myLobby = myLobby.substring(0, index);
+        if(lobbySelectBox.getValue() != null){
+            String myLobby = lobbySelectBox.getValue().trim();
+            int index = myLobby.indexOf(" ");
+            if (index >= 0) {
+                myLobby = myLobby.substring(0, index);
+            }
+            messageHandler.setMyLobby(myLobby);
+            messageHandler.notifyObservers(new JoinLobbyRequest(myLobby));
         }
-        messageHandler.setMyLobby(myLobby);
-        messageHandler.notifyObservers(new JoinLobbyRequest(myLobby));
     }
     public void createLobby(){
         String name = newLobbyName.getText();
