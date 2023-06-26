@@ -8,9 +8,7 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.IllegalDrawException;
 import it.polimi.ingsw.model.exceptions.IllegalNumOfPlayersException;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ public class Board implements Serializable {
      * @param numPlayers number of players
      */
     public void initBoard(int numPlayers){
-        String jsonpath = "src/main/resources/gameboardJSON/";
+        String jsonpath = "/gameboardJSON/";
         String json = null;
         if(numPlayers<2 ||numPlayers>4){
             //should never happen because this check is already performed when a player tries to start the game
@@ -59,21 +57,22 @@ public class Board implements Serializable {
                 jsonpath += "board4.json";
                 break;
         }
-        ObjectMapper objectMapper = new ObjectMapper();
-        Path filePath = Path.of(jsonpath);
-        try{
-            json = Files.readString(filePath);
-        }catch(IOException e){
-            System.err.println("Error accessing file "+ filePath);
+        InputStream inputStream = Board.class.getResourceAsStream(jsonpath);
+        if (inputStream == null) {
+            // Handle the case when the resource is not found
+            System.err.println("Resource not found.");
+            return;
         }
         try {
-            gameboard = objectMapper.readValue(
-                    json,
-                    new TypeReference<Square[][]>(){});
+            // Use the ObjectMapper class from Jackson to deserialize the JSON into your object
+            ObjectMapper objectMapper = new ObjectMapper();
+            gameboard = objectMapper.readValue(inputStream, new TypeReference<Square[][]>(){});
+
         } catch (IOException e) {
-            System.err.println("Error reading " + jsonpath + "file");
-            throw new RuntimeException(e);
+            // Handle the exception if there's an error reading the file
+            System.err.println("Error reading " + jsonpath + " file");
         }
+
         /*
         for(int i=0; i<DIMENSIONS; i++){
             for(int j=0; j<DIMENSIONS; j++) {
