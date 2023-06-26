@@ -11,7 +11,10 @@ import it.polimi.ingsw.model.exceptions.IllegalNumOfPlayersException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Stack;
 /**
  Represents the game board.
@@ -39,6 +42,7 @@ public class Board implements Serializable {
      */
     public void initBoard(int numPlayers){
         String jsonpath = "src/main/resources/gameboardJSON/";
+        String json = null;
         if(numPlayers<2 ||numPlayers>4){
             //should never happen because this check is already performed when a player tries to start the game
             System.err.println("Illegal number of players.");
@@ -56,9 +60,15 @@ public class Board implements Serializable {
                 break;
         }
         ObjectMapper objectMapper = new ObjectMapper();
+        Path filePath = Path.of(jsonpath);
+        try{
+            json = Files.readString(filePath);
+        }catch(IOException e){
+            System.err.println("Error accessing file "+ filePath);
+        }
         try {
             gameboard = objectMapper.readValue(
-                    new File(jsonpath),
+                    json,
                     new TypeReference<Square[][]>(){});
         } catch (IOException e) {
             System.err.println("Error reading " + jsonpath + "file");
