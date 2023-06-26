@@ -387,6 +387,11 @@ public class Lobby {
      * Destroys the lobby by removing it from the server's list of lobbies.
      */
     private void destroyLobby() {
+        for(Client c : inLobbyClients){
+            //completely removes from the server those clients that were disconnected from the game when the game ended
+            if(!server.getConnectedClientInfo(c).isConnected())
+                server.getConnectedClients().remove(c);
+        }
         inLobbyClients.clear();
         server.getLobbies().remove(this);
     }
