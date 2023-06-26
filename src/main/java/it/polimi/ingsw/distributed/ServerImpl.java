@@ -430,7 +430,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
                 getConnectedClientInfo(client).setConnected(false);
                 removeClientFromLobby(client);
                 connectedClients.remove(client);
-                lobby.sendToAll(new PlayerLeftMessage("", username + "left the game. His turn will be skipped until he reconnects."));
+                lobby.sendToAll(new PlayerLeftMessage("", username + " left the game. His turn will be skipped until he reconnects."));
             }
             else if (getConnectedClientInfo(client).getClientState() == ClientState.IN_GAME) {
                 getConnectedClientInfo(client).setConnected(false);

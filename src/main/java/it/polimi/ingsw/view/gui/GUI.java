@@ -93,6 +93,8 @@ public class GUI extends Application{
     public void changeScene() {
         Platform.runLater(()->{
             currentStage.setScene(currentScene);
+            //currentStage.getScene().getWindow().centerOnScreen();
+            currentStage.getScene().getWindow().sizeToScene();
             String fxmlPath = fxml.get(phase);
             controllers.get(fxmlPath).initialize();
         });

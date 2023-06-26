@@ -14,7 +14,7 @@ import java.util.List;
  * Represents a personal goal card with a grid of objectives.
  * Each objective is represented by an ItemType value.
  */
-public class PersonalGoalCard implements Serializable {
+public class    PersonalGoalCard implements Serializable {
     private static final long serialVersionUID = -4793133503754805698L;
     public static final int Rows=6;
     public static final int Columns=5;

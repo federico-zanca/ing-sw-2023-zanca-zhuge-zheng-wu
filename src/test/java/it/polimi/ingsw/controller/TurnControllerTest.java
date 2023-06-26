@@ -145,7 +145,7 @@ class TurnControllerTest {
     @Test
     void addPlayerToSkip() throws InterruptedException {
         controller.disconnectPlayer("c1");
-        int i = controller.getTurnController().TIMEOUT_LASTPLAYER + 100;
+        int i = TurnController.TIMEOUT_LASTPLAYER + 100;
         sleep(i);
         assertSame(controller.getModel().getGamePhase(), GamePhase.ENDED);
     }
