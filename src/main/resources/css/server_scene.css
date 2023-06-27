@@ -11,18 +11,17 @@
         -fx-font-size: 24;
 }
 .list-cell: even { /* <=== changed to even */
-    -fx-background-color: #ab5c23;
+    -fx-background-color: transparent;
     -fx-opacity: 0.9;
 }
 .list-cell: odd { /* <=== changed to even */
     -fx-background-color: #8B4513;
     -fx-opacity: 0.9;
-    -fx-font-size: 24px;
 }
 .listView{
     -fx-background-color: #ab5c23;
     -fx-opacity: 0.9;
-    -fx-font-size: 24px;
+    -fx-font-size: 18px;
 }
 .hbox{
     -fx-background-color:  #8B4513;

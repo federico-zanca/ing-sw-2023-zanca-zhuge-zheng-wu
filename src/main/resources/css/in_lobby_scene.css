@@ -13,3 +13,21 @@
         -fx-font-family: 'Curlz MT';
         -fx-font-size: 18;
 }
+.text-area .content {
+    -fx-background-color: #ab5c23 ;
+}
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+	-fx-background-color: #8c4c1d;
+	-fx-background-radius: 0;
+}
+.spinner .increment-arrow-button:hover:pressed,
+.spinner .decrement-arrow-button:hover:pressed,
+.spinner .increment-arrow-button:pressed,
+.spinner .decrement-arrow-button:pressed {
+	-fx-background-color: #5b3f0e;
+}
+.spinner .increment-arrow-button .increment-arrow,
+.spinner .decrement-arrow-button .decrement-arrow {
+	-fx-background-color: white;
+}
