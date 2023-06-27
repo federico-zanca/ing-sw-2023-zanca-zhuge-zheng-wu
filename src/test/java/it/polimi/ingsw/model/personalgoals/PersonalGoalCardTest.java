@@ -6,8 +6,23 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PersonalGoalCardTest {
+    @Test
+    void testSecondConstructor() {
+        int n=10;
+        ItemType[][] copyObjective;
+        PersonalGoalCard card=new PersonalGoalCard(n);
+        PersonalGoalCard copy=new PersonalGoalCard(card);
+        assertEquals(card.getIdentificator(), copy.getIdentificator());
+        copyObjective=copy.getObjective();
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 5; j++) {
+                assertEquals(copyObjective[i][j], card.getSingleObjective(i,j));
+            }
+        }
+    }
 
     @Test
     void testJsonRead() {
