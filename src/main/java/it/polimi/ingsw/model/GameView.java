@@ -96,31 +96,11 @@ public class GameView implements Serializable {
     }
 
     /**
-     * Checks if it is the last turn of the game.
-     * @return true if it is the last turn, false otherwise
-     */
-    public boolean isLastTurn() {
-        return this.lastTurn;
-    }
-
-    /**
      * Retrieves the current player in the game.
      * @return the current player
      */
     public Player getCurrentPlayer() {
         return currentPlayer;
-    }
-
-    /**
-     * Retrieves the list of bookshelves belonging to each player.
-     * @return the list of bookshelves belonging to each player
-     */
-    public ArrayList<Bookshelf> getBookshelves() {
-        ArrayList<Bookshelf> bookshelves = new ArrayList<>();
-        for (Player p : players) {
-            bookshelves.add(p.getBookshelf());
-        }
-        return bookshelves;
     }
 }
 /*
