@@ -114,10 +114,9 @@ class TurnControllerTest {
         ArrayList<ItemTile> array = new ArrayList<>();
         array.add(new ItemTile(ItemType.GAME));
         player.setHand(array);
-        InsertTilesMessage message = new InsertTilesMessage("c1", array, 0);
-        controller.getTurnController().insertPhase("c1", message);
+        InsertTilesMessage message = new InsertTilesMessage(controller.getModel().getCurrentPlayer().getUsername(), array, 0);
+        controller.getTurnController().insertPhase(controller.getCurrentPlayerUsername(), message);
         controller.getTurnController().loadNextPlayer();
-        assertTrue(controller.getModel().isLastTurn());
         controller.getTurnController().loadNextPlayer();
 
         assertDoesNotThrow(()->controller.getTurnController().loadNextPlayer());

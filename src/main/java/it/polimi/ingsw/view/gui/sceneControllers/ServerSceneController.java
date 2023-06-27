@@ -39,6 +39,8 @@ public class ServerSceneController implements Controller{
     @FXML
     private Text error;
     @FXML
+    private ListView<String> lobbyListView;
+    @FXML
     void enterCreateLobby(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             createLobby();
@@ -74,11 +76,11 @@ public class ServerSceneController implements Controller{
             String lobbyNameWithStatus = lobby.getLobbyName() + " (" + lobby.getNumPlayers() + "/" + lobby.getNumPlayersChosen() + ") " + "Stato: " + lobby.isGameStarted();
             lobbyNames.add(lobbyNameWithStatus);
         }
-        lobbySelectBox.setItems(FXCollections.observableList(lobbyNames));
+        lobbyListView.setItems(FXCollections.observableList(lobbyNames));
     }
     public void joinLobby(){
-        if(lobbySelectBox.getValue() != null){
-            String myLobby = lobbySelectBox.getValue().trim();
+        if(lobbyListView.getSelectionModel().getSelectedItem() != null){
+            String myLobby = lobbyListView.getSelectionModel().getSelectedItem().trim();
             int index = myLobby.indexOf(" ");
             if (index >= 0) {
                 myLobby = myLobby.substring(0, index);
