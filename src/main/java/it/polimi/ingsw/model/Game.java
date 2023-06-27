@@ -172,13 +172,6 @@ public class Game extends Observable {
         return new PersonalGoalCard(n);
     }
 
-    /**
-     * Adds a CommonGoalCard to Game.commonGoals list
-     * @param cg the CommonGoalCard to be added to the game
-     */
-    public void addCommonGoal(CommonGoalCard cg){
-        commonGoals.add(cg);
-    }
 
     /**
      * Starts the Game by executing these steps:
@@ -296,13 +289,6 @@ public class Game extends Observable {
         //notifica view perché la lobby si aggiorna
     }
 
-    /**
-     * Returns the first player to play.
-     * @return first player to play
-     */
-    public Player getFirstPlayer(){
-        return players.get(0);
-    }
 
     /**Returns the number of players
      *
@@ -335,16 +321,6 @@ public class Game extends Observable {
         return currentPlayer;
     }
 
-    /**
-     * Search a username in the current Game.
-     *
-     * @param username the username of the player.
-     * @return {@code true} if the username is found, {@code false} otherwise.
-     */
-    public boolean isUsernameTaken(String username){
-        if(getPlayersUsernames().isEmpty()) return false;
-        return getPlayersUsernames().contains(username);
-    }
 
     /**
      * Returns a list of player usernames that are already in-game.
@@ -384,13 +360,6 @@ public class Game extends Observable {
         return board;
     }
 
-    /** Returns the current bag.
-     *
-     * @return the bag of the game.
-     */
-    public Bag getBag() {
-        return bag;
-    }
 
     /**
      * @return the TurnPhase of the game
@@ -460,33 +429,23 @@ public class Game extends Observable {
         notifyObservers(new BookshelfMessage(currentPlayer.getUsername(), currentPlayer.getBookshelf()));
     }
 
-    //  CALCULATE PHASE METHODS
-
-    /**
-     * Prepares the game for the calculate phase by setting the turnphase to Calculate
-     */
-    public void prepareForCalculatePhase() {
-        nextTurnPhase();
-        handleCalculatePhase();
-    }
-
     /**
      * Handles calculate phase by checking if the player has achieved any common goal
      */
     public void handleCalculatePhase() {
         int count=0;
-        for(CommonGoalCard cg : commonGoals){
-            if(!cg.achievedBy(currentPlayer) && cg.check(currentPlayer.getBookshelf())){
-                int points = cg.pop();
+        for(int i=0;i< commonGoals.size();i++){
+            if(!commonGoals.get(i).achievedBy(currentPlayer) && commonGoals.get(i).check(currentPlayer.getBookshelf())){
+                int points = commonGoals.get(i).pop();
                 addPointsToPlayer(currentPlayer, points);
-                cg.addAchiever(currentPlayer);
+                commonGoals.get(i).addAchiever(currentPlayer);
                 //cg.takePoints(currentPlayer);
-                notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername() + " ha completato l'Obiettivo Comune:\n\"" + cg + "\"\n e ha ottenuto " + points + "punti!")); //send a message containing the info of the achieved common goal
+                notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername() + " ha completato l'Obiettivo Comune:\n\"" + commonGoals.get(i) + "\"\n e ha ottenuto " + points + "punti!",i+1,commonGoals.get(i))); //send a message containing the info of the achieved common goal
                 count++;
             }
         }
         if(count==0){
-            notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername()+" non ha completato nessun Obiettivo Comune questo turno."));
+            notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername()+" non ha completato nessun Obiettivo Comune questo turno.",0,commonGoals.get(0)));
         }
     }
 

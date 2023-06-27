@@ -81,6 +81,9 @@ private static final long serialVersionUID = 2348200362905242941L;
      * @return the topmost element from the stack of points
      */
     public int peek(){
+        if(points.empty()){
+            return 0;
+        }
         return points.peek();
     }
 

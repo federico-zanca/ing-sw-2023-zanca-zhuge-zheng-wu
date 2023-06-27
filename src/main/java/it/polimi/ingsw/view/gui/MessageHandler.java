@@ -113,7 +113,12 @@ public class MessageHandler extends VirtualView implements View {
 
     @Override
     public void onAchievedCommonGoalMessage(AchievedCommonGoalMessage achievedCommonGoalMessage) {
-
+        String str = achievedCommonGoalMessage.getContent();
+        int index = str.trim().indexOf(" ");
+        if (index >= 0) {
+            str = str.substring(0, index).trim();
+        }
+        gui.setIcons(str,achievedCommonGoalMessage.getCommonGoal(),achievedCommonGoalMessage.getCg());
     }
 
     @Override
@@ -144,6 +149,7 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onEndGameMessage(EndGameMessage endGameMessage) {
         lastMessage = endGameMessage;
+        gui.setInitialized();
         gui.setPhase(GuiPhase.END_GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.END_SCENE.s));
         gui.changeScene();

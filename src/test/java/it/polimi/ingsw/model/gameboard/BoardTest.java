@@ -116,20 +116,22 @@ class BoardTest {
         board.placeItem(item, 1, 3);
     }
 
-    @Test
+    @Test()
     void pickItem() throws IllegalDrawException {
         board = new Board();
-        board.initBoard(2);
-        //Placing items on a square and on adjacent squares.
-        ItemTile item = new ItemTile(ItemType.BOOK);
-        board.placeItem(item,1,3);
-        item = new ItemTile(ItemType.FRAME);
-        board.placeItem(item,1,4);
-        item = new ItemTile(ItemType.CAT);
-        board.placeItem(item,2,3);
-        item = board.pickItem(1,3);
-        assertEquals(ItemType.BOOK,item.getType());
-        assertNotNull(item);
+
+        for(int i=2; i<=5; i++){
+            board.initBoard(i);
+            //Placing items on a square and on adjacent squares.
+            ItemTile item = new ItemTile(ItemType.BOOK);
+            board.placeItem(item,1,3);
+            item = new ItemTile(ItemType.FRAME);
+            board.placeItem(item,1,4);
+            item = board.pickItem(1,3);
+            assertEquals(ItemType.BOOK,item.getType());
+            assertNotNull(item);
+        }
+
     }
 
     @Disabled

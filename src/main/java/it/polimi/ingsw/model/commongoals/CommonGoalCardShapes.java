@@ -64,6 +64,7 @@ public class CommonGoalCardShapes extends CommonGoalCard {
         return flag;
     }
 
+
     @Override
     public String toString() {
         if (Objects.equals(shape, "4Corners")){

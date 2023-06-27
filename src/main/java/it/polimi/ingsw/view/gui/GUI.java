@@ -3,6 +3,7 @@ import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.GameView;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
@@ -306,6 +307,24 @@ public class GUI extends Application{
         if(currentController instanceof ServerSceneController){
             Platform.runLater(()-> {
                 ((ServerSceneController) currentController).setAlert();
+            });
+        }
+    }
+
+    public void setIcons(String username, int commonGoal,CommonGoalCard cg) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).setIcons(username,commonGoal,cg);
+            });
+        }
+    }
+
+    public void setInitialized() {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).setInitialized();
             });
         }
     }
