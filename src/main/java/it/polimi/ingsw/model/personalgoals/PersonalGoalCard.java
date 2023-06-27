@@ -7,7 +7,9 @@ import it.polimi.ingsw.model.enumerations.ItemType;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.rmi.ServerError;
 import java.util.List;
 
 /**
@@ -33,6 +35,20 @@ public class    PersonalGoalCard implements Serializable {
                 objective[i][j] = ItemType.EMPTY;
             }
         }
+        String jsonpath = "/personalGoalJson/PersonalGoalCard"+n+".json";
+        InputStream inputStream = PersonalGoalCard.class.getResourceAsStream(jsonpath);
+        if(inputStream == null){
+            System.err.println("Resource personalgoal not found");
+            return;
+        }
+        List<PersonalGoalCell> goalcells = null;
+        try{
+            ObjectMapper objectMapper = new ObjectMapper();
+            goalcells = objectMapper.readValue(inputStream, new TypeReference<List<PersonalGoalCell>>(){});
+        } catch(IOException e){
+            System.err.println("Error reading " + jsonpath + " file");
+        }
+        /*
         String file_name = "src/main/resources/personalGoalJson/PersonalGoalCard" + n + ".json";
         ObjectMapper objectMapper = new ObjectMapper();
         List<PersonalGoalCell> goalcells = null;
@@ -43,6 +59,8 @@ public class    PersonalGoalCard implements Serializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        */
+
         for (PersonalGoalCell cell : goalcells){
             objective[cell.getRow()][cell.getCol()] = cell.getType();
         }

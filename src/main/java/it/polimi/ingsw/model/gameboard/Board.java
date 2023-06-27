@@ -60,7 +60,7 @@ public class Board implements Serializable {
         InputStream inputStream = Board.class.getResourceAsStream(jsonpath);
         if (inputStream == null) {
             // Handle the case when the resource is not found
-            System.err.println("Resource not found.");
+            System.err.println("Resource gameboard not found.");
             return;
         }
         try {

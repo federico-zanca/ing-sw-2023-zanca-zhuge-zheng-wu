@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.ItemTile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -24,11 +25,17 @@ public class CommonGoalCardShapes extends CommonGoalCard {
         boolean flag = false;
         matrix = bookshelf.getShelfie();
         String file_name = "src/main/resources/commonGoalShapesJson/" + shape + ".json";
+        String jsonpath = "/commonGoalShapesJson/"+shape+".json";
+        InputStream inputStream = CommonGoalCardShapes.class.getResourceAsStream(jsonpath);
+        if(inputStream == null){
+            System.err.println("Resource commongoal not found");
+            return false;
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<ArrayList<ShapeCoordinates>> shapecells;
         try {
             shapecells = objectMapper.readValue(
-                    new File(file_name),
+                    inputStream,
                     new TypeReference<ArrayList<ArrayList<ShapeCoordinates>>>(){});
         } catch (IOException e) {
             System.err.println("Error reading " + shape + "file");
