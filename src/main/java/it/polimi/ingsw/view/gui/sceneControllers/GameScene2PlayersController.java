@@ -55,9 +55,35 @@ public class GameScene2PlayersController implements Controller {
     private int maxNumItems;
     private final ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
     private Bookshelf bookshelf;
-    private final ArrayList<ImageView> newHandOrder = new ArrayList<>();
-    private final ArrayList<Integer> order = new ArrayList<>();
-    private ArrayList<Label> pList = new ArrayList<>();
+    private ArrayList<ImageView> newHandOrder;
+    private ArrayList<Integer> order;
+    private ArrayList<Label> pList;
+    @FXML
+    public HBox player1;
+    @FXML
+    public ImageView player1F;
+    @FXML
+    public ImageView player1S;
+    @FXML
+    public HBox player2;
+    @FXML
+    public ImageView player2F;
+    @FXML
+    public ImageView player2S;
+    @FXML
+    public HBox player3;
+    @FXML
+    public ImageView player3F;
+    @FXML
+    public ImageView player3S;
+    @FXML
+    public HBox player4;
+    @FXML
+    public ImageView player4F;
+    @FXML
+    public ImageView player4S;
+    @FXML
+    public Button exitButton;
     @FXML
     private TextArea chat;
     @FXML
@@ -240,36 +266,82 @@ public class GameScene2PlayersController implements Controller {
             return;
         } else if (!initialized) {
             initialized = true;
-            setChatBox(messageHandler.getChatLog());
+            pList = new ArrayList<>();
+            order = new ArrayList<>();
+            newHandOrder = new ArrayList<>();
             tilesToDraw = new ArrayList<>();
             tilesToInsert = new ArrayList<>();
             playersList = new ArrayList<>();
+            bookshelf = new Bookshelf();
             nameOfBookshelf.setText(messageHandler.getMyUsername());
+            setChatBox(messageHandler.getChatLog());
+            resetCommonGoals();
+            clearEffects();
+            clearboard();
             initLivingRoomGrid();
             initBookshelfGrid();
             initSelectCol();
         } else {
-            tilesToDraw.clear();
-            tilesToInsert.clear();
+            bookshelf = new Bookshelf();
+            clearboard();
+            clearPlayerList();
+            resetPersonalGoals();
+            clearHand();
+            clearTiles();
+            clearEffects();
+        }
+    }
+
+    private void resetPersonalGoals() {
+        myPersonalGoal.setImage(null);
+    }
+
+    private void resetCommonGoals() {
+        firstCommonGoalScoreBox.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));
+        secondCommonGoalScoreBox.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));
+    }
+
+    private void clearPlayerList() {
+        player1.getChildren().clear();
+        player2.getChildren().clear();
+        player3.getChildren().clear();
+        player4.getChildren().clear();
+    }
+
+    private void clearboard() {
+        for (int i = 0; i < Board.DIMENSIONS; i++) {
+            for (int j = 0; j < Board.DIMENSIONS; j++) {
+                itemLivRoomCells[i][j].setImage(null);
+            }
         }
     }
 
     public void initPlayerList(ArrayList<Player> players) {
         playersList = players;
+        HBox hBox = null;
         this.players.setSpacing(3);
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
-            HBox hbox = new HBox();
-            hbox.setSpacing(3);
-            hbox.setPadding(new Insets(3));
-            hbox.setPrefSize(200, 45);
-            hbox.setStyle("-fx-background-color: #D08C4D;");
-            hbox.setEffect(new DropShadow());
-            hbox.setAlignment(Pos.CENTER_LEFT);
+            switch (i){
+                case 0 : hBox = player1;
+                    break;
+                case 1 : hBox = player2;
+                    break;
+                case 2 : hBox = player3;
+                    break;
+                case 3 : hBox = player4;
+                    break;
+                default: hBox = null;
+            }
+            assert hBox != null;
+            hBox.setPadding(new Insets(3));
+            hBox.setPrefSize(200, 45);
+            hBox.setStyle("-fx-background-color: #D08C4D;");
+            hBox.setEffect(new DropShadow());
+            hBox.setAlignment(Pos.CENTER_LEFT);
 
             Label label = new Label(p.getUsername());
-            label.setPrefWidth(130);
-            label.setPrefHeight(40);
+            label.setPrefSize(130,40);
             label.setStyle("-fx-font-family: system;");
             label.setStyle("-fx-font-weight: bold;");
             if (i == 0) {
@@ -282,18 +354,18 @@ public class GameScene2PlayersController implements Controller {
             else {
                 label.setStyle("-fx-background-color: #f2f2f2;");
             }*/
-            hbox.getChildren().add(label);
-
-            /*for (int j = 0; j < 3; j++) {
-                ImageView imageView = new ImageView();
-                imageView.setFitHeight(40);
-                imageView.setFitWidth(40);
-                //imageView.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));
-                hbox.getChildren().add(imageView);
+            hBox.getChildren().clear();
+            hBox.getChildren().add(label);
+            if(i == 0){
+                hBox.getChildren().addAll(player1F,player1S);
+            }else if(i == 1){
+                hBox.getChildren().addAll(player2F,player2S);
+            }else if(i == 2){
+                hBox.getChildren().addAll(player3F,player3S);
+            }else if(i == 3){
+                hBox.getChildren().addAll(player4F,player4S);
             }
-             */
-
-            this.players.getChildren().add(hbox);
+            hBox.setVisible(true);
 
             label.setOnMousePressed(event -> {
                 String username = label.getText();
@@ -631,5 +703,57 @@ public class GameScene2PlayersController implements Controller {
                 break;
             }
         }
+    }
+    public void setIcons(String username,int commonGoal,CommonGoalCard cg){
+        String url;
+        Image image;
+        if(cg.peek() == 2 || cg.peek() == 4 || cg.peek() == 6 || cg.peek() == 8){
+            url = ("/images/scoring_tokens/scoring_"+ cg.peek() +".jpg");
+        }else if(cg.peek() == 0){
+            url = ("/images/scoring_tokens/scoring.jpg");
+        }else{
+            return;
+        }
+        if(commonGoal == 1){
+            image = firstCommonGoalScoreBox.getImage();
+            firstCommonGoalScoreBox.setImage(new Image(url));
+        }else if(commonGoal == 2){
+            image = secondCommonGoalScoreBox.getImage();
+            secondCommonGoalScoreBox.setImage(new Image(url));
+        }else{
+            image = null;
+        }
+        for(int i=0;i<pList.size();i++){
+            if(Objects.equals(pList.get(i).getText(), username)){
+                if(i==0){
+                    if(player1F.getImage()==null){
+                        player1F.setImage(image);
+                    } else{
+                        player1S.setImage(image);
+                    }
+                }else if(i==1) {
+                    if (player2F.getImage() == null){
+                        player2F.setImage(image);
+                    } else {
+                        player2S.setImage(image);
+                    }
+                }else if(i==2){
+                    if(player3F.getImage()==null){
+                        player3F.setImage(image);
+                    }else{
+                        player3S.setImage(image);
+                    }
+                }else if(i == 3){
+                    if(player4F.getImage() == null){
+                        player4F.setImage(image);
+                    }else{
+                        player4S.setImage(image);
+                    }
+                }
+            }
+        }
+    }
+    public void setInitialized(){
+        initialized = false;
     }
 }

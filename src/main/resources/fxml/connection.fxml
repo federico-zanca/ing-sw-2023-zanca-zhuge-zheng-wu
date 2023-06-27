@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="root" prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ConnectionController">
+<AnchorPane fx:id="root" prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ConnectionController">
    <children>
       <ImageView fitWidth="680.0" layoutX="311.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -50,6 +47,7 @@
             <Font size="18.0" />
          </font>
       </TextField>
+      <VBox layoutX="356.0" layoutY="120.0" prefHeight="200.0" prefWidth="100.0" />
    </children>
    <stylesheets>
       <URL value="@../css/connection.css" />

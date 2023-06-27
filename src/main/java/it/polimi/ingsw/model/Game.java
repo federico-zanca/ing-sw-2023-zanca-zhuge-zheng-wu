@@ -475,18 +475,18 @@ public class Game extends Observable {
      */
     public void handleCalculatePhase() {
         int count=0;
-        for(CommonGoalCard cg : commonGoals){
-            if(!cg.achievedBy(currentPlayer) && cg.check(currentPlayer.getBookshelf())){
-                int points = cg.pop();
+        for(int i=0;i< commonGoals.size();i++){
+            if(!commonGoals.get(i).achievedBy(currentPlayer) && commonGoals.get(i).check(currentPlayer.getBookshelf())){
+                int points = commonGoals.get(i).pop();
                 addPointsToPlayer(currentPlayer, points);
-                cg.addAchiever(currentPlayer);
+                commonGoals.get(i).addAchiever(currentPlayer);
                 //cg.takePoints(currentPlayer);
-                notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername() + " ha completato l'Obiettivo Comune:\n\"" + cg + "\"\n e ha ottenuto " + points + "punti!")); //send a message containing the info of the achieved common goal
+                notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername() + " ha completato l'Obiettivo Comune:\n\"" + commonGoals.get(i) + "\"\n e ha ottenuto " + points + "punti!",i+1,commonGoals.get(i))); //send a message containing the info of the achieved common goal
                 count++;
             }
         }
         if(count==0){
-            notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername()+" non ha completato nessun Obiettivo Comune questo turno."));
+            notifyObservers(new AchievedCommonGoalMessage("", currentPlayer.getUsername()+" non ha completato nessun Obiettivo Comune questo turno.",0,commonGoals.get(0)));
         }
     }
 
