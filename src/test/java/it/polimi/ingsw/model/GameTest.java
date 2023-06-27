@@ -153,10 +153,53 @@ class GameTest {
     }
 
     @Test
+    void TestPlayerRemovalAndPhases(){
+        ArrayList<String> usernames=new ArrayList<>();
+        testGame.addPlayer(new Player("Zeta"));
+        testGame.addPlayer(new Player("Teta"));
+        usernames.add("Zeta");
+        usernames.add("Teta");
+        assertEquals(testGame.getPlayersUsernames(),usernames );
+        testGame.removePlayer(testGame.getPlayerByUsername("Teta"));
+        usernames.remove("Teta");
+        assertEquals(testGame.getPlayersUsernames(), usernames);
+
+        testGame.resetPlayers();
+        usernames.clear();
+        assertEquals(testGame.getPlayers(), usernames);
+
+        testGame.setGamePhase(GamePhase.LOGIN);
+        assertEquals(testGame.getGamePhase(), GamePhase.LOGIN);
+        testGame.nextGamePhase();
+        assertEquals(testGame.getGamePhase(), GamePhase.INIT);
+        testGame.nextGamePhase();
+        assertEquals(testGame.getGamePhase(), GamePhase.PLAY);
+        testGame.nextGamePhase();
+        assertEquals(testGame.getGamePhase(), GamePhase.AWARDS);
+        testGame.nextGamePhase();
+        assertEquals(testGame.getGamePhase(), GamePhase.ENDED);
+    }
+
+    @Test
     void TestEndPhase(){
         gamecontroller.getModel().addPlayer(new Player("Alpha"));
         gamecontroller.getModel().startGame();
         gamecontroller.awardPhase(null);
+    }
+
+    @Test
+    void TestTile(){
+        testPlayer=new Player("Player");
+        ArrayList<ItemTile> tiles=new ArrayList<>();
+        tiles.add(new ItemTile(ItemType.CAT));
+        testGame.addPlayer(testPlayer);
+        testGame.startGame();
+        testGame.setCurrentPlayer(testPlayer);
+        System.out.println(testGame.getCurrentPlayer());
+        testGame.insertTiles(tiles, 2);
+        testPlayer.getBookshelf().printBookshelf();
+
+        assertEquals(testPlayer.getBookshelf().getSingleCell(5,2).getType(), ItemType.CAT);
     }
 
 

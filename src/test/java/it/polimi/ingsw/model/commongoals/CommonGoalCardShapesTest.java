@@ -102,4 +102,17 @@ class CommonGoalCardShapesTest {
         assertFalse(cg.check(bookshelf));
     }
 
+    @Test
+    void TestPrint(){
+
+        CommonGoalCardShapes cg1 = new CommonGoalCardShapes(4,"X");
+        CommonGoalCardShapes cg2 = new CommonGoalCardShapes(4,"4Corners");
+        CommonGoalCardShapes cg3 = new CommonGoalCardShapes(4,"Diagonal");
+
+        System.out.println(cg1);
+        System.out.println(cg2);
+        System.out.println(cg3);
+
+    }
+
 }
