@@ -1,6 +1,6 @@
 # Progetto di Ingegneria del Software 2023
 
-# Index
+## Index
 - Group Components
 - Introduction to "My Shelfie"
 - External Libraries
@@ -8,7 +8,7 @@
 - User Instructions
 
 
-# Group Components
+## Group Components
 
 | Cognome | Nome | e-mail 
 | ------ | ------ |----- 
@@ -18,7 +18,7 @@
 | Zheng |Fabio| fabio1.zheng@mail.polimi.it
 
 
-# Introduction to "My Shelfie"
+## Introduction to "My Shelfie"
 
 My Shelfie is a board game that can be enjoyed by 2 to 4 players, set in a living room where every player is given a bookshelf to place item tiles picked from the living room board.
 The participants compete with each other to fulfill goals that award points. These goals are visible to everyone and are randomly drawn during the game setup. Every player is also assigned a personal goal card that is not visible to others. Points are also awarded for the number of adjacent tiles you manage to place in your bookshelf.
@@ -27,10 +27,10 @@ The player with the most points wins.
 
 This game is perfect for a tranquil evening with your family or friends but also promises to be competitive enough to add some zest.
 
-# External Libraries
+## External Libraries
 
 
-# Implemented Features
+## Implemented Features
 Number of Advanced Features implemented: 3/4
 |Feature |Status|
 |--------|------------|
@@ -46,7 +46,7 @@ Number of Advanced Features implemented: 3/4
 |Server Persistence|   ![failure](https://via.placeholder.com/15/ff0000/000000?text=+)|
 
 
-# User Instructions
+## User Instructions
 
 Into the deliverables folder of this poject can be found two jar files.
 
@@ -81,7 +81,7 @@ Write:
 - 2 for RMI connection
 
 
-## License
+### License
 
 This project is developed in collaboration with Politecnico di Milano and Cranio Creations.
 
