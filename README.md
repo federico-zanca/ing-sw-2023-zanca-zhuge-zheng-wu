@@ -27,8 +27,6 @@ The player with the most points wins.
 
 This game is perfect for a tranquil evening with your family or friends but also promises to be competitive enough to add some zest.
 
-## External Libraries
-
 
 ## Implemented Features
 Number of Advanced Features implemented: 3/4
