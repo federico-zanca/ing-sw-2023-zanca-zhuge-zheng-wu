@@ -10,6 +10,10 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -146,8 +150,9 @@ public class InLobbySceneController implements Controller{
         messageHandler.notifyObservers(new StartGameRequest());
     }
     public void setError(String error) {
-        this.error.setText(error);
-        this.error.setVisible(true);
+        /*this.error.setText(error);
+        this.error.setVisible(true);*/
+        chat.appendText(error+"\n");
     }
     public void exitLobby(){
         messageHandler.notifyObservers(new ExitLobbyRequest());
