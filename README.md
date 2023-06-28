@@ -46,7 +46,36 @@ Number of Advanced Features implemented: 3/4
 
 # User Instructions
 
-## Summary:
+Into the deliverables folder of this poject can be found two jar files.
 
-'''java.jar'''
+The "server.jar" is the executable dedicated to the server.
 
+Execute with command:
+```sh
+java -jar server.jar
+```
+No interactions are possible with the server.
+
+The "client.jar" is the executable dedicated to the clients.
+
+Execute with command:
+```sh
+java -jar client.jar gui
+```
+
+Executing the client will display a message asking to choose between GUI and CLI.
+
+Type:
+- 0 to access CLI interface
+- Any other character or word to access GUI interface
+
+
+After choosing the interface you will be asked to insert the IP adress of the server to which you wish to connect to.
+
+
+
+## License
+
+This project is developed in collaboration with Politecnico di Milano and Cranio Creations.
+
+All rights of graphic resources are reserved to Cranio Creation.
