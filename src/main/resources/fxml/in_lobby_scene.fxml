@@ -18,7 +18,7 @@
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="760.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.InLobbySceneController">
     <children>
-        <ImageView fitHeight="760.0" fitWidth="1300.0" pickOnBounds="true">
+        <ImageView fx:id="backGround" fitHeight="760.0" fitWidth="1300.0" pickOnBounds="true">
             <image>
                 <Image url="@../images/Publisher_material/Display_1.jpg" />
             </image>

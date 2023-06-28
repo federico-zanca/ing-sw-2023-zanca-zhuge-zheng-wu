@@ -275,17 +275,11 @@ public class GameScene2PlayersController implements Controller {
             bookshelf = new Bookshelf();
             nameOfBookshelf.setText(messageHandler.getMyUsername());
             setChatBox(messageHandler.getChatLog());
-            resetCommonGoals();
-            clearEffects();
-            clearboard();
             initLivingRoomGrid();
             initBookshelfGrid();
             initSelectCol();
         } else {
             bookshelf = new Bookshelf();
-            clearboard();
-            clearPlayerList();
-            resetPersonalGoals();
             clearHand();
             clearTiles();
             clearEffects();

@@ -11,19 +11,25 @@ import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.tui.TextColor;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class ServerSceneController implements Controller{
+    public Button refresh;
+    public ImageView backGround;
     private MessageHandler messageHandler;
     private GUI gui;
     private InputValidator inputValidator = new InputValidator();
+    private ArrayList<String> lobbyNames = new ArrayList<>();
     @FXML
     private TextField newLobbyName;
     @FXML
@@ -54,14 +60,15 @@ public class ServerSceneController implements Controller{
     public void setGui(GUI gui){this.gui = gui;}
     @Override
     public void initialize() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        backGround.setFitWidth(screenWidth);
         if(gui == null){
             return;
         }else{
             setError(null);
+            lobbyNames = new ArrayList<>();
             newLobbyName.clear();
-            gui.getCurrentStage().setOnCloseRequest(e->{
-                System.exit(0);
-            });
         }
     }
     public void exitButton(){
@@ -70,13 +77,17 @@ public class ServerSceneController implements Controller{
     public void lobbyList(){
         messageHandler.notifyObservers(new LobbyListRequest());
     }
-    public void showLobbies(ArrayList<LobbyDisplayInfo> lobbies){
-        ArrayList<String> lobbyNames = new ArrayList<>();
+    public void showLobbies(ArrayList<LobbyDisplayInfo> lobbies) {
+        ArrayList<String> updatedLobbyNames = new ArrayList<>(lobbyNames); // Create a copy of the existing lobbyNames
+
         for (LobbyDisplayInfo lobby : lobbies) {
             String lobbyNameWithStatus = lobby.getLobbyName() + " (" + lobby.getNumPlayers() + "/" + lobby.getNumPlayersChosen() + ") " + "Stato: " + lobby.isGameStarted();
-            lobbyNames.add(lobbyNameWithStatus);
+            if(!lobbyNames.contains(lobby.getLobbyName())){
+                updatedLobbyNames.add(lobbyNameWithStatus); // Add new lobby to the updatedLobbyNames
+            }
         }
-        lobbyListView.setItems(FXCollections.observableList(lobbyNames));
+
+        lobbyListView.setItems(FXCollections.observableList(updatedLobbyNames)); // Set the updated lobbyNames to the lobbyListView
     }
     public void joinLobby(){
         if(lobbyListView.getSelectionModel().getSelectedItem() != null){

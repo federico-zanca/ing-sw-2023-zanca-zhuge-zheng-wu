@@ -5,10 +5,17 @@ import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -18,6 +25,9 @@ import java.rmi.registry.Registry;
 public class ConnectionController implements Controller{
 
     public AnchorPane root;
+    @FXML
+    public ImageView backGround;
+    public ImageView Title;
     private MessageHandler messageHandler;
     private GUI gui;
     private String ip;
@@ -36,8 +46,10 @@ public class ConnectionController implements Controller{
 
     @Override
     public void initialize() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        backGround.setFitWidth(screenWidth);
     }
-
     @FXML
     void connectRMI() {
         if(askIp()){

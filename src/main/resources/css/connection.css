@@ -1,7 +1,3 @@
-.rootPane {
-    -fx-background-image: url("../images/Publisher_material/Display_3.jpg");
-    -fx-background-size: 1300px 760px;
-}
 .button{
         -fx-font-family: 'Curlz MT';
         -fx-font-size: 36;

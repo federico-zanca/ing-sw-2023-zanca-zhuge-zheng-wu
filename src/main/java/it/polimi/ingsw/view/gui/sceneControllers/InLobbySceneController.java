@@ -7,13 +7,16 @@ import it.polimi.ingsw.network.message.lobbymessage.StartGameRequest;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +26,7 @@ import java.util.Objects;
 public class InLobbySceneController implements Controller{
     public Button startGameButton;
     public Button exitLobbyButton;
+    public ImageView backGround;
     private MessageHandler messageHandler;
     private GUI gui;
     @FXML
@@ -47,6 +51,9 @@ public class InLobbySceneController implements Controller{
     }
     @Override
     public void initialize() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        backGround.setFitWidth(screenWidth);
         if(gui == null){
             return;
         }else{

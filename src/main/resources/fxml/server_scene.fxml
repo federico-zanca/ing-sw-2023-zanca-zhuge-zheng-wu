@@ -8,6 +8,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -17,76 +19,89 @@
 
 <AnchorPane prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ServerSceneController">
   <children>
-     <Button fx:id="Unisciti" alignment="CENTER" contentDisplay="CENTER" layoutX="972.0" layoutY="200.0" maxHeight="-Infinity" mnemonicParsing="false" onAction="#joinLobby" prefHeight="62.0" prefWidth="270.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Unisciti" textAlignment="CENTER" textFill="WHITE">
-        <font>
-           <Font name="Curlz MT" size="36.0" />
-        </font>
-         <effect>
-            <DropShadow height="25.0" radius="12.0" width="25.0" />
-         </effect>
-     </Button>
-     <Button fx:id="CambiaUsername" layoutX="976.0" layoutY="290.0" mnemonicParsing="false" onAction="#changeName" prefHeight="42.0" prefWidth="270.0" text="Cambia Username" textFill="#754207">
-         <font>
-             <Font name="Arial Black" size="14.0" />
-         </font>
-      </Button>
-     <Button fx:id="Esci" layoutX="1033.0" layoutY="426.0" mnemonicParsing="false" onAction="#exitButton" prefHeight="53.0" prefWidth="145.0" text="Esci" textFill="#754207">
-         <font>
-            <Font name="Arial Black" size="14.0" />
-         </font>
-      </Button>
+      <ImageView fx:id="backGround" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/Publisher_material/Display_3.jpg" />
+         </image>
+      </ImageView>
       <Text fx:id="error" fill="WHITE" layoutX="980.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold" textAlignment="CENTER" visible="false" wrappingWidth="250.93670654296875">
          <font>
             <Font name="System Bold" size="28.0" />
          </font>
       </Text>
-      <VBox layoutX="78.0" layoutY="65.0" prefHeight="650.0" prefWidth="850.0">
+      <HBox alignment="CENTER" fillHeight="false" layoutX="766.0" layoutY="30.0" spacing="50.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
          <children>
-            <HBox prefHeight="58.0" prefWidth="850.0" styleClass="hbox">
-               <effect>
-                  <DropShadow height="21.06" radius="10.015" />
-               </effect>
+            <VBox>
                <children>
-                  <Label prefHeight="54.0" prefWidth="796.0" text="GAMES :" textFill="WHITE">
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
-                  </Label>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="51.0" prefWidth="92.0" style="-fx-background-color: #8B4513;" styleClass="reloadbutton" text="↺" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
-            <ListView fx:id="lobbyListView" fixedCellSize="30.0" prefHeight="550.0" prefWidth="850.0">
-               <styleClass>
-                  <String fx:value="list-cell" />
-                  <String fx:value="listView" />
-               </styleClass>
-               <effect>
-                  <DropShadow radius="4.75" width="0.0" />
-               </effect>
-            </ListView>
-            <HBox prefHeight="50.0" prefWidth="786.0">
-               <children>
-                  <TextField fx:id="newLobbyName" onKeyPressed="#enterCreateLobby" prefHeight="50.0" prefWidth="628.0" promptText="Enter New Lobby Name" />
-                 <Button fx:id="CreateGame" mnemonicParsing="false" onAction="#createLobby" prefHeight="50.0" prefWidth="251.0" style="-fx-background-color: #8B4513;" styleClass="createButton" text="Crea Partita" textFill="WHITE">
-                     <font>
-                        <Font name="Curlz MT" size="20.0" />
-                     </font>
+                  <HBox styleClass="hbox">
                      <effect>
-                        <DropShadow height="17.5" radius="10.125" width="25.0">
-                           <color>
-                              <Color red="0.4526315927505493" green="0.4526315927505493" blue="0.4526315927505493" />
-                           </color>
-                        </DropShadow>
+                        <DropShadow height="21.06" radius="10.015" />
                      </effect>
+                     <children>
+                        <Label text="GAMES :" textFill="WHITE">
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                        <Button fx:id="refresh" alignment="CENTER" mnemonicParsing="false" onAction="#lobbyList" prefHeight="51.0" prefWidth="92.0" style="-fx-background-color: #8B4513;" styleClass="reloadbutton" text="↺" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <ListView fx:id="lobbyListView" fixedCellSize="60.0">
+                     <styleClass>
+                        <String fx:value="list-cell" />
+                        <String fx:value="listView" />
+                     </styleClass>
+                     <effect>
+                        <DropShadow radius="4.75" width="0.0" />
+                     </effect>
+                  </ListView>
+                  <HBox>
+                     <children>
+                        <TextField fx:id="newLobbyName" onKeyPressed="#enterCreateLobby" prefHeight="50.0" prefWidth="628.0" promptText="Enter New Lobby Name" />
+                       <Button fx:id="CreateGame" mnemonicParsing="false" onAction="#createLobby" prefHeight="50.0" prefWidth="251.0" style="-fx-background-color: #8B4513;" styleClass="createButton" text="Crea Partita" textFill="WHITE">
+                           <font>
+                              <Font name="Curlz MT" size="20.0" />
+                           </font>
+                           <effect>
+                              <DropShadow height="17.5" radius="10.125" width="25.0">
+                                 <color>
+                                    <Color red="0.4526315927505493" green="0.4526315927505493" blue="0.4526315927505493" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" fillWidth="false" spacing="100.0">
+               <children>
+                 <Button fx:id="Unisciti" alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" mnemonicParsing="false" onAction="#joinLobby" prefHeight="62.0" prefWidth="270.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Unisciti" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                       <Font name="Curlz MT" size="36.0" />
+                    </font>
+                     <effect>
+                        <DropShadow height="25.0" radius="12.0" width="25.0" />
+                     </effect>
+                 </Button>
+                 <Button fx:id="CambiaUsername" mnemonicParsing="false" onAction="#changeName" prefHeight="42.0" prefWidth="270.0" text="Cambia Username" textFill="#754207">
+                     <font>
+                         <Font name="Arial Black" size="14.0" />
+                     </font>
+                  </Button>
+                 <Button fx:id="Esci" mnemonicParsing="false" onAction="#exitButton" prefHeight="53.0" prefWidth="145.0" text="Esci" textFill="#754207">
+                     <font>
+                        <Font name="Arial Black" size="14.0" />
+                     </font>
                   </Button>
                </children>
-            </HBox>
+            </VBox>
          </children>
-      </VBox>
+      </HBox>
     
   </children>
    <stylesheets>

@@ -1,53 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="760.0" prefWidth="1300.0" styleClass="rootPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ConnectionController">
+<AnchorPane fx:id="root" styleClass="rootPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.ConnectionController">
    <children>
-      <ImageView fitWidth="680.0" layoutX="311.0" layoutY="109.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/Publisher_material/Title.png" />
-         </image>
+      <ImageView fx:id="backGround" preserveRatio="true">
+         <Image url="@../images/Publisher_material/Display_3.jpg" />
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dfa041" height="100.0" layoutX="390.0" layoutY="317.0" opacity="0.51" stroke="#ea2323" strokeType="INSIDE" strokeWidth="0.0" width="543.0" />
-      <Label layoutX="442.0" layoutY="320.0" styleClass="Label" text="Benvenuto in MyShelfie!" textAlignment="CENTER" textFill="#5b3f0e">
-         <font>
-            <Font name="Arial Bold Italic" size="36.0" />
-         </font>
-      </Label>
-      <Label layoutX="520.0" layoutY="370.0" text="Segli Connessione" textAlignment="CENTER" textFill="#5b3f0e">
-         <font>
-            <Font name="Arial Bold Italic" size="30.0" />
-         </font>
-      </Label>
-      <Button fx:id="SocketButton" graphicTextGap="0.0" layoutX="393.0" layoutY="571.0" mnemonicParsing="false" onAction="#connectSocket" prefHeight="77.0" prefWidth="160.0" style="-fx-background-color: #8B4513;" text="Socket" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
-         <font>
-            <Font name="Curlz MT" size="36.0" />
-         </font>
-         <effect>
-            <DropShadow />
-         </effect>
-      </Button>
-      <Button fx:id="RMIButton" graphicTextGap="0.0" layoutX="771.0" layoutY="572.0" mnemonicParsing="false" onAction="#connectRMI" prefHeight="77.0" prefWidth="160.0" style="-fx-background-color: #8B4513;" text="RMI" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
-         <font>
-            <Font name="Curlz MT" size="36.0" />
-         </font>
-         <effect>
-            <DropShadow />
-         </effect>
-      </Button>
-      <TextField fx:id="ServerIp" layoutX="536.0" layoutY="480.0" prefHeight="42.0" prefWidth="251.0" promptText="Server IP">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </TextField>
-      <VBox layoutX="356.0" layoutY="120.0" prefHeight="200.0" prefWidth="100.0" />
+      <VBox alignment="CENTER" fillWidth="false" layoutX="356.0" layoutY="120.0" spacing="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+         <children>
+            <ImageView fx:id="Title" fitWidth="800.0" preserveRatio="true">
+               <Image url="@../images/Publisher_material/Title.png" />
+            </ImageView>
+            <TextField fx:id="ServerIp" alignment="CENTER" prefWidth="400.0" promptText="Server IP">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="100.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TextField>
+            <HBox alignment="CENTER" fillHeight="false" spacing="100.0">
+               <children>
+                  <Button fx:id="SocketButton" graphicTextGap="0.0" mnemonicParsing="false" onAction="#connectSocket" style="-fx-background-color: #8B4513;" text="Socket" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
+                     <font>
+                        <Font name="Curlz MT" size="36.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Button>
+                  <Button fx:id="RMIButton" graphicTextGap="0.0" mnemonicParsing="false" onAction="#connectRMI" prefHeight="77.0" prefWidth="160.0" style="-fx-background-color: #8B4513;" text="RMI" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
+                     <font>
+                        <Font name="Curlz MT" size="36.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Button>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets top="-50.0" />
+               </VBox.margin>
+            </HBox>
+         </children></VBox>
    </children>
    <stylesheets>
       <URL value="@../css/connection.css" />

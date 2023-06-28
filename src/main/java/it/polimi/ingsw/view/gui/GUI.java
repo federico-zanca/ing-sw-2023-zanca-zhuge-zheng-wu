@@ -14,9 +14,10 @@ import it.polimi.ingsw.view.tui.PlayerState;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ public class GUI extends Application{
     private final MessageHandler messageHandler;
     private GuiPhase phase;
     private PersonalGoalCard personalGoalCard;
+
     public GUI() throws RemoteException, NotBoundException {
         controllers = new HashMap<>();
         fxml = new HashMap<>();
@@ -53,6 +55,8 @@ public class GUI extends Application{
         this.currentStage = stage;
         initializationFXMLParameter();
         initMenuStage();
+        String fxmlPath = fxml.get(phase);
+        controllers.get(fxmlPath).initialize();
     }
     public void initializationFXMLParameter() {
         List<GameFxml> fxmlFiles = new ArrayList<>(Arrays.asList(GameFxml.values()));
@@ -86,16 +90,21 @@ public class GUI extends Application{
     public void initMenuStage(){
         currentStage.setTitle("My shelfie Board Game");
         currentStage.setScene(currentScene);
-        currentStage.setWidth(1280d);
-        currentStage.setHeight(720d);
-        currentStage.setResizable(true);
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        double screenHeight = primaryScreenBounds.getHeight();
+        currentStage.setHeight(screenHeight);
+        currentStage.setWidth(screenWidth);
+        currentStage.setFullScreen(true);
         currentStage.show();
     }
+
     public void changeScene() {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             currentStage.setScene(currentScene);
-            //currentStage.getScene().getWindow().centerOnScreen();
-            currentStage.getScene().getWindow().sizeToScene();
+            currentStage.getScene().getWindow().centerOnScreen();
+            //currentStage.getScene().getWindow().sizeToScene();
+            currentStage.setFullScreen(true);
             String fxmlPath = fxml.get(phase);
             controllers.get(fxmlPath).initialize();
         });

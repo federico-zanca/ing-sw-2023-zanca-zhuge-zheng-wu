@@ -6,13 +6,16 @@ import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.gui.GUI;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 
 import java.util.Objects;
 
@@ -26,11 +29,12 @@ public class MenuSceneController implements Controller{
     private Button play;
     @FXML
     private Button quit;
+    public ImageView backGround;
+    public ImageView title;
     @FXML
     private Text error;
     @FXML
     private TextField usernameField;
-
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
@@ -40,6 +44,9 @@ public class MenuSceneController implements Controller{
 
     @Override
     public void initialize() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        backGround.setFitWidth(screenWidth);
         if(gui == null){
             return;
         }else{

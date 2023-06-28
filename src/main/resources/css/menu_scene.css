@@ -1,7 +1,3 @@
-.rootPane {
-    -fx-background-image: url("../images/Publisher_material/Display_3.jpg");
-    -fx-background-size: 1300px 760px;
-}
 .play {
     -fx-border-width: 0;
     -fx-background-radius: 0;
