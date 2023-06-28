@@ -27,6 +27,8 @@ The player with the most points wins.
 
 This game is perfect for a tranquil evening with your family or friends but also promises to be competitive enough to add some zest.
 
+# External Libraries
+
 
 # Implemented Features
 Number of Advanced Features implemented: 3/4
@@ -48,7 +50,7 @@ Number of Advanced Features implemented: 3/4
 
 Into the deliverables folder of this poject can be found two jar files.
 
-The "server.jar" is the executable dedicated to the server.
+#### The "server.jar" is the executable dedicated to the server.
 
 Execute with command:
 ```sh
@@ -56,22 +58,27 @@ java -jar server.jar
 ```
 No interactions are possible with the server.
 
-The "client.jar" is the executable dedicated to the clients.
+#### The "client.jar" is the executable dedicated to the clients.
 
 Execute with command:
 ```sh
-java -jar client.jar gui
+java -jar client.jar
 ```
 
-Executing the client will display a message asking to choose between GUI and CLI.
+#### Executing the client will display a message asking to choose between GUI and CLI.
 
 Type:
 - 0 to access CLI interface
 - Any other character or word to access GUI interface
 
 
-After choosing the interface you will be asked to insert the IP adress of the server to which you wish to connect to.
+#### Insert the IP adress of the server you wish to connect to.
 
+#### Choose the connection mode 
+
+Write:
+- 1 for socket connection
+- 2 for RMI connection
 
 
 ## License
