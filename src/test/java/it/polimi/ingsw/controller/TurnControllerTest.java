@@ -42,12 +42,12 @@ class TurnControllerTest {
         server = new ServerImpl();
         client = new ClientImpl(server);
         client2 = new ClientImpl(server);
-        server.update(client, new LoginRequest("c1"));
-        server.update(client2, new LoginRequest("c2"));
-        server.update(client, new CreateLobbyRequest("lobbyTest"));
-        server.update(client2, new JoinLobbyRequest("lobbyTest"));
+        server.getPreGameController().onConnectionMessage(client, new LoginRequest("c1"));
+        server.getPreGameController().onConnectionMessage(client2, new LoginRequest("c2"));
+        server.getPreGameController().onConnectionMessage(client, new CreateLobbyRequest("lobbyTest"));
+        server.getPreGameController().onConnectionMessage(client2, new JoinLobbyRequest("lobbyTest"));
         lobby= server.getLobbyByName("lobbyTest")  ;
-        server.update(client, new StartGameRequest());
+        server.getPreGameController().onLobbyMessage(client, new StartGameRequest());
         controller = lobby.getController();
         player = controller.getModel().getPlayerByUsername("c1");
         player2 = controller.getModel().getPlayerByUsername("c2");
@@ -120,11 +120,6 @@ class TurnControllerTest {
         controller.getTurnController().loadNextPlayer();
 
         assertDoesNotThrow(()->controller.getTurnController().loadNextPlayer());
-
-    }
-
-    @Test
-    void triggerLastTurn() {
 
     }
 

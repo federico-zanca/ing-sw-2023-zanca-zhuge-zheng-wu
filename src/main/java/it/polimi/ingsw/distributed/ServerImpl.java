@@ -493,4 +493,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         System.err.println("Sending message to " + getUsernameOfClient(client) + " : " + message);
         client.update(message);
     }
+
+    public PreGameController getPreGameController() {
+        return preGameController;
+    }
 }
