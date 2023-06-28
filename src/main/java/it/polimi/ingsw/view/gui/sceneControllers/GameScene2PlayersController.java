@@ -21,6 +21,7 @@ import it.polimi.ingsw.view.tui.PlayerState;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -31,6 +32,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.stage.Screen;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -38,6 +40,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class GameScene2PlayersController implements Controller {
+    public AnchorPane root;
+    public ImageView backGround;
+    public Button okButton;
     private MessageHandler messageHandler;
     private GUI gui;
     private boolean initialized = false;
@@ -262,6 +267,11 @@ public class GameScene2PlayersController implements Controller {
 
     @Override
     public void initialize() {
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double screenWidth = primaryScreenBounds.getWidth();
+        double screenHeight = primaryScreenBounds.getHeight();
+        backGround.setFitWidth(screenWidth);
+        root.setPrefSize(screenWidth,screenHeight);
         if (gui == null) {
             return;
         } else if (!initialized) {
@@ -316,17 +326,13 @@ public class GameScene2PlayersController implements Controller {
         this.players.setSpacing(3);
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
-            switch (i){
-                case 0 : hBox = player1;
-                    break;
-                case 1 : hBox = player2;
-                    break;
-                case 2 : hBox = player3;
-                    break;
-                case 3 : hBox = player4;
-                    break;
-                default: hBox = null;
-            }
+            hBox = switch (i) {
+                case 0 -> player1;
+                case 1 -> player2;
+                case 2 -> player3;
+                case 3 -> player4;
+                default -> null;
+            };
             assert hBox != null;
             hBox.setPadding(new Insets(3));
             hBox.setPrefSize(200, 45);
@@ -692,7 +698,6 @@ public class GameScene2PlayersController implements Controller {
                 y = l.localToScene(l.getBoundsInLocal()).getMinY();
                 turnIndicator.setLayoutX(x-20);
                 turnIndicator.setLayoutY(y+30);
-                turnIndicator.toFront();
                 turnIndicator.setVisible(true);
                 break;
             }

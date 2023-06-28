@@ -377,10 +377,6 @@ public class Lobby {
      * Ends the game and removes the lobby from the server.
      */
     public void endGame() {
-        ArrayList<Client> clientsToRemove = new ArrayList<>(inLobbyClients);
-        for(Client client : clientsToRemove){
-            removeClient(client);
-        }
         destroyLobby();
     }
 
@@ -389,7 +385,11 @@ public class Lobby {
      */
     private void destroyLobby() {
         server.getLobbies().remove(this);
-        for(Client c : inLobbyClients){
+        ArrayList<Client> clientsToRemove = new ArrayList<>(inLobbyClients);
+        for(Client client : clientsToRemove){
+            removeClient(client);
+        }
+        for(Client c : clientsToRemove){
             //completely removes from the server those clients that were disconnected from the game when the game ended
             if(!server.getConnectedClientInfo(c).isConnected()) {
                 server.getConnectedClients().remove(c);
