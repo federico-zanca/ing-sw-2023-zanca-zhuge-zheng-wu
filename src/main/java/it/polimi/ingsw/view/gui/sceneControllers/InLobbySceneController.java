@@ -12,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -27,6 +29,7 @@ public class InLobbySceneController implements Controller{
     public Button startGameButton;
     public Button exitLobbyButton;
     public ImageView backGround;
+    public HBox titoli;
     private MessageHandler messageHandler;
     private GUI gui;
     @FXML
@@ -62,7 +65,7 @@ public class InLobbySceneController implements Controller{
             lobbyName.setText(lobbyN);
             SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4,2);
             numPlayersSpinner.setValueFactory(svf);
-            playerNames.setStyle("-fx-alignment: top-left");
+            playerNames.setStyle("-fx-background-color: rgba(255, 255, 255, 0.7);");
             for (Node node : numPlayersSpinner.lookupAll(".repeat-buttons .increment-button, .repeat-buttons .decrement-button")) {
                 Button btn = (Button) node;
                 int step = btn.getStyleClass().contains("increment-button") ? +1 : -1;
