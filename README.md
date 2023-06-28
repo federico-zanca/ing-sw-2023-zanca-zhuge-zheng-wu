@@ -3,7 +3,6 @@
 ## Index
 - Group Components
 - Introduction to "My Shelfie"
-- External Libraries
 - Implemented Features
 - User Instructions
 
