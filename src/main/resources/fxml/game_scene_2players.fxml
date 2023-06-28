@@ -152,13 +152,13 @@
                   </InnerShadow>
                </effect>
             </ImageView>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="34.0" layoutX="149.0" layoutY="534.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ab5c23" height="34.0" layoutX="149.0" layoutY="534.0" opacity="0.87" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="117.0">
                <effect>
                   <InnerShadow />
                </effect>
             </Rectangle>
             <ImageView fx:id="myPersonalGoal" fitHeight="150.0" fitWidth="200.0" layoutX="400.0" layoutY="191.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="nameOfBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="#e40e0e">
+            <Label fx:id="nameOfBookshelf" alignment="CENTER" contentDisplay="CENTER" layoutX="149.0" layoutY="542.0" prefWidth="120.0" text="Label" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
@@ -213,23 +213,23 @@
                   <Double fx:value="-60.0" />
                </points>
             </Polygon>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ab5c23" height="70.0" layoutX="58.0" layoutY="55.0" opacity="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="300.0" />
             <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="13.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="hand1" fitHeight="50.0" fitWidth="50.0" layoutX="100.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true">
             </ImageView>
             <ImageView fx:id="hand2" fitHeight="50.0" fitWidth="50.0" layoutX="185.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="hand3" fitHeight="50.0" fitWidth="50.0" layoutX="270.0" layoutY="65.0" onMouseClicked="#clickedHand" pickOnBounds="true" preserveRatio="true" />
-            <Label layoutX="100.0" layoutY="65.0" text="1" textFill="#fff30f">
+            <Label layoutX="100.0" layoutY="65.0" text="1" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="185.0" layoutY="65.0" text="2" textFill="#fff30f">
+            <Label layoutX="185.0" layoutY="65.0" text="2" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <Label layoutX="270.0" layoutY="65.0" text="3" textFill="#fff30f">
+            <Label layoutX="270.0" layoutY="65.0" text="3" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
@@ -263,13 +263,13 @@
                </children>
             </HBox>
          </children></VBox>
-      <Button fx:id="exitButton" layoutX="1155.0" layoutY="12.0" mnemonicParsing="false" onAction="#clickedExit" prefHeight="35.0" prefWidth="57.0" style="-fx-background-color: #6b3014;" text="Exit" textFill="WHITE">
+      <Button fx:id="exitButton" layoutX="1205.0" layoutY="15.0" mnemonicParsing="false" onAction="#clickedExit" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #6b3014;" text="Exit" textFill="WHITE">
          <font>
             <Font name="System Bold Italic" size="14.0" />
          </font>
       </Button>
-      <TextField fx:id="inputField" layoutX="917.0" layoutY="624.0" prefHeight="26.0" prefWidth="296.0" promptText="\\@name to send private message" />
-      <TextArea fx:id="chat" editable="false" layoutX="917.0" layoutY="440.0" opacity="0.85" prefHeight="184.0" prefWidth="296.0" style="-fx-border-width: 0px;" styleClass="text-area" />
+      <TextField fx:id="inputField" layoutX="960.0" layoutY="634.0" prefHeight="26.0" prefWidth="296.0" promptText="\\@name to send private message" />
+      <TextArea fx:id="chat" editable="false" layoutX="960.0" layoutY="450.0" opacity="0.85" prefHeight="184.0" prefWidth="296.0" style="-fx-border-width: 0px;" styleClass="text-area" />
       <Polygon fx:id="turnIndicator" fill="#c66025" layoutX="970.0" layoutY="84.0" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.15" scaleY="0.15" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0" />
    </children>
 </AnchorPane>
