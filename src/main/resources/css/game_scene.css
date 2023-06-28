@@ -2,3 +2,6 @@
     -fx-font-family: 'Curlz MT';
     -fx-font-size: 18;
 }
+.text-area .content {
+    -fx-background-color: #ab5c23 ;
+}

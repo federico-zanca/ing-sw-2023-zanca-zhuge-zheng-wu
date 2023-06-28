@@ -23,9 +23,9 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
+<AnchorPane fx:id="root" prefHeight="1300.0" prefWidth="1300.0" stylesheets="@../css/game_scene.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <children>
-      <ImageView fitWidth="1300.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitWidth="1300.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/misc/sfondo_parquet.jpg" />
          </image>
@@ -109,7 +109,7 @@
             </GridPane>
             <Button fx:id="okButton" layoutX="374.0" layoutY="120.0" mnemonicParsing="false" onAction="#clickedOk" prefHeight="35.0" prefWidth="109.0" style="-fx-background-color: #6b3014;" text="Draw" textFill="WHITE">
                <font>
-                  <Font name="System Italic" size="18.0" />
+                  <Font name="System Bold Italic" size="18.0" />
                </font>
                <effect>
                   <DropShadow />
@@ -263,13 +263,13 @@
                </children>
             </HBox>
          </children></VBox>
-      <Button fx:id="exitButton" layoutX="1015.0" layoutY="15.0" mnemonicParsing="false" onAction="#clickedExit" prefHeight="30.0" prefWidth="57.0" text="Exit">
+      <Button fx:id="exitButton" layoutX="1155.0" layoutY="12.0" mnemonicParsing="false" onAction="#clickedExit" prefHeight="35.0" prefWidth="57.0" style="-fx-background-color: #6b3014;" text="Exit" textFill="WHITE">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold Italic" size="14.0" />
          </font>
       </Button>
       <TextField fx:id="inputField" layoutX="917.0" layoutY="624.0" prefHeight="26.0" prefWidth="296.0" promptText="\\@name to send private message" />
-      <TextArea fx:id="chat" editable="false" layoutX="917.0" layoutY="440.0" opacity="0.85" prefHeight="184.0" prefWidth="296.0" />
+      <TextArea fx:id="chat" editable="false" layoutX="917.0" layoutY="440.0" opacity="0.85" prefHeight="184.0" prefWidth="296.0" style="-fx-border-width: 0px;" styleClass="text-area" />
       <Polygon fx:id="turnIndicator" fill="#c66025" layoutX="970.0" layoutY="84.0" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.15" scaleY="0.15" stroke="#ffd816" strokeType="INSIDE" strokeWidth="3.0" />
    </children>
 </AnchorPane>
