@@ -37,7 +37,7 @@
                   </Text>
                </children>
             </Group>
-                <TextField fx:id="usernameField" alignment="CENTER" prefWidth="400.0" promptText="Username">
+                <TextField fx:id="usernameField" onKeyPressed="#enterCheckUserName" alignment="CENTER" prefWidth="400.0" promptText="Username">
                     <font>
                         <Font size="18.0" />
                     </font>
@@ -50,7 +50,7 @@
                 </TextField>
                 <HBox alignment="CENTER" fillHeight="false" spacing="100.0">
                     <children>
-                        <Button fx:id="play" graphicTextGap="0.0" mnemonicParsing="false" onAction="#checkUsername" onKeyPressed="#enterCheckUserName" style="-fx-background-color: #8B4513;" text="Play" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
+                        <Button fx:id="play" graphicTextGap="0.0" mnemonicParsing="false" onAction="#checkUsername" style="-fx-background-color: #8B4513;" text="Play" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
                             <font>
                                 <Font name="Curlz MT" size="36.0" />
                             </font>

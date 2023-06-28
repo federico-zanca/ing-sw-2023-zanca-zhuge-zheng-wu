@@ -75,6 +75,7 @@ public class MessageHandler extends VirtualView implements View {
             gui.setPhase(GuiPhase.SERVER);
             gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
             gui.changeScene();
+            gui.lobbyList();
         }else{
             gui.setError("Username is already in use!");
         }

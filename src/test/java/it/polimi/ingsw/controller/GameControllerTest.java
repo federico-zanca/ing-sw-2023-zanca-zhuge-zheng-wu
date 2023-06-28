@@ -30,9 +30,11 @@ import it.polimi.ingsw.model.enumerations.GamePhase;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameControllerTest {
+    private Object lock = new Object();
     private ServerImpl server;
     private ClientImpl client;
     private ClientImpl client2;
@@ -41,16 +43,16 @@ class GameControllerTest {
     private GameController controller;
     private Lobby lobby;
     @BeforeEach
-    void setUp() throws RemoteException, LobbyNotFoundException {
+    void setUp() throws RemoteException, LobbyNotFoundException, InterruptedException {
         server = new ServerImpl();
         client = new ClientImpl(server);
         client2 = new ClientImpl(server);
-        server.update(client, new LoginRequest("c1"));
-        server.update(client2, new LoginRequest("c2"));
-        server.update(client, new CreateLobbyRequest("lobbyTest"));
-        server.update(client2, new JoinLobbyRequest("lobbyTest"));
+        server.getPreGameController().onConnectionMessage(client, new LoginRequest("c1"));
+        server.getPreGameController().onConnectionMessage(client2, new LoginRequest("c2"));
+        server.getPreGameController().onConnectionMessage(client, new CreateLobbyRequest("lobbyTest"));
+        server.getPreGameController().onConnectionMessage(client2, new JoinLobbyRequest("lobbyTest"));
         lobby= server.getLobbyByName("lobbyTest")  ;
-        server.update(client, new StartGameRequest());
+        server.getPreGameController().onLobbyMessage(client, new StartGameRequest());
         controller = lobby.getController();
         player = controller.getModel().getPlayerByUsername("c1");
         player2 = controller.getModel().getPlayerByUsername("c2");
@@ -78,7 +80,7 @@ class GameControllerTest {
     }
 
     @Test
-    void onMessageReceived() {
+    void onMessageReceived() throws InterruptedException {
         controller.getModel().setGamePhase(GamePhase.AWARDS);
         controller.onMessageReceived("c1", null);
         controller.getModel().setGamePhase(GamePhase.PLAY);
@@ -99,7 +101,7 @@ class GameControllerTest {
     }
 
     @Test
-    void update() {
+    void update() throws InterruptedException {
         controller.getModel().setGamePhase(GamePhase.PLAY);
         Square sq1 = new Square(new Coordinates(1,3), controller.getModel().getBoard().getGameboard()[1][3].getItem().getType() );
         Square sq2 = new Square(new Coordinates(1,4), controller.getModel().getBoard().getGameboard()[1][4].getItem().getType() );
@@ -109,6 +111,7 @@ class GameControllerTest {
         assertDoesNotThrow(()->controller.update("c2", new DrawTilesMessage("c1", squares)));
         assertDoesNotThrow(()->controller.update("c1", new DrawTilesMessage("c1", squares)));
         controller.update("c2", new ExitGameRequest("c2"));
+        sleep(100);
         assertTrue(controller.getTurnController().getPlayersToSkipUsernames().contains("c2"));
         controller.getModel().setTurnPhase(TurnPhase.INSERT);
         assertDoesNotThrow(()->controller.update("c1",
