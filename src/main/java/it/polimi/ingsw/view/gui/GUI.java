@@ -166,6 +166,14 @@ public class GUI extends Application{
             });
         }
     }
+    public void lobbyList(){
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof ServerSceneController){
+            Platform.runLater(()->{
+                ((ServerSceneController)currentController).lobbyList();
+            });
+        }
+    }
     public void setGameScene(GameView model) {
         Controller currentController = controllers.get(fxml.get(phase));
         if (currentController instanceof GameScene2PlayersController) {
