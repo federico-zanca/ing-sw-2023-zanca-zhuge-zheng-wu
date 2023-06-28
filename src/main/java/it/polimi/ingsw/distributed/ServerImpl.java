@@ -303,41 +303,53 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 
     @Override
     public void update(Client client, Message message){
-        if(message.getType()== MessageType.GAME_MSG) {
-            System.out.println("Received message: " + message);
-            Lobby lobby = getLobbyOfClient(client);
-            if(message instanceof ExitGameRequest){
-                clientExitsFromItsLobby(client);
-            }
-            lobby.getController().update(getUsernameOfClient(client), (MessageToServer) message);
+        new Thread(()->{
+            if(message.getType()==MessageType.GAME_MSG)
+                {
+                    System.out.println("Received message: " + message);
+                    Lobby lobby = getLobbyOfClient(client);
+                    if (message instanceof ExitGameRequest) {
+                        clientExitsFromItsLobby(client);
+                    }
+                    lobby.getController().update(getUsernameOfClient(client), (MessageToServer) message);
+                }
+            else if(message.getType()==MessageType.CONNECTION_MSG)
+
+                {
+                    System.out.println("Received message: " + message);
+                    try {
+                        this.preGameController.onConnectionMessage(client, (MessageToServer) message);
+                    } catch (RemoteException e) {
+                        System.err.println("Unable to send ConnectionResponse message");
+                    }
+                }
+            else if(message.getType()==MessageType.LOBBY_MSG)
+
+                {
+                    System.out.println("Received message: " + message);
+                    try {
+                        this.preGameController.onLobbyMessage(client, (MessageToServer) message);
+                    } catch (RemoteException e) {
+                        System.err.println("Unable to send LobbyResponse message");
+                    }
+                }
+            else if(message instanceof HeartBeatMessage)
+
+                {
+                    receiveHeartBeat(client);
+                }
+            else if(message instanceof ChatMessage)
+
+                {
+                    System.out.println("Received message: " + message);
+                    Lobby lobby = getLobbyOfClient(client);
+                    if (lobby != null)
+                        lobby.onChatMessage(client, (ChatMessage) message);
+                }
+            else
+                    System.err.println("Message not recognized: "+message);
         }
-        else if(message.getType()==MessageType.CONNECTION_MSG) {
-            System.out.println("Received message: " + message);
-            try {
-                this.preGameController.onConnectionMessage(client, (MessageToServer) message);
-            } catch(RemoteException e) {
-                System.err.println("Unable to send ConnectionResponse message");
-            }
-        }
-        else if(message.getType()==MessageType.LOBBY_MSG){
-            System.out.println("Received message: " + message);
-            try {
-                this.preGameController.onLobbyMessage(client, (MessageToServer) message);
-            } catch (RemoteException e) {
-                System.err.println("Unable to send LobbyResponse message");
-            }
-        }
-        else if(message instanceof HeartBeatMessage){
-            receiveHeartBeat(client);
-        }
-        else if(message instanceof ChatMessage){
-            System.out.println("Received message: " + message);
-            Lobby lobby = getLobbyOfClient(client);
-            if(lobby != null)
-                lobby.onChatMessage(client, (ChatMessage) message);
-        }
-        else
-            System.err.println("Message not recognized: " + message);
+        ).start();
     }
 
     /*
