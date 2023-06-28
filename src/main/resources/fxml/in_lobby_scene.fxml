@@ -25,11 +25,6 @@
                 <Image url="@../images/Publisher_material/Display_1.jpg" />
             </image>
         </ImageView>
-        <Text fx:id="error" fill="WHITE" layoutX="167.0" layoutY="626.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold; -fx-background-color: white;" wrappingWidth="640.0000305175781">
-            <font>
-                <Font name="System Bold" size="28.0" />
-            </font>
-        </Text>
       <HBox alignment="CENTER" layoutX="607.0" layoutY="44.0" spacing="70.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
          <children>
             <Group>
@@ -123,6 +118,15 @@
             </VBox>
          </children>
       </HBox>
+      <VBox layoutY="-30.21484375" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0">
+         <children>
+              <Text fx:id="error" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold; -fx-background-color: white;" wrappingWidth="699.2000427246094">
+                  <font>
+                      <Font name="System Bold Italic" size="28.0" />
+                  </font>
+              </Text>
+         </children>
+      </VBox>
     </children>
    <stylesheets>
       <URL value="@../css/in_lobby_scene.css" />
