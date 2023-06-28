@@ -150,7 +150,6 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onEndGameMessage(EndGameMessage endGameMessage) {
         lastMessage = endGameMessage;
-        gui.setInitialized();
         gui.setPhase(GuiPhase.END_GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.END_SCENE.s));
         gui.changeScene();

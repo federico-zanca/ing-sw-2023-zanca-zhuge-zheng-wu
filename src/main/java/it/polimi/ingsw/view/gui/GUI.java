@@ -337,11 +337,11 @@ public class GUI extends Application{
         }
     }
 
-    public void setInitialized() {
+    public void destroy() {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             Platform.runLater(()-> {
-                ((GameScene2PlayersController) currentController).setInitialized();
+                ((GameScene2PlayersController) currentController).destroy();
             });
         }
     }

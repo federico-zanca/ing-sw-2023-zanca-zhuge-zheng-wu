@@ -45,7 +45,6 @@ public class GameScene2PlayersController implements Controller {
     public Button okButton;
     private MessageHandler messageHandler;
     private GUI gui;
-    private boolean initialized = false;
     private PlayerState state = PlayerState.WATCHING;
     private ArrayList<Player> playersList;
     private ArrayList<ItemTile> tilesToInsert;
@@ -54,11 +53,11 @@ public class GameScene2PlayersController implements Controller {
     private final InputValidator inputValidator = new InputValidator();
     private final double cellWidth = 46.5;
     private final double cellHeight = 46.5;
-    private final ImageView[][] itemLivRoomCells = new ImageView[Board.DIMENSIONS][Board.DIMENSIONS];
+    private ImageView[][] itemLivRoomCells = new ImageView[Board.DIMENSIONS][Board.DIMENSIONS];
     private Square[][] board;
     private final DropShadow dropShadow = new DropShadow();
     private int maxNumItems;
-    private final ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];
+    private ImageView[][] bookshelfCells = new ImageView[Bookshelf.Rows][Bookshelf.Columns];;
     private Bookshelf bookshelf;
     private ArrayList<ImageView> newHandOrder;
     private ArrayList<Integer> order;
@@ -272,10 +271,8 @@ public class GameScene2PlayersController implements Controller {
         double screenHeight = primaryScreenBounds.getHeight();
         backGround.setFitWidth(screenWidth);
         root.setPrefSize(screenWidth,screenHeight);
-        if (gui == null) {
-            return;
-        } else if (!initialized) {
-            initialized = true;
+        if (gui != null) {
+            clearHand();
             pList = new ArrayList<>();
             order = new ArrayList<>();
             newHandOrder = new ArrayList<>();
@@ -288,11 +285,8 @@ public class GameScene2PlayersController implements Controller {
             initLivingRoomGrid();
             initBookshelfGrid();
             initSelectCol();
-        } else {
-            bookshelf = new Bookshelf();
-            clearHand();
-            clearTiles();
-            clearEffects();
+            destroy();
+            System.out.println("i initialized");
         }
     }
 
@@ -453,6 +447,10 @@ public class GameScene2PlayersController implements Controller {
         ImageView cell;
         for (int i = 0; i < Bookshelf.Rows; i++) {
             for (int j = 0; j < Bookshelf.Columns; j++) {
+                if(!myBookShelfGrid.getChildren().isEmpty()){
+                    myBookShelfGrid.getChildren().remove(bookshelfCells[i][j]);
+                    bookshelfCells[i][j] = null;
+                }
                 cell = new ImageView();
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
@@ -468,6 +466,10 @@ public class GameScene2PlayersController implements Controller {
         ImageView cell;
         for (int i = 0; i < Board.DIMENSIONS; i++) {
             for (int j = 0; j < Board.DIMENSIONS; j++) {
+                if(!livingRoomGrid.getChildren().isEmpty()){
+                    livingRoomGrid.getChildren().remove(itemLivRoomCells[i][j]);
+                    itemLivRoomCells[i][j] = null;
+                }
                 cell = new ImageView();
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
@@ -752,7 +754,16 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-    public void setInitialized(){
-        initialized = false;
+    public void destroy(){
+        for (int i = 0; i < Board.DIMENSIONS; i++) {
+            for (int j = 0; j < Board.DIMENSIONS; j++) {
+                itemLivRoomCells[i][j].setImage(null);
+            }
+        }
+        for (int i = 0; i < Bookshelf.Rows; i++) {
+            for (int j = 0; j < Bookshelf.Columns; j++) {
+                bookshelfCells[i][j].setImage(null);
+            }
+        }
     }
 }
