@@ -3,19 +3,18 @@
 ## Index
 - Group Components
 - Introduction to "My Shelfie"
-- External Libraries
 - Implemented Features
 - User Instructions
 
 
 ## Group Components
 
-| Cognome | Nome | e-mail 
-| ------ | ------ |----- 
-| Zanca | Federico| margherita.musumeci@mail.polimi.it
-| Zhenghao Zhuge|  Michele | matteo.nunziante@mail.polimi.it
-| Wu |Jia Hui| matteo.oldani@mail.polimi.it
-| Zheng |Fabio| fabio1.zheng@mail.polimi.it
+| Cognome | Nome
+| ------ | ------
+| Zanca | Federico
+| Zhenghao Zhuge|  Michele
+| Wu |Jia Hui
+| Zheng |Fabio
 
 
 ## Introduction to "My Shelfie"

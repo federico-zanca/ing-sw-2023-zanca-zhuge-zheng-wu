@@ -25,7 +25,7 @@
                 <Image url="@../images/Publisher_material/Display_1.jpg" />
             </image>
         </ImageView>
-      <HBox alignment="CENTER" layoutX="607.0" layoutY="44.0" spacing="70.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
+      <HBox alignment="CENTER" fillHeight="false" layoutX="607.0" layoutY="44.0" spacing="70.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="60.0">
          <children>
             <Group>
                <children>

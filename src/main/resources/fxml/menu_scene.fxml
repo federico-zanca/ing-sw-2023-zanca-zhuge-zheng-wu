@@ -18,7 +18,7 @@
         <ImageView fx:id="backGround" preserveRatio="true">
             <Image url="@../images/Publisher_material/Display_3.jpg" />
         </ImageView>
-        <VBox alignment="CENTER" fillWidth="false" layoutX="356.0" layoutY="65.0" prefHeight="625.0" prefWidth="942.0" spacing="20.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0">
+        <VBox alignment="CENTER" fillWidth="false" layoutX="356.0" layoutY="65.0" spacing="20.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="60.0">
             <children>
                 <ImageView fx:id="title" fitWidth="800.0" preserveRatio="true">
                     <Image url="@../images/Publisher_material/Title.png" />
@@ -30,14 +30,14 @@
                         <Image url="@../images/misc/retang.png" />
                      </image>
                   </ImageView>
-                  <Text fx:id="error" fill="WHITE" layoutX="15.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Error" textAlignment="CENTER" wrappingWidth="490.28277587890625">
+                  <Text fx:id="error" fill="WHITE" layoutX="15.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inserire Username" textAlignment="CENTER" wrappingWidth="490.28277587890625">
                      <font>
                         <Font name="System Bold Italic" size="24.0" />
                      </font>
                   </Text>
                </children>
             </Group>
-                <TextField fx:id="usernameField" onKeyPressed="#enterCheckUserName" alignment="CENTER" prefWidth="400.0" promptText="Username">
+                <TextField fx:id="usernameField" alignment="CENTER" onKeyPressed="#enterCheckUserName" prefWidth="400.0" promptText="Username">
                     <font>
                         <Font size="18.0" />
                     </font>
