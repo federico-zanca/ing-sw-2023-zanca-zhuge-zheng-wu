@@ -71,6 +71,7 @@ public class ServerSceneController implements Controller{
             lobbyNames = new ArrayList<>();
             newLobbyName.clear();
         }
+        setError("Unisciti a una partita o creane una tu!");
     }
     public void exitButton(){
         System.exit(0);
@@ -151,7 +152,7 @@ public class ServerSceneController implements Controller{
             messageHandler.setMyLobby(name);
             messageHandler.notifyObservers(new CreateLobbyRequest(name));
         }else{
-            setError("La lobby non può avere nome vuoto!");
+            setError("Nome della lobby non valido!");
         }
     }
     public void changeName(){

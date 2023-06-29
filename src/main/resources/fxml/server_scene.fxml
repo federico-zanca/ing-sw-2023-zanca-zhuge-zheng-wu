@@ -78,9 +78,9 @@
                              <image>
                                  <Image url="@../images/misc/retang.png" />
                              </image>
-                           <effect>
-                              <DropShadow />
-                           </effect>
+                             <effect>
+                                 <DropShadow height="25.0" radius="12.0" width="25.0" />
+                             </effect>
                          </ImageView>
                         <Text fx:id="error" fill="WHITE" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold" text="Scegli una partita a cui unirti o creane una nuova!" textAlignment="CENTER" wrappingWidth="812.5368041992188">
                            <font>
@@ -109,15 +109,21 @@
                         <DropShadow height="25.0" radius="12.0" width="25.0" />
                      </effect>
                  </Button>
-                 <Button fx:id="CambiaUsername" mnemonicParsing="false" onAction="#changeName" prefHeight="42.0" prefWidth="270.0" text="Cambia Username" textFill="#754207">
+                 <Button fx:id="CambiaUsername" mnemonicParsing="false" onAction="#changeName" prefHeight="42.0" prefWidth="270.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Cambia Username" textFill="WHITE">
                      <font>
                          <Font name="Arial Black" size="14.0" />
                      </font>
+                     <effect>
+                         <DropShadow height="25.0" radius="12.0" width="25.0" />
+                     </effect>
                   </Button>
-                 <Button fx:id="Esci" mnemonicParsing="false" onAction="#exitButton" prefHeight="53.0" prefWidth="145.0" text="Esci" textFill="#754207">
+                 <Button fx:id="Esci" mnemonicParsing="false" onAction="#exitButton" prefHeight="53.0" prefWidth="145.0" style="-fx-background-color: #8B4513;" styleClass="mainButton" text="Esci" textFill="WHITE">
                      <font>
                         <Font name="Arial Black" size="14.0" />
                      </font>
+                     <effect>
+                         <DropShadow height="25.0" radius="12.0" width="25.0" />
+                     </effect>
                   </Button>
                </children>
             </VBox>

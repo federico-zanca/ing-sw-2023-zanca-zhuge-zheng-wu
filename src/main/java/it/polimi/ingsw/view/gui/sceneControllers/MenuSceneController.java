@@ -57,7 +57,7 @@ public class MenuSceneController implements Controller{
     }
     public void checkUsername(){
         if(Objects.equals(usernameField.getText(), "")){
-            setError("Il tuo username non può avere nome vuoto!");
+            setError("Il tuo username non può essere vuoto!");
             return;
         }
         if(!inputValidator.isValidUsername(usernameField.getText())){
