@@ -41,6 +41,7 @@ public class GUI extends Application{
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
         new GUI();
+        System.setProperty("prism.allowhidpi", "true"); // Enable DPI scaling awareness
         launch(args);
     }
     /**
