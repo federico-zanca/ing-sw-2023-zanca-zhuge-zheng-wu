@@ -91,15 +91,15 @@ Type:
 
 #### Choose the connection mode 
 
-Write:
+On client startup enter:
 - 1 for socket connection
 - 2 for RMI connection
-
+A dialog asking you to choose which connection is preferred will be shown before trying to connect to the server.
 ### Troubleshooting
 Some Windows devices may face difficulties connecting through JavaRMI.
 To address this problem the user running the server should launch the jar this way
 ```sh
-java -Djava.rmi.server.hostname=<IPADDRESS of the server> -jar server.jar
+java -Djava.rmi.server.hostname=[IPADDRESS of the server] -jar server.jar
 ```
 ### License
 
