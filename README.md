@@ -8,8 +8,9 @@
 - Group Components
 - Introduction to "My Shelfie"
 - Implemented Features
-- Tests
+<!--- Tests-->
 - User Instructions
+- Troubleshooting
 
 
 ## Group Components
@@ -52,13 +53,13 @@ Number of Advanced Features implemented: 3/4
 |Chat|   ![success](https://via.placeholder.com/15/00ff00/000000?text=+)|
 |Server Persistence|   ![failure](https://via.placeholder.com/15/ff0000/000000?text=+)|
 
-
+<!--
 ## Tests
 
 <img src="src/main/resources/images/TestControllerImage.png" alt="Alt Text" style="width:800px; height:150px;">
 <img src="src/main/resources/images/TestModelImage.png" alt="Alt Text" style="width:800px; height:450px;">
 
-
+-->
 
 ## User Instructions
 
@@ -94,11 +95,16 @@ Write:
 - 1 for socket connection
 - 2 for RMI connection
 
-
+### Troubleshooting
+Some Windows devices may face difficulties connecting through JavaRMI.
+To address this problem the user running the server should launch the jar this way
+```sh
+java -Djava.rmi.server.hostname=<IPADDRESS of the server> -jar server.jar
+```
 ### License
 
 This project is developed in collaboration with Politecnico di Milano and Cranio Creations.
 
-All rights of graphic resources are reserved to Cranio Creation.
+All rights of graphic resources are reserved to Cranio Creations.
 
 <img src="src/main/resources/images/Publisher_material/Publisher.png" alt="Alt Text">

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
@@ -18,6 +19,7 @@ import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.tui.PlayerState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MessageHandler extends VirtualView implements View {
@@ -27,6 +29,7 @@ public class MessageHandler extends VirtualView implements View {
     private String myUsername = "";
     private PersonalGoalCard personalGoalCard;
     private MessageToClient lastMessage;
+    private HashMap<String,EndGameScores> scores;
     private ChatBox chatBox = new ChatBox();
     /**
      * Handles the event when the client successfully connects to the server.
@@ -180,7 +183,7 @@ public class MessageHandler extends VirtualView implements View {
     //TODO metodo vuoto! da implementare per la leaderboard scene
     @Override
     public void onAdjacentItemsPointsMessage(AdjacentItemsPointsMessage adjacentItemsPointsMessage) {
-
+        gui.addAdjacentPoints(adjacentItemsPointsMessage.getPlayerUsername(),adjacentItemsPointsMessage.getPoints());
     }
     /**
      * Handles the message received when the game board is updated.
@@ -223,10 +226,12 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onEndGameMessage(EndGameMessage endGameMessage) {
         lastMessage = endGameMessage;
+        setScores(gui.getScores());
         gui.setPhase(GuiPhase.END_GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.END_SCENE.s));
         gui.changeScene();
         gui.setLeaderBoard(endGameMessage.getRanking());
+        gui.setScoreBoard(scores);
     }
     /**
      * Handles the response received when exiting the game.
@@ -250,6 +255,7 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onGameStartedMessage(GameStartedMessage gameStartedMessage) {
         lastMessage = gameStartedMessage;
+        scores = new HashMap<>();
         gui.setPhase(GuiPhase.GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
         gui.changeScene();
@@ -281,6 +287,7 @@ public class MessageHandler extends VirtualView implements View {
     public void onLastTurnMessage(LastTurnMessage lastTurnMessage) {
         lastMessage = lastTurnMessage;
         gui.setGameNotification("It's the last turn!");
+        gui.addLastTurnScore(lastTurnMessage.getCurrentPlayer());
     }
     //TODO vuoto! da implementare per la leaderboard scene
     @Override
@@ -342,6 +349,7 @@ public class MessageHandler extends VirtualView implements View {
      */
     @Override
     public void onPersonalGoalPointsMessage(PersonalGoalPointsMessage personalGoalPointsMessage) {
+        gui.addPersonalScore(personalGoalPointsMessage.getPlayerUsername(),personalGoalPointsMessage.getPoints());
 
     }
     /**
@@ -598,5 +606,8 @@ public class MessageHandler extends VirtualView implements View {
      */
     public ArrayList<ChatMessage> getChatLog(){
         return chatBox.getChatLog();
+    }
+    public void setScores(HashMap<String,EndGameScores> scores){
+        this.scores = scores;
     }
 }
