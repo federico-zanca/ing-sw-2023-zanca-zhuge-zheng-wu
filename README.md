@@ -1,9 +1,14 @@
 # Progetto di Ingegneria del Software 2023
 
+
+
+<img src="src/main/resources/images/Publisher_material/Title.png" alt="Alt Text">
+
 ## Index
 - Group Components
 - Introduction to "My Shelfie"
 - Implemented Features
+- Tests
 - User Instructions
 
 
@@ -18,6 +23,11 @@
 
 
 ## Introduction to "My Shelfie"
+
+
+<img src="src/main/resources/images/Publisher_material/Display_2.jpg" alt="Alt Text" width="900" height="500">
+
+
 
 My Shelfie is a board game that can be enjoyed by 2 to 4 players, set in a living room where every player is given a bookshelf to place item tiles picked from the living room board.
 The participants compete with each other to fulfill goals that award points. These goals are visible to everyone and are randomly drawn during the game setup. Every player is also assigned a personal goal card that is not visible to others. Points are also awarded for the number of adjacent tiles you manage to place in your bookshelf.
@@ -41,6 +51,13 @@ Number of Advanced Features implemented: 3/4
 |Resilience to Disconnections|   ![success](https://via.placeholder.com/15/00ff00/000000?text=+)|
 |Chat|   ![success](https://via.placeholder.com/15/00ff00/000000?text=+)|
 |Server Persistence|   ![failure](https://via.placeholder.com/15/ff0000/000000?text=+)|
+
+
+## Tests
+
+<img src="src/main/resources/images/TestControllerImage.png" alt="Alt Text" style="width:800px; height:150px;">
+<img src="src/main/resources/images/TestModelImage.png" alt="Alt Text" style="width:800px; height:450px;">
+
 
 
 ## User Instructions
@@ -83,3 +100,5 @@ Write:
 This project is developed in collaboration with Politecnico di Milano and Cranio Creations.
 
 All rights of graphic resources are reserved to Cranio Creation.
+
+<img src="src/main/resources/images/Publisher_material/Publisher.png" alt="Alt Text">
