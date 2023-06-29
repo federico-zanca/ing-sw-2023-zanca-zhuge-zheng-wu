@@ -14,6 +14,10 @@
     -fx-background-color: #8B4513;
     -fx-opacity: 0.9;
 }
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    /*-fx-effect: dropshadow(gaussian, white, 0.5, 0.5, 0, 0);*/
+    -fx-background-color: grey;
+}
 .listView{
     -fx-background-color: #ab5c23;
     -fx-opacity: 0.9;

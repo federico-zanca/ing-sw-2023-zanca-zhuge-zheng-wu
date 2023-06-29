@@ -100,11 +100,16 @@ public class ServerSceneController implements Controller{
         HBox hbox = new HBox();
         Label nameLabel=new javafx.scene.control.Label(lobbyName);
         nameLabel.setPrefWidth(276);
+        nameLabel.setTextFill(Color.WHITE);
+
         Label numPlayersLabel=new javafx.scene.control.Label(numPlayers);
         numPlayersLabel.setPrefWidth(276);
+        numPlayersLabel.setTextFill(Color.WHITE);
         numPlayersLabel.setAlignment(Pos.CENTER);
+
         Label statusLabel=new javafx.scene.control.Label(status);
         statusLabel.setPrefWidth(276);
+        statusLabel.setTextFill(Color.WHITE);
         statusLabel.setAlignment(Pos.BASELINE_RIGHT);
 
         hbox.getChildren().addAll(nameLabel, numPlayersLabel, statusLabel);
