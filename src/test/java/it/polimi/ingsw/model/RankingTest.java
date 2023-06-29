@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RankingTest {
 
-    //incompleto
-
     @org.junit.jupiter.api.Test
     void getRanking() {
 

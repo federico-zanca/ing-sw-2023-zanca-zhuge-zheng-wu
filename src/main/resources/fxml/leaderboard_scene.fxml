@@ -47,6 +47,7 @@
                         <Font name="Times New Roman Italic" size="18.0" />
                      </font>
                   </Label>
+                  <AnchorPane layoutX="-109.0" layoutY="-56.0" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </Group>
          </children>
