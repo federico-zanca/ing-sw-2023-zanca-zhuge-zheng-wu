@@ -35,6 +35,7 @@ public class GUI extends Application{
     private final HashMap<GuiPhase,String> fxml;
     private final HashMap<String,Scene> scenes;
     private final MessageHandler messageHandler;
+    private HashMap<String,EndGameScores> scores;
     private GuiPhase phase;
     private PersonalGoalCard personalGoalCard;
 
@@ -504,5 +505,50 @@ public class GUI extends Application{
         if(currentController instanceof GameScene2PlayersController){
             ((GameScene2PlayersController) currentController).setDrawn(drawn);
         }
-    }}
+    }
+
+    public void addLastTurnScore(String player) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).addLastTurnScores(player);
+            });
+        }
+    }
+
+    public void addPersonalScore(String playerUsername, int points) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).addPersonalScores(playerUsername,points);
+            });
+        }
+    }
+
+    public void addAdjacentPoints(String playerUsername, int points) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).addAdjacentScores(playerUsername,points);
+            });
+        }
+    }
+
+    public HashMap<String,EndGameScores> getScores() {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            scores = ((GameScene2PlayersController) currentController).getScores();
+        }
+        return scores;
+    }
+
+    public void setScoreBoard(HashMap<String, EndGameScores> scores) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof EndGameController){
+            Platform.runLater(()->{
+                ((EndGameController)currentController).setScores(scores);
+            });
+        }
+    }
+}
 

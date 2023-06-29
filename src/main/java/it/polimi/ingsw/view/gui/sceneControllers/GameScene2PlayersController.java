@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
+import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;
@@ -14,6 +15,7 @@ import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.gamemessage.InsertInfoMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertTilesMessage;
 import it.polimi.ingsw.view.InputValidator;
+import it.polimi.ingsw.view.gui.EndGameScores;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.ActionType;
@@ -48,6 +50,7 @@ public class GameScene2PlayersController implements Controller {
     private GUI gui;
     private PlayerState state = PlayerState.WATCHING;
     private ArrayList<Player> playersList;
+    private HashMap<String, EndGameScores> scores;
     private ArrayList<ItemTile> tilesToInsert;
     private ArrayList<Square> tilesToDraw;
     private ActionType actionType = ActionType.NONE;
@@ -117,7 +120,6 @@ public class GameScene2PlayersController implements Controller {
     private Label notification;
     @FXML
     private Polygon turnIndicator;
-
     @FXML
     void translateTriangle(MouseEvent event) {
         if (state.equals(PlayerState.ACTIVE)) {
@@ -276,6 +278,7 @@ public class GameScene2PlayersController implements Controller {
         drawn = true;
         if (gui != null) {
             clearHand();
+            scores = new HashMap<>();
             pList = new ArrayList<>();
             order = new ArrayList<>();
             newHandOrder = new ArrayList<>();
@@ -319,6 +322,7 @@ public class GameScene2PlayersController implements Controller {
 
     public void initPlayerList(ArrayList<Player> players) {
         playersList = players;
+        initScores();
         HBox hBox = null;
         this.players.setSpacing(3);
         for (int i = 0; i < players.size(); i++) {
@@ -374,6 +378,12 @@ public class GameScene2PlayersController implements Controller {
                 nameOfBookshelf.setText(messageHandler.getMyUsername());
             });
             pList.add(label);
+        }
+    }
+
+    private void initScores() {
+        for(Player p : playersList){
+            scores.put(p.getUsername(),new EndGameScores());
         }
     }
 
@@ -771,5 +781,22 @@ public class GameScene2PlayersController implements Controller {
     }
     public void setDrawn(boolean drawn){
         this.drawn = drawn;
+    }
+    public void addLastTurnScores(String player){
+        scores.get(player).setFullShelfPoints(1);
+        /*
+        EndgameScores tmp = scores.get(player);
+        tmp.setFullShelfPoints(1);
+        scores.put(player, tmp);
+         */
+    }
+    public void addPersonalScores(String player,int points){
+        scores.get(player).setPersonalPoints(points);
+    }
+    public void addAdjacentScores(String player,int points){
+        scores.get(player).setAdjacentPoints(points);
+    }
+    public HashMap<String, EndGameScores> getScores(){
+        return scores;
     }
 }
