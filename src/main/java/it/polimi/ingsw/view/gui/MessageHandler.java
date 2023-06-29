@@ -145,6 +145,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
         gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard(),drawInfoMessage.getMaxNumItems());
         gui.setPlayers(drawInfoMessage.getModel().getPlayers());
+        gui.setDrawn(false);
     }
 
     @Override

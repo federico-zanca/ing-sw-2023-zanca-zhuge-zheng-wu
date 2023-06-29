@@ -95,16 +95,15 @@ public class GUI extends Application{
         double screenHeight = primaryScreenBounds.getHeight();
         currentStage.setHeight(screenHeight);
         currentStage.setWidth(screenWidth);
-        currentStage.setFullScreen(true);
+        currentStage.getScene().getWindow().centerOnScreen();
         currentStage.show();
     }
 
     public void changeScene() {
         Platform.runLater(() -> {
             currentStage.setScene(currentScene);
-            currentStage.getScene().getWindow().centerOnScreen();
+            currentScene.getWindow().centerOnScreen();
             //currentStage.getScene().getWindow().sizeToScene();
-            currentStage.setFullScreen(true);
             String fxmlPath = fxml.get(phase);
             controllers.get(fxmlPath).initialize();
         });
@@ -345,5 +344,10 @@ public class GUI extends Application{
             });
         }
     }
-}
+    public void setDrawn(boolean drawn){
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            ((GameScene2PlayersController) currentController).setDrawn(drawn);
+        }
+    }}
 

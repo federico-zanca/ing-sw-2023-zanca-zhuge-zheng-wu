@@ -41,6 +41,7 @@ import java.util.*;
 
 public class GameScene2PlayersController implements Controller {
     public AnchorPane root;
+    private boolean drawn;
     public ImageView backGround;
     public Button okButton;
     private MessageHandler messageHandler;
@@ -236,15 +237,16 @@ public class GameScene2PlayersController implements Controller {
 
     @FXML
     void clickedOk() {
-        if (state.equals(PlayerState.ACTIVE)) {
+        if (state.equals(PlayerState.ACTIVE) && !drawn) {
+            setPlayerState(PlayerState.WATCHING);
             if (tilesToDraw.size() != 0) {
-                setPlayerState(PlayerState.WATCHING);
+                drawn = true;
                 messageHandler.notifyObservers(new DrawTilesMessage(messageHandler.getMyUsername(), tilesToDraw));
                 clearEffects();
                 drawTiles();
+            } else {
+                setPlayerState(PlayerState.ACTIVE);
             }
-        } else {
-            messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
         }
     }
 
@@ -271,6 +273,7 @@ public class GameScene2PlayersController implements Controller {
         double screenHeight = primaryScreenBounds.getHeight();
         backGround.setFitWidth(screenWidth);
         root.setPrefSize(screenWidth,screenHeight);
+        drawn = true;
         if (gui != null) {
             clearHand();
             pList = new ArrayList<>();
@@ -765,5 +768,8 @@ public class GameScene2PlayersController implements Controller {
                 bookshelfCells[i][j].setImage(null);
             }
         }
+    }
+    public void setDrawn(boolean drawn){
+        this.drawn = drawn;
     }
 }
