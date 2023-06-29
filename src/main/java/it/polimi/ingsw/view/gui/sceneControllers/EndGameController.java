@@ -2,13 +2,12 @@ package it.polimi.ingsw.view.gui.sceneControllers;
 
 import it.polimi.ingsw.view.gui.EndGameScores;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.GameFxml;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;

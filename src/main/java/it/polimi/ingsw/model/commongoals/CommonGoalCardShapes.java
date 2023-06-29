@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

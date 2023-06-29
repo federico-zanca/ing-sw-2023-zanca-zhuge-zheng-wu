@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.enumerations.ItemType;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.rmi.ServerError;
 import java.util.List;
 
 /**

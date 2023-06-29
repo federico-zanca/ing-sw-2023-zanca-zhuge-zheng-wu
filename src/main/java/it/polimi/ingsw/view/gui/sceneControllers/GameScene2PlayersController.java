@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
-import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer;
 import it.polimi.ingsw.model.Bookshelf;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.Player;

@@ -8,7 +8,6 @@ import it.polimi.ingsw.view.InputValidator;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
-import it.polimi.ingsw.view.tui.TextColor;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -21,9 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Optional;

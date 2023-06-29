@@ -3,8 +3,6 @@ package it.polimi.ingsw.model;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RankingTest {
 
     @org.junit.jupiter.api.Test

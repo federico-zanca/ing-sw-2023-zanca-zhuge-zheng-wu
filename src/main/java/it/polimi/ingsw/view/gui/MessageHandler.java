@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.commongoals.CommonGoalCard;
 import it.polimi.ingsw.model.enumerations.JoinType;
 import it.polimi.ingsw.model.personalgoals.PersonalGoalCard;
 import it.polimi.ingsw.network.message.ChatMessage;
@@ -265,7 +264,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message received when the player needs to insert tiles from their hand.
      *
      * @param insertInfoMessage The InsertInfoMessage containing the hand tiles to be inserted.
-     *
+     * <p>
      * Updates the GUI player state to ACTIVE and sets the action type to INSERT_HAND.
      * Updates the GUI hand with the tiles from the insertInfoMessage.
      */
@@ -298,7 +297,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message received at the start of a new turn.
      *
      * @param newTurnMessage The NewTurnMessage containing the information about the new turn.
-     *
+     * <p>
      * This method updates the GUI with the necessary information for the new turn.
      * It clears the tiles, sets the action type to "NONE", displays a notification message, and updates the turn indicator.
      * If the current player is the same as the user's username, it displays a notification indicating that it's their turn.
@@ -343,7 +342,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message containing the points scored for a personal goal.
      *
      * @param personalGoalPointsMessage The PersonalGoalPointsMessage containing the points scored for a personal goal.
-     *
+     * <p>
      * This method can be used to update the GUI with the points scored for a personal goal by a player.
      * However, the current implementation does not perform any specific actions.
      */
@@ -356,7 +355,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message indicating that a player has left the game.
      *
      * @param playerLeftMessage The PlayerLeftMessage indicating that a player has left the game.
-     *
+     * <p>
      * This method can be used to update the GUI with a notification about the player who left the game.
      * The provided content in the message can be displayed as a notification to inform other players about the event.
      */
@@ -368,7 +367,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message indicating that a player has rejoined the game.
      *
      * @param playerRejoinedMessage The PlayerRejoinedMessage indicating that a player has rejoined the game.
-     *
+     * <p>
      * This method can be used to update the GUI with a notification about the player who rejoined the game.
      * The provided player information in the message can be displayed as a notification to inform other players about the event.
      */
@@ -380,7 +379,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the response message indicating the result of a request to change the number of players in the game.
      *
      * @param changeNumOfPlayerResponse The ChangeNumOfPlayerResponse indicating the result of the request.
-     *
+     * <p>
      * This method can be used to update the GUI based on the response from the server.
      * If the request was successful, the chosen number of players can be displayed in the spinner control.
      * If the request failed, an error message can be displayed to inform the user about the failure.
@@ -397,7 +396,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the response message indicating the result of a request to exit the lobby.
      *
      * @param exitLobbyResponse The ExitLobbyResponse indicating the result of the request.
-     *
+     * <p>
      * This method can be used to update the GUI based on the response from the server.
      * If the request was successful, the GUI phase can be set to the server phase, the scene can be changed to the server scene,
      * and the chat box can be cleared.
@@ -415,7 +414,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message indicating that the game is not ready to start.
      *
      * @param gameNotReadyMessage The GameNotReadyMessage indicating the reason why the game is not ready.
-     *
+     * <p>
      * This method can be used to display an error message on the GUI indicating that the game cannot start
      * due to certain conditions not being met.
      */
@@ -437,7 +436,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the message indicating that the player is not the admin of the lobby.
      *
      * @param notAdminMessage The NotAdminMessage containing information about the admin status.
-     *
+     * <p>
      * This method can be used to display an error message on the GUI when a non-admin player tries to use a command
      * that is restricted to the lobby admin.
      */
@@ -464,7 +463,7 @@ public class MessageHandler extends VirtualView implements View {
      * Updates the GUI based on the received message from the server.
      *
      * @param message The message received from the server.
-     *
+     * <p>
      * This method is responsible for handling different types of messages and updating the GUI accordingly.
      * It checks the type of the message and calls the corresponding handler method to process the message.
      * If the message type is not recognized, it prints an error message indicating that the message is ignored.
@@ -500,7 +499,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the LobbyMessage received from the server.
      *
      * @param message The LobbyMessage received from the server.
-     *
+     * <p>
      * This method executes the appropriate action based on the type of LobbyMessage.
      * The execution is delegated to the corresponding method in the message object.
      */
@@ -511,7 +510,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the ConnectionMessage received from the server.
      *
      * @param message The ConnectionMessage received from the server.
-     *
+     * <p>
      * This method executes the appropriate action based on the type of ConnectionMessage.
      * The execution is delegated to the corresponding method in the message object.
      */
@@ -522,7 +521,7 @@ public class MessageHandler extends VirtualView implements View {
      * Handles the GameMessage received from the server.
      *
      * @param message The GameMessage received from the server.
-     *
+     * <p>
      * This method executes the appropriate action based on the type of GameMessage.
      * The execution is delegated to the corresponding method in the message object.
      */

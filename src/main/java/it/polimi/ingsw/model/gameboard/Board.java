@@ -6,14 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.ItemTile;
 import it.polimi.ingsw.model.enumerations.ItemType;
 import it.polimi.ingsw.model.exceptions.IllegalDrawException;
-import it.polimi.ingsw.model.exceptions.IllegalNumOfPlayersException;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Stack;
+
 /**
  Represents the game board.
  */

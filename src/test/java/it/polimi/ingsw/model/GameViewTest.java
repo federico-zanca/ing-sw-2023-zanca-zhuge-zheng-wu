@@ -2,9 +2,6 @@ package it.polimi.ingsw.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameViewTest {
