@@ -236,18 +236,4 @@ public interface View {
      @param message the message received
      */
     void update(Message message);
-  /*
-
-    void askPlayerNumber();
-
-
-    void showLoginResult(boolean valiUsername, String username);
-
-
-    void showLobby();
-
-
-    void showFirstPlayerThisGame();
-
-*/
 }

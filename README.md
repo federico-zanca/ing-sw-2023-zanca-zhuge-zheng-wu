@@ -15,12 +15,12 @@
 
 ## Group Components
 
-| Cognome | Nome
-| ------ | ------
-| Zanca | Federico
-| Zhenghao Zhuge|  Michele
-| Wu |Jia Hui
-| Zheng |Fabio
+| Cognome        | Nome     |
+|----------------|----------|
+| Zanca          | Federico |
+| Zhenghao Zhuge | Michele  |
+| Wu             | Jia Hui  |
+| Zheng          | Fabio    |
 
 
 ## Introduction to "My Shelfie"

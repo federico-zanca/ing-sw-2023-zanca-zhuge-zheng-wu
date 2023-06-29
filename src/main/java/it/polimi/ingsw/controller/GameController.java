@@ -110,14 +110,6 @@ public class GameController {
             case INSERT:
                 turnController.insertPhase(senderUsername, message);
                 break;
-                /*
-            case CALCULATE:
-                turnController.calculateCommonGoal();
-                break;
-            case REFILL:
-                turnController.refillPhase();
-                break;
-                 */
             default:
                 System.err.println("Invalid Turn Phase: should never reach this state");
         }

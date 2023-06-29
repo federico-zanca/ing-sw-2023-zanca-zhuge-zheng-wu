@@ -82,38 +82,7 @@ public class ItemTile implements Serializable {
         return !(getType()==ItemType.FORBIDDEN || getType()==ItemType.EMPTY);
     }
 
-/*
-    public String toColorString(){
-        StringBuilder stringBuilder = new StringBuilder();
-        TextColor c;
-        switch(type){
-            case CAT :
-                c=TextColor.GREEN;
-                break;
-            case PLANT:
-                c=TextColor.RED;
-                break;
-            case FRAME:
-                c=TextColor.BLUE;
-                break;
-            case GAME:
-                c=TextColor.YELLOW_BOLD;
-                break;
-            case TROPHY:
-                c=TextColor.CYAN_BOLD;
-                break;
-            case BOOK:
-                c=TextColor.WHITE;
-                break;
-            default:
-                c=TextColor.NO_COLOR;
-                break;
-        }
-        return stringBuilder.append(c).append(type).append(TextColor.NO_COLOR).toString();
-    }
-
- */
-    @Override
+@Override
     public String toString(){
         return type.toString();
     }

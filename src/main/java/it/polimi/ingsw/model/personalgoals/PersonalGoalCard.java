@@ -48,18 +48,6 @@ public class    PersonalGoalCard implements Serializable {
         } catch(IOException e){
             System.err.println("Error reading " + jsonpath + " file");
         }
-        /*
-        String file_name = "src/main/resources/personalGoalJson/PersonalGoalCard" + n + ".json";
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<PersonalGoalCell> goalcells = null;
-        try {
-            goalcells = objectMapper.readValue(
-                    new File(file_name),
-                    new TypeReference<List<PersonalGoalCell>>(){});
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        */
 
         for (PersonalGoalCell cell : goalcells){
             objective[cell.getRow()][cell.getCol()] = cell.getType();

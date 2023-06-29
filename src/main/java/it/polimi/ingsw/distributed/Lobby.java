@@ -73,16 +73,6 @@ public class Lobby {
                 connectedClientInfo.setClientState(ClientState.IN_GAME);
                 controller.reconnectPlayer(clientID);
             }
-            /*
-            else {
-
-                try {
-                    controller.addPlayer(clientID);
-                } catch (InvalidUsernameException e) {
-                    System.err.println("Can't add player to the model: " + e.getMessage());
-                }
-            }
-            */
 
             this.model.addObserver((arg) -> {
                 try {

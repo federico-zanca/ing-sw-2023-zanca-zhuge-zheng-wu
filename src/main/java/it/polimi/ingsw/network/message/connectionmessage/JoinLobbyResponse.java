@@ -14,8 +14,6 @@ public class JoinLobbyResponse extends MessageToClient {
     private final String content;
     private final ArrayList<String> usernames;
     private final JoinType joinType;
-    //private final int numClients;
-    //private final int maxNumClients;
 
     /**
      * Constructs a new JoinLobbyResponse message with the specified join type, content, and usernames.
@@ -28,8 +26,6 @@ public class JoinLobbyResponse extends MessageToClient {
         this.joinType = joinType;
         this.content = content;
         this.usernames = usernames;
-        //this.numClients = numClients;
-        //this.maxNumClients = maxNumClients;
     }
 
     /**
@@ -64,15 +60,5 @@ public class JoinLobbyResponse extends MessageToClient {
     public void execute(View view) {
         view.onJoinLobbyResponse(this);
     }
-/*
-    public int getNumClients() {
-        return numClients;
-    }
-
-    public int getMaxNumClients() {
-        return maxNumClients;
-    }
-
- */
 
 }

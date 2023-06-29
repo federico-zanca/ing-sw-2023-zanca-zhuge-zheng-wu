@@ -150,19 +150,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
     public boolean isUsernameAvailable(String username) {
         Client client = getClientByUsername(username);
         return client == null;
-        /*
-        for(Lobby l : lobbies){
-            if(l.containsAPlayerWithThisUsername(username))
-                return false;
-        }
-
-         */
-/*
-        for(ClientInfo c : connectedClients.values())
-            if(c.getClientID().equals(username))
-                return false;
-        return true;
-        */
 
     }
 
@@ -351,38 +338,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
         }
         ).start();
     }
-
-    /*
-    public void run(){
-        while(!Thread.currentThread().isInterrupted()){
-            synchronized (clientsLock){
-                for(Client client : connectedClients.keySet()){
-                    if(getConnectedClientInfo(client).isConnected()) {
-                        try{
-                            client.ping();
-                        } catch (RemoteException e){
-                            System.err.println("Client " + getConnectedClientInfo(client).getClientID() + " disconnected");
-                            if(getConnectedClientInfo(client).getClientState() == ClientState.IN_A_LOBBY)
-                                clientExitsFromItsLobby(client);
-                            else if(getConnectedClientInfo(client).getClientState() == ClientState.IN_GAME){
-                                getConnectedClientInfo(client).setConnected(false);
-                                getLobbyOfClient(client).disconnectClient(client);
-                            }
-                            else{
-                                connectedClients.remove(client);
-                            }
-                        }
-                    }
-                }
-            }
-            try{
-                Thread.sleep(1000);
-            } catch (InterruptedException e){
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-    */
 
     /**
      * Starts the heartbeat mechanism for a specific client.

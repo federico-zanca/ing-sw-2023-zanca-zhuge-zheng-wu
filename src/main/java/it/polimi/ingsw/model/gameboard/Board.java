@@ -73,51 +73,6 @@ public class Board implements Serializable {
             System.err.println("Error reading " + jsonpath + " file");
         }
 
-        /*
-        for(int i=0; i<DIMENSIONS; i++){
-            for(int j=0; j<DIMENSIONS; j++) {
-                if(i==0)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==1 && (j<3 || j>4))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==2 && (j<3 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==3 && (j<2 || j>7))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==4 && (j<1 || j>7))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==5 && (j<1 || j>6))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==6 && (j<3 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==7 && (j<4 || j>5))    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-                if(i==8)    gameboard[i][j].getItem().setType(ItemType.FORBIDDEN);
-            }
-        }
-        if(numPlayers>2){
-            gameboard[0][3].getItem().setType(ItemType.EMPTY);
-            gameboard[2][2].getItem().setType(ItemType.EMPTY);
-            gameboard[2][6].getItem().setType(ItemType.EMPTY);
-            gameboard[3][8].getItem().setType(ItemType.EMPTY);
-            gameboard[5][0].getItem().setType(ItemType.EMPTY);
-            gameboard[6][2].getItem().setType(ItemType.EMPTY);
-            gameboard[6][6].getItem().setType(ItemType.EMPTY);
-            gameboard[8][5].getItem().setType(ItemType.EMPTY);
-        }
-        if(numPlayers == 4){
-            gameboard[0][4].getItem().setType(ItemType.EMPTY);
-            gameboard[1][5].getItem().setType(ItemType.EMPTY);
-            gameboard[1][5].getItem().setType(ItemType.EMPTY);
-            gameboard[3][1].getItem().setType(ItemType.EMPTY);
-            gameboard[4][0].getItem().setType(ItemType.EMPTY);
-            gameboard[4][8].getItem().setType(ItemType.EMPTY);
-            gameboard[5][7].getItem().setType(ItemType.EMPTY);
-            gameboard[7][3].getItem().setType(ItemType.EMPTY);
-            gameboard[8][4].getItem().setType(ItemType.EMPTY);
-        }
-        */
-
-        /*
-        for(int i=0; i< DIMENSIONS; i++){
-            for(int j=0; j<DIMENSIONS; j++){
-                if(gameboard[i][j].getItem().getType()==null ) gameboard[i][j].getItem().setType(ItemType.EMPTY);
-            }
-        }
-        */
-
     }
 // ITEMS è passato da turn e sono le tessere pescate da Bag
 
@@ -237,61 +192,6 @@ public class Board implements Serializable {
      @return An ArrayList of integers representing the coordinates (row, column) of the pickable first items.
      */
 
-    /*
-    public ArrayList<Integer> pickableFirstItems(){
-        ArrayList<Integer> pickable=new ArrayList<>();
-            for(int i=1; i<DIMENSIONS-1; i++){
-                for(int j=1; j<DIMENSIONS-1; j++){
-                    if(gameboard[i][j].getItem().hasSomething() && doesSquareHaveFreeSide(i, j))
-                    {
-                        pickable.add(i);
-                        pickable.add(j);
-                    }
-                }
-            }
-        return  pickable;
-    }
-
-    /**
-     *
-     * @param firstItem_x coordinate of the first clicked ItemTile
-     * @param firstItem_y coordinate of the first clicked ItemTile
-     * @return ArrayList of pickable ItemTiles given the coordinate of the ItemTile picked as first
-     */
-
-    /*
-    public ArrayList<Integer> pickableItems(int firstItem_x, int firstItem_y) {
-        ArrayList<Integer> pickable=new ArrayList<>();
-
-            Stack<Integer> nx =new Stack<>();
-            Stack<Integer> ny =new Stack<>();
-            nx.push(0);
-            nx.push(-1);
-            nx.push(0);
-            nx.push(1);
-            ny.push(-1);
-            ny.push(0);
-            ny.push(1);
-            ny.push(0);
-
-            while (!nx.isEmpty() && !ny.isEmpty()){
-                int x=nx.pop();
-                int y=ny.pop();
-                int count=2;
-
-                while (gameboard[firstItem_x+x][firstItem_y+y].getItem().getType()!=ItemType.EMPTY && gameboard[firstItem_x+x][firstItem_y+y].getItem().getType()!=ItemType.FORBIDDEN && count>0){
-                    pickable.add(firstItem_x+x);
-                    pickable.add(firstItem_y+y);
-                    x=2*x;
-                    y=2*y;
-                    count--;
-                }
-            }
-        return  pickable;
-    }
-
-    */
-
     /**
      *
      * @param row row number of the square to check
@@ -308,16 +208,6 @@ public class Board implements Serializable {
      * for testing purpose.
      */
 
-    /*
-    public void printBoard(){
-        for(int i=0;i<9;i++){
-            for(int j=0;j<9;j++){
-                System.out.print(getGameboard()[i][j].getItem());
-            }
-            System.out.println();
-        }
-    }
-    */
     /**
      Retrieves the square at the specified coordinates on the game board.
      @param coords The coordinates (row, column) of the desired square.

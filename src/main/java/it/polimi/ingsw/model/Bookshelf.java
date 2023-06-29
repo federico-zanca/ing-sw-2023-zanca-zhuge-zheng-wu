@@ -119,11 +119,6 @@ public class Bookshelf implements Serializable {
      */
 
     public boolean isFull(){
-        /*
-        for(int i=0; i<Dimensions; i++)
-            if(shelfie[0][i].getType()==ItemType.EMPTY) return false;
-        return true;
-         */
         return getNumEmptyCells()==0;
     }
 

@@ -337,13 +337,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
      * @param input the input from the user
      */
     private void elaborateLobbyCommand(String input) {
-        /*
-        if(input .equals("chat")){
-            startChatting();
-            return;
-        }
-
-         */
         String[] parts = input.split(" ");
         LobbyCommand lobbyCommand = null;
         for (LobbyCommand c : LobbyCommand.values()) {
@@ -611,101 +604,12 @@ public class TextualUI extends VirtualView implements View, Runnable {
     private void onGameMessage(MessageToClient message) {
         //setIsActive(message.getUsername().equals(myUsername));
         message.execute(this);
-        /*
-        switch (message.getType()) {
-            case GAME_STARTED:
-
-                break;
-            case NEW_TURN:
-
-                break;
-            case BOARD:
-
-                break;
-            case LEADERBOARD:
-
-                break;
-            case BOOKSHELF:
-
-                break;
-            case PERSONALGOALCARD:
-
-                break;
-            case DRAW_INFO:
-
-                //}
-                break;
-            case INSERT_INFO:
-
-                //}
-                break;
-            case ACHIEVED_COMMON_GOAL:
-
-                break;
-            case NO_COMMON_GOAL:
-
-                break;
-            case LAST_TURN:
-
-                break;
-            case ADJACENT_ITEMS_POINTS:
-
-                break;
-            case PERSONAL_GOAL_POINTS:
-
-                break;
-            case END_GAME:
-
-                break;
-            case PLAYER_REJOINED:
-                break;
-            case EXIT_GAME_RESPONSE:
-
-                break;
-            case PLAYER_LEFT:
-                break;
-            default:
-                System.err.println("Ignoring event from model");
-                break;
-        }
-        */
-        /*
-        if(playerState == PlayerState.WATCHING){
-            System.out.println();
-            printer.displayPrompt();
-        }
-        */
 
         setPlayerState(PlayerState.ACTIVE);
     }
 
     private void onConnectionMessage(MessageToClient message) {
         message.execute(this);
-        /*
-        switch (message.getType()){
-            case CONNECTED_TO_SERVER:
-
-                break;
-            case LOBBY_LIST_RESPONSE:
-                break;
-            case CREATE_LOBBY_RESPONSE:
-
-                break;
-            case JOIN_LOBBY_RESPONSE:
-
-                break;
-            case USERNAME_RESPONSE:
-                break;
-            case LOGIN_RESPONSE:
-
-                break;
-            case RECONNECTION:
-                break;
-            default:
-                System.err.println("Ignoring ConnectionMessage from server");
-                break;
-        }
-        */
         setPlayerState(PlayerState.ACTIVE);
     }
 
@@ -715,37 +619,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
      */
     private void onLobbyMessage(MessageToClient message) {
         message.execute(this);
-        /*
-        switch(message.getType()){
-            case EXIT_LOBBY_RESPONSE:
-
-                break;
-            case PLAYER_LIST_RESPONSE:
-                printer.showLobbyPlayersList(((PlayerListResponse) message).getClients());
-                break;
-            case NEW_ADMIN:
-                break;
-            case GAME_NOT_READY:
-                break;
-            case NOT_ADMIN:
-                break;
-            case INVALID_COMMAND:
-                break;
-            case CHANGE_NUM_OF_PLAYER_RESPONSE:
-                break;
-            case NEW_PLAYER_IN_LOBBY:
-                break;
-            default:
-                System.err.println("Ignoring LobbyMessage from server "+ message.getType().toString());
-                break;
-        }
-        */
-        /*
-        if(playerState == PlayerState.WATCHING) {
-            System.out.println();
-            printer.displayPrompt();
-        }
-         */
         setPlayerState(PlayerState.ACTIVE);
     }
 
@@ -1209,16 +1082,6 @@ public class TextualUI extends VirtualView implements View, Runnable {
             System.err.println("Ignoring message from server");
         }
     }
-    /*
-    public GameMessage getLastMessage() {
-        return lastMessage;
-    }
-
-    public void setLastMessage(GameMessage lastMessage) {
-        this.lastMessage = lastMessage;
-    }
-
-     */
 
     /**
      Sets the personal goal card for the current player.
