@@ -105,6 +105,6 @@ java -Djava.rmi.server.hostname=<IPADDRESS of the server> -jar server.jar
 
 This project is developed in collaboration with Politecnico di Milano and Cranio Creations.
 
-All rights of graphic resources are reserved to Cranio Creation.
+All rights of graphic resources are reserved to Cranio Creations.
 
 <img src="src/main/resources/images/Publisher_material/Publisher.png" alt="Alt Text">
