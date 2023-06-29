@@ -56,6 +56,7 @@ public class InLobbySceneController implements Controller{
     public void initialize() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         double screenWidth = primaryScreenBounds.getWidth();
+        lobbyName.setPrefWidth(213);
         backGround.setFitWidth(screenWidth);
         if(gui == null){
             return;

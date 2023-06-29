@@ -11,14 +11,19 @@ import it.polimi.ingsw.view.tui.LobbyDisplayInfo;
 import it.polimi.ingsw.view.tui.TextColor;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -45,7 +50,7 @@ public class ServerSceneController implements Controller{
     @FXML
     private Text error;
     @FXML
-    private ListView<String> lobbyListView;
+    private ListView<HBox> lobbyListView;
     @FXML
     void enterCreateLobby(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
@@ -78,20 +83,55 @@ public class ServerSceneController implements Controller{
         messageHandler.notifyObservers(new LobbyListRequest());
     }
     public void showLobbies(ArrayList<LobbyDisplayInfo> lobbies) {
-        ArrayList<String> updatedLobbyNames = new ArrayList<>(lobbyNames); // Create a copy of the existing lobbyNames
+        ArrayList<HBox> updatedLobbyNames = new ArrayList<>(); // Create a copy of the existing lobbyNames
 
         for (LobbyDisplayInfo lobby : lobbies) {
-            String lobbyNameWithStatus = lobby.getLobbyName() + " (" + lobby.getNumPlayers() + "/" + lobby.getNumPlayersChosen() + ") " + "Stato: " + lobby.isGameStarted();
+
+            HBox hbox=createHBox(lobby.getLobbyName(), Integer.toString(lobby.getNumPlayers())+"/"+lobby.getNumPlayersChosen(), lobby.isGameStarted());
+
             if(!lobbyNames.contains(lobby.getLobbyName())){
-                updatedLobbyNames.add(lobbyNameWithStatus); // Add new lobby to the updatedLobbyNames
+                updatedLobbyNames.add(hbox); // Add new lobby to the updatedLobbyNames
             }
         }
 
         lobbyListView.setItems(FXCollections.observableList(updatedLobbyNames)); // Set the updated lobbyNames to the lobbyListView
     }
+
+    private HBox createHBox(String lobbyName, String numPlayers, String status) {
+        HBox hbox = new HBox();
+        Label nameLabel=new javafx.scene.control.Label(lobbyName);
+        nameLabel.setPrefWidth(276);
+        Label numPlayersLabel=new javafx.scene.control.Label(numPlayers);
+        numPlayersLabel.setPrefWidth(276);
+        numPlayersLabel.setAlignment(Pos.CENTER);
+        Label statusLabel=new javafx.scene.control.Label(status);
+        statusLabel.setPrefWidth(276);
+        statusLabel.setAlignment(Pos.BASELINE_RIGHT);
+
+        hbox.getChildren().addAll(nameLabel, numPlayersLabel, statusLabel);
+        return hbox;
+
+    }
+
+    private String extractLobbyNameFromHBox(HBox hbox) {
+        String lobbyName = "";
+
+        for (Node node : hbox.getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                lobbyName = label.getText();
+                break;
+            }
+        }
+
+        return lobbyName;
+    }
+
     public void joinLobby(){
-        if(lobbyListView.getSelectionModel().getSelectedItem() != null){
-            String myLobby = lobbyListView.getSelectionModel().getSelectedItem().trim();
+
+        HBox selectedHBox = lobbyListView.getSelectionModel().getSelectedItem();
+        if(selectedHBox != null){
+            String myLobby = extractLobbyNameFromHBox(selectedHBox);
             int index = myLobby.indexOf(" ");
             if (index >= 0) {
                 myLobby = myLobby.substring(0, index);
