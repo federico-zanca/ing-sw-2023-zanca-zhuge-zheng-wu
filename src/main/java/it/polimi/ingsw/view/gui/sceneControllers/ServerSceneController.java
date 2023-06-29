@@ -71,7 +71,6 @@ public class ServerSceneController implements Controller{
         if(gui == null){
             return;
         }else{
-            setError(null);
             lobbyNames = new ArrayList<>();
             newLobbyName.clear();
         }
