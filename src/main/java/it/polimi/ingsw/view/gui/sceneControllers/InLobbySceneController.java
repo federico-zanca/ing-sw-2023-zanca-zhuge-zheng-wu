@@ -14,9 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
 
 import java.time.LocalDateTime;
@@ -29,6 +31,7 @@ public class InLobbySceneController implements Controller{
     public Button exitLobbyButton;
     public ImageView backGround;
     public HBox titoli;
+    public TextFlow txtFlow;
     private MessageHandler messageHandler;
     private GUI gui;
     @FXML
@@ -78,9 +81,11 @@ public class InLobbySceneController implements Controller{
             numPlayersSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
                 handleNumPlayersChange(newValue);
             });
+            //setChatBox(messageHandler.getChatLog());
             setChatBox(messageHandler.getChatLog());
         }
     }
+    /*
     private void setChatBox(ArrayList<ChatMessage> chatLog) {
         inputField.clear();
         chat.clear();
@@ -108,6 +113,55 @@ public class InLobbySceneController implements Controller{
             }
         });
     }
+    */
+    private void setChatBox(ArrayList<ChatMessage> chatLog){
+        inputField.clear();
+        txtFlow.getChildren().clear();
+        txtFlow.setPrefWidth(300);
+        for(ChatMessage message:chatLog) {
+            Text text = new Text(message.getContent() + "\n");
+            Text username = new Text(message.getSender()+": ");
+            Text prefix = new Text();
+            username.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+            username.setFill(javafx.scene.paint.Color.CYAN);
+            if(message.getReceiver() != null){
+                //if(Objects.equals(message.getReceiver(), messageHandler.getMyUsername())){
+                prefix = new Text("(PRIVATE MESSAGE)\n");
+                prefix.setFill(Color.GREEN);
+                prefix.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+                txtFlow.getChildren().addAll(prefix,username,text);
+
+                //}else{
+                 //   prefix = new Text("");
+                //}
+            }
+            else{
+                txtFlow.getChildren().addAll(username,text);
+            }
+            //text.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+
+        }
+        inputField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String message = inputField.getText();
+                message = message.trim();
+                String recipientusername = null;
+                if(message.isEmpty()) {
+                    return;
+                }
+                if(message.startsWith("@")) {
+                    if (!message.contains(" ")) {
+                        return;
+                    }
+                    recipientusername = message.substring(1, message.indexOf(" "));
+                    message = message.substring(message.indexOf(" ") + 1);
+                }
+                sendMessage(message,recipientusername);
+                inputField.clear();
+            }
+        });
+    }
+    /*
     public void setChat(ChatMessage message){
         String prefix = "";
         String messageContent = message.getContent();
@@ -127,6 +181,25 @@ public class InLobbySceneController implements Controller{
             messageContent = "["+formattedDateTime + "] " + message.getSender() + ": " + messageContent;
         }
         chat.appendText(prefix+messageContent+"\n");
+    }
+
+     */
+    public void setChat(ChatMessage message){
+        Text text = new Text(message.getContent() + "\n");
+        Text username = new Text(message.getSender() + ": ");
+        Text prefix = new Text();
+        text.setFill(javafx.scene.paint.Color.WHITE);
+        username.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+        username.setFill(javafx.scene.paint.Color.CYAN);
+        if(message.getReceiver() != null){
+            prefix = new Text("(PRIVATE MESSAGE)\n");
+            prefix.setFill(Color.GREEN);
+            prefix.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+            txtFlow.getChildren().addAll(prefix,username,text);
+        }
+        else{
+            txtFlow.getChildren().addAll(username,text);
+        }
     }
     public void sendMessage(String message, String recipientusername){
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
@@ -148,7 +221,11 @@ public class InLobbySceneController implements Controller{
     public void setError(String error) {
         /*this.error.setText(error);
         this.error.setVisible(true);*/
-        chat.appendText(error+"\n");
+        Text text = new Text(error+"\n");
+        text.setFill(javafx.scene.paint.Color.GOLD);
+        text.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        txtFlow.getChildren().add(text);
+        //chat.appendText(error+"\n");
     }
     public void exitLobby(){
         messageHandler.notifyObservers(new ExitLobbyRequest());

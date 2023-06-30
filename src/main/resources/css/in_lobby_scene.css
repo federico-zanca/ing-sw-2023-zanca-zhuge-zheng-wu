@@ -31,3 +31,11 @@
 .spinner .decrement-arrow-button .decrement-arrow {
 	-fx-background-color: white;
 }
+#chat{
+    -fx-background-color: #ab5c23;
+    -fx-opacity: 0.9;
+    -fx-font-size: 20px;
+}
+.scroll-pane .viewport {
+    -fx-background-color: #ab5c23;
+}
