@@ -123,6 +123,13 @@ public class GameScene2PlayersController implements Controller {
     private Label notification;
     @FXML
     private Polygon turnIndicator;
+    /**
+
+     Translates a triangle shape on a mouse event.
+     The translation is performed only if the player state is active and the action type is insert hand.
+     When the triangle shape is clicked, it applies a glow effect to the shape.
+     @param event The mouse event that triggered the translation.
+     */
     @FXML
     void translateTriangle(MouseEvent event) {
         if (state.equals(PlayerState.ACTIVE)) {
@@ -134,13 +141,23 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Clears the glow effect applied to a polygon shape on a mouse event.
+     *
+     * @param event The mouse event that triggered the clearing of the glow effect.
+     */
     @FXML
     void clearGlow(MouseEvent event) {
         Polygon polygon = (Polygon) event.getSource();
         polygon.setEffect(null);
     }
-
+    /**
+     * Handles the click event on a column shape.
+     * If the player is in the active state and the action type is to insert tiles from the hand,
+     * it processes the click event to insert the tiles into the specified column.
+     *
+     * @param event The mouse event that triggered the column click.
+     */
     @FXML
     void clickedCol(MouseEvent event) {
         if (state.equals(PlayerState.ACTIVE)) {
@@ -157,7 +174,13 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Handles the click event on a tile in the hand.
+     * If the player is in the active state and the action type is to insert tiles from the hand,
+     * it processes the click event to select the tile for insertion.
+     *
+     * @param event The mouse event that triggered the hand click.
+     */
     @FXML
     void clickedHand(MouseEvent event) {
         if (state.equals(PlayerState.ACTIVE)) {
@@ -200,7 +223,16 @@ public class GameScene2PlayersController implements Controller {
     }
 
  */
-
+    /**
+     * Handles the click event on an item in the living room area.
+     * If the player is in the active state and the action type is to draw tiles,
+     * it processes the click event to select or deselect the item for drawing.
+     * If the action type is to order the hand and the selected item is already on the hand,
+     * it processes the click event to deselect the item and switch back to drawing tiles action.
+     *
+     * @param row The row index of the clicked item.
+     * @param col The column index of the clicked item.
+     */
     @FXML
     void clickedItemLivRoom(int row, int col) {
         Glow glow = new Glow();
@@ -245,7 +277,12 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Handles the click event on the "OK" button.
+     * If the player is in the active state and has not drawn tiles yet,
+     * it notifies the server to draw the selected tiles and updates the player state.
+     * If there are no tiles selected to draw, it keeps the player in the active state.
+     */
     @FXML
     void clickedOk() {
         if (state.equals(PlayerState.ACTIVE) && !drawn) {
@@ -260,23 +297,41 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Clears the images of the drawn tiles from the living room grid.
+     */
     private void drawTiles() {
         for (Square tile : tilesToDraw) {
             itemLivRoomCells[tile.getRow()][tile.getColumn()].setImage(null);
         }
     }
-
+    /**
+     * Sets the message handler for the GUI.
+     *
+     * @param messageHandler The message handler to be set.
+     */
     @Override
     public void setMessageHandler(MessageHandler messageHandler) {
         this.messageHandler = messageHandler;
     }
 
+    /**
+     * Sets the GUI for the message handler.
+     *
+     * @param gui The GUI to be set.
+     */
     @Override
     public void setGui(GUI gui) {
         this.gui = gui;
     }
-
+    /**
+     * Initializes the message handler.
+     * This method sets up the necessary components and configurations for the message handler.
+     * It adjusts the size of the background and root elements based on the screen size.
+     * It also initializes various lists and objects used in the message handler.
+     * Additionally, it sets the chat box and clears the hand.
+     * Finally, it initializes the living room grid, bookshelf grid, and select column.
+     */
     @Override
     public void initialize() {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -303,16 +358,28 @@ public class GameScene2PlayersController implements Controller {
             destroy();
         }
     }
-
+    /**
+     * Resets the personal goals.
+     * This method clears the image of the personal goal card displayed on the GUI.
+     * It is called when the personal goals need to be reset, such as at the start of a new game.
+     */
     private void resetPersonalGoals() {
         myPersonalGoal.setImage(null);
     }
-
+    /**
+     * Resets the common goals.
+     * This method sets the image of the common goal score boxes to the default image.
+     * It is called when the common goals need to be reset, such as at the start of a new game.
+     */
     private void resetCommonGoals() {
         firstCommonGoalScoreBox.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));
         secondCommonGoalScoreBox.setImage(new Image("/images/scoring_tokens/scoring_8.jpg"));
     }
-
+    /**
+     * Clears the player list.
+     * This method clears the content of each player's pane in the GUI.
+     * It is called when the player list needs to be cleared, such as at the start of a new game or when players leave the game.
+     */
     private void clearPlayerList() {
         player1.getChildren().clear();
         player2.getChildren().clear();
@@ -320,6 +387,11 @@ public class GameScene2PlayersController implements Controller {
         player4.getChildren().clear();
     }
 
+    /**
+     * Clears the board.
+     * This method clears the images on each cell of the game board in the GUI.
+     * It is called when the board needs to be cleared, such as at the start of a new game or when tiles are removed from the board.
+     */
     private void clearboard() {
         for (int i = 0; i < Board.DIMENSIONS; i++) {
             for (int j = 0; j < Board.DIMENSIONS; j++) {
@@ -328,6 +400,12 @@ public class GameScene2PlayersController implements Controller {
         }
     }
 
+    /**
+     * Initializes the player list in the GUI.
+     * This method creates the visual representation of the player list in the GUI based on the provided list of players.
+     * It sets the player names, styles, and event handlers for interacting with the player bookshelves.
+     * @param players The list of players
+     */
     public void initPlayerList(ArrayList<Player> players) {
         playersList = players;
         initScores();
@@ -388,13 +466,25 @@ public class GameScene2PlayersController implements Controller {
             pList.add(label);
         }
     }
-
+    /**
+     * Initializes the scores for each player.
+     * This method creates an empty EndGameScores object for each player in the player list and stores it in the scores map.
+     * The scores map is used to keep track of the scores for each player throughout the game.
+     */
     private void initScores() {
         for(Player p : playersList){
             scores.put(p.getUsername(),new EndGameScores());
         }
     }
-
+    /**
+     * Displays the bookshelf of another player.
+     * This method searches for the player with the specified username in the playersList.
+     * If a player with a matching username is found and their bookshelf is not null and not the same as the current bookshelf,
+     * the method sets the bookshelf to the player's bookshelf.
+     * This allows the user to view the bookshelf of another player.
+     *
+     * @param username The username of the player whose bookshelf should be displayed.
+     */
     private void showOtherBookshelf(String username) {
         for (Player p : playersList) {
             if (p.getUsername().equals(username) && p.getBookshelf() != null && p.getBookshelf() != bookshelf) {
@@ -403,7 +493,14 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Returns the index of the tile in the tilesToDraw list based on its column and row position.
+     *
+     * @param col          The column position of the tile.
+     * @param row          The row position of the tile.
+     * @param tilesToDraw  The list of tiles being drawn.
+     * @return The index of the tile in the list, or -1 if the tile is not found.
+     */
     private int getTileIndex(int col, int row, ArrayList<Square> tilesToDraw) {
         for (int i = 0; i < tilesToDraw.size(); i++) {
             Square tile = tilesToDraw.get(i);
@@ -413,13 +510,19 @@ public class GameScene2PlayersController implements Controller {
         }
         return -1;
     }
-
+    /**
+     * Clears the images of all the tiles in the hand.
+     */
     private void clearHand() {
         hand1.setImage(null);
         hand2.setImage(null);
         hand3.setImage(null);
     }
+    /**
 
+     Sets the images of the tiles in the hand based on the given list of ItemTile objects.
+     @param hand The list of ItemTile objects representing the tiles in the hand.
+     */
     public void setHand(ArrayList<ItemTile> hand) {
         tilesToInsert = hand;
         URL url;
@@ -442,20 +545,36 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+    /**
 
+     Sets the action type for the player.
+     @param actionType The ActionType to set.
+     */
     public void setActionType(ActionType actionType) {
         this.actionType = actionType;
     }
-
+    /**
+     * Sets the notification text and makes it visible in the GUI.
+     *
+     * @param notification The text of the notification.
+     */
     public void setNotification(String notification) {
         this.notification.setText(notification);
         this.notification.setVisible(true);
     }
+    /**
 
+     Sets the state of the player.
+     @param state The PlayerState to set.
+     */
     public void setPlayerState(PlayerState state) {
         this.state = state;
     }
+    /**
 
+     Initializes the select column buttons and sets their user data.
+     The user data represents the column index.
+     */
     private void initSelectCol() {
         selectCol1.setUserData(0);
         selectCol2.setUserData(1);
@@ -463,7 +582,11 @@ public class GameScene2PlayersController implements Controller {
         selectCol4.setUserData(3);
         selectCol5.setUserData(4);
     }
-
+    /**
+     * Initializes the bookshelf grid by creating ImageView cells and adding them to the grid.
+     * The method also sets the appropriate row and column indices for each cell.
+     * Existing cells in the grid are removed before creating new cells.
+     */
     private void initBookshelfGrid() {
         ImageView cell;
         for (int i = 0; i < Bookshelf.Rows; i++) {
@@ -484,7 +607,11 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Initializes the living room grid by creating ImageView cells and adding them to the grid.
+     * The method also sets the appropriate row and column indices for each cell.
+     * Existing cells in the grid are removed before creating new cells.
+     */
     private void initLivingRoomGrid() {
         ImageView cell;
         for (int i = 0; i < Board.DIMENSIONS; i++) {
@@ -505,11 +632,19 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Sets the bookshelf attribute for the player.
+     *
+     * @param bookshelf The Bookshelf object to set.
+     */
     public void setBookshelfAttribute(Bookshelf bookshelf) {
         this.bookshelf = bookshelf;
     }
-
+    /**
+     * Sets the bookshelf for the player.
+     *
+     * @param bookshelf The Bookshelf object to set.
+     */
     public void setBookshelf(Bookshelf bookshelf) {
         if (bookshelf != null) {
             ItemTile[][] shelfie = bookshelf.getShelfie();
@@ -544,7 +679,12 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Sets the board state and displays the items on the living room grid.
+     *
+     * @param board       The 2D array representing the board state.
+     * @param maxNumItems The maximum number of items allowed on the board.
+     */
     public void setBoard(Square[][] board, int maxNumItems) {
         this.board = board;
         this.maxNumItems = maxNumItems;
@@ -582,13 +722,19 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Applies a pickable effect to the specified ImageView.
+     *
+     * @param image The ImageView to apply the effect to.
+     */
     private void setPickableEffect(ImageView image) {
         dropShadow.setRadius(25);
         dropShadow.setColor(Color.web("#006400"));
         image.setEffect(dropShadow);
     }
-
+    /**
+     * Clears any visual effects applied to the item cells in the living room grid.
+     */
     public void clearEffects() {
         ImageView item;
         for (int i = 0; i < Board.DIMENSIONS; i++) {
@@ -598,12 +744,18 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+    /**
+     * Clears the lists of tiles to be inserted and drawn.
+     */
     public void clearTiles() {
         tilesToInsert.clear();
         tilesToDraw.clear();
     }
+    /**
 
+     Sets the image of the personal goal card for the player.
+     The image is determined based on the player's personal goal card identifier.
+     */
     public void setPersonalGoalCardImage() {
         URL url;
         Image image;
@@ -615,6 +767,14 @@ public class GameScene2PlayersController implements Controller {
         myPersonalGoal.setVisible(true);
     }
 
+    /**
+
+     Sets the images for the common goal cards.
+
+     The images are determined based on the provided common goal cards.
+
+     @param commonGoals The list of common goal cards.
+     */
     public void setCommonGoals(ArrayList<CommonGoalCard> commonGoals) {
         URL url;
         Image image;
@@ -627,12 +787,22 @@ public class GameScene2PlayersController implements Controller {
         image = new Image(url.toString());
         secondCommonGoal.setImage(image);
     }
+    /**
 
+     Sets the list of players in the game.
+     Initializes the player list view with the provided players.
+     @param players The list of players.
+     */
     public void setPlayers(ArrayList<Player> players) {
         this.playersList = players;
         initPlayerList(players);
     }
+    /**
 
+     Changes the order of the tiles in the player's hand.
+
+     Swaps the positions of the first and second tiles in the hand.
+     */
     private void changeOrder() {
         int first = order.get(0);
         Image one = newHandOrder.get(0).getImage();
@@ -654,7 +824,12 @@ public class GameScene2PlayersController implements Controller {
         hand2.setEffect(null);
         hand3.setEffect(null);
     }
+    /**
 
+     Swaps the order of the tiles in the player's hand.
+
+     Swaps the positions of the two tiles in the hand.
+     */
     private void swapOrder() {
         if (tilesToInsert.size() == 2) {
             Collections.swap(tilesToInsert, 1, 0);
@@ -694,6 +869,14 @@ public class GameScene2PlayersController implements Controller {
         });
     }
     */
+    /**
+     * Sets up the chat box with the given chat log.
+     * Clears the input field and the chat flow, and populates the chat flow with messages from the chat log.
+     * Private messages are indicated with a "(PRIVATE MESSAGE)" prefix.
+     * Allows sending messages by pressing the Enter key.
+     *
+     * @param chatLog The list of chat messages to populate the chat box with.
+     */
     private void setChatBox(ArrayList<ChatMessage> chatLog){
         inputField.clear();
         txtFlow.getChildren().clear();
@@ -764,6 +947,13 @@ public class GameScene2PlayersController implements Controller {
         chat.appendText(prefix + messageContent + "\n");
     }
     */
+    /**
+     * Adds a chat message to the chat flow.
+     * The chat message is displayed with the sender's username and content.
+     * Private messages are indicated with a "(PRIVATE MESSAGE)" prefix.
+     *
+     * @param message The chat message to add to the chat flow.
+     */
     public void setChat(ChatMessage message){
         Text text = new Text(message.getContent() + "\n");
         Text username = new Text(message.getSender() + ": ");
@@ -781,6 +971,13 @@ public class GameScene2PlayersController implements Controller {
             txtFlow.getChildren().addAll(username,text);
         }
     }
+    /**
+     * Sends a chat message with the given content to the specified recipient.
+     * If a recipient username is provided, the message is sent as a private message.
+     *
+     * @param message           The content of the message to send.
+     * @param recipientusername The username of the message recipient, or null if it's a public message.
+     */
     public void sendMessage(String message, String recipientusername) {
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
@@ -800,6 +997,17 @@ public class GameScene2PlayersController implements Controller {
         }
     }
 
+     */
+    /**
+     * Sets the icons for the common goal based on the given parameters.
+     * Determines the URL of the image based on the value of `cg.peek()`.
+     * If `commonGoal` is 1, sets the image for the first common goal score box.
+     * If `commonGoal` is 2, sets the image for the second common goal score box.
+     * The icons for players are set based on their username.
+     *
+     * @param username     The username of the player.
+     * @param commonGoal   The common goal number (1 or 2).
+     * @param cg           The CommonGoalCard object to get the scoring token value from.
      */
     public void setIcons(String username,int commonGoal,CommonGoalCard cg){
         String url;
@@ -850,6 +1058,11 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
+    /**
+     * Clears the images in the item living room cells and bookshelf cells.
+     * Used to destroy/reset the state of the board.
+     */
     public void destroy(){
         for (int i = 0; i < Board.DIMENSIONS; i++) {
             for (int j = 0; j < Board.DIMENSIONS; j++) {
@@ -862,9 +1075,19 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+    /**
+     * Sets the value of the 'drawn' flag.
+     *
+     * @param drawn The value to set for the 'drawn' flag.
+     */
     public void setDrawn(boolean drawn){
         this.drawn = drawn;
     }
+    /**
+     * Adds the full shelf points for the last turn to the specified player's scores.
+     *
+     * @param player The username of the player.
+     */
     public void addLastTurnScores(String player){
         scores.get(player).setFullShelfPoints(1);
         /*
@@ -873,15 +1096,38 @@ public class GameScene2PlayersController implements Controller {
         scores.put(player, tmp);
          */
     }
+    /**
+     * Adds personal points to the specified player's scores.
+     *
+     * @param player The username of the player.
+     * @param points The number of personal points to add.
+     */
     public void addPersonalScores(String player,int points){
         scores.get(player).setPersonalPoints(points);
     }
+    /**
+     * Adds adjacent points to the specified player's scores.
+     *
+     * @param player The username of the player.
+     * @param points The number of adjacent points to add.
+     */
     public void addAdjacentScores(String player,int points){
         scores.get(player).setAdjacentPoints(points);
     }
+    /**
+     * Returns the scores of all players as a HashMap.
+     *
+     * @return The HashMap containing the scores of all players.
+     */
     public HashMap<String, EndGameScores> getScores(){
         return scores;
     }
+    /**
+     * Sets the last turn icon for the specified current player.
+     * Removes the image from the end game token box and adds it to the respective player's section.
+     *
+     * @param currentPlayer The username of the current player.
+     */
     public void setLastTurnIcon(String currentPlayer){
         Image tmp = endGameTokenBox.getImage();
         endGameTokenBox.setImage(null);
