@@ -434,7 +434,7 @@ public class Lobby {
         try {
             PersonalGoalCard personalGoal = model.getPersonalGoalOfPlayer(username);
             ArrayList<ChatMessage> chat = server.getConnectedClientInfo(client).getChat();
-            server.sendMessage(client, new ReconnectionMessage(new GameView(model), "You reconnected to the game you left: " + lobbyName + "\n", personalGoal, chat));
+            server.sendMessage(client, new ReconnectionMessage(new GameView(model,getController().getTurnController().getPlayerQueue()), "You reconnected to the game you left: " + lobbyName + "\n", personalGoal, chat));
             //client.update(new ReconnectionMessage(new GameView(model), "You reconnected to the game you left: " + lobbyName + "\n", personalGoal));
         } catch (RemoteException e) {
             System.err.println("Can't send Reconnection Message :" + e.getMessage());

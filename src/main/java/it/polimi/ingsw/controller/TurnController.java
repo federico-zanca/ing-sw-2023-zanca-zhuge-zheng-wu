@@ -83,7 +83,7 @@ public class TurnController {
         }
         else{
             model.notifyObservers(new ErrorMessage(senderUsername, "Tessere non valide"));
-            model.notifyObservers(new DrawInfoMessage(model.getCurrentPlayer().getUsername(), new GameView(model), model.getCurrentPlayer().getBookshelf().maxSlotsAvailable()));
+            model.notifyObservers(new DrawInfoMessage(model.getCurrentPlayer().getUsername(), new GameView(model,null), model.getCurrentPlayer().getBookshelf().maxSlotsAvailable()));
         }
         model.prepareForInsertPhase();
     }

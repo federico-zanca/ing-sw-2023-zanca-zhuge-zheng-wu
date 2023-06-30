@@ -25,7 +25,7 @@
                 <Image url="@../images/Publisher_material/Display_1.jpg" />
             </image>
         </ImageView>
-      <HBox alignment="CENTER" fillHeight="false" layoutX="607.0" layoutY="44.0" spacing="70.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="60.0">
+      <HBox alignment="CENTER" fillHeight="false" layoutX="607.0" layoutY="44.0" spacing="70.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="70.0">
          <children>
             <Group>
                <children>
@@ -118,7 +118,7 @@
             </VBox>
          </children>
       </HBox>
-      <VBox layoutY="-30.21484375" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0">
+      <VBox layoutY="-30.21484375" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="100.0">
          <children>
               <Text fx:id="error" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold; -fx-background-color: white;" wrappingWidth="699.2000427246094">
                   <font>

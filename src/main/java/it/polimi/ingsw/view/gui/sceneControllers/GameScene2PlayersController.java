@@ -10,7 +10,6 @@ import it.polimi.ingsw.model.gameboard.Coordinates;
 import it.polimi.ingsw.model.gameboard.Square;
 import it.polimi.ingsw.network.message.ChatMessage;
 import it.polimi.ingsw.network.message.gamemessage.DrawTilesMessage;
-import it.polimi.ingsw.network.message.gamemessage.ExitGameRequest;
 import it.polimi.ingsw.network.message.gamemessage.InsertInfoMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertTilesMessage;
 import it.polimi.ingsw.view.InputValidator;
@@ -54,8 +53,8 @@ public class GameScene2PlayersController implements Controller {
     private ArrayList<Square> tilesToDraw;
     private ActionType actionType = ActionType.NONE;
     private final InputValidator inputValidator = new InputValidator();
-    private final double cellWidth = 46.5;
-    private final double cellHeight = 46.5;
+    private final double cellWidth = 55;
+    private final double cellHeight = 55;
     private ImageView[][] itemLivRoomCells = new ImageView[Board.DIMENSIONS][Board.DIMENSIONS];
     private Square[][] board;
     private final DropShadow dropShadow = new DropShadow();
@@ -188,12 +187,14 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
-
+/*
     @FXML
     void clickedExit() {
         setPlayerState(PlayerState.WATCHING);
         messageHandler.notifyObservers(new ExitGameRequest(messageHandler.getMyUsername()));
     }
+
+ */
 
     @FXML
     void clickedItemLivRoom(int row, int col) {
@@ -291,7 +292,6 @@ public class GameScene2PlayersController implements Controller {
             initBookshelfGrid();
             initSelectCol();
             destroy();
-            System.out.println("i initialized");
         }
     }
 
@@ -466,6 +466,8 @@ public class GameScene2PlayersController implements Controller {
                 cell = new ImageView();
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
+                GridPane.setHalignment(cell, javafx.geometry.HPos.CENTER); // Horizontal alignment
+                GridPane.setValignment(cell, javafx.geometry.VPos.CENTER); // Vertical alignment
                 myBookShelfGrid.getChildren().add(cell);
                 bookshelfCells[i][j] = cell;
                 bookshelfCells[i][j].setFitWidth(cellWidth);
@@ -485,6 +487,8 @@ public class GameScene2PlayersController implements Controller {
                 cell = new ImageView();
                 GridPane.setRowIndex(cell, i);
                 GridPane.setColumnIndex(cell, j);
+                GridPane.setHalignment(cell, javafx.geometry.HPos.CENTER); // Horizontal alignment
+                GridPane.setValignment(cell, javafx.geometry.VPos.CENTER); // Vertical alignment
                 livingRoomGrid.getChildren().add(cell);
                 itemLivRoomCells[i][j] = cell;
                 itemLivRoomCells[i][j].setFitWidth(cellWidth);
@@ -513,8 +517,8 @@ public class GameScene2PlayersController implements Controller {
                         assert url != null;
                         image = new Image(url.toString());
                         item.setImage(image);
-                        item.setFitWidth(cellWidth);
-                        item.setFitHeight(cellHeight);
+                        item.setFitWidth(cellWidth-5);
+                        item.setFitHeight(cellHeight-5);
                         item.setPreserveRatio(true);
                     } else {
                         item.setImage(null);
@@ -617,6 +621,7 @@ public class GameScene2PlayersController implements Controller {
 
     public void setPlayers(ArrayList<Player> players) {
         this.playersList = players;
+        initPlayerList(players);
     }
 
     private void changeOrder() {
@@ -704,6 +709,7 @@ public class GameScene2PlayersController implements Controller {
         ChatMessage chatMessage = new ChatMessage(message, recipientusername);
         messageHandler.notifyObservers(chatMessage);
     }
+    /*
     public void moveTurnIndicator(String player) {
         double x, y;
         for (Label l : pList) {
@@ -717,6 +723,8 @@ public class GameScene2PlayersController implements Controller {
             }
         }
     }
+
+     */
     public void setIcons(String username,int commonGoal,CommonGoalCard cg){
         String url;
         Image image;
@@ -741,25 +749,25 @@ public class GameScene2PlayersController implements Controller {
                 if(i==0){
                     if(player1F.getImage()==null){
                         player1F.setImage(image);
-                    } else{
+                    } else if(player1S.getImage()==null){
                         player1S.setImage(image);
                     }
                 }else if(i==1) {
                     if (player2F.getImage() == null){
                         player2F.setImage(image);
-                    } else {
+                    } else if(player2S.getImage()==null){
                         player2S.setImage(image);
                     }
                 }else if(i==2){
                     if(player3F.getImage()==null){
                         player3F.setImage(image);
-                    }else{
+                    }else if(player3S.getImage()==null){
                         player3S.setImage(image);
                     }
                 }else if(i == 3){
                     if(player4F.getImage() == null){
                         player4F.setImage(image);
-                    }else{
+                    }else if(player4S.getImage()==null){
                         player4S.setImage(image);
                     }
                 }
@@ -797,5 +805,24 @@ public class GameScene2PlayersController implements Controller {
     }
     public HashMap<String, EndGameScores> getScores(){
         return scores;
+    }
+    public void setLastTurnIcon(String currentPlayer){
+        Image tmp = endGameTokenBox.getImage();
+        endGameTokenBox.setImage(null);
+        if(Objects.equals(messageHandler.getMyUsername(), currentPlayer)){
+            for(int i=0;i<pList.size();i++){
+                if(Objects.equals(pList.get(i).getText(), currentPlayer)){
+                    if(i==0){
+                        player1.getChildren().add(new ImageView(tmp));
+                    }else if(i==1) {
+                        player2.getChildren().add(new ImageView(tmp));
+                    }else if(i==2){
+                        player3.getChildren().add(new ImageView(tmp));
+                    }else if(i == 3){
+                        player4.getChildren().add(new ImageView(tmp));
+                    }
+                }
+            }
+        }
     }
 }

@@ -214,7 +214,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setActionType(ActionType.DRAW_TILES);
         gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
         gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard(),drawInfoMessage.getMaxNumItems());
-        gui.setPlayers(drawInfoMessage.getModel().getPlayers());
+        //gui.setPlayers(drawInfoMessage.getModel().getPlayers());
         gui.setDrawn(false);
     }
     /**
@@ -259,6 +259,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
         gui.changeScene();
         gui.setGameScene(gameStartedMessage.getGameView());
+        gui.setPlayers(gameStartedMessage.getGameView().getPlayerQueue());
     }
     /**
      * Handles the message received when the player needs to insert tiles from their hand.
@@ -287,6 +288,7 @@ public class MessageHandler extends VirtualView implements View {
         lastMessage = lastTurnMessage;
         gui.setGameNotification("It's the last turn!");
         gui.addLastTurnScore(lastTurnMessage.getCurrentPlayer());
+        gui.setLastTurnIcon(lastTurnMessage.getCurrentPlayer());
     }
     //TODO vuoto! da implementare per la leaderboard scene
     @Override
@@ -313,7 +315,8 @@ public class MessageHandler extends VirtualView implements View {
         }else{
             gui.setGameNotification(newTurnMessage.getContent());
         }
-        gui.setTurnIndicator(newTurnMessage.getCurrentPlayer());
+
+        //gui.setTurnIndicator(newTurnMessage.getCurrentPlayer());
     }
     /**
      * Handles the message indicating that no common goal is available.
