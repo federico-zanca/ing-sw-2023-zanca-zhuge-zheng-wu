@@ -753,14 +753,23 @@ public class GameScene2PlayersController implements Controller {
     public void setCommonGoals(ArrayList<CommonGoalCard> commonGoals) {
         URL url;
         Image image;
+        int score;
         url = getClass().getResource("/images/common_goal_cards/" + commonGoals.get(0).getImageId() + ".jpg");
         assert url != null;
         image = new Image(url.toString());
         firstCommonGoal.setImage(image);
+        score = commonGoals.get(0).peek();
+        url = getClass().getResource("/images/scoring_tokens/scoring_"+ score +".jpg");
+        assert url != null;
+        firstCommonGoalScoreBox.setImage(new Image(url.toString()));
         url = getClass().getResource("/images/common_goal_cards/" + commonGoals.get(1).getImageId() + ".jpg");
         assert url != null;
         image = new Image(url.toString());
         secondCommonGoal.setImage(image);
+        score = commonGoals.get(0).peek();
+        url = getClass().getResource("/images/scoring_tokens/scoring_"+ score +".jpg");
+        assert url != null;
+        firstCommonGoalScoreBox.setImage(new Image(url.toString()));
     }
 
     public void setPlayerQueue(ArrayList<Player> players) {
