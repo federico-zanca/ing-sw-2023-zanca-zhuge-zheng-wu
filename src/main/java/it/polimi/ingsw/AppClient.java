@@ -4,7 +4,6 @@ import it.polimi.ingsw.distributed.ClientImpl;
 import it.polimi.ingsw.distributed.socket.middleware.ServerStub;
 import it.polimi.ingsw.view.VirtualView;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.tui.TextualUI;
 import javafx.application.Application;
 
 import java.rmi.NotBoundException;
@@ -62,7 +61,6 @@ public class AppClient {
             } else {
                 Registry registry = LocateRegistry.getRegistry(ip, 1099);
                 AppServer server = (AppServer) registry.lookup("server");
-                view = new TextualUI();
                 ClientImpl client = new ClientImpl(server.connect());
                 client.run();
             }

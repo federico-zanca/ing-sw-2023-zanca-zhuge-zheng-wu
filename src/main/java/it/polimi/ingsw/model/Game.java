@@ -87,8 +87,6 @@ public class Game extends Observable {
      */
     public void setGamePhase(GamePhase phase) {
         this.gamePhase = phase;
-        //notifyObservers(new Message(currentPlayer.getUsername(), phase));
-        //notifyObservers(new ChangedPhaseMessage(currentPlayer.getUsername(), phase));
     }
 
     /**

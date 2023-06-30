@@ -94,6 +94,14 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable{
         });
         server.register(this);
 
+        keepAlive();
+    }
+
+    /**
+     * Sends a heartbeat message to the server at regular intervals to keep the connection alive.
+     * This helps in maintaining the connection and detecting any network issues.
+     */
+    private void keepAlive() {
         Timer heartbeatTimer = new Timer();
         heartbeatTimer.scheduleAtFixedRate(new TimerTask() {
             @Override

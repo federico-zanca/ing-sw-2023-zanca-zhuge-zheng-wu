@@ -35,8 +35,6 @@ class RankingTest {
             rank++;
         }
         // Printing the leaderboard
-        //PrintLeaderboard.printLeaderboard(sortedMap);
-        //ranking.printLeaderboard();
     }
 
     @org.junit.jupiter.api.Test

@@ -36,27 +36,6 @@ public class PreGameController {
     public void onConnectionMessage(Client client, MessageToServer message) throws RemoteException {
             message.execute(client, this);
 
-        /*
-        switch(message.getType()) {
-            case LOBBY_LIST_REQUEST:
-
-                break;
-            case CREATE_LOBBY_REQUEST:
-
-                break;
-            case JOIN_LOBBY_REQUEST:
-                break;
-            case USERNAME_REQUEST:
-
-                break;
-            case LOGIN_REQUEST:
-
-                break;
-            default:
-                System.err.println("Invalid message type: not implemented yet");
-        }
-
-         */
     }
 
     /**
@@ -93,22 +72,6 @@ public class PreGameController {
 
             message.execute(client, this);
 
-        /*
-        switch (message.getType()){
-            case EXIT_LOBBY_REQUEST:
-
-                break;
-            case START_GAME_REQUEST:
-
-                break;
-            case PLAYER_LIST_REQUEST:
-
-                break;
-            case CHANGE_NUM_OF_PLAYERS_REQUEST:
-
-                break;
-        }
-        */
     }
 
     /**
