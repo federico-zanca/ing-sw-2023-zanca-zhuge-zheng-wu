@@ -428,17 +428,8 @@ public class GameScene2PlayersController implements Controller {
             Label label = new Label(p.getUsername());
             label.setPrefSize(130,40);
             label.setStyle("-fx-font-family: system;");
+            label.setStyle("-fx-font-size: 22px;");
             label.setStyle("-fx-font-weight: bold;");
-            if (i == 0) {
-                label.setStyle("-fx-font-weight: bold;");
-                label.setStyle("-fx-text-fill: red");
-            }
-            /*else if (i % 2 == 0) {
-                label.setStyle("-fx-background-color: white;");
-            }
-            else {
-                label.setStyle("-fx-background-color: #f2f2f2;");
-            }*/
             hBox.getChildren().clear();
             hBox.getChildren().add(label);
             if(i == 0){
@@ -582,8 +573,8 @@ public class GameScene2PlayersController implements Controller {
                 GridPane.setValignment(cell, javafx.geometry.VPos.CENTER); // Vertical alignment
                 myBookShelfGrid.getChildren().add(cell);
                 bookshelfCells[i][j] = cell;
-                bookshelfCells[i][j].setFitWidth(cellWidth);
-                bookshelfCells[i][j].setFitHeight(cellHeight);
+                bookshelfCells[i][j].setFitWidth(cellWidth-5);
+                bookshelfCells[i][j].setFitHeight(cellHeight-5);
             }
         }
     }
@@ -1090,6 +1081,19 @@ public class GameScene2PlayersController implements Controller {
                     }
                 }
             }
+        }
+    }
+    public void setCurrentPlayerLabel(String currentPlayer){
+        clearPlistEffect();
+        for(Label l : pList){
+            if(Objects.equals(l.getText(), currentPlayer)){
+                l.setStyle("-fx-text-fill: lightgreen;");            }
+        }
+    }
+
+    private void clearPlistEffect() {
+        for(Label l : pList){
+            l.setStyle("-fx-text-fill: black");
         }
     }
 }

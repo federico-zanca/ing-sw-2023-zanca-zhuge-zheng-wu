@@ -6,7 +6,7 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Bloom?>
 <?import javafx.scene.effect.DropShadow?>
@@ -23,9 +23,8 @@
 <?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.text.TextFlow?>
+
 <AnchorPane fx:id="root" stylesheets="@../css/game_scene.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <children>
       <ImageView fx:id="backGround" preserveRatio="true" AnchorPane.bottomAnchor="0.599999999999909" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.599999999999909" AnchorPane.topAnchor="0.0">
@@ -36,7 +35,7 @@
             <Rectangle2D />
          </viewport>
       </ImageView>
-      <Label fx:id="notification" layoutX="315.0" layoutY="15.0" prefHeight="40.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="20.0">
+      <Label fx:id="notification" layoutX="315.0" layoutY="15.0" prefHeight="40.0" prefWidth="600.0" style="-fx-alignment: center; -fx-background-color: #683f24; -fx-background-radius: 10;" text="notification" textFill="WHITE" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="20.0">
          <font>
             <Font name="Century" size="16.0" />
          </font>
@@ -327,9 +326,9 @@
                         </ImageView>
                         <VBox alignment="CENTER">
                            <children>
-                              <ScrollPane opacity="0.85" minHeight="300.0" style="-fx-border-width: 0px;">
+                              <ScrollPane minHeight="300.0" opacity="0.85" style="-fx-border-width: 0px;">
                                  <content>
-                                    <TextFlow fx:id="txtFlow"  />
+                                    <TextFlow fx:id="txtFlow" />
                                  </content>
                               </ScrollPane>
                               <TextField fx:id="inputField" prefHeight="35.0" prefWidth="285.0" promptText="\@name to send private message" />

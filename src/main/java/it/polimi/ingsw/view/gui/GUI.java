@@ -526,5 +526,14 @@ public class GUI extends Application{
             });
         }
     }
+
+    public void setCurrentPlayerLabel(String currentPlayer) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).setCurrentPlayerLabel(currentPlayer);
+            });
+        }
+    }
 }
 

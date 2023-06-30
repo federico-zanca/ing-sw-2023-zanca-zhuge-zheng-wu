@@ -309,8 +309,7 @@ public class MessageHandler extends VirtualView implements View {
         }else{
             gui.setGameNotification(newTurnMessage.getContent());
         }
-
-        //gui.setTurnIndicator(newTurnMessage.getCurrentPlayer());
+        gui.setCurrentPlayerLabel(newTurnMessage.getCurrentPlayer());
     }
     /**
      * Handles the message indicating that no common goal is available.
