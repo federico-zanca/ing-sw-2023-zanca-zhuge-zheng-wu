@@ -863,6 +863,7 @@ public class GameScene2PlayersController implements Controller {
         txtFlow.setPrefWidth(300);
         for(ChatMessage message:chatLog) {
             Text text = new Text(message.getContent() + "\n");
+            text.setFill(Color.WHITE);
             Text username = new Text(message.getSender()+": ");
             Text prefix = new Text();
             username.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
