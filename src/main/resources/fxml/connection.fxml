@@ -17,7 +17,7 @@
       <ImageView fx:id="backGround" preserveRatio="true">
          <Image url="@../images/Publisher_material/Display_3.jpg" />
       </ImageView>
-      <VBox alignment="CENTER" fillWidth="false" layoutX="356.0" layoutY="120.0" spacing="100.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="60.0">
+      <VBox alignment="CENTER" fillWidth="false" layoutX="356.0" layoutY="120.0" spacing="100.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="70.0">
          <children>
             <ImageView fx:id="Title" fitWidth="800.0" preserveRatio="true">
                <Image url="@../images/Publisher_material/Title.png" />

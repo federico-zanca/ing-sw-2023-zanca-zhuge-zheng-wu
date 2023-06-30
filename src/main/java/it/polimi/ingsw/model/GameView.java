@@ -21,14 +21,16 @@ public class GameView implements Serializable {
     private final ArrayList<CommonGoalCard> commonGoals;
     private final Board board;
 
+    private final ArrayList<Player> playerQueue;
+
+
 
     //attributes for each single player, initialized thanks to the username passed to the constructor
-
     /**
      * Constructs a GameView object based on the provided Game model.
      * @param model the Game model used to initialize the GameView object
      */
-    public GameView(Game model) {
+    public GameView(Game model,ArrayList<Player> playerQueue) {
         if (model.getPlayers() != null) {
             this.players = new ArrayList<>(model.getPlayers());
         } else {
@@ -59,6 +61,11 @@ public class GameView implements Serializable {
         } else {
             this.currentPlayer = null;
         }
+        if(playerQueue != null){
+            this.playerQueue = new ArrayList<>(playerQueue);
+        }else{
+            this.playerQueue = this.players;
+        }
     }
 
 
@@ -70,6 +77,10 @@ public class GameView implements Serializable {
         return this.board;
     }
 
+
+    public ArrayList<Player> getPlayerQueue() {
+        return playerQueue;
+    }
 
     /**
      * Getter for CommonGoals

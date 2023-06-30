@@ -180,7 +180,7 @@ public class Game extends Observable {
      * - Randomly selects the two commongoals
      * - assigns a personal goal to each player
      */
-    public void startGame(){
+    public void startGame(ArrayList<Player> playerQueue){
         setGameStarted(true);
         setGamePhase(GamePhase.INIT);
         setGameBoard(chosenNumOfPlayers);
@@ -197,7 +197,7 @@ public class Game extends Observable {
         }
 
         initLeaderBoard();
-        notifyObservers(new GameStartedMessage("", new GameView(this)));
+        notifyObservers(new GameStartedMessage("", new GameView(this,playerQueue)));
         nextGamePhase();
         //fai vedere personal goal
         //fai vedere commongoals
@@ -221,7 +221,7 @@ public class Game extends Observable {
         notifyObservers(new NewTurnMessage("", currentPlayer.getUsername()));
         int maxItemTiles = currentPlayer.getBookshelf().maxSlotsAvailable();
         board.enableSquaresWithFreeSide();
-        DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this), maxItemTiles);
+        DrawInfoMessage m = new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this,null), maxItemTiles);
         notifyObservers(m);
     }
 
@@ -233,7 +233,7 @@ public class Game extends Observable {
         try {
             setPlayerHand(currentPlayer.getUsername(), getBoard().pickItems(squares));
         } catch (IllegalDrawException e) {
-            notifyObservers(new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this), currentPlayer.getBookshelf().maxSlotsAvailable()));
+            notifyObservers(new DrawInfoMessage(currentPlayer.getUsername(), new GameView(this,null), currentPlayer.getBookshelf().maxSlotsAvailable()));
             notifyObservers(new ErrorMessage(currentPlayer.getUsername(), e.getMessage()));
         }
         board.disableAllSquares();

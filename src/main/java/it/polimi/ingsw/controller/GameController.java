@@ -198,7 +198,7 @@ public class GameController {
             System.err.println("IL GIOCO INIZIA");
             turnController.setPlayersQueue(scramble(model.getPlayers()));
             model.setCurrentPlayer(turnController.getPlayerQueue().get(0));
-            model.startGame();
+            model.startGame(turnController.getPlayerQueue());
 
             //nextGamePhase();
             turnController.newTurn();

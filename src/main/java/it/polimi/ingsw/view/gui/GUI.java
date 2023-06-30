@@ -270,7 +270,7 @@ public class GUI extends Application{
                 ((GameScene2PlayersController) currentController).setCommonGoals(model.getCommonGoals());
                 ((GameScene2PlayersController) currentController).setBoard(model.getBoard().getGameboard(), 0);
                 ((GameScene2PlayersController) currentController).setPersonalGoalCardImage();
-                ((GameScene2PlayersController) currentController).initPlayerList(model.getPlayers());
+                //((GameScene2PlayersController) currentController).initPlayerList(model.getPlayers());
             });
         }
     }
@@ -453,11 +453,13 @@ public class GUI extends Application{
             });
         }
     }
+
     /**
      * Sets the turn indicator to the current player in the game scene.
      *
      * @param currentPlayer The username of the current player.
      */
+    /*
     public void setTurnIndicator(String currentPlayer) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -466,6 +468,8 @@ public class GUI extends Application{
             });
         }
     }
+
+     */
     /**
      * Sets an alert in the server scene.
      * This is used to notify the user about important server-related events or messages.
@@ -548,6 +552,15 @@ public class GUI extends Application{
         if(currentController instanceof EndGameController){
             Platform.runLater(()->{
                 ((EndGameController)currentController).setScores(scores);
+            });
+        }
+    }
+
+    public void setLastTurnIcon(String currentPlayer) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()-> {
+                ((GameScene2PlayersController) currentController).setLastTurnIcon(currentPlayer);
             });
         }
     }
