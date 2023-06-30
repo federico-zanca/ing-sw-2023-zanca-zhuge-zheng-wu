@@ -45,6 +45,10 @@ import java.util.*;
 public class GameScene2PlayersController implements Controller {
     public AnchorPane root;
     public TextFlow txtFlow;
+    public ImageView last1;
+    public ImageView last2;
+    public ImageView last3;
+    public ImageView last4;
     private boolean drawn;
     public ImageView backGround;
     public Button okButton;
@@ -573,8 +577,8 @@ public class GameScene2PlayersController implements Controller {
                 GridPane.setValignment(cell, javafx.geometry.VPos.CENTER); // Vertical alignment
                 myBookShelfGrid.getChildren().add(cell);
                 bookshelfCells[i][j] = cell;
-                bookshelfCells[i][j].setFitWidth(cellWidth-5);
-                bookshelfCells[i][j].setFitHeight(cellHeight-5);
+                bookshelfCells[i][j].setFitWidth(cellWidth-3.5);
+                bookshelfCells[i][j].setFitHeight(cellHeight-3.5);
             }
         }
     }
@@ -632,8 +636,8 @@ public class GameScene2PlayersController implements Controller {
                         assert url != null;
                         image = new Image(url.toString());
                         item.setImage(image);
-                        item.setFitWidth(cellWidth-5);
-                        item.setFitHeight(cellHeight-5);
+                        item.setFitWidth(cellWidth-3.5);
+                        item.setFitHeight(cellHeight-3.5);
                         item.setPreserveRatio(true);
                     } else {
                         item.setImage(null);
@@ -1071,13 +1075,13 @@ public class GameScene2PlayersController implements Controller {
             for(int i=0;i<pList.size();i++){
                 if(Objects.equals(pList.get(i).getText(), currentPlayer)){
                     if(i==0){
-                        player1.getChildren().add(new ImageView(tmp));
+                        last1.setImage(tmp);
                     }else if(i==1) {
-                        player2.getChildren().add(new ImageView(tmp));
+                        last2.setImage(tmp);
                     }else if(i==2){
-                        player3.getChildren().add(new ImageView(tmp));
+                        last3.setImage(tmp);
                     }else if(i == 3){
-                        player4.getChildren().add(new ImageView(tmp));
+                        last4.setImage(tmp);
                     }
                 }
             }
