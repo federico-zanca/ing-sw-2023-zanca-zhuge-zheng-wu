@@ -1,6 +1,6 @@
 .rootPane{
     -fx-background-image: url("../images/misc/sfondo_parquet.jpg");
-    -fx-background-size: 450px 500px;
+    -fx-background-size: 2000px 1200px;
     -fx-background-effect: DropShadow;
 }
 .Title{

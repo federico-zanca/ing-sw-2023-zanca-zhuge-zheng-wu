@@ -28,7 +28,6 @@ public class MessageHandler extends VirtualView implements View {
     private String myUsername = "";
     private PersonalGoalCard personalGoalCard;
     private MessageToClient lastMessage;
-    private HashMap<String,EndGameScores> scores;
     private ChatBox chatBox = new ChatBox();
     /**
      * Handles the event when the client successfully connects to the server.
@@ -182,7 +181,6 @@ public class MessageHandler extends VirtualView implements View {
     //TODO metodo vuoto! da implementare per la leaderboard scene
     @Override
     public void onAdjacentItemsPointsMessage(AdjacentItemsPointsMessage adjacentItemsPointsMessage) {
-        gui.addAdjacentPoints(adjacentItemsPointsMessage.getPlayerUsername(),adjacentItemsPointsMessage.getPoints());
     }
     /**
      * Handles the message received when the game board is updated.
@@ -214,7 +212,7 @@ public class MessageHandler extends VirtualView implements View {
         gui.setActionType(ActionType.DRAW_TILES);
         gui.setGameNotification("Puoi pescare al massimo "+Math.min(3,drawInfoMessage.getMaxNumItems())+" tessere");
         gui.setGameBoard(drawInfoMessage.getModel().getBoard().getGameboard(),drawInfoMessage.getMaxNumItems());
-        //gui.setPlayers(drawInfoMessage.getModel().getPlayers());
+        gui.setPlayers(drawInfoMessage.getModel().getPlayers());
         gui.setDrawn(false);
     }
     /**
@@ -225,12 +223,10 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onEndGameMessage(EndGameMessage endGameMessage) {
         lastMessage = endGameMessage;
-        setScores(gui.getScores());
         gui.setPhase(GuiPhase.END_GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.END_SCENE.s));
         gui.changeScene();
         gui.setLeaderBoard(endGameMessage.getRanking());
-        gui.setScoreBoard(scores);
     }
     /**
      * Handles the response received when exiting the game.
@@ -254,12 +250,11 @@ public class MessageHandler extends VirtualView implements View {
     @Override
     public void onGameStartedMessage(GameStartedMessage gameStartedMessage) {
         lastMessage = gameStartedMessage;
-        scores = new HashMap<>();
         gui.setPhase(GuiPhase.GAME);
         gui.setCurrentScene(gui.getScene(GameFxml.GAME_SCENE.s));
         gui.changeScene();
         gui.setGameScene(gameStartedMessage.getGameView());
-        gui.setPlayers(gameStartedMessage.getGameView().getPlayerQueue());
+        gui.setPlayerQueue(gameStartedMessage.getGameView().getPlayerQueue());
     }
     /**
      * Handles the message received when the player needs to insert tiles from their hand.
@@ -287,7 +282,6 @@ public class MessageHandler extends VirtualView implements View {
     public void onLastTurnMessage(LastTurnMessage lastTurnMessage) {
         lastMessage = lastTurnMessage;
         gui.setGameNotification("It's the last turn!");
-        gui.addLastTurnScore(lastTurnMessage.getCurrentPlayer());
         gui.setLastTurnIcon(lastTurnMessage.getCurrentPlayer());
     }
     //TODO vuoto! da implementare per la leaderboard scene
@@ -351,8 +345,6 @@ public class MessageHandler extends VirtualView implements View {
      */
     @Override
     public void onPersonalGoalPointsMessage(PersonalGoalPointsMessage personalGoalPointsMessage) {
-        gui.addPersonalScore(personalGoalPointsMessage.getPlayerUsername(),personalGoalPointsMessage.getPoints());
-
     }
     /**
      * Handles the message indicating that a player has left the game.
@@ -608,8 +600,5 @@ public class MessageHandler extends VirtualView implements View {
      */
     public ArrayList<ChatMessage> getChatLog(){
         return chatBox.getChatLog();
-    }
-    public void setScores(HashMap<String,EndGameScores> scores){
-        this.scores = scores;
     }
 }

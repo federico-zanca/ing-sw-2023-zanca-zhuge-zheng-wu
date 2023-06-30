@@ -7,7 +7,7 @@ public enum GameFxml {
     SERVER_SCENE("server_scene.fxml"),
     IN_LOBBY_SCENE("in_lobby_scene.fxml"),
     GAME_SCENE("game_scene_2players.fxml"),
-    END_SCENE("end_scene.fxml");
+    END_SCENE("leaderboard_scene.fxml");
 
     private GuiPhase phase;
 

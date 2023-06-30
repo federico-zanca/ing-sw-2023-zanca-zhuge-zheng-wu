@@ -13,7 +13,6 @@ import it.polimi.ingsw.network.message.gamemessage.DrawTilesMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertInfoMessage;
 import it.polimi.ingsw.network.message.gamemessage.InsertTilesMessage;
 import it.polimi.ingsw.view.InputValidator;
-import it.polimi.ingsw.view.gui.EndGameScores;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import it.polimi.ingsw.view.tui.ActionType;
@@ -53,7 +52,6 @@ public class GameScene2PlayersController implements Controller {
     private GUI gui;
     private PlayerState state = PlayerState.WATCHING;
     private ArrayList<Player> playersList;
-    private HashMap<String, EndGameScores> scores;
     private ArrayList<ItemTile> tilesToInsert;
     private ArrayList<Square> tilesToDraw;
     private ActionType actionType = ActionType.NONE;
@@ -130,6 +128,8 @@ public class GameScene2PlayersController implements Controller {
      When the triangle shape is clicked, it applies a glow effect to the shape.
      @param event The mouse event that triggered the translation.
      */
+    private ArrayList<Player> playersQueue;
+
     @FXML
     void translateTriangle(MouseEvent event) {
         if (state.equals(PlayerState.ACTIVE)) {
@@ -342,13 +342,13 @@ public class GameScene2PlayersController implements Controller {
         drawn = true;
         if (gui != null) {
             clearHand();
-            scores = new HashMap<>();
             pList = new ArrayList<>();
             order = new ArrayList<>();
             newHandOrder = new ArrayList<>();
             tilesToDraw = new ArrayList<>();
             tilesToInsert = new ArrayList<>();
             playersList = new ArrayList<>();
+            playersQueue = new ArrayList<>();
             bookshelf = new Bookshelf();
             nameOfBookshelf.setText(messageHandler.getMyUsername());
             setChatBox(messageHandler.getChatLog());
@@ -407,8 +407,6 @@ public class GameScene2PlayersController implements Controller {
      * @param players The list of players
      */
     public void initPlayerList(ArrayList<Player> players) {
-        playersList = players;
-        initScores();
         HBox hBox = null;
         this.players.setSpacing(3);
         for (int i = 0; i < players.size(); i++) {
@@ -466,25 +464,7 @@ public class GameScene2PlayersController implements Controller {
             pList.add(label);
         }
     }
-    /**
-     * Initializes the scores for each player.
-     * This method creates an empty EndGameScores object for each player in the player list and stores it in the scores map.
-     * The scores map is used to keep track of the scores for each player throughout the game.
-     */
-    private void initScores() {
-        for(Player p : playersList){
-            scores.put(p.getUsername(),new EndGameScores());
-        }
-    }
-    /**
-     * Displays the bookshelf of another player.
-     * This method searches for the player with the specified username in the playersList.
-     * If a player with a matching username is found and their bookshelf is not null and not the same as the current bookshelf,
-     * the method sets the bookshelf to the player's bookshelf.
-     * This allows the user to view the bookshelf of another player.
-     *
-     * @param username The username of the player whose bookshelf should be displayed.
-     */
+
     private void showOtherBookshelf(String username) {
         for (Player p : playersList) {
             if (p.getUsername().equals(username) && p.getBookshelf() != null && p.getBookshelf() != bookshelf) {
@@ -787,15 +767,24 @@ public class GameScene2PlayersController implements Controller {
         image = new Image(url.toString());
         secondCommonGoal.setImage(image);
     }
-    /**
 
-     Sets the list of players in the game.
-     Initializes the player list view with the provided players.
-     @param players The list of players.
-     */
+    public void setPlayerQueue(ArrayList<Player> players) {
+        this.playersQueue = players;
+        initPlayerList(players);
+    }
     public void setPlayers(ArrayList<Player> players) {
         this.playersList = players;
-        initPlayerList(players);
+        for (int i = 0; i < playersList.size(); i++) {
+            int index = playersQueue.indexOf(playersList.get(i));
+            if (index >= 0) {
+                swap(playersList, i, index);
+            }
+        }
+    }
+    private void swap(List<Player> list, int index1, int index2) {
+        Player tmp = list.get(index1);
+        list.set(index1, list.get(index2));
+        list.set(index2, tmp);
     }
     /**
 
@@ -1083,51 +1072,7 @@ public class GameScene2PlayersController implements Controller {
     public void setDrawn(boolean drawn){
         this.drawn = drawn;
     }
-    /**
-     * Adds the full shelf points for the last turn to the specified player's scores.
-     *
-     * @param player The username of the player.
-     */
-    public void addLastTurnScores(String player){
-        scores.get(player).setFullShelfPoints(1);
-        /*
-        EndgameScores tmp = scores.get(player);
-        tmp.setFullShelfPoints(1);
-        scores.put(player, tmp);
-         */
-    }
-    /**
-     * Adds personal points to the specified player's scores.
-     *
-     * @param player The username of the player.
-     * @param points The number of personal points to add.
-     */
-    public void addPersonalScores(String player,int points){
-        scores.get(player).setPersonalPoints(points);
-    }
-    /**
-     * Adds adjacent points to the specified player's scores.
-     *
-     * @param player The username of the player.
-     * @param points The number of adjacent points to add.
-     */
-    public void addAdjacentScores(String player,int points){
-        scores.get(player).setAdjacentPoints(points);
-    }
-    /**
-     * Returns the scores of all players as a HashMap.
-     *
-     * @return The HashMap containing the scores of all players.
-     */
-    public HashMap<String, EndGameScores> getScores(){
-        return scores;
-    }
-    /**
-     * Sets the last turn icon for the specified current player.
-     * Removes the image from the end game token box and adds it to the respective player's section.
-     *
-     * @param currentPlayer The username of the current player.
-     */
+
     public void setLastTurnIcon(String currentPlayer){
         Image tmp = endGameTokenBox.getImage();
         endGameTokenBox.setImage(null);

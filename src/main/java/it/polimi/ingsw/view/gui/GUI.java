@@ -29,13 +29,11 @@ import java.util.*;
 
 public class GUI extends Application{
     private Scene currentScene;
-
     private Stage currentStage;
     private final HashMap<String,Controller> controllers;
     private final HashMap<GuiPhase,String> fxml;
     private final HashMap<String,Scene> scenes;
     private final MessageHandler messageHandler;
-    private HashMap<String,EndGameScores> scores;
     private GuiPhase phase;
     private PersonalGoalCard personalGoalCard;
 
@@ -432,6 +430,14 @@ public class GUI extends Application{
      *
      * @param players The list of players.
      */
+    public void setPlayerQueue(ArrayList<Player> players) {
+        Controller currentController = controllers.get(fxml.get(phase));
+        if(currentController instanceof GameScene2PlayersController){
+            Platform.runLater(()->{
+                ((GameScene2PlayersController)currentController).setPlayerQueue(players);
+            });
+        }
+    }
     public void setPlayers(ArrayList<Player> players) {
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
@@ -509,50 +515,6 @@ public class GUI extends Application{
         Controller currentController = controllers.get(fxml.get(phase));
         if(currentController instanceof GameScene2PlayersController){
             ((GameScene2PlayersController) currentController).setDrawn(drawn);
-        }
-    }
-
-    public void addLastTurnScore(String player) {
-        Controller currentController = controllers.get(fxml.get(phase));
-        if(currentController instanceof GameScene2PlayersController){
-            Platform.runLater(()-> {
-                ((GameScene2PlayersController) currentController).addLastTurnScores(player);
-            });
-        }
-    }
-
-    public void addPersonalScore(String playerUsername, int points) {
-        Controller currentController = controllers.get(fxml.get(phase));
-        if(currentController instanceof GameScene2PlayersController){
-            Platform.runLater(()-> {
-                ((GameScene2PlayersController) currentController).addPersonalScores(playerUsername,points);
-            });
-        }
-    }
-
-    public void addAdjacentPoints(String playerUsername, int points) {
-        Controller currentController = controllers.get(fxml.get(phase));
-        if(currentController instanceof GameScene2PlayersController){
-            Platform.runLater(()-> {
-                ((GameScene2PlayersController) currentController).addAdjacentScores(playerUsername,points);
-            });
-        }
-    }
-
-    public HashMap<String,EndGameScores> getScores() {
-        Controller currentController = controllers.get(fxml.get(phase));
-        if(currentController instanceof GameScene2PlayersController){
-            scores = ((GameScene2PlayersController) currentController).getScores();
-        }
-        return scores;
-    }
-
-    public void setScoreBoard(HashMap<String, EndGameScores> scores) {
-        Controller currentController = controllers.get(fxml.get(phase));
-        if(currentController instanceof EndGameController){
-            Platform.runLater(()->{
-                ((EndGameController)currentController).setScores(scores);
-            });
         }
     }
 

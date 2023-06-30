@@ -83,6 +83,7 @@ public class InLobbySceneController implements Controller{
             });
             //setChatBox(messageHandler.getChatLog());
             setChatBox(messageHandler.getChatLog());
+            numPlayersSpinner.setDisable(false);
         }
     }
     /*

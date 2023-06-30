@@ -1,35 +1,44 @@
 package it.polimi.ingsw.view.gui.sceneControllers;
 
-import it.polimi.ingsw.view.gui.EndGameScores;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.GameFxml;
 import it.polimi.ingsw.view.gui.MessageHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
+import java.net.URL;
 import java.util.LinkedHashMap;
-import java.util.Set;
+
 
 public class EndGameController implements Controller{
-    public Label first;
-    public Label second;
-    public Label third;
-    public Label fourth;
-    public ImageView gold;
-    public ImageView silver;
+    public ImageView fourthRow;
     public ImageView bronze;
-    public TableView<EndGameScores> scoreTable;
-    public TableColumn<EndGameScores,Integer> adjacent;
-    public TableColumn<EndGameScores,Integer> personal;
-    public TableColumn<EndGameScores,Integer> lastpoint;
-    public TableColumn<EndGameScores,Integer> total;
+    public ImageView thirdRow;
+    public Label quattro;
+    public BorderPane root;
     private MessageHandler messageHandler;
     private GUI gui;
-    private HashMap<String,EndGameScores> scores;
+    @FXML
+    private Label firstPlace;
+    @FXML
+    private Label secondPlace;
+    @FXML
+    private Label thirdPlace;
+    @FXML
+    private Label fourthPlace;
+    @FXML
+    private Text firstScores;
+    @FXML
+    private Text secondScores;
+    @FXML
+    private Text thirdScores;
+    @FXML
+    private Text fourthScores;
     @FXML
     private Button exit;
     @Override
@@ -41,58 +50,61 @@ public class EndGameController implements Controller{
     @Override
     public void initialize() {
         if (gui == null) {
+            return;
         }else{
-            scores = new HashMap<>();
-            //adjacent = new TableColumn<>("Adjacent Points");
-            adjacent.setCellValueFactory(new PropertyValueFactory<EndGameScores,Integer>("adjacent points"));
-            //personal = new TableColumn<>("Personal Points");
-            personal.setCellValueFactory(new PropertyValueFactory<EndGameScores,Integer>("personal points"));
-            //lastpoint = new TableColumn<>("Last Point");
-            lastpoint.setCellValueFactory(new PropertyValueFactory<EndGameScores,Integer>("last point"));
-            //total = new TableColumn<>("Total Points");
-            total.setCellValueFactory(new PropertyValueFactory<EndGameScores,Integer>("total points"));
-
+            thirdRow.setVisible(false);
+            fourthRow.setVisible(false);
+            bronze.setVisible(false);
+            quattro.setVisible(false);
+            clear();
+            exit.setOnAction(e->{
+                gui.setPhase(GuiPhase.SERVER);
+                gui.setCurrentScene(gui.getScene(GameFxml.SERVER_SCENE.s));
+                gui.changeScene();
+            });
         }
     }
 
     private void clear() {
+        firstPlace.setText(null);
+        firstScores.setText(null);
+        secondPlace.setText(null);
+        secondScores.setText(null);
+        thirdPlace.setText(null);
+        thirdScores.setText(null);
+        fourthPlace.setText(null);
+        fourthScores.setText(null);
     }
 
     public void setRanking(LinkedHashMap<String, Integer> ranking){
         int count=0;
         for (String key : ranking.keySet()) {
             if(count == 0){
-                first.setText(key);
+                firstPlace.setText(key);
+                firstScores.setText((ranking.get(key).toString()));
             }else if(count == 1){
-                second.setText(key);
+                secondPlace.setText(key);
+                secondScores.setText((ranking.get(key).toString()));
             }else if(count == 2){
                 if(ranking.get(key) == null){
                     break;
                 }else{
-                    //thirdRow.setVisible(true);
+                    thirdRow.setVisible(true);
                     bronze.setVisible(true);
                 }
-                third.setText(key);
-                //thirdScores.setText((ranking.get(key).toString()));
+                thirdPlace.setText(key);
+                thirdScores.setText((ranking.get(key).toString()));
             }else{
                 if(ranking.get(key) == null){
                     break;
                 }else{
-                    //fourthRow.setVisible(true);
-                    //quattro.setVisible(true);
+                    fourthRow.setVisible(true);
+                    quattro.setVisible(true);
                 }
-                fourth.setText(key);
-                //fourthScores.setText((ranking.get(key).toString()));
+                fourthPlace.setText(key);
+                fourthScores.setText((ranking.get(key).toString()));
             }
             count++;
-        }
-    }
-    public void setScores(HashMap<String, EndGameScores> scores){
-        this.scores = scores;
-        Set<String> stringSet = scores.keySet();
-        List<String> stringList = new ArrayList<>(stringSet);
-        for(String name : stringList){
-            scoreTable.getItems().add(scores.get(name));
         }
     }
 }
