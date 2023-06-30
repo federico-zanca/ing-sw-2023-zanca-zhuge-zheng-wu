@@ -199,6 +199,7 @@ public class GameScene2PlayersController implements Controller {
     @FXML
     void clickedItemLivRoom(int row, int col) {
         Glow glow = new Glow();
+        DropShadow pickedShadow = new DropShadow();
         if (state.equals(PlayerState.ACTIVE)) {
             if (actionType == ActionType.DRAW_TILES) {
                 if (board[row][col].isPickable()) {
@@ -215,7 +216,10 @@ public class GameScene2PlayersController implements Controller {
                     square.getItem().setImageId(board[row][col].getItem().getImageId());
                     tilesToDraw.add(square);
                     glow.setLevel(0.5);
-                    itemLivRoomCells[row][col].setEffect(glow);
+                    pickedShadow.setRadius(25);
+                    pickedShadow.setColor(Color.web("#800080"));
+                    //itemLivRoomCells[row][col].setEffect(glow);
+                    itemLivRoomCells[row][col].setEffect(pickedShadow);
                     if (inputValidator.isPossibleToDrawMore(tilesToDraw, board) && tilesToDraw.size() < Math.min(3, maxNumItems)) {
                         return;
                     } else {
