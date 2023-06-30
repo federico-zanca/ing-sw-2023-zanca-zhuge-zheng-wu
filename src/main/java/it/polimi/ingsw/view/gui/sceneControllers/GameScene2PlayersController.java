@@ -1086,12 +1086,16 @@ public class GameScene2PlayersController implements Controller {
                 if(Objects.equals(pList.get(i).getText(), currentPlayer)){
                     if(i==0){
                         last1.setImage(tmp);
+                        last1.setVisible(true);
                     }else if(i==1) {
                         last2.setImage(tmp);
+                        last2.setVisible(true);
                     }else if(i==2){
                         last3.setImage(tmp);
+                        last3.setVisible(true);
                     }else if(i == 3){
                         last4.setImage(tmp);
+                        last4.setVisible(true);
                     }
                 }
             }
