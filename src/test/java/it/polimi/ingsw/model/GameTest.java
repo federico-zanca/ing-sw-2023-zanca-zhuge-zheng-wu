@@ -73,7 +73,7 @@ class GameTest {
         testGame.addPlayer(new Player("Alpha"));
         testGame.addPlayer(new Player("Beta"));
         testGame.addPlayer(new Player("Gamma"));
-        testGame.startGame();
+        testGame.startGame(null);
         assertTrue(testGame.isGameStarted());
         assertEquals(testGame.getGamePhase(), GamePhase.PLAY);
         assertEquals(testGame.getCurrNumOfPlayers(), 3);
@@ -110,7 +110,7 @@ class GameTest {
         ArrayList<Square> squares = new ArrayList<>();
         squares.add(new Square(2, 3));
         squares.add(new Square(4, 5));
-        testGame.startGame();
+        testGame.startGame(null);
         testGame.setCurrentPlayer(new Player("Beta"));
         testGame.drawFromBoard(squares);
         assertEquals(testGame.getBoard().getSquare(new Coordinates(2, 3)).getItem().getType(), ItemType.EMPTY);
@@ -181,7 +181,7 @@ class GameTest {
         ArrayList<ItemTile> tiles = new ArrayList<>();
         tiles.add(new ItemTile(ItemType.CAT));
         testGame.addPlayer(testPlayer);
-        testGame.startGame();
+        testGame.startGame(null);
         testGame.setCurrentPlayer(testPlayer);
         System.out.println(testGame.getCurrentPlayer());
         testGame.insertTiles(tiles, 2);
@@ -283,7 +283,7 @@ class GameTest {
         testGame.getLeaderboard().put("Eve", 0);
         Player player = new Player("Adam");
         Player player1 = new Player("Eve");
-        testGame.startGame();
+        testGame.startGame(null);
         testGame.addPlayer(player);
         testGame.addPlayer(player1);
         testGame.setCurrentPlayer(player);

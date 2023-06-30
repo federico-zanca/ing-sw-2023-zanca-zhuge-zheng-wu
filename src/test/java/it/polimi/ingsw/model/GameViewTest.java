@@ -10,7 +10,7 @@ class GameViewTest {
     public void testGameViewConstructorWithoutPlayers() {
         // Create a sample Game model without players
         Game gameModel = new Game();
-        GameView gameView = new GameView(gameModel);
+        GameView gameView = new GameView(gameModel, null);
         // Verify that the players list is an empty list
         assertTrue(gameView.getPlayers().isEmpty());
     }
@@ -24,7 +24,7 @@ class GameViewTest {
 
 
         // Create a GameView object using the constructor
-        GameView gameView = new GameView(gameModel);
+        GameView gameView = new GameView(gameModel, null);
 
         // Verify that the players list is correctly initialized in the GameView object
         assertEquals(gameModel.getPlayers(), gameView.getPlayers());
@@ -37,7 +37,7 @@ class GameViewTest {
         gameModel.getLeaderboard().put("John", 100);
         gameModel.getLeaderboard().put("Alice", 80);
 
-        GameView gameView = new GameView(gameModel);
+        GameView gameView = new GameView(gameModel, null);
 
         // Verify that the leaderboard is correctly initialized in the GameView object
         assertEquals(gameModel.getLeaderboard(), gameView.getLeaderboard());
@@ -47,7 +47,7 @@ class GameViewTest {
     public void testGameViewConstructorWithoutLeaderboard() {
         // Create a sample Game model without a leaderboard
         Game gameModel = new Game();
-        GameView gameView = new GameView(gameModel);
+        GameView gameView = new GameView(gameModel, null);
 
         // Verify that the leaderboard is an empty LinkedHashMap in the GameView object
         assertTrue(gameView.getLeaderboard().isEmpty());
