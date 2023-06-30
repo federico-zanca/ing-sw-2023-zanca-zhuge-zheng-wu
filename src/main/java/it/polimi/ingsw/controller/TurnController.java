@@ -304,7 +304,7 @@ public class TurnController {
             }, TIMEOUT_LASTPLAYER);
         }
         if(playersToSkip.size()==playerQueue.size())
-            model.nextGamePhase(); //se esce l'ultimo giocatore, passa alla fase AWARDS (che non vedrà nessuno, si può cambiare)
+            gameController.awardPhase(null); //se esce l'ultimo giocatore, passa alla fase AWARDS (che non vedrà nessuno, si può cambiare)
         else if(player.equals(model.getCurrentPlayer()))
             loadNextPlayer();
     }
@@ -324,7 +324,7 @@ public class TurnController {
      * @param player The player to reconnect
      */
     public void reconnectExitedPlayer(Player player) {
-        if(timer!=null) {
+        if(timer!=null && playersToSkip.size()<playerQueue.size()) {
             timer.cancel();
         }
         playersToSkip.remove(player);
