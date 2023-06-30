@@ -24,6 +24,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.text.TextFlow?>
 <AnchorPane fx:id="root" stylesheets="@../css/game_scene.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.gui.sceneControllers.GameScene2PlayersController">
    <children>
       <ImageView fx:id="backGround" preserveRatio="true" AnchorPane.bottomAnchor="0.599999999999909" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.599999999999909" AnchorPane.topAnchor="0.0">
@@ -325,12 +327,22 @@
                         </ImageView>
                         <VBox alignment="CENTER">
                            <children>
+                              <ScrollPane opacity="0.85" minHeight="300.0" style="-fx-border-width: 0px;">
+                                 <content>
+                                    <TextFlow fx:id="txtFlow"  />
+                                 </content>
+                              </ScrollPane>
+                              <TextField fx:id="inputField" prefHeight="35.0" prefWidth="285.0" promptText="\@name to send private message" />
+                           </children>
+                           <!--
+                           <children>
                               <TextArea fx:id="chat" editable="false" minHeight="300.0" opacity="0.85" style="-fx-border-width: 0px;" styleClass="text-area">
                                  <font>
                                     <Font size="18.0" />
                                  </font></TextArea>
                               <TextField fx:id="inputField" promptText="\\@name to send private message" />
                            </children>
+                           -->
                         </VBox>
                      </children>
                   </VBox>
