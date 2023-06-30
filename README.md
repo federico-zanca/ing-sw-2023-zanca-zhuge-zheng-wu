@@ -96,11 +96,15 @@ On client startup enter:
 - 2 for RMI connection
 A dialog asking you to choose which connection is preferred will be shown before trying to connect to the server.
 ### Troubleshooting
+#### Can't connect through RMI
 Some Windows devices may face difficulties connecting through JavaRMI.
 To address this problem the user running the server should launch the jar this way
 ```sh
 java -Djava.rmi.server.hostname=[IPADDRESS of the server] -jar server.jar
 ```
+#### Proportions in the GUI are messed up
+This may be due to Windows screen scaling. Setting screen scaling to 100% instead of 125% is recommended.
+Settings > Display > Scale Rendering
 ### License
 
 This project is developed in collaboration with Politecnico di Milano and Cranio Creations.
