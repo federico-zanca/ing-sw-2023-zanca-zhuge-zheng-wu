@@ -103,7 +103,7 @@ To address this problem the user running the server should launch the jar this w
 java -Djava.rmi.server.hostname=[IPADDRESS of the server] -jar server.jar
 ```
 #### Proportions in the GUI are messed up
-This may be due to Windows screen scaling. Setting screen scaling to 100% instead of 125% is recommended.
+This may be due to Windows screen scaling. Setting screen scaling to 100% instead of 125% is recommended.<br>
 Settings > Display > Scale Rendering
 ### License
 
