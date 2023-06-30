@@ -5,3 +5,6 @@
 .text-area .content {
     -fx-background-color: #ab5c23 ;
 }
+.scroll-pane .viewport {
+    -fx-background-color: #ab5c23;
+}
